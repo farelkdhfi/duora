@@ -197,10 +197,7 @@ export default function GoalCard({
                 "
               />
             </div>
-          </div>
-
-          {/* CHIP + CARD NUMBER */}
-          
+          </div>          
 
           {/* TITLE */}
           <div className="mt-3 min-w-0">
@@ -210,7 +207,6 @@ export default function GoalCard({
                 text-[17px]
                 font-semibold
                 leading-tight
-                tracking-[-0.035em]
                 text-neutral-900
                 sm:text-[19px]
                 mb-5
@@ -241,7 +237,7 @@ export default function GoalCard({
 
                     <p
                       className="
-                        mt-1
+                        mt-2
                         truncate
                         text-[20px]
                         font-semibold
@@ -287,7 +283,7 @@ export default function GoalCard({
                 {/* PROGRESS */}
                 <div
                   className="
-                    mt-3
+                    mt-5
                     h-2
                     w-full
                     overflow-hidden
@@ -299,7 +295,7 @@ export default function GoalCard({
                     className="
                       h-full
                       rounded-full
-                      bg-linear-90 from-pink-300 to-neutral-700
+                      bg-linear-90 from-blue-200 via-pink-200 to-neutral-500
                       transition-all
                       duration-700
                       ease-out

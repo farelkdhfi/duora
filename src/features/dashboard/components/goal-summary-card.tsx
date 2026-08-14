@@ -122,7 +122,7 @@ export default function GoalSummaryCard({
 
             <div className="mt-5 h-2 overflow-hidden rounded-full bg-black/[0.06]">
               <div
-                className="h-full rounded-full bg-linear-90 from-pink-200 to-neutral-700 transition-all duration-700"
+                className="h-full rounded-full bg-linear-90 from-blue-200 via-pink-200 to-neutral-500 transition-all duration-700"
                 style={{ width: `${progress}%` }}
               />
             </div>
