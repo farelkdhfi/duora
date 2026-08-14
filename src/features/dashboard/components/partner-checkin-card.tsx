@@ -300,7 +300,7 @@ export default function PartnerCheckinCard({
             <img
               src={mood.image.src}
               alt={mood.label}
-              className="size-30 object-contain"
+              className="size-23 object-contain"
             />
             <div className={`
               flex w-fit mx-auto

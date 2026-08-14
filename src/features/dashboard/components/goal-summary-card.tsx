@@ -74,14 +74,11 @@ export default function GoalSummaryCard({
       <div className="
         relative overflow-hidden
         rounded-[1.6rem]
-        bg-[#f8f8f7]
+        bg-neutral-50
         p-5
       ">
 
-        {/* Ambient */}
-        <div className="pointer-events-none absolute -right-16 -top-16 size-44 rounded-full bg-pink-500/[0.05] blur-[70px]" />
-        <div className="pointer-events-none absolute -bottom-16 -left-16 size-44 rounded-full bg-blue-500/[0.04] blur-[70px]" />
-
+  
         <div className="relative">
 
           {/* Header */}
@@ -113,9 +110,6 @@ export default function GoalSummaryCard({
           <div className="mt-8">
             <div className="flex items-end justify-between">
               <div>
-                <p className="text-[10px] uppercase tracking-[0.18em] text-neutral-400">
-                  Saved
-                </p>
                 <p className="mt-2 text-2xl font-semibold tracking-[-0.05em] text-neutral-900">
                   {formatRupiah(totalSaved)}
                 </p>
@@ -126,16 +120,11 @@ export default function GoalSummaryCard({
               </p>
             </div>
 
-            <div className="mt-5 h-1.5 overflow-hidden rounded-full bg-black/[0.06]">
+            <div className="mt-5 h-2 overflow-hidden rounded-full bg-black/[0.06]">
               <div
-                className="h-full rounded-full bg-black transition-all duration-700"
+                className="h-full rounded-full bg-linear-90 from-pink-200 to-neutral-700 transition-all duration-700"
                 style={{ width: `${progress}%` }}
               />
-            </div>
-
-            <div className="mt-3 flex items-center justify-between text-[10px] text-neutral-400">
-              <span>{formatRupiah(target)}</span>
-              <span>Shared goal</span>
             </div>
           </div>
 
