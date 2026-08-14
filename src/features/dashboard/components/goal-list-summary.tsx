@@ -2,170 +2,112 @@
 
 import { Target } from 'lucide-react'
 
-import { useGoals } from '@/features/goals/queries'
 import GoalSummaryCard from './goal-summary-card'
-
+import { useGoalsWithSavingsSummary } from '@/features/savings/queries'
 
 interface GoalListProps {
   relationshipId: string
 }
 
-
 export default function GoalListSummary({
   relationshipId,
 }: GoalListProps) {
-
   const {
     data: goals,
     isLoading,
     error,
-  } = useGoals(relationshipId)
-
-
-  /* ========================================================= */
-  /* LOADING */
-  /* ========================================================= */
+  } = useGoalsWithSavingsSummary(relationshipId)
 
   if (isLoading) {
     return (
-      <div className="rounded-[1.75rem] border border-black/[0.05] bg-white/80 p-6 shadow-[0_15px_40px_-25px_rgba(0,0,0,0.15)]">
+      <div className="space-y-4">
+        {[1, 2].map((item) => (
+          <div
+            key={item}
+            className="rounded-[2rem] border border-black/[0.06] bg-white p-3 shadow-[0_25px_70px_rgba(0,0,0,0.05)]"
+          >
+            <div className="animate-pulse rounded-[1.6rem] bg-[#f8f8f7] p-5">
+              <div className="flex justify-between">
+                <div>
+                  <div className="h-2 w-20 rounded-full bg-neutral-200" />
+                  <div className="mt-3 h-5 w-40 rounded-lg bg-neutral-200" />
+                </div>
+                <div className="size-9 rounded-full bg-white" />
+              </div>
 
-        <div className="animate-pulse">
-
-          <div className="flex items-center justify-between">
-
-            <div className="space-y-2">
-
-              <div className="h-3 w-20 rounded-full bg-neutral-100" />
-
-              <div className="h-5 w-32 rounded-lg bg-neutral-100" />
-
+              <div className="mt-8">
+                <div className="h-3 w-24 rounded-full bg-neutral-200" />
+                <div className="mt-3 h-7 w-32 rounded-lg bg-neutral-200" />
+                <div className="mt-5 h-1.5 rounded-full bg-neutral-200" />
+              </div>
             </div>
-
-
-            <div className="size-9 rounded-xl bg-neutral-100" />
-
           </div>
-
-
-          <div className="mt-7 space-y-3">
-
-            <div className="h-3 w-full rounded-full bg-neutral-100" />
-
-            <div className="h-3 w-3/4 rounded-full bg-neutral-100" />
-
-          </div>
-
-        </div>
-
+        ))}
       </div>
     )
   }
-
-
-  /* ========================================================= */
-  /* ERROR */
-  /* ========================================================= */
 
   if (error) {
     return (
-      <div className="rounded-[1.75rem] border border-rose-100 bg-rose-50/50 p-6">
+      <div className="rounded-[2rem] border border-black/[0.06] bg-white p-3 shadow-[0_25px_70px_rgba(0,0,0,0.05)]">
+        <div className="rounded-[1.6rem] bg-[#f8f8f7] p-6">
+          <div className="flex items-start gap-3">
+            <div className="flex size-10 items-center justify-center rounded-full bg-white shadow-sm">
+              <Target size={16} className="text-neutral-500" />
+            </div>
 
-        <div className="flex items-center gap-3">
-
-          <div className="flex size-9 items-center justify-center rounded-xl bg-white">
-
-            <Target
-              size={16}
-              className="text-rose-400"
-            />
-
+            <div>
+              <p className="text-[10px] uppercase tracking-[0.18em] text-neutral-400">
+                Error
+              </p>
+              <p className="mt-1 text-sm font-semibold text-neutral-900">
+                Couldn't load goals
+              </p>
+              <p className="mt-1 text-xs text-neutral-400">
+                {error.message}
+              </p>
+            </div>
           </div>
-
-
-          <div>
-
-            <p className="text-sm font-medium text-rose-600">
-              Couldn't load goals
-            </p>
-
-            <p className="mt-0.5 text-xs text-rose-400">
-              {error.message || 'Something went wrong.'}
-            </p>
-
-          </div>
-
         </div>
-
       </div>
     )
   }
-
-
-  /* ========================================================= */
-  /* EMPTY */
-  /* ========================================================= */
 
   if (!goals?.length) {
     return (
-      <div className="relative overflow-hidden rounded-[1.75rem] border border-black/[0.05] bg-white/80 p-6 shadow-[0_15px_40px_-25px_rgba(0,0,0,0.15)]">
+      <div className="rounded-[2rem] border border-black/[0.06] bg-white p-3 shadow-[0_25px_70px_rgba(0,0,0,0.05)]">
+        <div className="relative overflow-hidden rounded-[1.6rem] bg-[#f8f8f7] p-10 text-center">
+          <div className="pointer-events-none absolute -right-16 -top-16 size-40 rounded-full bg-blue-500/[0.05] blur-[80px]" />
+          <div className="pointer-events-none absolute -bottom-16 -left-16 size-40 rounded-full bg-pink-500/[0.06] blur-[80px]" />
 
-        {/* Ambient */}
-
-        <div className="pointer-events-none absolute -right-12 -top-12 size-32 rounded-full bg-blue-100/50 blur-3xl" />
-
-        <div className="pointer-events-none absolute -bottom-12 -left-12 size-32 rounded-full bg-pink-100/40 blur-3xl" />
-
-
-        <div className="relative">
-
-          <div className="flex size-10 items-center justify-center rounded-[14px] bg-gradient-to-br from-blue-50 to-pink-50">
-
-            <Target
-              size={18}
-              className="text-blue-500"
-              strokeWidth={1.8}
-            />
-
+          <div className="relative mx-auto flex size-14 items-center justify-center rounded-full bg-white shadow-sm">
+            <Target size={22} className="text-neutral-400" />
           </div>
 
-
-          <p className="mt-5 text-[10px] font-semibold uppercase tracking-[0.15em] text-neutral-300">
+          <p className="relative mt-5 text-[10px] uppercase tracking-[0.18em] text-neutral-400">
             Shared goals
           </p>
 
-
-          <h3 className="mt-2 text-lg font-semibold tracking-[-0.03em] text-neutral-800">
+          <h3 className="relative mt-2 text-[16px] font-semibold tracking-[-0.02em] text-neutral-900">
             Nothing here yet.
           </h3>
 
-
-          <p className="mt-2 max-w-sm text-sm leading-6 text-neutral-400">
-            Set something meaningful to work
-            toward together.
+          <p className="relative mx-auto mt-1.5 max-w-xs text-[13px] leading-relaxed text-neutral-400">
+            Create your first shared goal and start building it together.
           </p>
-
         </div>
-
       </div>
     )
   }
 
-
-  /* ========================================================= */
-  /* GOALS */
-  /* ========================================================= */
-
   return (
-    <div className="grid gap-4">
-
+    <div className="space-y-4">
       {goals.slice(0, 2).map((goal) => (
         <GoalSummaryCard
           key={goal.id}
           goal={goal}
         />
       ))}
-
     </div>
   )
 }

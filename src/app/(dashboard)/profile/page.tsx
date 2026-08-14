@@ -16,11 +16,16 @@ export default function ProfilePage() {
 
         <div className="flex items-center gap-2">
 
-          <div className="flex size-8 items-center justify-center rounded-xl bg-gradient-to-br from-blue-50 to-pink-50">
+          <div className="flex size-7 items-center justify-center rounded-xl bg-gradient-to-br from-blue-50 to-pink-50 sm:size-8">
+            <UserRound
+              size={13}
+              strokeWidth={2}
+              className="text-black sm:hidden"
+            />
             <UserRound
               size={15}
               strokeWidth={2}
-              className="text-blue-500"
+              className="hidden text-black sm:block"
             />
           </div>
 
@@ -30,11 +35,11 @@ export default function ProfilePage() {
 
         </div>
 
-        <h1 className="mt-4 text-3xl font-semibold tracking-[-0.05em] text-neutral-800 sm:text-4xl">
+        <h1 className="mt-3 text-2xl font-semibold tracking-[-0.04em] text-neutral-800 sm:mt-4 sm:text-3xl lg:text-4xl">
           Profile
         </h1>
 
-        <p className="mt-2 max-w-md text-sm leading-6 text-neutral-400">
+        <p className="mt-2 max-w-md text-[13px] leading-6 text-neutral-400 sm:text-sm">
           Update your name and photo.
         </p>
 
@@ -45,7 +50,7 @@ export default function ProfilePage() {
       {/* FORM */}
       {/* =================================================== */}
 
-      <div className="mt-8 max-w-2xl">
+      <div className="mt-6 max-w-2xl sm:mt-8">
         <ProfileForm />
       </div>
 

@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/client'
+import { Relationship, RelationshipDetails } from './types'
 
 export async function getMyRelationship() {
   const supabase = createClient()
@@ -20,7 +21,7 @@ export async function createRelationship({
 }: {
   relationshipName: string
   startedAt?: string
-}) {
+}): Promise<Relationship> {
   const supabase = createClient()
 
   const { data, error } = await supabase.rpc(
@@ -35,7 +36,7 @@ export async function createRelationship({
     throw new Error(error.message)
   }
 
-  return data
+  return data as Relationship
 }
 
 export async function joinRelationship(
@@ -57,7 +58,7 @@ export async function joinRelationship(
   return data
 }
 
-export async function getMyRelationshipDetails() {
+export async function getMyRelationshipDetails(): Promise<RelationshipDetails> {
   const supabase = createClient()
 
   const { data, error } = await supabase.rpc(
@@ -68,7 +69,7 @@ export async function getMyRelationshipDetails() {
     throw new Error(error.message)
   }
 
-  return data
+  return data as RelationshipDetails
 }
 
 

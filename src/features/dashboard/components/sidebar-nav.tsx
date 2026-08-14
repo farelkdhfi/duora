@@ -1,6 +1,5 @@
 'use client'
 
-import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 
@@ -12,14 +11,15 @@ import {
   Home,
   Lock,
   LogOut,
-  Menu,
   Pin,
   User2,
-  X,
 } from 'lucide-react'
 
 import { createClient } from '@/lib/supabase/client'
 import { useMyRelationshipDetails } from '@/features/relationship/queries'
+import Image from 'next/image'
+
+import logoImage from '@/assets/duora-logo3.png'
 
 
 const navigation = [
@@ -51,14 +51,17 @@ const navigation = [
 ]
 
 
-export default function Sidebar() {
+interface SidebarNavProps {
+  onNavigate?: () => void
+}
+
+
+export default function SidebarNav({ onNavigate }: SidebarNavProps) {
 
   const pathname = usePathname()
   const router = useRouter()
 
   const { data, isLoading } = useMyRelationshipDetails()
-
-  const [mobileOpen, setMobileOpen] = useState(false)
 
   const memberCount = data?.members?.length ?? 0
   const locked = isLoading || memberCount < 2
@@ -70,12 +73,8 @@ export default function Sidebar() {
     router.refresh()
   }
 
-  function closeMobile() {
-    setMobileOpen(false)
-  }
 
-
-  const sidebarContent = (
+  return (
     <div className="flex h-full flex-col">
 
 
@@ -83,19 +82,21 @@ export default function Sidebar() {
       {/* BRAND */}
       {/* ===================================================== */}
 
-      <div className="flex items-center justify-between px-5 pb-7 pt-6">
+      <div className="px-5 pb-7 pt-6">
 
         <Link
           href="/dashboard"
-          onClick={closeMobile}
+          onClick={onNavigate}
           className="group flex items-center gap-3"
         >
 
-          {/* Brand */}
           <div>
+            <div className='flex items-center gap-1'>
+              <Image src={logoImage} width={20} height={20} alt='logo' />
             <p className="text-[17px] uppercase font-bold tracking-[-0.04em] text-[#111111]">
               duora
             </p>
+            </div>
 
             <p className="mt-0.5 text-[11px] text-neutral-400">
               Grow together.
@@ -104,15 +105,6 @@ export default function Sidebar() {
           </div>
 
         </Link>
-
-        {/* Close button (mobile only) */}
-        <button
-          type="button"
-          onClick={closeMobile}
-          className="flex size-8 items-center justify-center rounded-xl text-neutral-400 transition hover:bg-black/[0.03] hover:text-neutral-700 md:hidden"
-        >
-          <X size={18} strokeWidth={1.9} />
-        </button>
 
       </div>
 
@@ -171,7 +163,7 @@ export default function Sidebar() {
               <Link
                 key={item.href}
                 href={item.href}
-                onClick={closeMobile}
+                onClick={onNavigate}
                 className={`
                   group relative flex items-center gap-3
                   rounded-2xl px-3.5 py-3
@@ -230,7 +222,7 @@ export default function Sidebar() {
       {/* RELATIONSHIP CARD */}
       {/* ===================================================== */}
 
-      <div className="px-4 pb-4">
+      <div className="px-4 py-4">
 
         {locked ? (
           <div className="relative overflow-hidden rounded-[1.5rem] border border-black/[0.05] bg-neutral-50 p-4">
@@ -336,68 +328,5 @@ export default function Sidebar() {
       </div>
 
     </div>
-  )
-
-
-  return (
-    <>
-
-      {/* ===================================================== */}
-      {/* MOBILE TOP BAR — fixed, full width, always on top */}
-      {/* ===================================================== */}
-
-      <div className="fixed inset-x-0 top-0 z-30 flex items-center justify-between border-b border-black/[0.05] bg-white/80 px-4 py-3 backdrop-blur-xl md:hidden">
-
-        <Link href="/dashboard" className="flex items-center gap-2">
-          <p className="text-[16px] uppercase font-bold tracking-[-0.04em] text-[#111111]">
-            duora
-          </p>
-        </Link>
-
-        <button
-          type="button"
-          onClick={() => setMobileOpen(true)}
-          className="flex size-9 items-center justify-center rounded-xl text-neutral-500 transition hover:bg-black/[0.03] hover:text-neutral-900"
-        >
-          <Menu size={20} strokeWidth={1.9} />
-        </button>
-
-      </div>
-
-
-      {/* ===================================================== */}
-      {/* MOBILE DRAWER + OVERLAY */}
-      {/* ===================================================== */}
-
-      <div
-        className={`
-          fixed inset-0 z-40 bg-black/30 backdrop-blur-sm transition-opacity duration-300 md:hidden
-          ${mobileOpen ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'}
-        `}
-        onClick={closeMobile}
-      />
-
-      <aside
-        className={`
-          fixed inset-y-0 left-0 z-50 w-[280px] max-w-[85vw]
-          bg-white shadow-2xl
-          transition-transform duration-300 ease-out
-          md:hidden
-          ${mobileOpen ? 'translate-x-0' : '-translate-x-full'}
-        `}
-      >
-        {sidebarContent}
-      </aside>
-
-
-      {/* ===================================================== */}
-      {/* DESKTOP SIDEBAR */}
-      {/* ===================================================== */}
-
-      <aside className="sticky top-0 hidden h-screen w-[260px] shrink-0 border-r border-black/[0.05] bg-white/80 backdrop-blur-xl md:block">
-        {sidebarContent}
-      </aside>
-
-    </>
   )
 }

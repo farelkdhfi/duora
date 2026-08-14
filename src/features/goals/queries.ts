@@ -8,6 +8,7 @@ import {
   createGoal,
   getGoal,
   getGoals,
+  getGoalsWithContributionSummary,
 } from './api'
 
 export const goalKeys = {
@@ -69,5 +70,13 @@ export function useCreateGoal() {
         ),
       })
     },
+  })
+}
+
+export function useGoalsWithContributions(relationshipId: string) {
+  return useQuery({
+    queryKey: ['goals', relationshipId, 'with-contributions'],
+    queryFn: () => getGoalsWithContributionSummary(relationshipId),
+    enabled: !!relationshipId,
   })
 }

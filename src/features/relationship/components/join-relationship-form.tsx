@@ -27,9 +27,9 @@ export default function JoinRelationshipForm() {
     mutationFn: ({ inviteCode }: JoinRelationshipFormValues) =>
       joinRelationship(inviteCode),
 
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: relationshipKeys.mine(),
+    onSuccess: async () => {
+      await queryClient.refetchQueries({
+        queryKey: relationshipKeys.all,
       })
     },
   })
@@ -41,10 +41,10 @@ export default function JoinRelationshipForm() {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="space-y-4"
+      className="space-y-5"
     >
       <div>
-        <label>
+        <label className="mb-1.5 block text-sm font-medium text-neutral-700">
           Invite code
         </label>
 
@@ -52,18 +52,18 @@ export default function JoinRelationshipForm() {
           {...register('inviteCode')}
           placeholder="A83KD92F"
           maxLength={8}
-          className="uppercase"
+          className="w-full rounded-xl border border-black/[0.08] bg-white px-4 py-2.5 text-center text-sm uppercase tracking-[0.2em] outline-none transition-shadow placeholder:tracking-normal placeholder:text-neutral-400 focus:border-blue-200 focus:ring-4 focus:ring-blue-50"
         />
 
         {errors.inviteCode && (
-          <p>
+          <p className="mt-1.5 text-xs text-rose-500">
             {errors.inviteCode.message}
           </p>
         )}
       </div>
 
       {mutation.error && (
-        <p>
+        <p className="rounded-lg bg-rose-50 px-3 py-2 text-xs text-rose-500">
           {mutation.error.message}
         </p>
       )}
@@ -71,10 +71,9 @@ export default function JoinRelationshipForm() {
       <button
         type="submit"
         disabled={mutation.isPending}
+        className="w-full rounded-xl bg-gradient-to-br from-neutral-900 to-neutral-800 py-2.5 text-sm font-medium text-white shadow-sm transition-opacity hover:opacity-90 disabled:opacity-50"
       >
-        {mutation.isPending
-          ? 'Joining...'
-          : 'Join Relationship'}
+        {mutation.isPending ? 'Joining...' : 'Join Relationship'}
       </button>
     </form>
   )

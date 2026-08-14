@@ -1,10 +1,12 @@
 import { useQuery } from '@tanstack/react-query'
 
-import { getMyRelationship, getMyRelationshipDetails } from './api'
+import { getMyRelationship, getMyRelationshipDetails, getPartnerName } from './api'
 
 export const relationshipKeys = {
   all: ['relationship'] as const,
   mine: () => [...relationshipKeys.all, 'mine'] as const,
+  details: () => [...relationshipKeys.all, 'details'] as const,
+  partner: () => [...relationshipKeys.all, 'partner'] as const,
 }
 
 export function useMyRelationship() {
@@ -16,10 +18,14 @@ export function useMyRelationship() {
 
 export function useMyRelationshipDetails() {
   return useQuery({
-    queryKey: [
-      ...relationshipKeys.all,
-      'details',
-    ],
+    queryKey: relationshipKeys.details(),
     queryFn: getMyRelationshipDetails,
+  })
+}
+
+export function usePartnerName() {
+  return useQuery({
+    queryKey: relationshipKeys.partner(),
+    queryFn: getPartnerName,
   })
 }

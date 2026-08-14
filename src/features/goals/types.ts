@@ -20,14 +20,15 @@ export interface Goal {
   updated_at: string
 }
 
-export interface GoalChecklist {
+export interface Saving {
   id: string
   goal_id: string
-  title: string
-  is_completed: boolean
-  completed_by: string | null
-  completed_at: string | null
-  position: number
+  user_id: string
+  amount: number
+  note: string | null
   created_at: string
-  updated_at: string
+}
+
+export interface GoalWithSavings extends Goal {
+  savings: Saving[]
 }

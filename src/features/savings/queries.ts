@@ -7,6 +7,7 @@ import {
 import {
   createSaving,
   getGoalSavings,
+  getGoalsWithSavingsSummary,
 } from './api'
 
 export const savingsKeys = {
@@ -52,5 +53,13 @@ export function useCreateSaving() {
           ),
       })
     },
+  })
+}
+
+export function useGoalsWithSavingsSummary(relationshipId: string) {
+  return useQuery({
+    queryKey: [...savingsKeys.all, 'relationship', relationshipId, 'summary'],
+    queryFn: () => getGoalsWithSavingsSummary(relationshipId),
+    enabled: Boolean(relationshipId),
   })
 }

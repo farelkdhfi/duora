@@ -1,149 +1,146 @@
+'use client'
+
 import Link from 'next/link'
+import { ArrowUpRight } from 'lucide-react'
 
-import {
-  ArrowUpRight,
-  CalendarDays,
-  Sparkles,
-  Target,
-} from 'lucide-react'
-
-import type { Goal } from '@/features/goals/types'
-
+import type { GoalWithSavings } from '@/features/goals/types'
 
 interface GoalCardProps {
-  goal: Goal
+  goal: GoalWithSavings
 }
 
+const categoryLabels: Record<GoalWithSavings['category'], string> = {
+  wedding: 'Wedding',
+  house: 'House',
+  vacation: 'Vacation',
+  education: 'Education',
+  business: 'Business',
+  savings: 'Shared Goal',
+  personal: 'Personal',
+  other: 'Goal',
+}
+
+const categoryAccent: Record<GoalWithSavings['category'], string> = {
+  wedding: 'bg-pink-400',
+  house: 'bg-blue-400',
+  vacation: 'bg-blue-400',
+  education: 'bg-blue-400',
+  business: 'bg-neutral-400',
+  savings: 'bg-pink-400',
+  personal: 'bg-pink-400',
+  other: 'bg-neutral-400',
+}
+
+function formatRupiah(amount: number) {
+  if (amount >= 1_000_000) {
+    return `Rp ${(amount / 1_000_000).toFixed(1).replace(/\.0$/, '')}M`
+  }
+
+  if (amount >= 1_000) {
+    return `Rp ${(amount / 1_000).toFixed(1).replace(/\.0$/, '')}K`
+  }
+
+  return `Rp ${amount.toLocaleString('id-ID')}`
+}
 
 export default function GoalSummaryCard({
   goal,
 }: GoalCardProps) {
+  const target = goal.target_amount ?? 0
+
+  const totalSaved = goal.savings.reduce(
+    (sum, saving) => sum + saving.amount,
+    0,
+  )
+
+  const progress =
+    target > 0
+      ? Math.min(100, Math.round((totalSaved / target) * 100))
+      : 0
+
+  const accent = categoryAccent[goal.category]
 
   return (
     <Link
       href={`/goals/${goal.id}`}
-      className="group relative block overflow-hidden rounded-[1.75rem] border border-black/[0.05] bg-white/80 p-6 shadow-[0_15px_40px_-25px_rgba(0,0,0,0.15)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_20px_45px_-25px_rgba(0,0,0,0.2)]"
+      className="
+        group block rounded-[2rem]
+        border border-black/[0.06]
+        bg-white p-3
+        shadow-[0_20px_60px_rgba(0,0,0,0.05)]
+        transition hover:-translate-y-0.5
+      "
     >
+      <div className="
+        relative overflow-hidden
+        rounded-[1.6rem]
+        bg-[#f8f8f7]
+        p-5
+      ">
 
-      {/* ===================================================== */}
-      {/* AMBIENT */}
-      {/* ===================================================== */}
+        {/* Ambient */}
+        <div className="pointer-events-none absolute -right-16 -top-16 size-44 rounded-full bg-pink-500/[0.05] blur-[70px]" />
+        <div className="pointer-events-none absolute -bottom-16 -left-16 size-44 rounded-full bg-blue-500/[0.04] blur-[70px]" />
 
-      <div className="pointer-events-none absolute -right-16 -top-16 size-36 rounded-full bg-blue-100/50 blur-3xl" />
+        <div className="relative">
 
-      <div className="pointer-events-none absolute -bottom-16 -left-16 size-36 rounded-full bg-pink-100/30 blur-3xl" />
+          {/* Header */}
+          <div className="flex items-start justify-between gap-3">
+            <div className="min-w-0">
+              <div className="flex items-center gap-2">
+                <span className={`size-1.5 rounded-full ${accent}`} />
+                <p className="text-[10px] uppercase tracking-[0.18em] text-neutral-400">
+                  {categoryLabels[goal.category]}
+                </p>
+              </div>
 
-
-      <div className="relative">
-
-        {/* =================================================== */}
-        {/* HEADER */}
-        {/* =================================================== */}
-
-        <div className="flex items-start justify-between">
-
-          <div className="flex size-10 items-center justify-center rounded-[14px] bg-gradient-to-br from-blue-50 to-pink-50">
-
-            <Target
-              size={17}
-              strokeWidth={2.2}
-              className="text-emerald-500"
-            />
-
-          </div>
-
-
-          <div className="flex size-8 items-center justify-center rounded-full bg-neutral-100 text-neutral-400 transition-all duration-200 group-hover:bg-neutral-900 group-hover:text-white">
-
-            <ArrowUpRight
-              size={15}
-              strokeWidth={2.3}
-            />
-
-          </div>
-
-        </div>
-
-
-        {/* =================================================== */}
-        {/* TITLE */}
-        {/* =================================================== */}
-
-        <div className="mt-6">
-
-          <div className="flex items-center gap-1.5">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-neutral-300">
-              {goal.category}
-            </p>
-
-          </div>
-
-
-          <h2 className="mt-2 truncate text-lg font-semibold tracking-[-0.03em] text-neutral-800">
-            {goal.title}
-          </h2>
-
-        </div>
-
-
-        {/* =================================================== */}
-        {/* DETAILS */}
-        {/* =================================================== */}
-
-        <div className="mt-5 flex flex-wrap items-center gap-3">
-
-          {goal.target_amount !== null && (
-
-            <div className="rounded-2xl border border-black/[0.04] bg-neutral-50/80 px-4 py-2.5">
-
-              <p className="text-[9px] font-semibold uppercase tracking-[0.12em] text-neutral-400">
-                Target
-              </p>
-
-
-              <p className="mt-0.5 text-sm font-semibold tracking-[-0.01em] text-neutral-800">
-                Rp{' '}
-                {goal.target_amount.toLocaleString(
-                  'id-ID',
-                )}
-              </p>
-
+              <h3 className="mt-3 truncate text-lg font-semibold tracking-[-0.04em] text-neutral-900">
+                {goal.title}
+              </h3>
             </div>
 
-          )}
+            <div className="
+              flex size-9 shrink-0 items-center justify-center
+              rounded-full bg-white shadow-sm
+              text-neutral-400 transition
+              group-hover:bg-black group-hover:text-white
+            ">
+              <ArrowUpRight size={14} />
+            </div>
+          </div>
 
+          {/* Progress */}
+          <div className="mt-8">
+            <div className="flex items-end justify-between">
+              <div>
+                <p className="text-[10px] uppercase tracking-[0.18em] text-neutral-400">
+                  Saved
+                </p>
+                <p className="mt-2 text-2xl font-semibold tracking-[-0.05em] text-neutral-900">
+                  {formatRupiah(totalSaved)}
+                </p>
+              </div>
 
-          {goal.deadline && (
+              <p className="text-lg font-semibold tracking-[-0.04em] text-neutral-700">
+                {progress}%
+              </p>
+            </div>
 
-            <div className="flex items-center gap-1.5 rounded-full bg-pink-50/70 px-3 py-1.5">
-
-              <CalendarDays
-                size={12}
-                strokeWidth={2.4}
-                className="text-pink-500"
+            <div className="mt-5 h-1.5 overflow-hidden rounded-full bg-black/[0.06]">
+              <div
+                className="h-full rounded-full bg-black transition-all duration-700"
+                style={{ width: `${progress}%` }}
               />
-
-              <span className="text-[11px] font-semibold text-pink-600">
-                {new Date(
-                  goal.deadline,
-                ).toLocaleDateString(
-                  'id-ID',
-                  {
-                    day: 'numeric',
-                    month: 'short',
-                    year: 'numeric',
-                  },
-                )}
-              </span>
-
             </div>
 
-          )}
+            <div className="mt-3 flex items-center justify-between text-[10px] text-neutral-400">
+              <span>{formatRupiah(target)}</span>
+              <span>Shared goal</span>
+            </div>
+          </div>
 
         </div>
-
       </div>
-
     </Link>
   )
 }

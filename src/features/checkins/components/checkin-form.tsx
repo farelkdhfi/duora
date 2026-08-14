@@ -3,12 +3,12 @@
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
-  Heart,
   Brain,
-  Zap,
   HandHeart,
+  Heart,
   MessageCircle,
   Sparkles,
+  Zap,
 } from 'lucide-react'
 
 import {
@@ -29,88 +29,154 @@ interface CheckinFormProps {
   date: string
 }
 
-const textareaClass =
-  'min-h-24 w-full resize-none rounded-[18px] border border-black/[0.06] bg-[#F7F7F9] px-4 py-3.5 text-[14px] leading-relaxed text-[#1C1C1E] placeholder:text-[#AEAEB2] outline-none transition-all duration-200 focus:border-[#007AFF]/30 focus:bg-white focus:ring-4 focus:ring-[#007AFF]/[0.06]'
+/* ============================================================= */
+/* INPUT */
+/* ============================================================= */
 
-/**
- * Mood-based theme tokens.
- * Each mood maps to:
- * - topBar: gradient for the thin accent bar at the top of the card
- * - glow: soft radial glow color behind the header (rgba)
- * - iconWrap: gradient background behind the header heart icon
- * - iconColor: color of the header heart icon
- * - button: gradient for the submit button
- * - buttonShadow: shadow color tuned to the button gradient
- * - ring: focus ring / accent color used sparingly for emphasis
- */
+const textareaClass = `
+  mt-3
+  min-h-28
+  w-full
+  resize-none
+  rounded-[1.25rem]
+  border
+  border-black/[0.055]
+  bg-neutral-50/70
+  px-4
+  py-3.5
+  text-[13px]
+  leading-6
+  text-neutral-800
+  outline-none
+  transition-all
+  duration-200
+  placeholder:text-neutral-300
+  hover:border-black/[0.08]
+  focus:border-black/[0.12]
+  focus:bg-white
+  focus:ring-4
+  focus:ring-black/[0.025]
+`
+
+/* ============================================================= */
+/* MOOD THEME */
+/* ============================================================= */
+
 const moodTheme: Record<
   Mood,
   {
-    topBar: string
+    accent: string
     glow: string
     iconWrap: string
     iconColor: string
+    badge: string
     button: string
-    buttonShadow: string
-    ring: string
   }
 > = {
   happy: {
-    topBar: 'bg-gradient-to-r from-[#FFD166] via-[#FF9F43] to-[#FF6B8A]',
-    glow: 'bg-[#FFB020]/[0.10]',
-    iconWrap: 'bg-gradient-to-br from-[#FFD166]/20 to-[#FF9F43]/20',
-    iconColor: 'text-[#FF9500]',
+    accent:
+      'bg-gradient-to-r from-amber-300 via-orange-400 to-pink-400',
+
+    glow:
+      'bg-orange-300/[0.10]',
+
+    iconWrap:
+      'bg-gradient-to-br from-amber-100 to-orange-100',
+
+    iconColor:
+      'text-orange-500',
+
+    badge:
+      'border-orange-100 bg-orange-50 text-orange-600',
+
     button:
-      'bg-gradient-to-r from-[#FF9F43] to-[#FF6B8A] hover:from-[#FF8F2A] hover:to-[#FF5578]',
-    buttonShadow:
-      'shadow-[0_1px_2px_rgba(0,0,0,0.12),0_10px_28px_-8px_rgba(255,140,60,0.55)]',
-    ring: 'focus:ring-[#FF9500]/[0.10] focus:border-[#FF9500]/30',
+      'bg-gradient-to-r from-orange-400 to-pink-400 hover:from-orange-500 hover:to-pink-500',
   },
+
   neutral: {
-    topBar: 'bg-gradient-to-r from-[#FF6B8A] via-[#FF6B8A] to-[#007AFF]',
-    glow: 'bg-[#007AFF]/[0.06]',
-    iconWrap: 'bg-gradient-to-br from-[#FF6B8A]/10 to-[#007AFF]/10',
-    iconColor: 'text-[#FF3B5C]',
+    accent:
+      'bg-gradient-to-r from-blue-300 via-indigo-300 to-pink-300',
+
+    glow:
+      'bg-blue-300/[0.08]',
+
+    iconWrap:
+      'bg-gradient-to-br from-blue-50 to-pink-50',
+
+    iconColor:
+      'text-blue-500',
+
+    badge:
+      'border-blue-100 bg-blue-50 text-blue-600',
+
     button:
-      'bg-[#1C1C1E] hover:bg-black',
-    buttonShadow:
-      'shadow-[0_1px_2px_rgba(0,0,0,0.12),0_10px_24px_-8px_rgba(0,0,0,0.35)]',
-    ring: 'focus:ring-[#007AFF]/[0.06] focus:border-[#007AFF]/30',
+      'bg-neutral-900 hover:bg-neutral-800',
   },
+
   sad: {
-    topBar: 'bg-gradient-to-r from-[#5A7FBF] via-[#5B6BAE] to-[#3A4A8F]',
-    glow: 'bg-[#4A5FA8]/[0.10]',
-    iconWrap: 'bg-gradient-to-br from-[#5A7FBF]/20 to-[#3A4A8F]/20',
-    iconColor: 'text-[#4A5FA8]',
+    accent:
+      'bg-gradient-to-r from-blue-400 via-indigo-400 to-indigo-600',
+
+    glow:
+      'bg-indigo-400/[0.10]',
+
+    iconWrap:
+      'bg-gradient-to-br from-blue-100 to-indigo-100',
+
+    iconColor:
+      'text-indigo-500',
+
+    badge:
+      'border-indigo-100 bg-indigo-50 text-indigo-600',
+
     button:
-      'bg-gradient-to-r from-[#4A5FA8] to-[#2E3A6E] hover:from-[#40548F] hover:to-[#242E5A]',
-    buttonShadow:
-      'shadow-[0_1px_2px_rgba(0,0,0,0.12),0_10px_28px_-8px_rgba(58,74,143,0.5)]',
-    ring: 'focus:ring-[#4A5FA8]/[0.10] focus:border-[#4A5FA8]/30',
+      'bg-gradient-to-r from-indigo-500 to-indigo-700 hover:from-indigo-600 hover:to-indigo-800',
   },
+
   tired: {
-    topBar: 'bg-gradient-to-r from-[#9B8AC4] via-[#8177B5] to-[#5E6096]',
-    glow: 'bg-[#8177B5]/[0.10]',
-    iconWrap: 'bg-gradient-to-br from-[#9B8AC4]/20 to-[#5E6096]/20',
-    iconColor: 'text-[#7A6FB0]',
+    accent:
+      'bg-gradient-to-r from-violet-300 via-violet-400 to-indigo-500',
+
+    glow:
+      'bg-violet-400/[0.10]',
+
+    iconWrap:
+      'bg-gradient-to-br from-violet-100 to-indigo-100',
+
+    iconColor:
+      'text-violet-500',
+
+    badge:
+      'border-violet-100 bg-violet-50 text-violet-600',
+
     button:
-      'bg-gradient-to-r from-[#8177B5] to-[#5E6096] hover:from-[#726899] hover:to-[#4F5180]',
-    buttonShadow:
-      'shadow-[0_1px_2px_rgba(0,0,0,0.12),0_10px_28px_-8px_rgba(94,96,150,0.5)]',
-    ring: 'focus:ring-[#8177B5]/[0.10] focus:border-[#8177B5]/30',
+      'bg-gradient-to-r from-violet-500 to-indigo-600 hover:from-violet-600 hover:to-indigo-700',
   },
+
   stressed: {
-    topBar: 'bg-gradient-to-r from-[#B0201F] via-[#D62E2E] to-[#7A1414]',
-    glow: 'bg-[#D62E2E]/[0.12]',
-    iconWrap: 'bg-gradient-to-br from-[#D62E2E]/20 to-[#7A1414]/20',
-    iconColor: 'text-[#D62E2E]',
+    accent:
+      'bg-gradient-to-r from-rose-400 via-red-500 to-red-700',
+
+    glow:
+      'bg-rose-400/[0.10]',
+
+    iconWrap:
+      'bg-gradient-to-br from-rose-100 to-red-100',
+
+    iconColor:
+      'text-rose-500',
+
+    badge:
+      'border-rose-100 bg-rose-50 text-rose-600',
+
     button:
-      'bg-gradient-to-r from-[#D62E2E] to-[#7A1414] hover:from-[#C22525] hover:to-[#650F0F]',
-    buttonShadow:
-      'shadow-[0_1px_2px_rgba(0,0,0,0.12),0_10px_28px_-8px_rgba(214,46,46,0.55)]',
-    ring: 'focus:ring-[#D62E2E]/[0.10] focus:border-[#D62E2E]/30',
+      'bg-gradient-to-r from-rose-500 to-red-600 hover:from-rose-600 hover:to-red-700',
   },
 }
+
+/* ============================================================= */
+/* SECTION ICON */
+/* ============================================================= */
 
 function SectionIcon({
   children,
@@ -121,12 +187,62 @@ function SectionIcon({
 }) {
   return (
     <div
-      className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-[12px] ${className}`}
+      className={`
+        flex
+        size-9
+        shrink-0
+        items-center
+        justify-center
+        rounded-xl
+        ${className}
+      `}
     >
       {children}
     </div>
   )
 }
+
+/* ============================================================= */
+/* SECTION HEADER */
+/* ============================================================= */
+
+function SectionHeader({
+  icon,
+  iconClassName,
+  title,
+  description,
+}: {
+  icon: React.ReactNode
+  iconClassName?: string
+  title: string
+  description: string
+}) {
+  return (
+    <div className="flex items-start gap-3">
+
+      <SectionIcon className={iconClassName}>
+        {icon}
+      </SectionIcon>
+
+      <div className="min-w-0">
+
+        <h3 className="text-[13px] font-semibold tracking-[-0.01em] text-neutral-800">
+          {title}
+        </h3>
+
+        <p className="mt-0.5 text-[11px] leading-5 text-neutral-400">
+          {description}
+        </p>
+
+      </div>
+
+    </div>
+  )
+}
+
+/* ============================================================= */
+/* SLIDER */
+/* ============================================================= */
 
 function SliderSection({
   icon,
@@ -143,64 +259,147 @@ function SliderSection({
   value: number
   minLabel: string
   maxLabel: string
-  register: any
+  register: ReturnType<
+    typeof useForm<DailyCheckinFormValues>
+  >['register']
   name: 'energy' | 'stress'
   error?: string
 }) {
+  const percentage =
+    ((value - 1) / 9) * 100
+
   return (
     <div>
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2.5">
-          <SectionIcon className="bg-[#F2F2F7]">
-            {icon}
-          </SectionIcon>
 
-          <div>
-            <p className="text-[13px] font-semibold text-[#1C1C1E]">
+      {/* Header */}
+
+      <div className="flex items-center justify-between gap-4">
+
+        <div className="flex min-w-0 items-center gap-3">
+
+          <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-white shadow-[0_2px_10px_rgba(0,0,0,0.04)]">
+
+            {icon}
+
+          </div>
+
+          <div className="min-w-0">
+
+            <p className="text-[13px] font-semibold text-neutral-800">
               {label}
             </p>
 
-            <p className="mt-0.5 text-[11px] text-[#8E8E93]">
-              Rate it from 1 to 10
+            <p className="mt-0.5 text-[10px] text-neutral-400">
+              Rate from 1 to 10
             </p>
+
           </div>
+
         </div>
 
-        <div className="rounded-full bg-[#1C1C1E] px-3 py-1 text-[12px] font-semibold tabular-nums text-white">
-          {value}/10
+
+        {/* Value */}
+
+        <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-neutral-900">
+
+          <span className="text-[12px] font-bold tabular-nums text-white">
+            {value}
+          </span>
+
         </div>
+
       </div>
 
-      <input
-        {...register(name, {
-          valueAsNumber: true,
-        })}
-        type="range"
-        min="1"
-        max="10"
-        step="1"
-        className="mt-5 h-1.5 w-full cursor-pointer appearance-none rounded-full bg-[#E5E5EA] accent-[#007AFF] [&::-webkit-slider-runnable-track]:rounded-full [&::-webkit-slider-thumb]:mt-[-6px] [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border [&::-webkit-slider-thumb]:border-black/[0.06] [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:shadow-[0_2px_6px_rgba(0,0,0,0.16)]"
-      />
 
-      <div className="mt-2 flex justify-between text-[10px] font-medium uppercase tracking-[0.08em] text-[#AEAEB2]">
-        <span>{minLabel}</span>
-        <span>{maxLabel}</span>
+      {/* Slider */}
+
+      <div className="relative mt-5">
+
+        <div className="absolute inset-x-0 top-1/2 h-1.5 -translate-y-1/2 overflow-hidden rounded-full bg-neutral-200">
+
+          <div
+            className="h-full rounded-full bg-neutral-900 transition-all duration-200"
+            style={{
+              width: `${percentage}%`,
+            }}
+          />
+
+        </div>
+
+        <input
+          {...register(name, {
+            valueAsNumber: true,
+          })}
+          type="range"
+          min="1"
+          max="10"
+          step="1"
+          className="
+            relative
+            z-10
+            h-6
+            w-full
+            cursor-pointer
+            appearance-none
+            bg-transparent
+            accent-neutral-900
+
+            [&::-webkit-slider-runnable-track]:h-1.5
+            [&::-webkit-slider-runnable-track]:rounded-full
+            [&::-webkit-slider-runnable-track]:bg-transparent
+
+            [&::-webkit-slider-thumb]:mt-[-7px]
+            [&::-webkit-slider-thumb]:size-5
+            [&::-webkit-slider-thumb]:appearance-none
+            [&::-webkit-slider-thumb]:rounded-full
+            [&::-webkit-slider-thumb]:border
+            [&::-webkit-slider-thumb]:border-black/[0.08]
+            [&::-webkit-slider-thumb]:bg-white
+            [&::-webkit-slider-thumb]:shadow-[0_3px_10px_rgba(0,0,0,0.16)]
+          "
+        />
+
       </div>
+
+
+      {/* Labels */}
+
+      <div className="mt-1 flex items-center justify-between">
+
+        <span className="text-[9px] font-medium uppercase tracking-[0.08em] text-neutral-300">
+          {minLabel}
+        </span>
+
+        <span className="text-[9px] font-medium uppercase tracking-[0.08em] text-neutral-300">
+          {maxLabel}
+        </span>
+
+      </div>
+
 
       {error && (
-        <p className="mt-2 text-[12px] font-medium text-[#FF3B30]">
+        <p className="mt-2 text-[11px] font-medium text-rose-500">
           {error}
         </p>
       )}
+
     </div>
   )
 }
+
+/* ============================================================= */
+/* MAIN */
+/* ============================================================= */
 
 export default function CheckinForm({
   relationshipId,
   date,
 }: CheckinFormProps) {
-  const { data, isLoading } = useTodayCheckin(
+
+  const {
+    data,
+    isLoading,
+  } = useTodayCheckin(
     relationshipId,
     date,
   )
@@ -215,19 +414,42 @@ export default function CheckinForm({
     setValue,
     watch,
     reset,
-    formState: { errors },
+    formState: {
+      errors,
+    },
   } = useForm<DailyCheckinFormValues>({
-    resolver: zodResolver(dailyCheckinSchema),
+    resolver: zodResolver(
+      dailyCheckinSchema,
+    ),
 
     defaultValues: {
-      mood: existing?.mood ?? 'neutral',
-      energy: existing?.energy ?? 5,
-      stress: existing?.stress ?? 5,
-      likedToday: existing?.liked_today ?? '',
-      dislikedToday: existing?.disliked_today ?? '',
+      mood:
+        existing?.mood ??
+        'neutral',
+
+      energy:
+        existing?.energy ??
+        5,
+
+      stress:
+        existing?.stress ??
+        5,
+
+      likedToday:
+        existing?.liked_today ??
+        '',
+
+      dislikedToday:
+        existing?.disliked_today ??
+        '',
+
       needsFromPartner:
-        existing?.needs_from_partner ?? '',
-      note: existing?.note ?? '',
+        existing?.needs_from_partner ??
+        '',
+
+      note:
+        existing?.note ??
+        '',
     },
   })
 
@@ -235,20 +457,85 @@ export default function CheckinForm({
   const energy = watch('energy')
   const stress = watch('stress')
 
-  const theme = moodTheme[mood] ?? moodTheme.neutral
+  const theme =
+    moodTheme[mood] ??
+    moodTheme.neutral
+
+
+  /* =========================================================== */
+  /* LOADING */
+  /* =========================================================== */
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center py-20">
-        <div className="flex items-center gap-3 text-[14px] text-[#8E8E93]">
-          <span className="h-4 w-4 animate-spin rounded-full border-2 border-[#E5E5EA] border-t-[#007AFF]" />
-          Loading your check-in...
+      <div className="animate-pulse">
+
+        <div className="overflow-hidden rounded-[2rem] border border-black/[0.05] bg-white p-6 shadow-[0_20px_60px_-35px_rgba(0,0,0,0.15)] sm:p-8">
+
+          <div className="flex items-center gap-3">
+
+            <div className="size-11 rounded-2xl bg-neutral-100" />
+
+            <div className="space-y-2">
+
+              <div className="h-2.5 w-24 rounded-full bg-neutral-100" />
+
+              <div className="h-5 w-48 rounded-full bg-neutral-100" />
+
+            </div>
+
+          </div>
+
+
+          <div className="mt-9 grid grid-cols-3 gap-2">
+
+            {[1, 2, 3].map((item) => (
+              <div
+                key={item}
+                className="h-24 rounded-2xl bg-neutral-100"
+              />
+            ))}
+
+          </div>
+
+
+          <div className="mt-8 rounded-[1.5rem] bg-neutral-100 p-6">
+
+            <div className="h-4 w-32 rounded-full bg-neutral-200" />
+
+            <div className="mt-6 h-2 rounded-full bg-neutral-200" />
+
+            <div className="mt-7 h-2 rounded-full bg-neutral-200" />
+
+          </div>
+
+
+          <div className="mt-8 space-y-4">
+
+            {[1, 2, 3].map((item) => (
+              <div
+                key={item}
+                className="h-28 rounded-[1.5rem] bg-neutral-100"
+              />
+            ))}
+
+          </div>
+
         </div>
+
       </div>
     )
   }
 
-  function onSubmit(values: DailyCheckinFormValues) {
+
+  /* =========================================================== */
+  /* SUBMIT */
+  /* =========================================================== */
+
+  function onSubmit(
+    values: DailyCheckinFormValues,
+  ) {
+
     mutation.mutate(
       {
         relationshipId,
@@ -257,335 +544,588 @@ export default function CheckinForm({
       },
       {
         onSuccess: (saved) => {
+
           reset({
-            mood: saved.mood,
-            energy: saved.energy,
-            stress: saved.stress,
+            mood:
+              saved.mood,
+
+            energy:
+              saved.energy,
+
+            stress:
+              saved.stress,
+
             likedToday:
-              saved.liked_today ?? '',
+              saved.liked_today ??
+              '',
+
             dislikedToday:
-              saved.disliked_today ?? '',
+              saved.disliked_today ??
+              '',
+
             needsFromPartner:
-              saved.needs_from_partner ?? '',
-            note: saved.note ?? '',
+              saved.needs_from_partner ??
+              '',
+
+            note:
+              saved.note ??
+              '',
           })
+
         },
       },
     )
   }
 
+
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className={`relative mx-auto w-full overflow-hidden rounded-[30px] border border-black/[0.06] bg-white shadow-[0_1px_2px_rgba(0,0,0,0.03),0_20px_50px_-24px_rgba(0,0,0,0.16)]`}
+      className="
+        relative
+        mx-auto
+        w-full
+        overflow-hidden
+        rounded-[2rem]
+        border
+        border-black/[0.05]
+        bg-white
+        shadow-[0_25px_70px_-35px_rgba(0,0,0,0.18)]
+      "
     >
-      {/* Top accent — shifts gradient based on mood */}
+
+      {/* ===================================================== */}
+      {/* ACCENT */}
+      {/* ===================================================== */}
+
       <div
-        className={`h-[3px] transition-colors duration-500 ${theme.topBar}`}
+        className={`
+          h-1
+          transition-all
+          duration-500
+          ${theme.accent}
+        `}
       />
 
-      <div className="p-6 sm:p-8 lg:p-10">
-        {/* Header */}
-        <div className="relative">
-          <div
-            className={`pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full blur-3xl transition-colors duration-500 ${theme.glow}`}
-          />
 
-          <div className="relative flex items-start gap-4">
+      {/* ===================================================== */}
+      {/* HEADER */}
+      {/* ===================================================== */}
+
+      <div className="relative overflow-hidden p-6 sm:p-8 lg:p-10">
+
+        <div
+          className={`
+            pointer-events-none
+            absolute
+            -right-24
+            -top-24
+            size-64
+            rounded-full
+            blur-[100px]
+            transition-colors
+            duration-700
+            ${theme.glow}
+          `}
+        />
+
+
+        <div className="relative flex items-start justify-between gap-5">
+
+          <div className="flex items-start gap-3.5">
+
             <div
-              className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-[16px] transition-colors duration-500 ${theme.iconWrap}`}
+              className={`
+                flex
+                size-11
+                shrink-0
+                items-center
+                justify-center
+                rounded-2xl
+                transition-colors
+                duration-500
+                ${theme.iconWrap}
+              `}
             >
+
               <Heart
-                size={21}
+                size={19}
                 strokeWidth={2}
-                className={`transition-colors duration-500 ${theme.iconColor}`}
+                className={theme.iconColor}
+                fill="currentColor"
               />
+
             </div>
 
+
             <div>
-              <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[#8E8E93]">
+
+              <p className="text-[10px] font-semibold uppercase tracking-[0.17em] text-neutral-300">
                 Daily check-in
               </p>
 
-              <h2 className="mt-1 text-[23px] font-semibold tracking-[-0.025em] text-[#1C1C1E]">
+              <h1 className="mt-1.5 text-xl font-semibold tracking-[-0.04em] text-neutral-900 sm:text-2xl">
                 How are you feeling?
-              </h2>
+              </h1>
 
-              <p className="mt-1.5 max-w-md text-[13px] leading-relaxed text-[#8E8E93]">
-                A small moment to understand yourself
-                and let your partner in.
+              <p className="mt-2 max-w-lg text-[12px] leading-5 text-neutral-400 sm:text-[13px]">
+                Take a small moment for yourself.
+                Your partner will be able to understand
+                how you're doing today.
               </p>
+
             </div>
+
           </div>
+
+
+          {existing && (
+            <div
+              className={`
+                hidden
+                shrink-0
+                rounded-full
+                border
+                px-3
+                py-1.5
+                sm:block
+                ${theme.badge}
+              `}
+            >
+              <span className="text-[10px] font-semibold">
+                Updated
+              </span>
+            </div>
+          )}
+
         </div>
 
-        {/* Mood */}
-        <div className="mt-9">
+
+        {/* =================================================== */}
+        {/* MOOD */}
+        {/* =================================================== */}
+
+        <section className="mt-9">
+
           <div className="mb-4">
-            <p className="text-[13px] font-semibold text-[#1C1C1E]">
+
+            <p className="text-[13px] font-semibold tracking-[-0.01em] text-neutral-800">
               Your mood
             </p>
 
-            <p className="mt-0.5 text-[12px] text-[#8E8E93]">
-              Choose what feels closest to you today.
+            <p className="mt-0.5 text-[11px] text-neutral-400">
+              Choose the feeling that fits you best today.
             </p>
+
           </div>
 
-          <MoodSelector
-            value={mood}
-            onChange={(value) =>
-              setValue('mood', value, {
-                shouldDirty: true,
-                shouldValidate: true,
-              })
-            }
-          />
+
+          <div className="rounded-[1.5rem] border border-black/[0.04] bg-neutral-50/60 p-3 sm:p-4">
+
+            <MoodSelector
+              value={mood}
+              onChange={(value) =>
+                setValue(
+                  'mood',
+                  value,
+                  {
+                    shouldDirty: true,
+                    shouldValidate: true,
+                  },
+                )
+              }
+            />
+
+          </div>
+
 
           {errors.mood && (
-            <p className="mt-2 text-[12px] font-medium text-[#FF3B30]">
+            <p className="mt-2 text-[11px] font-medium text-rose-500">
               {errors.mood.message}
             </p>
           )}
-        </div>
 
-        {/* Divider */}
-        <div className="my-9 h-px bg-black/[0.05]" />
+        </section>
 
-        {/* Energy + Stress */}
-        <div>
+
+        {/* =================================================== */}
+        {/* DIVIDER */}
+        {/* =================================================== */}
+
+        <div className="my-9 h-px bg-black/[0.045]" />
+
+
+        {/* =================================================== */}
+        {/* ENERGY / STRESS */}
+        {/* =================================================== */}
+
+        <section>
+
           <div className="mb-5">
-            <p className="text-[13px] font-semibold text-[#1C1C1E]">
+
+            <p className="text-[13px] font-semibold tracking-[-0.01em] text-neutral-800">
               How are you doing?
             </p>
 
-            <p className="mt-0.5 text-[12px] text-[#8E8E93]">
-              Give yourself an honest rating.
-            </p>
-          </div>
-
-          <div className="space-y-7 rounded-[24px] bg-[#F7F7F9] p-5 sm:p-6">
-            <SliderSection
-              icon={
-                <Zap
-                  size={16}
-                  strokeWidth={2.25}
-                  className="text-[#FF9500]"
-                />
-              }
-              label="Energy"
-              value={energy}
-              minLabel="Exhausted"
-              maxLabel="Energetic"
-              register={register}
-              name="energy"
-              error={errors.energy?.message}
-            />
-
-            <div className="h-px bg-black/[0.05]" />
-
-            <SliderSection
-              icon={
-                <Brain
-                  size={16}
-                  strokeWidth={2.25}
-                  className="text-[#AF52DE]"
-                />
-              }
-              label="Stress"
-              value={stress}
-              minLabel="Relaxed"
-              maxLabel="Very stressed"
-              register={register}
-              name="stress"
-              error={errors.stress?.message}
-            />
-          </div>
-        </div>
-
-        {/* Divider */}
-        <div className="my-9 h-px bg-black/[0.05]" />
-
-        {/* Reflection */}
-        <div>
-          <div className="mb-5">
-            <p className="text-[13px] font-semibold text-[#1C1C1E]">
-              A little reflection
+            <p className="mt-0.5 text-[11px] text-neutral-400">
+              Be honest. There is no right score.
             </p>
 
-            <p className="mt-0.5 text-[12px] text-[#8E8E93]">
-              Share what matters. There is no right answer.
-            </p>
           </div>
 
-          <div className="space-y-6">
-            {/* Liked */}
+
+          <div className="overflow-hidden rounded-[1.5rem] border border-black/[0.04] bg-neutral-50/60">
+
+            <div className="p-5 sm:p-6">
+
+              <SliderSection
+                icon={
+                  <Zap
+                    size={15}
+                    strokeWidth={2.3}
+                    className="text-amber-500"
+                  />
+                }
+                label="Energy"
+                value={energy}
+                minLabel="Exhausted"
+                maxLabel="Energetic"
+                register={register}
+                name="energy"
+                error={errors.energy?.message}
+              />
+
+            </div>
+
+
+            <div className="mx-5 h-px bg-black/[0.045] sm:mx-6" />
+
+
+            <div className="p-5 sm:p-6">
+
+              <SliderSection
+                icon={
+                  <Brain
+                    size={15}
+                    strokeWidth={2.3}
+                    className="text-violet-500"
+                  />
+                }
+                label="Stress"
+                value={stress}
+                minLabel="Relaxed"
+                maxLabel="Very stressed"
+                register={register}
+                name="stress"
+                error={errors.stress?.message}
+              />
+
+            </div>
+
+          </div>
+
+        </section>
+
+
+        {/* =================================================== */}
+        {/* DIVIDER */}
+        {/* =================================================== */}
+
+        <div className="my-9 h-px bg-black/[0.045]" />
+
+
+        {/* =================================================== */}
+        {/* REFLECTION */}
+        {/* =================================================== */}
+
+        <section>
+
+          <div className="mb-6">
+
+            <div className="flex items-center gap-2">
+
+              <Sparkles
+                size={14}
+                className="text-neutral-400"
+              />
+
+              <p className="text-[13px] font-semibold tracking-[-0.01em] text-neutral-800">
+                A little reflection
+              </p>
+
+            </div>
+
+            <p className="mt-1 text-[11px] text-neutral-400">
+              Share what matters. Even a few words are enough.
+            </p>
+
+          </div>
+
+
+          <div className="space-y-5">
+
+            {/* ================================================= */}
+            {/* LIKED */}
+            {/* ================================================= */}
+
             <div>
-              <div className="mb-2.5 flex items-center gap-2.5">
-                <SectionIcon className="bg-[#FF6B8A]/10">
+
+              <SectionHeader
+                icon={
                   <Heart
                     size={15}
-                    strokeWidth={2.25}
-                    className="text-[#FF3B5C]"
+                    strokeWidth={2.2}
+                    className="text-pink-500"
                   />
-                </SectionIcon>
+                }
+                iconClassName="bg-pink-50"
+                title="What did you like today?"
+                description="Something that made you happy."
+              />
 
-                <div>
-                  <label
-                    htmlFor="likedToday"
-                    className="text-[13px] font-semibold text-[#1C1C1E]"
-                  >
-                    What did you like today?
-                  </label>
-                </div>
-              </div>
 
               <textarea
                 id="likedToday"
                 {...register('likedToday')}
-                placeholder="Something your partner did, something that made you happy..."
-                className={`${textareaClass} ${theme.ring}`}
+                placeholder="Something your partner did, something that made you smile..."
+                className={textareaClass}
               />
 
+
               {errors.likedToday && (
-                <p className="mt-2 text-[12px] font-medium text-[#FF3B30]">
+                <p className="mt-2 px-1 text-[11px] font-medium text-rose-500">
                   {errors.likedToday.message}
                 </p>
               )}
+
             </div>
 
-            {/* Disliked */}
+
+            {/* ================================================= */}
+            {/* DISLIKED */}
+            {/* ================================================= */}
+
             <div>
-              <div className="mb-2.5 flex items-center gap-2.5">
-                <SectionIcon className="bg-[#F2F2F7]">
+
+              <SectionHeader
+                icon={
                   <MessageCircle
                     size={15}
-                    strokeWidth={2.25}
-                    className="text-[#8E8E93]"
+                    strokeWidth={2.2}
+                    className="text-neutral-500"
                   />
-                </SectionIcon>
+                }
+                iconClassName="bg-neutral-100"
+                title="What didn't you like today?"
+                description="Something that could have been better."
+              />
 
-                <label
-                  htmlFor="dislikedToday"
-                  className="text-[13px] font-semibold text-[#1C1C1E]"
-                >
-                  What didn't you like today?
-                </label>
-              </div>
 
               <textarea
                 id="dislikedToday"
                 {...register('dislikedToday')}
-                placeholder="Something that bothered you or could have been better..."
-                className={`${textareaClass} ${theme.ring}`}
+                placeholder="Something that bothered you or felt difficult..."
+                className={textareaClass}
               />
 
+
               {errors.dislikedToday && (
-                <p className="mt-2 text-[12px] font-medium text-[#FF3B30]">
+                <p className="mt-2 px-1 text-[11px] font-medium text-rose-500">
                   {errors.dislikedToday.message}
                 </p>
               )}
+
             </div>
 
-            {/* Needs */}
+
+            {/* ================================================= */}
+            {/* NEEDS */}
+            {/* ================================================= */}
+
             <div>
-              <div className="mb-2.5 flex items-center gap-2.5">
-                <SectionIcon className="bg-[#007AFF]/10">
+
+              <SectionHeader
+                icon={
                   <HandHeart
                     size={15}
-                    strokeWidth={2.25}
-                    className="text-[#007AFF]"
+                    strokeWidth={2.2}
+                    className="text-blue-500"
                   />
-                </SectionIcon>
+                }
+                iconClassName="bg-blue-50"
+                title="What do you need from your partner?"
+                description="Tell them how they can be there for you."
+              />
 
-                <label
-                  htmlFor="needsFromPartner"
-                  className="text-[13px] font-semibold text-[#1C1C1E]"
-                >
-                  What do you need from your partner?
-                </label>
-              </div>
 
               <textarea
                 id="needsFromPartner"
                 {...register('needsFromPartner')}
                 placeholder="Maybe you need space, attention, encouragement..."
-                className={`${textareaClass} ${theme.ring}`}
+                className={textareaClass}
               />
 
+
               {errors.needsFromPartner && (
-                <p className="mt-2 text-[12px] font-medium text-[#FF3B30]">
+                <p className="mt-2 px-1 text-[11px] font-medium text-rose-500">
                   {errors.needsFromPartner.message}
                 </p>
               )}
+
             </div>
 
-            {/* Note */}
+
+            {/* ================================================= */}
+            {/* NOTE */}
+            {/* ================================================= */}
+
             <div>
-              <div className="mb-2.5 flex items-center gap-2.5">
-                <SectionIcon className="bg-[#AF52DE]/10">
+
+              <SectionHeader
+                icon={
                   <Sparkles
                     size={15}
-                    strokeWidth={2.25}
-                    className="text-[#AF52DE]"
+                    strokeWidth={2.2}
+                    className="text-violet-500"
                   />
-                </SectionIcon>
+                }
+                iconClassName="bg-violet-50"
+                title="Anything else?"
+                description="Anything you want your partner to know."
+              />
 
-                <label
-                  htmlFor="note"
-                  className="text-[13px] font-semibold text-[#1C1C1E]"
-                >
-                  Anything else?
-                </label>
-              </div>
 
               <textarea
                 id="note"
                 {...register('note')}
-                placeholder="Anything else you want your partner to know..."
-                className={`${textareaClass} ${theme.ring}`}
+                placeholder="Write anything else that's on your mind..."
+                className={textareaClass}
               />
 
+
               {errors.note && (
-                <p className="mt-2 text-[12px] font-medium text-[#FF3B30]">
+                <p className="mt-2 px-1 text-[11px] font-medium text-rose-500">
                   {errors.note.message}
                 </p>
               )}
-            </div>
-          </div>
-        </div>
 
-        {/* Error */}
+            </div>
+
+          </div>
+
+        </section>
+
+
+        {/* =================================================== */}
+        {/* ERROR */}
+        {/* =================================================== */}
+
         {mutation.error && (
-          <div className="mt-8 rounded-[18px] border border-[#FF3B30]/10 bg-[#FF3B30]/[0.04] px-4 py-3.5">
-            <p className="text-[13px] font-medium text-[#FF3B30]">
+
+          <div className="mt-7 rounded-[1.25rem] border border-rose-100 bg-rose-50/60 px-4 py-3.5">
+
+            <p className="text-[11px] font-medium leading-5 text-rose-500">
               {mutation.error.message}
             </p>
+
           </div>
+
         )}
 
-        {/* Submit */}
-        <div className="mt-9">
+
+        {/* =================================================== */}
+        {/* SUBMIT */}
+        {/* =================================================== */}
+
+        <div className="mt-8 sm:mt-9">
+
           <button
             type="submit"
             disabled={mutation.isPending}
-            className={`group relative flex w-full items-center justify-center gap-2 overflow-hidden rounded-[18px] py-3.5 text-[14px] font-semibold text-white transition-all duration-500 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50 ${theme.button} ${theme.buttonShadow}`}
+            className={`
+              group
+              relative
+              flex
+              h-13
+              w-full
+              items-center
+              justify-center
+              overflow-hidden
+              rounded-[1.25rem]
+              px-5
+              text-[12px]
+              font-semibold
+              text-white
+              shadow-[0_15px_35px_-15px_rgba(0,0,0,0.35)]
+              transition-all
+              duration-300
+              hover:-translate-y-0.5
+              hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.4)]
+              active:translate-y-0
+              disabled:cursor-not-allowed
+              disabled:opacity-50
+              ${theme.button}
+            `}
           >
-            <span className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/[0.08] to-white/0 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
 
-            <span className="relative">
-              {mutation.isPending
-                ? 'Saving your check-in...'
-                : existing
-                  ? 'Update Check-in'
-                  : 'Save Check-in'}
+            <span className="pointer-events-none absolute inset-0 bg-gradient-to-r from-transparent via-white/[0.10] to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+
+
+            <span className="relative flex items-center gap-2">
+
+              {mutation.isPending ? (
+
+                <>
+                  <span className="size-3.5 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+
+                  Saving your check-in...
+
+                </>
+
+              ) : (
+
+                <>
+                  {existing
+                    ? 'Update Check-in'
+                    : 'Save Check-in'}
+
+                  <span className="flex size-6 items-center justify-center rounded-full bg-white/10">
+
+                    <Heart
+                      size={12}
+                      fill="currentColor"
+                      strokeWidth={2}
+                    />
+
+                  </span>
+
+                </>
+
+              )}
+
             </span>
+
           </button>
 
-          <p className="mt-3 text-center text-[11px] text-[#AEAEB2]">
-            Your check-in helps you both understand each other better.
-          </p>
+
+          <div className="mt-4 flex items-center justify-center gap-1.5">
+
+            <Sparkles
+              size={10}
+              className="text-neutral-300"
+            />
+
+            <p className="text-center text-[10px] leading-5 text-neutral-300">
+              A small check-in can make a big difference
+              in understanding each other.
+            </p>
+
+          </div>
+
         </div>
+
       </div>
+
     </form>
   )
 }

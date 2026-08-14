@@ -6,7 +6,6 @@ import {
   Sparkles,
 } from 'lucide-react'
 
-
 interface PlannerSummaryCardProps {
   title: string
   date: string
@@ -14,30 +13,22 @@ interface PlannerSummaryCardProps {
   description?: string | null
 }
 
-
 function formatDate(date: string) {
-  return new Date(
-    `${date}T00:00:00`,
-  ).toLocaleDateString('id-ID', {
+  return new Date(`${date}T00:00:00`).toLocaleDateString('id-ID', {
     day: 'numeric',
-    month: 'long',
+    month: 'short',
   })
 }
-
 
 function formatDay(date: string) {
-  return new Date(
-    `${date}T00:00:00`,
-  ).toLocaleDateString('id-ID', {
-    weekday: 'long',
+  return new Date(`${date}T00:00:00`).toLocaleDateString('en-US', {
+    weekday: 'short',
   })
 }
-
 
 function formatTime(time: string) {
   return time.slice(0, 5)
 }
-
 
 export default function PlannerSummaryCard({
   title,
@@ -45,144 +36,248 @@ export default function PlannerSummaryCard({
   startTime,
   description,
 }: PlannerSummaryCardProps) {
+  const parsedDate = new Date(`${date}T00:00:00`)
 
   return (
-    <div className="relative overflow-hidden rounded-[1.75rem] border border-black/[0.05] bg-white/80 p-6 shadow-[0_15px_40px_-25px_rgba(0,0,0,0.15)] backdrop-blur-xl">
+    <div className="
+      rounded-[2rem]
+      border border-black/[0.06]
+      bg-white
+      p-3
+      shadow-[0_20px_60px_rgba(0,0,0,0.05)]
+    ">
+      <div className="
+        group relative overflow-hidden
+        rounded-[1.6rem]
+        bg-[#f8f8f7]
+        p-5
+      ">
+        {/* Ambient */}
+        <div className="
+          pointer-events-none absolute
+          -right-16 -top-16
+          size-40 rounded-full
+          bg-blue-500/[0.05]
+          blur-[70px]
+        " />
 
-      {/* ===================================================== */}
-      {/* AMBIENT */}
-      {/* ===================================================== */}
+        <div className="
+          pointer-events-none absolute
+          -bottom-16 -left-16
+          size-40 rounded-full
+          bg-pink-500/[0.05]
+          blur-[70px]
+        " />
 
-      <div className="pointer-events-none absolute -right-16 -top-16 size-36 rounded-full bg-blue-100/50 blur-3xl" />
+        <div className="relative">
 
-      <div className="pointer-events-none absolute -bottom-16 -left-16 size-36 rounded-full bg-pink-100/30 blur-3xl" />
-
-
-      <div className="relative">
-
-        {/* =================================================== */}
-        {/* HEADER */}
-        {/* =================================================== */}
-
-        <div className="flex items-start justify-between">
-
-          <div className="flex size-10 items-center justify-center rounded-[14px] bg-gradient-to-br from-blue-50 to-pink-50">
-
-            <CalendarDays
-              size={17}
-              strokeWidth={2.2}
-              className="text-blue-500"
-            />
-
-          </div>
-
-
-          <Link
-            href="/planner"
-            aria-label="Open planner"
-            className="flex size-8 items-center justify-center rounded-full bg-neutral-100 text-neutral-400 transition-all duration-200 hover:bg-neutral-900 hover:text-white"
-          >
-
-            <ArrowUpRight
-              size={15}
-              strokeWidth={2.3}
-            />
-
-          </Link>
-
-        </div>
-
-
-        {/* =================================================== */}
-        {/* TITLE */}
-        {/* =================================================== */}
-
-        <div className="mt-6">
-
-          <div className="flex items-center gap-1.5">
-
-            <Sparkles
-              size={11}
-              className="text-blue-400"
-            />
-
-            <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-neutral-300">
-              Next plan
-            </p>
-
-          </div>
-
-
-          <h2 className="mt-2 truncate text-lg font-semibold tracking-[-0.03em] text-neutral-800">
-            {title}
-          </h2>
-
-        </div>
-
-
-        {/* =================================================== */}
-        {/* DATE + TIME */}
-        {/* =================================================== */}
-
-        <div className="mt-5 flex items-center gap-3">
-
-          {/* Date */}
-
-          <div className="rounded-2xl border border-black/[0.04] bg-neutral-50/80 px-4 py-2.5">
-
-            <p className="text-[9px] font-semibold uppercase tracking-[0.12em] text-neutral-400">
-              {formatDay(date)}
-            </p>
-
-
-            <p className="mt-0.5 text-sm font-semibold tracking-[-0.01em] text-neutral-800">
-              {formatDate(date)}
-            </p>
-
-          </div>
-
-
-          {/* Time */}
-
-          {startTime && (
-
-            <div className="flex items-center gap-1.5 rounded-full bg-blue-50/70 px-3 py-1.5">
-
-              <Clock
-                size={12}
-                strokeWidth={2.4}
-                className="text-blue-500"
+          {/* Header */}
+          <div className="flex items-start justify-between gap-4">
+            <div className="flex items-center gap-2">
+              <Sparkles
+                size={11}
+                className="text-pink-400"
+                strokeWidth={2.2}
               />
 
-              <span className="text-[11px] font-semibold text-blue-600">
-                {formatTime(startTime)}
-              </span>
-
+              <p className="
+                text-[10px]
+                font-semibold
+                uppercase
+                tracking-[0.18em]
+                text-neutral-400
+              ">
+                Next plan
+              </p>
             </div>
 
-          )}
-
-        </div>
-
-
-        {/* =================================================== */}
-        {/* DESCRIPTION */}
-        {/* =================================================== */}
-
-        {description && (
-
-          <div className="mt-5 border-t border-black/[0.04] pt-4">
-
-            <p className="line-clamp-2 text-[13px] leading-5 text-neutral-400">
-              {description}
-            </p>
-
+            <Link
+              href="/planner"
+              aria-label="Open planner"
+              className="
+                flex size-8 shrink-0
+                items-center justify-center
+                rounded-full
+                bg-white
+                text-neutral-300
+                shadow-sm
+                transition-all duration-300
+                hover:bg-neutral-900
+                hover:text-white
+              "
+            >
+              <ArrowUpRight
+                size={14}
+                strokeWidth={2.2}
+                className="
+                  transition-transform duration-300
+                  group-hover:-translate-y-0.5
+                  group-hover:translate-x-0.5
+                "
+              />
+            </Link>
           </div>
 
-        )}
+          {/* Main */}
+          <div className="mt-5 flex items-center gap-4">
 
+            {/* Date block */}
+            <div className="
+              relative flex
+              size-[72px]
+              shrink-0
+              flex-col
+              items-center
+              justify-center
+              overflow-hidden
+              rounded-2xl
+              bg-[#111111]
+              text-white
+            ">
+              {/* Date ambient */}
+              <div className="
+                pointer-events-none absolute
+                -right-5 -top-5
+                size-14 rounded-full
+                bg-pink-500/[0.12]
+                blur-[25px]
+              " />
+
+              <p className="
+                relative
+                text-[9px]
+                uppercase
+                tracking-[0.16em]
+                text-white/40
+              ">
+                {formatDay(date)}
+              </p>
+
+              <p className="
+                relative
+                mt-1
+                text-xl
+                font-semibold
+                leading-none
+                tracking-[-0.04em]
+              ">
+                {parsedDate.getDate()}
+              </p>
+
+              <p className="
+                relative
+                mt-1
+                text-[9px]
+                uppercase
+                tracking-[0.12em]
+                text-white/40
+              ">
+                {parsedDate.toLocaleDateString('en-US', {
+                  month: 'short',
+                })}
+              </p>
+            </div>
+
+            {/* Event info */}
+            <div className="min-w-0 flex-1">
+              <h2 className="
+                truncate
+                text-[16px]
+                font-semibold
+                tracking-[-0.025em]
+                text-neutral-900
+              ">
+                {title}
+              </h2>
+
+              <div className="mt-2 flex flex-wrap items-center gap-2">
+                <span className="
+                  flex items-center gap-1.5
+                  text-[11px]
+                  text-neutral-400
+                ">
+                  <CalendarDays
+                    size={12}
+                    strokeWidth={2}
+                  />
+
+                  {formatDate(date)}
+                </span>
+
+                {startTime && (
+                  <>
+                    <span className="size-0.5 rounded-full bg-neutral-300" />
+
+                    <span className="
+                      flex items-center gap-1.5
+                      text-[11px]
+                      font-medium
+                      text-neutral-500
+                    ">
+                      <Clock
+                        size={12}
+                        strokeWidth={2}
+                      />
+
+                      {formatTime(startTime)}
+                    </span>
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Description */}
+          {description && (
+            <div className="
+              mt-5
+              border-t
+              border-black/[0.05]
+              pt-4
+            ">
+              <p className="
+                line-clamp-2
+                text-[12px]
+                leading-relaxed
+                text-neutral-400
+              ">
+                {description}
+              </p>
+            </div>
+          )}
+
+          {/* Footer */}
+          <div className="
+            mt-4
+            flex
+            items-center
+            justify-between
+            border-t
+            border-black/[0.05]
+            pt-3
+          ">
+            <span className="
+              text-[10px]
+              uppercase
+              tracking-[0.14em]
+              text-neutral-300
+            ">
+              Shared planner
+            </span>
+
+            <span className="
+              text-[10px]
+              font-medium
+              text-neutral-300
+              transition-colors
+              group-hover:text-neutral-500
+            ">
+              View planner
+            </span>
+          </div>
+
+        </div>
       </div>
-
     </div>
   )
 }
