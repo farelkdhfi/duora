@@ -53,48 +53,63 @@ export default function Checklist({
 
   if (isLoading) {
     return (
-      <section className="overflow-hidden rounded-[1.5rem] border border-black/[0.06] bg-white">
-        <div className="animate-pulse p-5 sm:p-6">
+      <section className="overflow-hidden rounded-[1.5rem] border border-black/[0.06] bg-white sm:rounded-[2rem]">
 
-          <div className="flex items-center justify-between">
+        <div className="animate-pulse p-4 xs:p-5 sm:p-6 lg:p-7">
 
-            <div className="flex items-center gap-3">
+          {/* Header */}
 
-              <div className="size-9 rounded-xl bg-neutral-100" />
+          <div className="flex items-center justify-between gap-3 sm:gap-4">
 
-              <div className="space-y-2">
+            <div className="flex min-w-0 items-center gap-2.5 sm:gap-3">
+
+              <div className="size-9 shrink-0 rounded-[12px] bg-neutral-100 sm:size-10 sm:rounded-[14px]" />
+
+              <div className="min-w-0 space-y-2">
                 <div className="h-2 w-16 rounded-full bg-neutral-100" />
-                <div className="h-4 w-28 rounded-full bg-neutral-100" />
+                <div className="h-3.5 w-28 rounded-full bg-neutral-100 sm:h-4 sm:w-32" />
               </div>
 
             </div>
 
-            <div className="h-6 w-12 rounded-full bg-neutral-100" />
+            <div className="h-7 w-11 shrink-0 rounded-full bg-neutral-100" />
 
           </div>
 
-          <div className="mt-6 h-1.5 rounded-full bg-neutral-100" />
+          {/* Progress */}
 
-          <div className="mt-6 space-y-5">
+          <div className="mt-7 h-1.5 rounded-full bg-neutral-100 sm:mt-8" />
+
+          {/* Items */}
+
+          <div className="mt-6 space-y-4 sm:mt-7 sm:space-y-5">
 
             {[1, 2, 3].map((item) => (
               <div
                 key={item}
-                className="flex items-center gap-3"
+                className="flex items-center gap-2.5 sm:gap-3"
               >
-                <div className="size-5 rounded-md bg-neutral-100" />
-                <div className="h-3 w-40 rounded-full bg-neutral-100" />
+                <div className="size-5 shrink-0 rounded-md bg-neutral-100" />
+
+                <div className="h-3 w-32 rounded-full bg-neutral-100 sm:w-40" />
               </div>
             ))}
 
           </div>
 
-          <div className="mt-7 h-10 rounded-xl bg-neutral-100" />
+          {/* Add */}
+
+          <div className="mt-6 h-11 rounded-[12px] bg-neutral-100 sm:mt-7 sm:h-12 sm:rounded-[14px]" />
 
         </div>
+
       </section>
     )
   }
+
+  /* ========================================================= */
+  /* CALCULATION */
+  /* ========================================================= */
 
   const completedCount =
     items?.filter(
@@ -116,47 +131,49 @@ export default function Checklist({
     completedCount === totalCount
 
   return (
-    <section className="overflow-hidden rounded-[1.5rem] border border-black/[0.06] bg-white">
+    <section className="overflow-hidden rounded-[1.5rem] border border-black/[0.06] bg-white sm:rounded-[2rem]">
 
       {/* ===================================================== */}
       {/* HEADER */}
       {/* ===================================================== */}
 
-      <div className="p-5 sm:p-6">
+      <div className="p-4 xs:p-5 sm:p-6 lg:p-7">
 
-        <div className="flex items-start justify-between gap-4">
+        <div className="flex items-start justify-between gap-3 sm:gap-4">
 
-          <div className="flex min-w-0 items-center gap-3">
+          <div className="flex min-w-0 items-center gap-2.5 sm:gap-3">
 
             <div
               className="
                 flex size-9 shrink-0
                 items-center justify-center
-                rounded-xl
+                rounded-[12px]
                 bg-neutral-900
                 text-white
+                sm:size-10
+                sm:rounded-[14px]
               "
             >
               <ListChecks
-                size={16}
+                size={15}
                 strokeWidth={2}
+                className="sm:size-4"
               />
             </div>
 
             <div className="min-w-0">
 
-              <p className="text-[9px] font-semibold uppercase tracking-[0.16em] text-neutral-300">
+              <p className="truncate text-[9px] font-semibold uppercase tracking-[0.14em] text-neutral-300 sm:text-[10px] sm:tracking-[0.16em]">
                 Together
               </p>
 
-              <h2 className="mt-1 text-[15px] font-semibold tracking-[-0.025em] text-neutral-900">
+              <h2 className="mt-1 truncate text-[14px] font-semibold tracking-[-0.025em] text-neutral-900 sm:text-[15px]">
                 Checklist
               </h2>
 
             </div>
 
           </div>
-
 
           {/* COUNT */}
 
@@ -166,10 +183,12 @@ export default function Checklist({
                 shrink-0
                 rounded-full
                 px-2.5
-                py-1
+                py-1.5
                 text-[10px]
                 font-semibold
                 tabular-nums
+                sm:px-3
+                sm:text-[11px]
                 ${
                   isCompleted
                     ? 'bg-emerald-50 text-emerald-600'
@@ -183,24 +202,23 @@ export default function Checklist({
 
         </div>
 
-
         {/* ================================================= */}
         {/* PROGRESS */}
         {/* ================================================= */}
 
         {totalCount > 0 && (
-          <div className="mt-6">
+          <div className="mt-7 sm:mt-8">
 
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between gap-3">
 
-              <span className="text-[10px] text-neutral-400">
+              <span className="min-w-0 truncate text-[9px] text-neutral-400 sm:text-[10px]">
                 {isCompleted
                   ? 'Everything is complete'
                   : `${progress}% completed`}
               </span>
 
               {isCompleted && (
-                <span className="flex items-center gap-1 text-[10px] font-medium text-emerald-500">
+                <span className="flex shrink-0 items-center gap-1 text-[9px] font-medium text-emerald-500 sm:text-[10px]">
                   <Check
                     size={11}
                     strokeWidth={2.8}
@@ -238,7 +256,6 @@ export default function Checklist({
 
       </div>
 
-
       {/* ===================================================== */}
       {/* ITEMS */}
       {/* ===================================================== */}
@@ -257,14 +274,17 @@ export default function Checklist({
                   group
                   flex
                   items-center
-                  gap-3
+                  gap-2.5
                   border-b
                   border-black/[0.04]
-                  px-5
-                  py-3.5
+                  px-3.5
+                  py-3
                   transition-colors
                   hover:bg-neutral-50/60
-                  sm:px-6
+                  sm:gap-3
+                  sm:px-5
+                  sm:py-3.5
+                  lg:px-6
                 "
               >
 
@@ -322,17 +342,18 @@ export default function Checklist({
 
                 </button>
 
-
                 {/* TITLE */}
 
                 <span
                   className={`
                     min-w-0
                     flex-1
-                    text-[13px]
+                    truncate
+                    text-[12px]
                     leading-5
                     transition-all
                     duration-200
+                    sm:text-[13px]
                     ${
                       item.is_completed
                         ? 'text-neutral-300 line-through'
@@ -342,7 +363,6 @@ export default function Checklist({
                 >
                   {item.title}
                 </span>
-
 
                 {/* DELETE */}
 
@@ -363,13 +383,14 @@ export default function Checklist({
                     justify-center
                     rounded-lg
                     text-neutral-200
-                    opacity-0
+                    opacity-100
                     transition-all
                     duration-200
-                    group-hover:opacity-100
                     hover:bg-rose-50
                     hover:text-rose-400
-                    focus:opacity-100
+                    sm:opacity-0
+                    sm:group-hover:opacity-100
+                    sm:focus:opacity-100
                   "
                 >
                   <Trash2
@@ -390,23 +411,23 @@ export default function Checklist({
           /* EMPTY */
           /* ================================================= */
 
-          <div className="px-5 py-10 text-center sm:px-6">
+          <div className="px-4 py-9 text-center xs:px-5 sm:px-6 sm:py-10 lg:px-7">
 
-            <div className="mx-auto flex size-10 items-center justify-center rounded-xl bg-neutral-50">
+            <div className="mx-auto flex size-9 items-center justify-center rounded-[12px] bg-neutral-50 sm:size-10 sm:rounded-xl">
 
               <Sparkles
-                size={16}
+                size={15}
                 strokeWidth={1.8}
-                className="text-neutral-300"
+                className="text-neutral-300 sm:size-4"
               />
 
             </div>
 
-            <h3 className="mt-3 text-[13px] font-semibold text-neutral-600">
+            <h3 className="mt-3 text-[12px] font-semibold text-neutral-600 sm:text-[13px]">
               Nothing to check off yet
             </h3>
 
-            <p className="mx-auto mt-1 max-w-xs text-[11px] leading-5 text-neutral-400">
+            <p className="mx-auto mt-1 max-w-xs text-[10px] leading-5 text-neutral-400 sm:text-[11px]">
               Add a small step and work toward
               this goal together.
             </p>
@@ -417,12 +438,11 @@ export default function Checklist({
 
       </div>
 
-
       {/* ===================================================== */}
       {/* ADD ITEM */}
       {/* ===================================================== */}
 
-      <div className="border-t border-black/[0.05] bg-neutral-50/50 p-4 sm:px-5">
+      <div className="border-t border-black/[0.05] bg-neutral-50/50 p-3.5 xs:p-4 sm:px-5 sm:py-4 lg:px-6">
 
         <div className="flex items-center gap-2">
 
@@ -439,10 +459,10 @@ export default function Checklist({
             }}
             placeholder="Add a small step..."
             className="
-              h-10
+              h-11
               min-w-0
               flex-1
-              rounded-xl
+              rounded-[12px]
               border
               border-black/[0.06]
               bg-white
@@ -455,6 +475,9 @@ export default function Checklist({
               focus:border-neutral-300
               focus:ring-4
               focus:ring-black/[0.025]
+              sm:h-12
+              sm:rounded-[14px]
+              sm:px-4
             "
           />
 
@@ -467,11 +490,11 @@ export default function Checklist({
             }
             className="
               flex
-              size-10
+              size-11
               shrink-0
               items-center
               justify-center
-              rounded-xl
+              rounded-[12px]
               bg-neutral-900
               text-white
               transition-all
@@ -479,6 +502,8 @@ export default function Checklist({
               active:scale-95
               disabled:cursor-not-allowed
               disabled:opacity-20
+              sm:size-12
+              sm:rounded-[14px]
             "
             aria-label="Add checklist item"
           >
@@ -492,7 +517,7 @@ export default function Checklist({
 
         </div>
 
-        <p className="mt-2 px-1 text-[9px] text-neutral-300">
+        <p className="mt-2 px-1 text-[8px] text-neutral-300 sm:text-[9px]">
           Press Enter to add
         </p>
 

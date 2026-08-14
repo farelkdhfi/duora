@@ -24,14 +24,18 @@ interface CreateSavingFormProps {
   goalId: string
 }
 
+/* ========================================================= */
+/* INPUT */
+/* ========================================================= */
+
 const inputClass = `
   mt-2
-  h-12
+  h-11
   w-full
-  rounded-[14px]
+  rounded-[12px]
   border border-white/[0.08]
   bg-white/[0.06]
-  px-4
+  px-3.5
   text-[13px]
   font-medium
   text-white
@@ -45,6 +49,9 @@ const inputClass = `
   focus:bg-white/[0.1]
   focus:ring-4
   focus:ring-white/[0.05]
+  sm:h-12
+  sm:rounded-[14px]
+  sm:px-4
 `
 
 export default function CreateSavingForm({
@@ -82,7 +89,8 @@ export default function CreateSavingForm({
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <div className="space-y-5">
+
+      <div className="space-y-4 sm:space-y-5 lg:space-y-6">
 
         {/* ================================================= */}
         {/* AMOUNT */}
@@ -90,23 +98,26 @@ export default function CreateSavingForm({
 
         <div>
 
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between gap-3 sm:gap-4">
 
             <label
               htmlFor="amount"
               className="
-                flex items-center gap-2
-                text-[10px]
+                flex min-w-0 items-center gap-2.5
+                text-[9px]
                 font-semibold
                 uppercase
-                tracking-[0.14em]
+                tracking-[0.13em]
                 text-white/40
+                sm:gap-2
+                sm:text-[10px]
+                sm:tracking-[0.14em]
               "
             >
 
               <span
                 className="
-                  flex size-7
+                  flex size-7 shrink-0
                   items-center justify-center
                   rounded-[9px]
                   bg-white/[0.07]
@@ -119,16 +130,17 @@ export default function CreateSavingForm({
                 />
               </span>
 
-              Amount
+              <span className="truncate">
+                Amount
+              </span>
 
             </label>
 
-            <span className="text-[9px] font-medium text-white/25">
+            <span className="shrink-0 text-[8px] font-medium text-white/25 sm:text-[9px]">
               Required
             </span>
 
           </div>
-
 
           <div className="relative">
 
@@ -136,12 +148,14 @@ export default function CreateSavingForm({
               className="
                 pointer-events-none
                 absolute
-                left-4
+                left-3.5
                 top-1/2
                 -translate-y-1/2
-                text-[12px]
+                text-[11px]
                 font-semibold
                 text-white/30
+                sm:left-4
+                sm:text-[12px]
               "
             >
               Rp
@@ -157,21 +171,20 @@ export default function CreateSavingForm({
               })}
               type="number"
               min="1"
+              inputMode="numeric"
               placeholder="500.000"
-              className={`${inputClass} pl-11 pr-4 text-[15px]`}
+              className={`${inputClass} pl-10 pr-3.5 text-[14px] sm:pl-11 sm:pr-4 sm:text-[15px]`}
             />
 
           </div>
 
-
           {errors.amount && (
-            <p className="mt-2 px-1 text-[10px] font-medium text-rose-300">
+            <p className="mt-1.5 px-1 text-[9px] font-medium leading-relaxed text-rose-300 sm:mt-2 sm:text-[10px]">
               {errors.amount.message}
             </p>
           )}
 
         </div>
-
 
         {/* ================================================= */}
         {/* NOTE */}
@@ -179,23 +192,26 @@ export default function CreateSavingForm({
 
         <div>
 
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between gap-3 sm:gap-4">
 
             <label
               htmlFor="note"
               className="
-                flex items-center gap-2
-                text-[10px]
+                flex min-w-0 items-center gap-2.5
+                text-[9px]
                 font-semibold
                 uppercase
-                tracking-[0.14em]
+                tracking-[0.13em]
                 text-white/40
+                sm:gap-2
+                sm:text-[10px]
+                sm:tracking-[0.14em]
               "
             >
 
               <span
                 className="
-                  flex size-7
+                  flex size-7 shrink-0
                   items-center justify-center
                   rounded-[9px]
                   bg-white/[0.07]
@@ -208,16 +224,17 @@ export default function CreateSavingForm({
                 />
               </span>
 
-              Note
+              <span className="truncate">
+                Note
+              </span>
 
             </label>
 
-            <span className="text-[9px] font-medium text-white/25">
+            <span className="shrink-0 text-[8px] font-medium text-white/25 sm:text-[9px]">
               Optional
             </span>
 
           </div>
-
 
           <input
             id="note"
@@ -226,15 +243,13 @@ export default function CreateSavingForm({
             className={inputClass}
           />
 
-
           {errors.note && (
-            <p className="mt-2 px-1 text-[10px] font-medium text-rose-300">
+            <p className="mt-1.5 px-1 text-[9px] font-medium leading-relaxed text-rose-300 sm:mt-2 sm:text-[10px]">
               {errors.note.message}
             </p>
           )}
 
         </div>
-
 
         {/* ================================================= */}
         {/* ERROR */}
@@ -243,17 +258,19 @@ export default function CreateSavingForm({
         {mutation.error && (
           <div
             className="
-              flex items-start gap-3
+              flex items-start gap-2.5
               rounded-[14px]
               border border-rose-400/10
               bg-rose-400/[0.06]
-              px-4 py-3
+              px-3.5 py-3
+              sm:gap-3
+              sm:px-4 sm:py-3.5
             "
           >
 
             <div
               className="
-                flex size-6 shrink-0
+                flex size-7 shrink-0
                 items-center justify-center
                 rounded-full
                 bg-rose-400/10
@@ -264,13 +281,12 @@ export default function CreateSavingForm({
               </span>
             </div>
 
-            <p className="pt-0.5 text-[10px] font-medium leading-relaxed text-rose-300">
+            <p className="min-w-0 pt-0.5 text-[10px] font-medium leading-relaxed text-rose-300 sm:text-[11px]">
               {mutation.error.message}
             </p>
 
           </div>
         )}
-
 
         {/* ================================================= */}
         {/* SUCCESS */}
@@ -279,11 +295,13 @@ export default function CreateSavingForm({
         {mutation.isSuccess && (
           <div
             className="
-              flex items-center gap-3
+              flex items-center gap-2.5
               rounded-[14px]
               border border-emerald-400/10
               bg-emerald-400/[0.06]
-              px-4 py-3
+              px-3.5 py-3
+              sm:gap-3
+              sm:px-4 sm:py-3.5
             "
           >
 
@@ -302,13 +320,13 @@ export default function CreateSavingForm({
               />
             </div>
 
-            <div>
+            <div className="min-w-0">
 
-              <p className="text-[11px] font-semibold text-emerald-300">
+              <p className="truncate text-[11px] font-semibold text-emerald-300 sm:text-[12px]">
                 Savings added
               </p>
 
-              <p className="mt-0.5 text-[10px] text-emerald-300/50">
+              <p className="mt-0.5 truncate text-[10px] text-emerald-300/50 sm:text-[11px]">
                 Another little step toward your goal.
               </p>
 
@@ -316,7 +334,6 @@ export default function CreateSavingForm({
 
           </div>
         )}
-
 
         {/* ================================================= */}
         {/* SUBMIT */}
@@ -329,16 +346,16 @@ export default function CreateSavingForm({
             group
             relative
             flex
-            h-12
+            h-11
             w-full
             items-center
             justify-center
             gap-2
             overflow-hidden
-            rounded-[14px]
+            rounded-[12px]
             bg-white
-            px-5
-            text-[12px]
+            px-4
+            text-[11px]
             font-semibold
             text-neutral-900
             shadow-[0_12px_30px_-12px_rgba(0,0,0,0.5)]
@@ -351,6 +368,10 @@ export default function CreateSavingForm({
             active:scale-[0.985]
             disabled:cursor-not-allowed
             disabled:opacity-50
+            sm:h-12
+            sm:rounded-[14px]
+            sm:px-5
+            sm:text-[12px]
           "
         >
 
@@ -372,15 +393,19 @@ export default function CreateSavingForm({
             {mutation.isPending ? (
               <>
                 <Loader2
-                  size={14}
-                  className="animate-spin"
+                  size={13}
+                  className="animate-spin sm:size-[14px]"
                 />
 
-                Adding savings...
+                <span>
+                  Adding savings...
+                </span>
               </>
             ) : (
               <>
-                Add savings
+                <span>
+                  Add savings
+                </span>
 
                 <span
                   className="
@@ -391,13 +416,14 @@ export default function CreateSavingForm({
                   "
                 >
                   <ArrowUpRight
-                    size={13}
+                    size={12}
                     strokeWidth={2.5}
                     className="
                       transition-transform
                       duration-200
                       group-hover:translate-x-0.5
                       group-hover:-translate-y-0.5
+                      sm:size-[13px]
                     "
                   />
                 </span>
@@ -408,17 +434,25 @@ export default function CreateSavingForm({
 
         </button>
 
-
         {/* ================================================= */}
         {/* FOOTER */}
         {/* ================================================= */}
 
-        <p className="pt-0.5 text-center text-[9px] leading-relaxed text-white/20">
+        <p className="
+          px-3
+          text-center
+          text-[8px]
+          leading-relaxed
+          text-white/20
+          sm:px-0
+          sm:text-[9px]
+        ">
           Every contribution brings you two
           a little closer.
         </p>
 
       </div>
+
     </form>
   )
 }

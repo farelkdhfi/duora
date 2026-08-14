@@ -309,40 +309,133 @@ export default function GoalDetail({
               {/* CONTRIBUTE */}
               {/* ================================================= */}
 
-              <section className="relative overflow-hidden rounded-[2rem] border border-black/[0.06] bg-neutral-950 p-6 text-white shadow-[0_25px_70px_-35px_rgba(0,0,0,0.35)] sm:p-8">
-                {/* Ambient */}
+              <section
+                className="
+    relative
+    overflow-hidden
+    rounded-[1.5rem]
+    border border-black/[0.06]
+    bg-neutral-950
+    p-4
+    text-white
+    shadow-[0_25px_70px_-35px_rgba(0,0,0,0.35)]
+    xs:p-5
+    sm:rounded-[2rem]
+    sm:p-6
+    lg:p-7
+  "
+              >
+                {/* ===================================================== */}
+                {/* AMBIENT */}
+                {/* ===================================================== */}
 
-                <div className="pointer-events-none absolute -right-24 -top-24 size-64 rounded-full bg-blue-500/10 blur-[90px]" />
+                <div
+                  className="
+      pointer-events-none
+      absolute
+      -right-16
+      -top-16
+      size-32
+      rounded-full
+      bg-blue-500/10
+      blur-[60px]
+      sm:-right-20
+      sm:-top-20
+      sm:size-40
+      sm:blur-[70px]
+      lg:-right-24
+      lg:-top-24
+      lg:size-64
+      lg:blur-[90px]
+    "
+                />
 
-                <div className="pointer-events-none absolute -bottom-24 -left-24 size-64 rounded-full bg-pink-500/10 blur-[90px]" />
+                <div
+                  className="
+      pointer-events-none
+      absolute
+      -bottom-16
+      -left-16
+      size-32
+      rounded-full
+      bg-pink-500/10
+      blur-[60px]
+      sm:-bottom-20
+      sm:-left-20
+      sm:size-40
+      sm:blur-[70px]
+      lg:-bottom-24
+      lg:-left-24
+      lg:size-64
+      lg:blur-[90px]
+    "
+                />
 
                 <div className="relative">
-                  <div className="flex items-start gap-3.5">
-                    <div className="flex size-10 shrink-0 items-center justify-center rounded-[14px] bg-white/[0.08]">
+
+                  {/* ================================================= */}
+                  {/* HEADER */}
+                  {/* ================================================= */}
+
+                  <div className="flex items-start gap-2.5 sm:gap-3">
+
+                    <div
+                      className="
+          flex
+          size-9
+          shrink-0
+          items-center
+          justify-center
+          rounded-[12px]
+          bg-white/[0.08]
+          sm:size-10
+          sm:rounded-[14px]
+        "
+                    >
                       <Wallet
-                        size={17}
+                        size={15}
                         strokeWidth={1.9}
-                        className="text-white/80"
+                        className="text-white/80 sm:size-[17px]"
                       />
                     </div>
 
-                    <div>
-                      <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-white/35">
+                    <div className="min-w-0">
+
+                      <p className="truncate text-[9px] font-semibold uppercase tracking-[0.14em] text-white/35 sm:text-[10px] sm:tracking-[0.16em]">
                         Contribute
                       </p>
 
-                      <h2 className="mt-1 text-lg font-semibold tracking-[-0.035em]">
+                      <h2 className="mt-1 text-[15px] font-semibold tracking-[-0.03em] sm:text-[17px] sm:tracking-[-0.035em]">
                         Add to shared savings
                       </h2>
+
                     </div>
+
                   </div>
 
-                  <p className="mt-4 max-w-md text-[13px] leading-6 text-white/40">
+                  {/* ================================================= */}
+                  {/* DESCRIPTION */}
+                  {/* ================================================= */}
+
+                  <p className="
+      mt-3.5
+      max-w-md
+      text-[11px]
+      leading-5
+      text-white/40
+      sm:mt-4
+      sm:text-[13px]
+      sm:leading-6
+    ">
                     Every contribution brings you both
                     one step closer to this goal.
                   </p>
 
-                  <div className="mt-6">
+                  {/* ================================================= */}
+                  {/* FORM */}
+                  {/* ================================================= */}
+
+                  <div className="mt-5 sm:mt-6 lg:mt-7">
                     <CreateSavingForm
                       relationshipId={
                         relationship.relationship.id
@@ -350,6 +443,7 @@ export default function GoalDetail({
                       goalId={goal.id}
                     />
                   </div>
+
                 </div>
               </section>
             </>
