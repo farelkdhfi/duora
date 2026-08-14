@@ -163,7 +163,7 @@ export default function RelationshipCard({
                   w-8
                   bg-gradient-to-r
                   from-transparent
-                  to-neutral-200
+                  to-neutral-900
                   sm:block
                   sm:w-12
                   md:w-16
@@ -182,8 +182,8 @@ export default function RelationshipCard({
                   justify-center
                   rounded-full
                   bg-gradient-to-br
-                  from-blue-400
-                  to-pink-400
+                  from-blue-200
+                  to-pink-200
                   shadow-[0_10px_25px_-10px_rgba(236,72,153,0.45)]
                   sm:size-14
                 "
@@ -223,7 +223,7 @@ export default function RelationshipCard({
                   w-8
                   bg-gradient-to-l
                   from-transparent
-                  to-neutral-200
+                  to-neutral-900
                   sm:block
                   sm:w-12
                   md:w-16
