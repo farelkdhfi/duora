@@ -28,7 +28,7 @@ export default function MobileDrawer({ open, onClose }: MobileDrawerProps) {
           fixed inset-y-0 left-0 z-50 w-[280px] max-w-[85vw]
           bg-white shadow-2xl
           transition-transform duration-300 ease-out
-          md:hidden
+          md:hidden overflow-y-auto
           ${open ? 'translate-x-0' : '-translate-x-full'}
         `}
       >
