@@ -4,6 +4,7 @@ import Link from 'next/link'
 import {
   ArrowUpRight,
   CalendarDays,
+  CreditCard,
   Heart,
   Target,
 } from 'lucide-react'
@@ -106,248 +107,199 @@ export default function GoalCard({
       : 0
 
   const contributors = getContributors(savings)
-
   const accent = categoryAccent[goal.category]
 
   return (
     <Link
       href={`/goals/${goal.id}`}
       className="
-        group relative block overflow-hidden
-        rounded-[2rem]
-        border border-black/[0.06]
-        bg-white p-3
-        shadow-[0_25px_70px_rgba(0,0,0,0.05)]
-        transition-all duration-300
-        hover:-translate-y-0.5
-        hover:shadow-[0_30px_80px_rgba(0,0,0,0.07)]
+        group
+        relative
+        block h-fit
+        w-full
+        overflow-hidden
+        rounded-[1.35rem]
+        border
+        border-black/[0.07]
+        bg-white
+        p-3
+        shadow-[0_12px_15px_rgba(0,0,0,0.06)]
+        transition-all
+        duration-300
+        hover:-translate-y-1
+        hover:shadow-[0_18px_45px_rgba(0,0,0,0.09)]
+        active:scale-[0.99]
       "
     >
-      {/* ===================================================== */}
-      {/* INNER SURFACE */}
-      {/* ===================================================== */}
+      <div
+        className="
+          relative
+          overflow-hidden
+          rounded-[1.15rem]
+          bg-neutral-50
+          px-4
+          py-4
+          sm:px-5
+          sm:py-5
+        "
+      >
+        <div className="relative flex h-full flex-col">
+          {/* TOP */}
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex min-w-0 items-center gap-2">
+              <span
+                className={`
+                  size-1.5
+                  shrink-0
+                  rounded-full
+                  ${accent}
+                `}
+              />
 
-      <div className="
-        relative overflow-hidden
-        rounded-[1.7rem]
-        bg-[#f8f8f7]
-        p-5
-        md:p-7
-      ">
-
-        {/* ================================================= */}
-        {/* AMBIENT */}
-        {/* ================================================= */}
-
-        <div className="
-          pointer-events-none
-          absolute -right-20 -top-20
-          size-56
-          rounded-full
-          bg-pink-500/[0.055]
-          blur-[80px]
-          transition-transform duration-700
-          group-hover:scale-125
-        " />
-
-        <div className="
-          pointer-events-none
-          absolute -bottom-20 -left-20
-          size-56
-          rounded-full
-          bg-blue-500/[0.045]
-          blur-[80px]
-        " />
-
-
-        <div className="relative">
-
-
-          {/* ================================================= */}
-          {/* HEADER */}
-          {/* ================================================= */}
-
-          <div className="flex items-start justify-between gap-4">
-
-            <div className="min-w-0">
-
-              {/* Category */}
-
-              <div className="flex items-center gap-2">
-
-                <span
-                  className={`size-1.5 shrink-0 rounded-full ${accent}`}
-                />
-
-                <p className="
+              <span
+                className="
                   truncate
-                  text-[10px]
-                  font-medium
+                  text-[9px]
+                  font-semibold
                   uppercase
-                  tracking-[0.18em]
+                  tracking-[0.2em]
                   text-neutral-400
-                ">
-                  {categoryLabels[goal.category]}
-                </p>
-
-              </div>
-
-
-              {/* Title */}
-
-              <h3 className="
-                mt-3
-                truncate
-                text-xl
-                font-semibold
-                leading-tight
-                tracking-[-0.04em]
-                text-neutral-900
-              ">
-                {goal.title}
-              </h3>
-
-
-              {/* Description */}
-
-              {goal.description && (
-                <p className="
-                  mt-2
-                  line-clamp-2
-                  max-w-lg
-                  text-[13px]
-                  leading-5
-                  text-neutral-500
-                ">
-                  {goal.description}
-                </p>
-              )}
-
+                "
+              >
+                {categoryLabels[goal.category]}
+              </span>
             </div>
 
-
-            {/* Open */}
-
-            <div className="
-              flex size-10 shrink-0
-              items-center justify-center
-              rounded-full
-              bg-white
-              text-neutral-400
-              shadow-sm
-              transition-all duration-300
-              group-hover:bg-black
-              group-hover:text-white
-            ">
+            <div
+              className="
+                flex
+                size-7
+                items-center
+                justify-center
+                rounded-full
+                bg-white
+                text-neutral-400
+                shadow-[0_2px_8px_rgba(0,0,0,0.04)]
+                transition-all
+                duration-300
+                group-hover:bg-neutral-900
+                group-hover:text-white
+              "
+            >
               <ArrowUpRight
-                size={15}
+                size={13}
                 strokeWidth={2}
                 className="
-                  transition-transform duration-300
+                  transition-transform
+                  duration-300
                   group-hover:-translate-y-0.5
                   group-hover:translate-x-0.5
                 "
               />
             </div>
-
           </div>
 
+          {/* CHIP + CARD NUMBER */}
+          
 
-          {/* ================================================= */}
-          {/* PROGRESS */}
-          {/* ================================================= */}
+          {/* TITLE */}
+          <div className="mt-3 min-w-0">
+            <h3
+              className="
+                truncate
+                text-[17px]
+                font-semibold
+                leading-tight
+                tracking-[-0.035em]
+                text-neutral-900
+                sm:text-[19px]
+                mb-5
+              "
+            >
+              {goal.title}
+            </h3>
+          </div>
 
-          {target > 0 ? (
-            <div className="mt-8">
+          {/* BOTTOM */}
+          <div className="mt-auto">
+            {target > 0 ? (
+              <>
+                <div className="flex items-end justify-between gap-3">
+                  {/* SAVED */}
+                  <div className="min-w-0">
+                    <p
+                      className="
+                        text-[8px]
+                        font-medium
+                        uppercase
+                        tracking-[0.18em]
+                        text-neutral-400
+                      "
+                    >
+                      Saved together
+                    </p>
 
-              <div className="
-                flex
-                items-end
-                justify-between
-                gap-4
-              ">
+                    <p
+                      className="
+                        mt-1
+                        truncate
+                        text-[20px]
+                        font-semibold
+                        leading-none
+                        tracking-[-0.05em]
+                        text-neutral-900
+                        sm:text-[23px]
+                      "
+                    >
+                      {formatRupiah(totalSaved)}
+                    </p>
+                  </div>
 
-                {/* Saved */}
+                  {/* PROGRESS */}
+                  <div className="shrink-0 text-right">
+                    <p
+                      className="
+                        text-[8px]
+                        font-medium
+                        uppercase
+                        tracking-[0.18em]
+                        text-neutral-400
+                      "
+                    >
+                      Progress
+                    </p>
 
-                <div className="min-w-0">
-
-                  <p className="
-                    text-[10px]
-                    uppercase
-                    tracking-[0.18em]
-                    text-neutral-400
-                  ">
-                    Saved together
-                  </p>
-
-                  <p className="
-                    mt-2
-                    truncate
-                    text-[27px]
-                    font-semibold
-                    leading-none
-                    tracking-[-0.055em]
-                    text-neutral-900
-                  ">
-                    {formatRupiah(totalSaved)}
-                  </p>
-
-                  <p className="
-                    mt-2
-                    text-[11px]
-                    text-neutral-400
-                  ">
-                    of {formatRupiah(target)}
-                  </p>
-
+                    <p
+                      className="
+                        mt-1
+                        text-sm
+                        font-semibold
+                        tracking-[-0.03em]
+                        text-neutral-800
+                        sm:text-base
+                      "
+                    >
+                      {progress}%
+                    </p>
+                  </div>
                 </div>
 
-
-                {/* Percentage */}
-
-                <div className="shrink-0 text-right">
-
-                  <p className="
-                    text-[10px]
-                    uppercase
-                    tracking-[0.18em]
-                    text-neutral-400
-                  ">
-                    Progress
-                  </p>
-
-                  <p className="
-                    mt-2
-                    text-xl
-                    font-semibold
-                    tracking-[-0.04em]
-                    text-neutral-800
-                  ">
-                    {progress}%
-                  </p>
-
-                </div>
-
-              </div>
-
-
-              {/* Progress bar */}
-
-              <div className="mt-6">
-
-                <div className="
-                  h-1.5
-                  w-full
-                  overflow-hidden
-                  rounded-full
-                  bg-black/[0.06]
-                ">
-
+                {/* PROGRESS */}
+                <div
+                  className="
+                    mt-3
+                    h-2
+                    w-full
+                    overflow-hidden
+                    rounded-full
+                    bg-black/[0.07]
+                  "
+                >
                   <div
                     className="
                       h-full
                       rounded-full
-                      bg-black
+                      bg-linear-90 from-pink-300 to-neutral-700
                       transition-all
                       duration-700
                       ease-out
@@ -356,235 +308,146 @@ export default function GoalCard({
                       width: `${progress}%`,
                     }}
                   />
-
                 </div>
-
-              </div>
-
-            </div>
-          ) : (
-
-            /* ================================================= */
-            /* NO TARGET */
-            /* ================================================= */
-
-            <div className="
-              mt-7
-              rounded-[1.4rem]
-              bg-white
-              p-5
-            ">
-
-              <div className="flex items-center gap-3">
-
-                <div className="
-                  flex size-9 shrink-0
-                  items-center justify-center
-                  rounded-full
-                  bg-neutral-100
-                ">
+              </>
+            ) : (
+              <div
+                className="
+                  flex
+                  items-center
+                  gap-2
+                  rounded-xl
+                  bg-white/70
+                  px-3
+                  py-2
+                "
+              >
+                <div
+                  className="
+                    flex
+                    size-7
+                    shrink-0
+                    items-center
+                    justify-center
+                    rounded-full
+                    bg-neutral-100
+                  "
+                >
                   <Target
-                    size={15}
+                    size={12}
                     className="text-neutral-400"
                   />
                 </div>
 
-                <div>
-
-                  <p className="
-                    text-[11px]
-                    font-medium
-                    text-neutral-600
-                  ">
+                <div className="min-w-0">
+                  <p
+                    className="
+                      truncate
+                      text-[9px]
+                      font-medium
+                      text-neutral-600
+                    "
+                  >
                     No target set yet
                   </p>
 
-                  <p className="
-                    mt-0.5
-                    text-[10px]
-                    text-neutral-400
-                  ">
-                    Add a target to start tracking.
-                  </p>
-
-                </div>
-
-              </div>
-
-            </div>
-
-          )}
-
-
-          {/* ================================================= */}
-          {/* CONTRIBUTORS */}
-          {/* ================================================= */}
-
-          {contributors.length > 0 && (
-            <div className="
-              mt-6
-              border-t
-              border-black/[0.05]
-              pt-5
-            ">
-
-              <div className="
-                flex
-                items-center
-                justify-between
-              ">
-
-                <p className="
-                  text-[10px]
-                  font-medium
-                  uppercase
-                  tracking-[0.18em]
-                  text-neutral-400
-                ">
-                  Contributions
-                </p>
-
-                <Heart
-                  size={12}
-                  fill="currentColor"
-                  strokeWidth={0}
-                  className="text-pink-300"
-                />
-
-              </div>
-
-
-              <div className="
-                mt-3
-                flex
-                flex-wrap
-                gap-2
-              ">
-
-                {contributors.map((contributor) => (
-                  <div
-                    key={contributor.userId}
+                  <p
                     className="
-                      flex
-                      min-w-0
-                      max-w-full
-                      items-center
-                      gap-2
-                      rounded-full
-                      bg-white
-                      py-1.5
-                      pl-1.5
-                      pr-3
-                      shadow-sm
+                      truncate
+                      text-[8px]
+                      text-neutral-400
                     "
                   >
+                    Add a target to start tracking
+                  </p>
+                </div>
+              </div>
+            )}
 
-                    {/* Avatar */}
-
-                    <div className="
-                      flex size-6 shrink-0
-                      items-center justify-center
-                      rounded-full
-                      bg-neutral-100
-                    ">
-                      <span className="
-                        text-[8px]
-                        font-semibold
-                        text-neutral-600
-                      ">
-                        {contributor.name
-                          .slice(0, 1)
-                          .toUpperCase()}
-                      </span>
+            {/* FOOTER */}
+            <div className="mt-3 flex items-center justify-between gap-3">
+              {/* CONTRIBUTORS */}
+              <div className="flex min-w-0 items-center">
+                {contributors.length > 0 ? (
+                  <>
+                    <div className="flex -space-x-1.5">
+                      {contributors
+                        .slice(0, 3)
+                        .map((contributor) => (
+                          <div
+                            key={contributor.userId}
+                            title={contributor.name}
+                            className="
+                              flex
+                              size-6
+                              shrink-0
+                              items-center
+                              justify-center
+                              rounded-full
+                              border-2
+                              border-[#f5f5f4]
+                              bg-neutral-200
+                            "
+                          >
+                            <span
+                              className="
+                                text-[7px]
+                                font-semibold
+                                text-neutral-600
+                              "
+                            >
+                              {contributor.name
+                                .slice(0, 1)
+                                .toUpperCase()}
+                            </span>
+                          </div>
+                        ))}
                     </div>
 
+                    <div className="ml-2 flex min-w-0 items-center gap-1">
+                      <Heart
+                        size={9}
+                        fill="currentColor"
+                        strokeWidth={0}
+                        className="shrink-0 text-pink-300"
+                      />
 
-                    {/* Name */}
-
-                    <span className="
-                      max-w-[80px]
-                      truncate
-                      text-[10px]
-                      font-medium
-                      text-neutral-500
-                      sm:max-w-[100px]
-                    ">
-                      {contributor.name}
-                    </span>
-
-
-                    {/* Amount */}
-
-                    <span className="
-                      text-[10px]
-                      font-semibold
-                      text-neutral-800
-                    ">
-                      {formatRupiah(contributor.amount)}
-                    </span>
-
-                  </div>
-                ))}
-
+                      <span
+                        className="
+                          truncate
+                          text-[8px]
+                          text-neutral-400
+                        "
+                      >
+                        {contributors.length === 1
+                          ? contributors[0].name
+                          : `${contributors.length} contributors`}
+                      </span>
+                    </div>
+                  </>
+                ) : (
+                  <span className="text-[8px] text-neutral-400">
+                    Shared goal
+                  </span>
+                )}
               </div>
 
-            </div>
-          )}
-
-
-          {/* ================================================= */}
-          {/* FOOTER */}
-          {/* ================================================= */}
-
-          {goal.deadline && (
-            <div className="
-              mt-5
-              flex
-              items-center
-              justify-between
-              border-t
-              border-black/[0.05]
-              pt-5
-            ">
-
-              <div className="
-                flex
-                items-center
-                gap-3
-              ">
-
-                <div className="
-                  flex size-8
-                  items-center
-                  justify-center
-                  rounded-full
-                  bg-white
-                  shadow-sm
-                ">
+              {/* DEADLINE */}
+              {goal.deadline && (
+                <div className="flex shrink-0 items-center gap-1.5">
                   <CalendarDays
-                    size={13}
+                    size={10}
                     strokeWidth={2}
-                    className="text-neutral-500"
+                    className="text-neutral-400"
                   />
-                </div>
 
-                <div>
-
-                  <p className="
-                    text-[9px]
-                    uppercase
-                    tracking-[0.16em]
-                    text-neutral-400
-                  ">
-                    Deadline
-                  </p>
-
-                  <p className="
-                    mt-0.5
-                    text-[11px]
-                    font-medium
-                    text-neutral-600
-                  ">
+                  <span
+                    className="
+                      text-[8px]
+                      font-medium
+                      text-neutral-500
+                    "
+                  >
                     {new Date(
                       goal.deadline,
                     ).toLocaleDateString(
@@ -595,26 +458,11 @@ export default function GoalCard({
                         year: 'numeric',
                       },
                     )}
-                  </p>
-
+                  </span>
                 </div>
-
-              </div>
-
-
-              <span className="
-                text-[10px]
-                font-medium
-                text-neutral-400
-                transition-colors
-                group-hover:text-neutral-700
-              ">
-                View goal
-              </span>
-
+              )}
             </div>
-          )}
-
+          </div>
         </div>
       </div>
     </Link>

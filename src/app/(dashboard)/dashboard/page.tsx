@@ -119,7 +119,7 @@ export default function DashboardPage() {
 
             <Heart
               size={17}
-              className="animate-pulse text-pink-500"
+              className="animate-pulse text-black"
               fill="currentColor"
             />
 

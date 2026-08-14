@@ -367,7 +367,7 @@ export default function GoalList({
   /* ========================================================= */
 
   return (
-    <div className="grid gap-4 md:grid-cols-2">
+    <div className="grid gap-4 md:grid-cols-3">
 
       {goals.map((goal) => (
         <GoalCard
