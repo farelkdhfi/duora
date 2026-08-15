@@ -4,7 +4,6 @@ import {
   CalendarCheck,
   CheckCircle2,
   Circle,
-  Heart,
   ListChecks,
   Loader2,
   Smile,
@@ -33,74 +32,78 @@ const activityConfig: Record<
     icon: Target,
     color: 'text-pink-500',
     bg: 'bg-pink-50',
-    label: (m) =>
-      `membuat goal baru "${m.goal_title}"`,
+    label: (m) => `membuat goal baru "${m.goal_title}"`,
   },
+
   goal_updated: {
     icon: Target,
     color: 'text-blue-500',
     bg: 'bg-blue-50',
-    label: (m) =>
-      `memperbarui goal "${m.goal_title}"`,
+    label: (m) => `memperbarui goal "${m.goal_title}"`,
   },
+
   goal_deleted: {
     icon: Target,
     color: 'text-neutral-400',
     bg: 'bg-neutral-100',
-    label: (m) =>
-      `menghapus goal "${m.goal_title}"`,
+    label: (m) => `menghapus goal "${m.goal_title}"`,
   },
+
   saving_added: {
     icon: Wallet,
     color: 'text-emerald-500',
     bg: 'bg-emerald-50',
     label: (m) =>
-      `menabung Rp ${Number(
-        m.amount,
-      ).toLocaleString('id-ID')} untuk "${m.goal_title}"`,
+      `menabung Rp ${Number(m.amount).toLocaleString(
+        'id-ID',
+      )} untuk "${m.goal_title}"`,
   },
+
   saving_deleted: {
     icon: Wallet,
     color: 'text-neutral-400',
     bg: 'bg-neutral-100',
     label: (m) =>
-      `menghapus tabungan Rp ${Number(
-        m.amount,
-      ).toLocaleString('id-ID')} dari "${m.goal_title}"`,
+      `menghapus tabungan Rp ${Number(m.amount).toLocaleString(
+        'id-ID',
+      )} dari "${m.goal_title}"`,
   },
+
   checkin_added: {
     icon: Smile,
     color: 'text-amber-500',
     bg: 'bg-amber-50',
     label: () => `melakukan mood check-in hari ini`,
   },
+
   checkin_updated: {
     icon: Smile,
     color: 'text-amber-400',
     bg: 'bg-amber-50',
     label: () => `memperbarui mood check-in`,
   },
+
   plan_created: {
     icon: CalendarCheck,
     color: 'text-blue-500',
     bg: 'bg-blue-50',
-    label: (m) =>
-      `membuat rencana "${m.plan_title}"`,
+    label: (m) => `membuat rencana "${m.plan_title}"`,
   },
+
   plan_updated: {
     icon: CalendarCheck,
     color: 'text-blue-400',
     bg: 'bg-blue-50',
-    label: (m) =>
-      `memperbarui rencana "${m.plan_title}"`,
+    label: (m) => `memperbarui rencana "${m.plan_title}"`,
   },
+
   plan_deleted: {
     icon: CalendarCheck,
     color: 'text-neutral-400',
     bg: 'bg-neutral-100',
-    label: (m) =>
-      `menghapus rencana "${m.plan_title}"`,
+    label: (m) => `menghapus rencana "${m.plan_title}"`,
   },
+
   checklist_completed: {
     icon: CheckCircle2,
     color: 'text-emerald-500',
@@ -108,6 +111,7 @@ const activityConfig: Record<
     label: (m) =>
       `menyelesaikan "${m.checklist_title}" di goal "${m.goal_title}"`,
   },
+
   checklist_uncompleted: {
     icon: Circle,
     color: 'text-neutral-400',
@@ -115,26 +119,26 @@ const activityConfig: Record<
     label: (m) =>
       `membatalkan "${m.checklist_title}" di goal "${m.goal_title}"`,
   },
+
   note_created: {
     icon: StickyNote,
     color: 'text-pink-500',
     bg: 'bg-pink-50',
-    label: (m) =>
-      `membuat catatan "${m.note_title}"`,
+    label: (m) => `membuat catatan "${m.note_title}"`,
   },
+
   note_updated: {
     icon: StickyNote,
     color: 'text-blue-500',
     bg: 'bg-blue-50',
-    label: (m) =>
-      `memperbarui catatan "${m.note_title}"`,
+    label: (m) => `memperbarui catatan "${m.note_title}"`,
   },
+
   note_deleted: {
     icon: StickyNote,
     color: 'text-neutral-400',
     bg: 'bg-neutral-100',
-    label: (m) =>
-      `menghapus catatan "${m.note_title}"`,
+    label: (m) => `menghapus catatan "${m.note_title}"`,
   },
 }
 
@@ -159,6 +163,10 @@ function formatRelativeTime(dateString: string) {
   })
 }
 
+/* -------------------------------------------------------------------------- */
+/* ACTIVITY ITEM                                                              */
+/* -------------------------------------------------------------------------- */
+
 function ActivityItem({
   activity,
   isLast,
@@ -175,7 +183,7 @@ function ActivityItem({
     'Seseorang'
 
   return (
-    <div className="group relative flex gap-3.5">
+    <div className="group relative flex gap-4">
       {/* TIMELINE */}
 
       <div className="relative flex w-9 shrink-0 justify-center">
@@ -185,10 +193,12 @@ function ActivityItem({
               absolute
               left-1/2
               top-9
-              h-[calc(100%+4px)]
+              bottom-0
               w-px
               -translate-x-1/2
-              bg-neutral-100
+              bg-gradient-to-b
+              from-neutral-200
+              to-neutral-100
             "
           />
         )}
@@ -199,17 +209,22 @@ function ActivityItem({
             z-10
             flex
             size-9
+            shrink-0
             items-center
             justify-center
-            rounded-full
+            rounded-xl
             border
             border-white
-            shadow-[0_2px_8px_rgba(0,0,0,0.06)]
+            shadow-[0_4px_14px_rgba(0,0,0,0.06)]
+            transition-all
+            duration-300
+            group-hover:-translate-y-0.5
+            group-hover:shadow-[0_6px_18px_rgba(0,0,0,0.08)]
             ${config.bg}
           `}
         >
           <Icon
-            size={14}
+            size={15}
             strokeWidth={2}
             className={config.color}
           />
@@ -223,25 +238,219 @@ function ActivityItem({
           min-w-0
           flex-1
           pb-5
-          ${!isLast ? 'border-b border-black/[0.035]' : ''}
+          ${
+            !isLast
+              ? 'border-b border-black/[0.035]'
+              : ''
+          }
         `}
       >
-        <div className="flex items-start justify-between gap-3">
-          <p className="min-w-0 text-[13px] leading-5 text-neutral-700">
-            <span className="font-semibold text-neutral-900">
-              {actorName}
-            </span>{' '}
-            {config.label(activity.metadata)}
-          </p>
+        <div
+          className="
+            -mx-2
+            rounded-xl
+            px-2
+            py-1.5
+            transition-colors
+            duration-200
+            group-hover:bg-neutral-50/70
+          "
+        >
+          <div className="flex items-start gap-4">
+            <p
+              className="
+                min-w-0
+                flex-1
+                text-[12.5px]
+                leading-[1.65]
+                tracking-[-0.01em]
+                text-neutral-500
+              "
+            >
+              <span className="font-semibold text-neutral-900">
+                {actorName}
+              </span>{' '}
+              {config.label(activity.metadata)}
+            </p>
 
-          <span className="shrink-0 text-[10px] text-neutral-400">
-            {formatRelativeTime(activity.created_at)}
-          </span>
+            <span
+              className="
+                shrink-0
+                pt-0.5
+                text-[10px]
+                font-medium
+                tracking-[-0.01em]
+                text-neutral-300
+              "
+            >
+              {formatRelativeTime(activity.created_at)}
+            </span>
+          </div>
         </div>
       </div>
     </div>
   )
 }
+
+/* -------------------------------------------------------------------------- */
+/* SKELETON                                                                   */
+/* -------------------------------------------------------------------------- */
+
+function ActivityFeedSkeleton() {
+  return (
+    <div className="p-5 sm:p-6">
+      <div className="space-y-0">
+        {[1, 2, 3, 4, 5].map((item, index) => (
+          <div
+            key={item}
+            className="relative flex gap-4"
+          >
+            {/* ICON */}
+
+            <div className="relative flex w-9 shrink-0 justify-center">
+              {index !== 4 && (
+                <div
+                  className="
+                    absolute
+                    left-1/2
+                    top-9
+                    bottom-0
+                    w-px
+                    -translate-x-1/2
+                    bg-neutral-100
+                  "
+                />
+              )}
+
+              <div
+                className="
+                  relative
+                  z-10
+                  size-9
+                  rounded-xl
+                  bg-neutral-100
+                  animate-pulse
+                "
+              />
+            </div>
+
+            {/* CONTENT */}
+
+            <div
+              className={`
+                min-w-0
+                flex-1
+                pb-5
+                ${
+                  index !== 4
+                    ? 'border-b border-black/[0.035]'
+                    : ''
+                }
+              `}
+            >
+              <div className="flex items-start justify-between gap-4">
+                <div className="min-w-0 flex-1 space-y-2 py-1">
+                  <div className="h-2.5 w-[78%] animate-pulse rounded-full bg-neutral-100" />
+                  <div className="h-2.5 w-[42%] animate-pulse rounded-full bg-neutral-100" />
+                </div>
+
+                <div className="h-2.5 w-10 shrink-0 animate-pulse rounded-full bg-neutral-100" />
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+/* -------------------------------------------------------------------------- */
+/* EMPTY STATE                                                                */
+/* -------------------------------------------------------------------------- */
+
+function ActivityEmptyState() {
+  return (
+    <div className="px-6 py-14">
+      <div className="flex flex-col items-center text-center">
+        <div
+          className="
+            relative
+            flex
+            size-14
+            items-center
+            justify-center
+            overflow-hidden
+            rounded-2xl
+            border
+            border-black/[0.04]
+            bg-neutral-50
+            shadow-[0_8px_30px_rgba(0,0,0,0.04)]
+          "
+        >
+          <div
+            className="
+              absolute
+              -right-4
+              -top-4
+              size-10
+              rounded-full
+              bg-pink-100
+              blur-xl
+            "
+          />
+
+          <div
+            className="
+              absolute
+              -bottom-4
+              -left-4
+              size-10
+              rounded-full
+              bg-blue-100
+              blur-xl
+            "
+          />
+
+          <ListChecks
+            size={19}
+            strokeWidth={1.7}
+            className="relative text-neutral-400"
+          />
+        </div>
+
+        <h3
+          className="
+            mt-5
+            text-[13px]
+            font-semibold
+            tracking-[-0.025em]
+            text-neutral-800
+          "
+        >
+          Belum ada aktivitas
+        </h3>
+
+        <p
+          className="
+            mt-2
+            max-w-[250px]
+            text-[11.5px]
+            leading-5
+            tracking-[-0.005em]
+            text-neutral-400
+          "
+        >
+          Semua kegiatan kamu dan pasangan
+          akan muncul di sini.
+        </p>
+      </div>
+    </div>
+  )
+}
+
+/* -------------------------------------------------------------------------- */
+/* MAIN                                                                       */
+/* -------------------------------------------------------------------------- */
 
 export default function ActivityFeed({
   relationshipId,
@@ -255,39 +464,44 @@ export default function ActivityFeed({
     isFetchingNextPage,
   } = useRelationshipActivities(relationshipId)
 
-  const activities =
-    data?.pages.flat() ?? []
+  const activities = data?.pages.flat() ?? []
 
   /* LOADING */
 
   if (isLoading) {
-    return (
-      <div className="p-5 sm:p-6">
-        <div className="animate-pulse space-y-5">
-          {[1, 2, 3, 4].map((item) => (
-            <div
-              key={item}
-              className="flex items-center gap-3"
-            >
-              <div className="size-9 shrink-0 rounded-full bg-neutral-100" />
-
-              <div className="min-w-0 flex-1 space-y-2">
-                <div className="h-3 w-48 rounded-full bg-neutral-100" />
-                <div className="h-2.5 w-24 rounded-full bg-neutral-100" />
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    )
+    return <ActivityFeedSkeleton />
   }
 
   /* ERROR */
 
   if (error) {
     return (
-      <div className="p-6 text-center">
-        <p className="text-[13px] text-neutral-400">
+      <div className="px-6 py-12 text-center">
+        <div
+          className="
+            mx-auto
+            flex
+            size-10
+            items-center
+            justify-center
+            rounded-xl
+            bg-neutral-50
+          "
+        >
+          <Circle
+            size={16}
+            className="text-neutral-300"
+          />
+        </div>
+
+        <p
+          className="
+            mt-3
+            text-[12px]
+            leading-5
+            text-neutral-400
+          "
+        >
           {error.message}
         </p>
       </div>
@@ -297,40 +511,21 @@ export default function ActivityFeed({
   /* EMPTY */
 
   if (!activities.length) {
-    return (
-      <div className="px-6 py-12">
-        <div className="flex flex-col items-center text-center">
-          <div className="flex size-12 items-center justify-center rounded-2xl bg-neutral-50">
-            <ListChecks
-              size={18}
-              strokeWidth={1.8}
-              className="text-neutral-300"
-            />
-          </div>
-
-          <h3 className="mt-4 text-sm font-semibold tracking-[-0.02em] text-neutral-800">
-            Belum ada aktivitas
-          </h3>
-
-          <p className="mt-2 max-w-[240px] text-[12px] leading-5 text-neutral-400">
-            Semua kegiatan kamu dan pasangan
-            akan muncul di sini.
-          </p>
-        </div>
-      </div>
-    )
+    return <ActivityEmptyState />
   }
 
   /* LIST */
 
   return (
     <div className="p-5 sm:p-6">
-      <div className="space-y-1">
+      <div className="space-y-0">
         {activities.map((activity, index) => (
           <ActivityItem
             key={activity.id}
             activity={activity}
-            isLast={index === activities.length - 1}
+            isLast={
+              index === activities.length - 1
+            }
           />
         ))}
       </div>
@@ -341,7 +536,7 @@ export default function ActivityFeed({
           onClick={() => fetchNextPage()}
           disabled={isFetchingNextPage}
           className="
-            mt-5
+            mt-6
             flex
             w-full
             items-center
@@ -349,13 +544,21 @@ export default function ActivityFeed({
             gap-2
             rounded-full
             border
-            border-black/[0.06]
+            border-black/[0.055]
+            bg-white
             py-2.5
-            text-[12px]
-            font-medium
+            text-[11px]
+            font-semibold
+            tracking-[-0.01em]
             text-neutral-500
-            transition
+            shadow-[0_3px_12px_rgba(0,0,0,0.025)]
+            transition-all
+            duration-200
+            hover:border-black/[0.08]
             hover:bg-neutral-50
+            hover:text-neutral-700
+            active:scale-[0.99]
+            disabled:cursor-not-allowed
             disabled:opacity-50
           "
         >
@@ -365,7 +568,7 @@ export default function ActivityFeed({
                 size={13}
                 className="animate-spin"
               />
-              Memuat...
+              Memuat aktivitas...
             </>
           ) : (
             'Muat lebih banyak'
