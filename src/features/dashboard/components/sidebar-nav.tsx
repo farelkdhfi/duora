@@ -11,6 +11,8 @@ import {
   Home,
   Lock,
   LogOut,
+  Logs,
+  NotebookPen,
   Pin,
   User2,
 } from 'lucide-react'
@@ -42,6 +44,16 @@ const navigation = [
     label: 'Daily Check-in',
     href: '/check-in',
     icon: CheckCircle2,
+  },
+  {
+    label: 'Activities',
+    href: '/activities',
+    icon: Logs,
+  },
+  {
+    label: 'Notes',
+    href: '/notes',
+    icon: NotebookPen,
   },
   {
     label: 'Profile',
