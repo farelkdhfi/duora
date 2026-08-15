@@ -98,55 +98,34 @@ export async function createGoal({
   return data
 }
 
-export async function getGoalContributions(goalId: string) {
-  const supabase = createClient()
-
-  const {
-    data,
-    error,
-  } = await supabase
-    .from('goal_contributions')
-    .select('*')
-    .eq('goal_id', goalId)
-    .order('created_at', { ascending: false })
-
-  if (error) {
-    throw new Error(error.message)
-  }
-
-  return data
-}
-
-export async function addGoalContribution({
+export async function updateGoal({
   goalId,
-  amount,
-  note,
+  values,
 }: {
   goalId: string
-  amount: number
-  note?: string
+  values: CreateGoalFormValues
 }) {
   const supabase = createClient()
 
   const {
-    data: { user },
-  } = await supabase.auth.getUser()
-
-  if (!user) {
-    throw new Error('Not authenticated')
-  }
-
-  const {
     data,
     error,
   } = await supabase
-    .from('goal_contributions')
-    .insert({
-      goal_id: goalId,
-      contributed_by: user.id,
-      amount,
-      note: note || null,
+    .from('goals')
+    .update({
+      title: values.title,
+      description:
+        values.description || null,
+
+      category: values.category,
+
+      target_amount:
+        values.targetAmount ?? null,
+
+      deadline:
+        values.deadline || null,
     })
+    .eq('id', goalId)
     .select()
     .single()
 
@@ -157,46 +136,21 @@ export async function addGoalContribution({
   return data
 }
 
-export async function getGoalsWithContributionSummary(
-  relationshipId: string,
+export async function deleteGoal(
+  goalId: string,
 ) {
   const supabase = createClient()
 
   const {
-    data: goals,
-    error: goalsError,
+    error,
   } = await supabase
     .from('goals')
-    .select('*')
-    .eq('relationship_id', relationshipId)
-    .order('created_at', { ascending: false })
+    .delete()
+    .eq('id', goalId)
 
-  if (goalsError) {
-    throw new Error(goalsError.message)
+  if (error) {
+    throw new Error(error.message)
   }
 
-  if (goals.length === 0) {
-    return []
-  }
-
-  const goalIds = goals.map((g) => g.id)
-
-  const {
-    data: contributions,
-    error: contribError,
-  } = await supabase
-    .from('goal_contributions')
-    .select('id, goal_id, contributed_by, amount, note, created_at')
-    .in('goal_id', goalIds)
-
-  if (contribError) {
-    throw new Error(contribError.message)
-  }
-
-  return goals.map((goal) => ({
-    ...goal,
-    contributions: contributions.filter(
-      (c) => c.goal_id === goal.id,
-    ),
-  }))
+  return goalId
 }

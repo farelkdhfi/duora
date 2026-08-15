@@ -24,6 +24,7 @@ export default function Checklist({
   goalId,
 }: ChecklistProps) {
   const [title, setTitle] = useState('')
+  const [confirmingDeleteId, setConfirmingDeleteId] = useState<string | null>(null)
 
   const {
     data: items,
@@ -45,6 +46,23 @@ export default function Checklist({
     })
 
     setTitle('')
+  }
+
+  function handleDeleteClick(itemId: string) {
+    if (confirmingDeleteId !== itemId) {
+      setConfirmingDeleteId(itemId)
+      return
+    }
+
+    deleteMutation.mutate(itemId, {
+      onSettled: () => {
+        setConfirmingDeleteId(null)
+      },
+    })
+  }
+
+  function handleCancelDelete() {
+    setConfirmingDeleteId(null)
   }
 
   /* ========================================================= */
@@ -122,8 +140,8 @@ export default function Checklist({
   const progress =
     totalCount > 0
       ? Math.round(
-          (completedCount / totalCount) * 100,
-        )
+        (completedCount / totalCount) * 100,
+      )
       : 0
 
   const isCompleted =
@@ -189,10 +207,9 @@ export default function Checklist({
                 tabular-nums
                 sm:px-3
                 sm:text-[11px]
-                ${
-                  isCompleted
-                    ? 'bg-emerald-50 text-emerald-600'
-                    : 'bg-neutral-100 text-neutral-500'
+                ${isCompleted
+                  ? 'bg-emerald-50 text-emerald-600'
+                  : 'bg-neutral-100 text-neutral-500'
                 }
               `}
             >
@@ -238,10 +255,9 @@ export default function Checklist({
                   transition-all
                   duration-500
                   ease-out
-                  ${
-                    isCompleted
-                      ? 'bg-emerald-500'
-                      : 'bg-neutral-900'
+                  ${isCompleted
+                    ? 'bg-emerald-500'
+                    : 'bg-neutral-900'
                   }
                 `}
                 style={{
@@ -317,14 +333,13 @@ export default function Checklist({
                     border
                     transition-all
                     duration-200
-                    ${
-                      item.is_completed
-                        ? `
+                    ${item.is_completed
+                      ? `
                           border-neutral-900
                           bg-neutral-900
                           text-white
                         `
-                        : `
+                      : `
                           border-neutral-200
                           bg-white
                           hover:border-neutral-400
@@ -354,10 +369,9 @@ export default function Checklist({
                     transition-all
                     duration-200
                     sm:text-[13px]
-                    ${
-                      item.is_completed
-                        ? 'text-neutral-300 line-through'
-                        : 'text-neutral-700'
+                    ${item.is_completed
+                      ? 'text-neutral-300 line-through'
+                      : 'text-neutral-700'
                     }
                   `}
                 >
@@ -366,38 +380,141 @@ export default function Checklist({
 
                 {/* DELETE */}
 
-                <button
-                  type="button"
-                  aria-label="Delete checklist item"
-                  onClick={() =>
-                    deleteMutation.mutate(item.id)
-                  }
-                  disabled={
-                    deleteMutation.isPending
-                  }
-                  className="
-                    flex
-                    size-7
-                    shrink-0
-                    items-center
-                    justify-center
-                    rounded-lg
-                    text-neutral-200
-                    opacity-100
-                    transition-all
-                    duration-200
-                    hover:bg-rose-50
-                    hover:text-rose-400
-                    sm:opacity-0
-                    sm:group-hover:opacity-100
-                    sm:focus:opacity-100
-                  "
-                >
-                  <Trash2
-                    size={13}
-                    strokeWidth={2}
-                  />
-                </button>
+                {confirmingDeleteId === item.id ? (
+                  <div
+                    className="
+      flex
+      shrink-0
+      items-center
+      gap-1
+      rounded-full
+      border
+      border-red-100
+      bg-white
+      p-1
+      shadow-[0_3px_12px_rgba(239,68,68,0.08)]
+    "
+                  >
+                    <button
+                      type="button"
+                      onClick={() =>
+                        handleDeleteClick(item.id)
+                      }
+                      disabled={deleteMutation.isPending}
+                      className="
+        inline-flex
+        min-h-7
+        items-center
+        justify-center
+        gap-1
+        rounded-full
+        bg-red-500
+        px-2.5
+        text-[9px]
+        font-semibold
+        text-white
+        transition-all
+        duration-200
+        hover:bg-red-600
+        active:scale-95
+        disabled:cursor-not-allowed
+        disabled:opacity-50
+        sm:min-h-7.5
+        sm:px-3
+      "
+                    >
+                      {deleteMutation.isPending ? (
+                        <span className="size-2.5 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                      ) : (
+                        <Trash2
+                          size={10}
+                          strokeWidth={2}
+                        />
+                      )}
+
+                      <span>
+                        {deleteMutation.isPending
+                          ? 'Deleting...'
+                          : 'Delete'}
+                      </span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={handleCancelDelete}
+                      disabled={deleteMutation.isPending}
+                      className="
+        inline-flex
+        min-h-7
+        items-center
+        justify-center
+        rounded-full
+        px-2.5
+        text-[9px]
+        font-semibold
+        text-neutral-500
+        transition-all
+        duration-200
+        hover:bg-neutral-100
+        hover:text-neutral-700
+        active:scale-95
+        disabled:cursor-not-allowed
+        disabled:opacity-50
+        sm:min-h-7.5
+        sm:px-3
+      "
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    type="button"
+                    aria-label={`Delete checklist item: ${item.title}`}
+                    onClick={() =>
+                      handleDeleteClick(item.id)
+                    }
+                    disabled={deleteMutation.isPending}
+                    className="
+      group/delete
+      flex
+      size-7
+      shrink-0
+      items-center
+      justify-center
+      rounded-full
+      border
+      border-neutral-200/80
+      bg-white
+      text-neutral-300
+      shadow-[0_2px_7px_rgba(0,0,0,0.035)]
+      transition-all
+      duration-200
+
+      hover:border-red-100
+      hover:bg-red-50
+      hover:text-red-500
+      active:scale-95
+
+      sm:size-6.5
+      sm:border-transparent
+      sm:bg-neutral-50/70
+      sm:opacity-70
+      sm:group-hover:opacity-100
+      sm:focus:opacity-100
+    "
+                  >
+                    <Trash2
+                      size={11}
+                      strokeWidth={2}
+                      className="
+        transition-transform
+        duration-200
+        group-hover/delete:scale-105
+      "
+                    />
+                  </button>
+                )}
 
               </div>
 

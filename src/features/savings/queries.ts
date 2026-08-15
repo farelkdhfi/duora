@@ -6,6 +6,7 @@ import {
 
 import {
   createSaving,
+  deleteSaving,
   getGoalSavings,
   getGoalsWithSavingsSummary,
 } from './api'
@@ -18,6 +19,14 @@ export const savingsKeys = {
       ...savingsKeys.all,
       'goal',
       goalId,
+    ] as const,
+
+  summary: (relationshipId: string) =>
+    [
+      ...savingsKeys.all,
+      'relationship',
+      relationshipId,
+      'summary',
     ] as const,
 }
 
@@ -56,10 +65,46 @@ export function useCreateSaving() {
   })
 }
 
-export function useGoalsWithSavingsSummary(relationshipId: string) {
+export function useGoalsWithSavingsSummary(
+  relationshipId: string,
+) {
   return useQuery({
-    queryKey: [...savingsKeys.all, 'relationship', relationshipId, 'summary'],
-    queryFn: () => getGoalsWithSavingsSummary(relationshipId),
+    queryKey: savingsKeys.summary(
+      relationshipId,
+    ),
+    queryFn: () =>
+      getGoalsWithSavingsSummary(
+        relationshipId,
+      ),
     enabled: Boolean(relationshipId),
+  })
+}
+
+export function useDeleteSaving({
+  goalId,
+  relationshipId,
+}: {
+  goalId: string
+  relationshipId: string
+}) {
+  const queryClient =
+    useQueryClient()
+
+  return useMutation({
+    mutationFn: deleteSaving,
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey:
+          savingsKeys.goal(goalId),
+      })
+
+      queryClient.invalidateQueries({
+        queryKey:
+          savingsKeys.summary(
+            relationshipId,
+          ),
+      })
+    },
   })
 }

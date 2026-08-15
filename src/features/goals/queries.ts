@@ -6,10 +6,12 @@ import {
 
 import {
   createGoal,
+  deleteGoal,
   getGoal,
   getGoals,
-  getGoalsWithContributionSummary,
+  updateGoal,
 } from './api'
+import { savingsKeys } from '../savings/queries'
 
 export const goalKeys = {
   all: ['goals'] as const,
@@ -69,14 +71,84 @@ export function useCreateGoal() {
           variables.relationshipId,
         ),
       })
+
+      queryClient.invalidateQueries({
+        queryKey: savingsKeys.summary(
+          variables.relationshipId,
+        ),
+      })
     },
   })
 }
 
-export function useGoalsWithContributions(relationshipId: string) {
-  return useQuery({
-    queryKey: ['goals', relationshipId, 'with-contributions'],
-    queryFn: () => getGoalsWithContributionSummary(relationshipId),
-    enabled: !!relationshipId,
+export function useUpdateGoal(
+  relationshipId: string,
+) {
+  const queryClient =
+    useQueryClient()
+
+  return useMutation({
+    mutationFn: updateGoal,
+
+    onSuccess: (
+      data,
+    ) => {
+      queryClient.invalidateQueries({
+        queryKey: goalKeys.detail(
+          data.id,
+        ),
+      })
+
+      queryClient.invalidateQueries({
+        queryKey: goalKeys.list(
+          relationshipId,
+        ),
+      })
+
+      queryClient.invalidateQueries({
+        queryKey: savingsKeys.summary(
+          relationshipId,
+        ),
+      })
+    },
+  })
+}
+
+export function useDeleteGoal(
+  relationshipId: string,
+) {
+  const queryClient =
+    useQueryClient()
+
+  return useMutation({
+    mutationFn: deleteGoal,
+
+    onSuccess: (
+      goalId,
+    ) => {
+      queryClient.invalidateQueries({
+        queryKey: goalKeys.list(
+          relationshipId,
+        ),
+      })
+
+      queryClient.invalidateQueries({
+        queryKey: savingsKeys.summary(
+          relationshipId,
+        ),
+      })
+
+      queryClient.removeQueries({
+        queryKey: goalKeys.detail(
+          goalId,
+        ),
+      })
+
+      queryClient.removeQueries({
+        queryKey: savingsKeys.goal(
+          goalId,
+        ),
+      })
+    },
   })
 }

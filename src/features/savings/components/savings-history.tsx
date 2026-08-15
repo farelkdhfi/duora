@@ -1,17 +1,22 @@
 'use client'
 
+import { useState } from 'react'
 import {
   CalendarDays,
   Heart,
+  Loader2,
+  Trash2,
   Wallet,
 } from 'lucide-react'
 
 import {
+  useDeleteSaving,
   useGoalSavings,
 } from '../queries'
 
 interface SavingsHistoryProps {
   goalId: string
+  relationshipId: string
 }
 
 function formatDate(date: string) {
@@ -37,12 +42,39 @@ function formatTime(date: string) {
 
 export default function SavingsHistory({
   goalId,
+  relationshipId,
 }: SavingsHistoryProps) {
   const {
     data: savings,
     isLoading,
   } = useGoalSavings(goalId)
 
+  const [confirmingId, setConfirmingId] =
+    useState<string | null>(null)
+
+  const deleteSavingMutation = useDeleteSaving({
+    goalId,
+    relationshipId,
+  })
+
+  const handleDeleteClick = (
+    savingId: string,
+  ) => {
+    if (confirmingId !== savingId) {
+      setConfirmingId(savingId)
+      return
+    }
+
+    deleteSavingMutation.mutate(savingId, {
+      onSettled: () => {
+        setConfirmingId(null)
+      },
+    })
+  }
+
+  const handleCancelClick = () => {
+    setConfirmingId(null)
+  }
 
   /* ========================================================= */
   /* LOADING */
@@ -144,6 +176,14 @@ export default function SavingsHistory({
 
           const isLast =
             index === savings.length - 1
+
+          const isConfirming =
+            confirmingId === saving.id
+
+          const isDeletingThis =
+            deleteSavingMutation.isPending &&
+            deleteSavingMutation.variables ===
+            saving.id
 
           return (
             <div
@@ -257,19 +297,156 @@ export default function SavingsHistory({
                   </div>
 
 
-                  {/* Amount */}
+                  {/* Amount + Delete */}
+                  <div className="flex shrink-0 items-center gap-2">
+                    {isConfirming ? (
+                      <div
+                        className="
+        flex
+        items-center
+        gap-1
+        rounded-full
+        border
+        border-red-100
+        bg-white
+        p-1
+        shadow-[0_4px_14px_rgba(239,68,68,0.08)]
+      "
+                      >
+                        <button
+                          type="button"
+                          onClick={() =>
+                            handleDeleteClick(saving.id)
+                          }
+                          disabled={isDeletingThis}
+                          className="
+          inline-flex
+          min-h-7
+          items-center
+          justify-center
+          gap-1.5
+          rounded-full
+          bg-red-500
+          px-2.5
+          text-[9px]
+          font-semibold
+          text-white
+          transition-all
+          duration-200
+          hover:bg-red-600
+          active:scale-95
+          disabled:cursor-not-allowed
+          disabled:opacity-50
+          sm:px-3
+        "
+                        >
+                          {isDeletingThis ? (
+                            <Loader2
+                              size={10}
+                              className="animate-spin"
+                            />
+                          ) : (
+                            <Trash2
+                              size={10}
+                              strokeWidth={2}
+                            />
+                          )}
 
-                  <div className="shrink-0 text-right">
+                          <span>
+                            {isDeletingThis
+                              ? 'Deleting...'
+                              : 'Delete'}
+                          </span>
+                        </button>
 
-                    <p className="text-[13px] font-semibold tabular-nums tracking-[-0.01em] text-neutral-900">
+                        <button
+                          type="button"
+                          onClick={handleCancelClick}
+                          disabled={isDeletingThis}
+                          className="
+          inline-flex
+          min-h-7
+          items-center
+          justify-center
+          rounded-full
+          px-2.5
+          text-[9px]
+          font-semibold
+          text-neutral-500
+          transition-all
+          duration-200
+          hover:bg-neutral-100
+          hover:text-neutral-700
+          active:scale-95
+          disabled:cursor-not-allowed
+          disabled:opacity-50
+          sm:px-3
+        "
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    ) : (
+                      <button
+                        type="button"
+                        aria-label={`Delete contribution from ${name}`}
+                        onClick={() =>
+                          handleDeleteClick(saving.id)
+                        }
+                        className="
+        group/delete
+        flex
+        size-7
+        shrink-0
+        items-center
+        justify-center
+        rounded-full
+        border
+        border-neutral-200/80
+        bg-white
+        text-neutral-300
+        shadow-[0_2px_7px_rgba(0,0,0,0.035)]
+        transition-all
+        duration-200
+
+        hover:border-red-100
+        hover:bg-red-50
+        hover:text-red-500
+        active:scale-95
+
+        sm:size-6.5
+        sm:border-transparent
+        sm:bg-neutral-50/70
+        sm:opacity-70
+        sm:group-hover:opacity-100
+      "
+                      >
+                        <Trash2
+                          size={11}
+                          strokeWidth={2}
+                          className="
+          transition-transform
+          duration-200
+          group-hover/delete:scale-105
+        "
+                        />
+                      </button>
+                    )}
+
+                    <p
+                      className="
+      text-[13px]
+      font-semibold
+      tabular-nums
+      tracking-[-0.01em]
+      text-neutral-900
+    "
+                    >
                       + Rp{' '}
                       {Number(
                         saving.amount,
-                      ).toLocaleString(
-                        'id-ID',
-                      )}
+                      ).toLocaleString('id-ID')}
                     </p>
-
                   </div>
 
                 </div>

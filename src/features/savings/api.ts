@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/client'
 import { SavingTransactionWithProfile } from './types'
+import { Goal } from '../goals/types'
 
 export interface SavingWithProfile {
   id: string
@@ -57,9 +58,13 @@ export async function getGoalSavings(
   })) as SavingWithProfile[]
 }
 
+export interface GoalWithSavingsSummary extends Goal {
+  savings: SavingTransactionWithProfile[]
+}
+
 export async function getGoalsWithSavingsSummary(
   relationshipId: string,
-) {
+): Promise<GoalWithSavingsSummary[]> {
   const supabase = createClient()
 
   const {
@@ -162,4 +167,23 @@ export async function createSaving({
   }
 
   return data
+}
+
+export async function deleteSaving(
+  savingId: string,
+) {
+  const supabase = createClient()
+
+  const {
+    error,
+  } = await supabase
+    .from('savings')
+    .delete()
+    .eq('id', savingId)
+
+  if (error) {
+    throw new Error(error.message)
+  }
+
+  return savingId
 }

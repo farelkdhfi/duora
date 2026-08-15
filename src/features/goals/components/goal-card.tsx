@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import Link from 'next/link'
 import {
   ArrowUpRight,
@@ -7,10 +8,12 @@ import {
   CreditCard,
   Heart,
   Target,
+  Trash2,
 } from 'lucide-react'
 
 import type { Goal } from '../types'
 import type { SavingTransactionWithProfile } from '@/features/savings/types'
+import { useDeleteGoal } from '../queries'
 
 interface GoalCardProps {
   goal: Goal
@@ -94,6 +97,13 @@ export default function GoalCard({
   goal,
   savings = [],
 }: GoalCardProps) {
+  const [isConfirming, setIsConfirming] =
+    useState(false)
+
+  const deleteGoalMutation = useDeleteGoal(
+    goal.relationship_id,
+  )
+
   const target = goal.target_amount ?? 0
 
   const totalSaved = savings.reduce(
@@ -108,6 +118,28 @@ export default function GoalCard({
 
   const contributors = getContributors(savings)
   const accent = categoryAccent[goal.category]
+
+  const handleDeleteClick = (
+    e: React.MouseEvent,
+  ) => {
+    e.preventDefault()
+    e.stopPropagation()
+
+    if (!isConfirming) {
+      setIsConfirming(true)
+      return
+    }
+
+    deleteGoalMutation.mutate(goal.id)
+  }
+
+  const handleCancelClick = (
+    e: React.MouseEvent,
+  ) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setIsConfirming(false)
+  }
 
   return (
     <Link
@@ -149,55 +181,174 @@ export default function GoalCard({
             <div className="flex min-w-0 items-center gap-2">
               <span
                 className={`
-                  size-1.5
-                  shrink-0
-                  rounded-full
-                  ${accent}
-                `}
+        size-1.5
+        shrink-0
+        rounded-full
+        ${accent}
+      `}
               />
 
               <span
                 className="
-                  truncate
-                  text-[9px]
-                  font-semibold
-                  uppercase
-                  tracking-[0.2em]
-                  text-neutral-400
-                "
+        truncate
+        text-[9px]
+        font-semibold
+        uppercase
+        tracking-[0.2em]
+        text-neutral-400
+      "
               >
                 {categoryLabels[goal.category]}
               </span>
             </div>
 
-            <div
-              className="
-                flex
-                size-7
-                items-center
-                justify-center
-                rounded-full
-                bg-white
-                text-neutral-400
-                shadow-[0_2px_8px_rgba(0,0,0,0.04)]
-                transition-all
-                duration-300
-                group-hover:bg-neutral-900
-                group-hover:text-white
-              "
-            >
-              <ArrowUpRight
-                size={13}
-                strokeWidth={2}
+            <div className="flex shrink-0 items-center gap-1.5">
+              {/* DELETE */}
+              {isConfirming ? (
+                <div
+                  className="
+          flex
+          items-center
+          gap-1
+          rounded-full
+          border
+          border-red-100
+          bg-white
+          p-1
+          shadow-[0_3px_12px_rgba(239,68,68,0.10)]
+        "
+                >
+                  <button
+                    onClick={handleDeleteClick}
+                    disabled={deleteGoalMutation.isPending}
+                    className="
+            flex
+            min-h-7
+            items-center
+            justify-center
+            rounded-full
+            bg-red-500
+            px-3
+            text-[9px]
+            font-semibold
+            text-white
+            transition-all
+            duration-200
+            hover:bg-red-600
+            active:scale-95
+            disabled:cursor-not-allowed
+            disabled:opacity-50
+            sm:min-h-7.5
+            sm:px-3.5
+          "
+                  >
+                    {deleteGoalMutation.isPending
+                      ? 'Deleting...'
+                      : 'Delete'}
+                  </button>
+
+                  <button
+                    onClick={handleCancelClick}
+                    disabled={deleteGoalMutation.isPending}
+                    className="
+            flex
+            min-h-7
+            items-center
+            justify-center
+            rounded-full
+            px-3
+            text-[9px]
+            font-semibold
+            text-neutral-500
+            transition-all
+            duration-200
+            hover:bg-neutral-100
+            hover:text-neutral-700
+            active:scale-95
+            disabled:cursor-not-allowed
+            disabled:opacity-50
+            sm:min-h-7.5
+            sm:px-3.5
+          "
+                  >
+                    Cancel
+                  </button>
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  aria-label="Delete goal"
+                  onClick={handleDeleteClick}
+                  className="
+          group/delete
+          flex
+          size-8
+          items-center
+          justify-center
+          rounded-full
+          border
+          border-neutral-200/80
+          bg-white
+          text-neutral-400
+          shadow-[0_2px_8px_rgba(0,0,0,0.035)]
+          transition-all
+          duration-200
+
+          hover:border-red-100
+          hover:bg-red-50
+          hover:text-red-500
+          active:scale-95
+
+          sm:size-7.5
+          sm:border-transparent
+          sm:bg-white/80
+          sm:opacity-70
+          sm:group-hover:opacity-100
+        "
+                >
+                  <Trash2
+                    size={13}
+                    strokeWidth={2}
+                    className="
+            transition-transform
+            duration-200
+            group-hover/delete:scale-105
+          "
+                  />
+                </button>
+              )}
+
+              {/* OPEN */}
+              <div
                 className="
-                  transition-transform
-                  duration-300
-                  group-hover:-translate-y-0.5
-                  group-hover:translate-x-0.5
-                "
-              />
+        flex
+        size-8
+        items-center
+        justify-center
+        rounded-full
+        bg-white
+        text-neutral-400
+        shadow-[0_2px_8px_rgba(0,0,0,0.04)]
+        transition-all
+        duration-300
+        group-hover:bg-neutral-900
+        group-hover:text-white
+        sm:size-7.5
+      "
+              >
+                <ArrowUpRight
+                  size={13}
+                  strokeWidth={2}
+                  className="
+          transition-transform
+          duration-300
+          group-hover:-translate-y-0.5
+          group-hover:translate-x-0.5
+        "
+                />
+              </div>
             </div>
-          </div>          
+          </div>
 
           {/* TITLE */}
           <div className="mt-3 min-w-0">

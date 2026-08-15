@@ -1,15 +1,19 @@
 'use client'
 
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import {
   ArrowLeft,
   ArrowUpRight,
   CalendarDays,
+  Pencil,
   Target,
+  Trash2,
   Wallet,
 } from 'lucide-react'
 
-import { useGoal } from '@/features/goals/queries'
+import { useGoal, useDeleteGoal } from '@/features/goals/queries'
 
 import CreateSavingForm from '@/features/savings/components/create-saving-form'
 import SavingsProgress from '@/features/savings/components/savings-progress'
@@ -17,6 +21,7 @@ import SavingsHistory from '@/features/savings/components/savings-history'
 import Checklist from '@/features/goals/components/checklist'
 
 import { useMyRelationshipDetails } from '@/features/relationship/queries'
+import EditGoalForm from './edit-goal-form'
 
 interface GoalDetailProps {
   goalId: string
@@ -44,6 +49,13 @@ function formatDate(date: string) {
 export default function GoalDetail({
   goalId,
 }: GoalDetailProps) {
+  const router = useRouter()
+
+  const [isConfirmingDelete, setIsConfirmingDelete] =
+    useState(false)
+
+  const [isEditing, setIsEditing] = useState(false)
+
   const {
     data: goal,
     isLoading,
@@ -51,6 +63,27 @@ export default function GoalDetail({
   } = useGoal(goalId)
 
   const { data: relationship } = useMyRelationshipDetails()
+
+  const deleteGoalMutation = useDeleteGoal(
+    goal?.relationship_id ?? '',
+  )
+
+  const handleDelete = () => {
+    if (!isConfirmingDelete) {
+      setIsConfirmingDelete(true)
+      return
+    }
+
+    deleteGoalMutation.mutate(goalId, {
+      onSuccess: () => {
+        router.push('/goals')
+      },
+    })
+  }
+
+  const handleCancelDelete = () => {
+    setIsConfirmingDelete(false)
+  }
 
   /* ========================================================= */
   /* LOADING */
@@ -133,122 +166,284 @@ export default function GoalDetail({
       {/* BACK */}
       {/* ===================================================== */}
 
-      <Link
-        href="/goals"
-        className="group inline-flex items-center gap-2 text-[13px] font-medium text-neutral-400 transition-colors hover:text-neutral-900"
-      >
-        <ArrowLeft
-          size={15}
-          strokeWidth={2}
-          className="transition-transform duration-200 group-hover:-translate-x-0.5"
-        />
+      <div className="flex items-center justify-between gap-3">
+        <Link
+          href="/goals"
+          className="group inline-flex items-center gap-2 text-[13px] font-medium text-neutral-400 transition-colors hover:text-neutral-900"
+        >
+          <ArrowLeft
+            size={15}
+            strokeWidth={2}
+            className="transition-transform duration-200 group-hover:-translate-x-0.5"
+          />
 
-        Back to goals
-      </Link>
+          Back to goals
+        </Link>
+
+        {/* DELETE ACTION */}
+        {isConfirmingDelete ? (
+          <div
+            className="
+      flex
+      items-center
+      gap-1
+      rounded-full
+      border
+      border-red-100
+      bg-white
+      p-1
+      shadow-[0_6px_20px_rgba(239,68,68,0.08)]
+    "
+          >
+            <span
+              className="
+        hidden
+        px-2
+        text-[11px]
+        font-medium
+        text-neutral-400
+        sm:block
+      "
+            >
+              Delete permanently?
+            </span>
+
+            <button
+              type="button"
+              onClick={handleDelete}
+              disabled={deleteGoalMutation.isPending}
+              className="
+        inline-flex
+        min-h-8
+        items-center
+        justify-center
+        gap-1.5
+        rounded-full
+        bg-red-500
+        px-3.5
+        text-[11px]
+        font-semibold
+        text-white
+        transition-all
+        duration-200
+        hover:bg-red-600
+        active:scale-95
+        disabled:cursor-not-allowed
+        disabled:opacity-50
+        sm:min-h-8.5
+        sm:px-4
+      "
+            >
+              <Trash2
+                size={12}
+                strokeWidth={2}
+              />
+
+              {deleteGoalMutation.isPending
+                ? 'Deleting...'
+                : 'Delete'}
+            </button>
+
+            <button
+              type="button"
+              onClick={handleCancelDelete}
+              disabled={deleteGoalMutation.isPending}
+              className="
+        inline-flex
+        min-h-8
+        items-center
+        justify-center
+        rounded-full
+        px-3
+        text-[11px]
+        font-semibold
+        text-neutral-500
+        transition-all
+        duration-200
+        hover:bg-neutral-100
+        hover:text-neutral-700
+        active:scale-95
+        disabled:cursor-not-allowed
+        disabled:opacity-50
+        sm:min-h-8.5
+        sm:px-3.5
+      "
+            >
+              Cancel
+            </button>
+          </div>
+        ) : (
+          <button
+            type="button"
+            onClick={handleDelete}
+            aria-label="Delete goal"
+            className="
+      group/delete
+      inline-flex
+      min-h-8.5
+      items-center
+      justify-center
+      gap-1.5
+      rounded-full
+      border
+      border-black/[0.06]
+      bg-white
+      px-3
+      text-[11px]
+      font-medium
+      text-neutral-400
+      shadow-[0_3px_12px_rgba(0,0,0,0.035)]
+      transition-all
+      duration-200
+
+      hover:border-red-100
+      hover:bg-red-50
+      hover:text-red-500
+      active:scale-95
+
+      sm:min-h-8
+      sm:bg-neutral-50/70
+      sm:px-3.5
+    "
+          >
+            <Trash2
+              size={13}
+              strokeWidth={2}
+              className="
+        transition-transform
+        duration-200
+        group-hover/delete:scale-105
+      "
+            />
+
+            <span>Delete goal</span>
+          </button>
+        )}
+      </div>
 
       {/* ===================================================== */}
       {/* HERO */}
       {/* ===================================================== */}
 
-      <section className="relative mt-5 overflow-hidden rounded-[2rem] border border-black/[0.05] bg-white shadow-[0_20px_70px_-35px_rgba(0,0,0,0.18)]">
-        {/* Ambient */}
-
-        <div className="pointer-events-none absolute -right-24 -top-24 size-72 rounded-full bg-blue-100/40 blur-[90px]" />
-
-        <div className="pointer-events-none absolute -bottom-24 -left-24 size-72 rounded-full bg-pink-100/30 blur-[90px]" />
-
-        {/* Accent */}
-
-        <div className="absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-[#FFD166] via-[#FF6B8A] to-[#007AFF]" />
-
-        {/* Background icon */}
-
-        <Target
-          size={360}
-          strokeWidth={1}
-          className="pointer-events-none absolute -bottom-32 -right-24 text-neutral-900/[0.025] sm:size-[430px]"
+      {isEditing ? (
+        <EditGoalForm
+          goal={goal}
+          onClose={() => setIsEditing(false)}
         />
+      ) : (
 
-        <div className="relative p-6 sm:p-8 lg:p-10">
-          {/* Header */}
+        <section className="relative mt-5 overflow-hidden rounded-[2rem] border border-black/[0.05] bg-white shadow-[0_20px_70px_-35px_rgba(0,0,0,0.18)]">
+          {/* Ambient */}
 
-          <div className="flex items-start justify-between gap-5">
-            <div className="min-w-0">
-              {/* Category */}
+          <div className="pointer-events-none absolute -right-24 -top-24 size-72 rounded-full bg-blue-100/40 blur-[90px]" />
 
-              <div className="flex items-center gap-2.5">
-                <div className="flex size-8 items-center justify-center rounded-[11px] bg-neutral-100">
-                  <Target
-                    size={14}
+          <div className="pointer-events-none absolute -bottom-24 -left-24 size-72 rounded-full bg-pink-100/30 blur-[90px]" />
+
+          {/* Accent */}
+
+          <div className="absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-[#FFD166] via-[#FF6B8A] to-[#007AFF]" />
+
+          {/* Background icon */}
+
+          <Target
+            size={360}
+            strokeWidth={1}
+            className="pointer-events-none absolute -bottom-32 -right-24 text-neutral-900/[0.025] sm:size-[430px]"
+          />
+
+          <div className="relative p-6 sm:p-8 lg:p-10">
+            {/* Header */}
+
+            <div className="flex items-start justify-between gap-5">
+              <div className="min-w-0">
+                {/* Category */}
+
+                <div className="flex items-center gap-2.5">
+                  <div className="flex size-8 items-center justify-center rounded-[11px] bg-neutral-100">
+                    <Target
+                      size={14}
+                      strokeWidth={2}
+                      className="text-neutral-500"
+                    />
+                  </div>
+
+                  <span className="text-[10px] font-semibold uppercase tracking-[0.17em] text-neutral-400">
+                    {categoryLabels[goal.category] ?? goal.category}
+                  </span>
+                </div>
+
+                {/* Title */}
+
+                <button
+                  type="button"
+                  onClick={() => setIsEditing(true)}
+                  className="group mt-5 flex max-w-3xl items-start gap-2 text-left"
+                >
+                  <h1 className="break-words text-3xl font-semibold leading-[1.04] tracking-[-0.055em] text-neutral-900 sm:text-4xl lg:text-[46px]">
+                    {goal.title}
+                  </h1>
+
+                  <Pencil
+                    size={16}
+                    strokeWidth={2}
+                    className="mt-2 shrink-0 text-neutral-300 opacity-0 transition-opacity group-hover:opacity-100"
+                  />
+                </button>
+
+                {/* Description */}
+
+                {goal.description && (
+                  <p className="mt-4 max-w-2xl text-[13px] leading-6 text-neutral-400 sm:text-sm sm:leading-7">
+                    {goal.description}
+                  </p>
+                )}
+              </div>
+
+              {/* Action */}
+
+              <div className="hidden size-10 shrink-0 items-center justify-center rounded-full border border-black/[0.05] bg-neutral-50 text-neutral-300 sm:flex">
+                <ArrowUpRight
+                  size={16}
+                  strokeWidth={2}
+                />
+              </div>
+            </div>
+
+            {/* Meta */}
+
+            <div className="mt-8 flex flex-wrap gap-2">
+              {goal.target_amount !== null && (
+                <div className="inline-flex items-center gap-2 rounded-full border border-black/[0.05] bg-neutral-50 px-3.5 py-2">
+                  <Wallet
+                    size={12}
                     strokeWidth={2}
                     className="text-neutral-500"
                   />
+
+                  <span className="text-[11px] font-medium text-neutral-600">
+                    Target Rp{' '}
+                    {goal.target_amount.toLocaleString('id-ID')}
+                  </span>
                 </div>
+              )}
 
-                <span className="text-[10px] font-semibold uppercase tracking-[0.17em] text-neutral-400">
-                  {categoryLabels[goal.category] ?? goal.category}
-                </span>
-              </div>
+              {goal.deadline && (
+                <div className="inline-flex items-center gap-2 rounded-full border border-black/[0.05] bg-neutral-50 px-3.5 py-2">
+                  <CalendarDays
+                    size={12}
+                    strokeWidth={2}
+                    className="text-neutral-500"
+                  />
 
-              {/* Title */}
-
-              <h1 className="mt-5 max-w-3xl break-words text-3xl font-semibold leading-[1.04] tracking-[-0.055em] text-neutral-900 sm:text-4xl lg:text-[46px]">
-                {goal.title}
-              </h1>
-
-              {/* Description */}
-
-              {goal.description && (
-                <p className="mt-4 max-w-2xl text-[13px] leading-6 text-neutral-400 sm:text-sm sm:leading-7">
-                  {goal.description}
-                </p>
+                  <span className="text-[11px] font-medium text-neutral-600">
+                    {formatDate(goal.deadline)}
+                  </span>
+                </div>
               )}
             </div>
-
-            {/* Action */}
-
-            <div className="hidden size-10 shrink-0 items-center justify-center rounded-full border border-black/[0.05] bg-neutral-50 text-neutral-300 sm:flex">
-              <ArrowUpRight
-                size={16}
-                strokeWidth={2}
-              />
-            </div>
           </div>
-
-          {/* Meta */}
-
-          <div className="mt-8 flex flex-wrap gap-2">
-            {goal.target_amount !== null && (
-              <div className="inline-flex items-center gap-2 rounded-full border border-black/[0.05] bg-neutral-50 px-3.5 py-2">
-                <Wallet
-                  size={12}
-                  strokeWidth={2}
-                  className="text-neutral-500"
-                />
-
-                <span className="text-[11px] font-medium text-neutral-600">
-                  Target Rp{' '}
-                  {goal.target_amount.toLocaleString('id-ID')}
-                </span>
-              </div>
-            )}
-
-            {goal.deadline && (
-              <div className="inline-flex items-center gap-2 rounded-full border border-black/[0.05] bg-neutral-50 px-3.5 py-2">
-                <CalendarDays
-                  size={12}
-                  strokeWidth={2}
-                  className="text-neutral-500"
-                />
-
-                <span className="text-[11px] font-medium text-neutral-600">
-                  {formatDate(goal.deadline)}
-                </span>
-              </div>
-            )}
-          </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* ===================================================== */}
       {/* CONTENT */}
@@ -478,7 +673,10 @@ export default function GoalDetail({
 
             <div className="overflow-hidden rounded-[2rem] border border-black/[0.05] bg-white shadow-[0_15px_50px_-30px_rgba(0,0,0,0.15)]">
               <div className="lg:max-h-[calc(100vh-8rem)] lg:overflow-y-auto">
-                <SavingsHistory goalId={goal.id} />
+                <SavingsHistory
+                  goalId={goal.id}
+                  relationshipId={relationship.relationship.id}
+                />
               </div>
             </div>
           </aside>
