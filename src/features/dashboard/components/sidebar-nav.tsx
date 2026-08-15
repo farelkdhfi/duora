@@ -322,7 +322,7 @@ export default function SidebarNav({ onNavigate }: SidebarNavProps) {
         </button>
 
         <p className="mt-2 px-3.5 text-[10px] text-neutral-300">
-          Duora
+          Grow together with DUORA
         </p>
 
       </div>

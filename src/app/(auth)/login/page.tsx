@@ -41,7 +41,7 @@ export default function LoginPage() {
       {/* NAVBAR */}
       {/* ========================================================= */}
 
-      <nav className="relative z-20 px-6 py-5">
+      <nav className="relative z-20 px-6 py-5 hidden md:block">
 
         <div className="mx-auto flex max-w-7xl items-center justify-between">
 
@@ -265,7 +265,7 @@ export default function LoginPage() {
             {/* HEADING */}
             {/* ================================================= */}
 
-            <div className="mb-7">
+            <div className="mb-7 text-center">
 
 
               <h2 className="text-4xl font-semibold tracking-[-0.06em]">
