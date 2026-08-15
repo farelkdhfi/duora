@@ -254,20 +254,13 @@ export default function ProfileForm() {
           <div className="pointer-events-none absolute -right-8 -top-8 size-28 rounded-full bg-blue-100/40 blur-3xl" />
 
           <div className="relative flex items-start gap-3.5 sm:gap-4">
-            <div className="flex size-10 shrink-0 items-center justify-center rounded-[14px] bg-neutral-900 text-white shadow-sm sm:size-11">
-              <UserRound
-                size={18}
-                strokeWidth={2}
-              />
-            </div>
-
             <div className="min-w-0">
               <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-neutral-400 sm:text-[11px]">
                 Account
               </p>
 
-              <h2 className="mt-1 text-[20px] font-semibold tracking-[-0.03em] text-neutral-900 sm:text-[23px]">
-                Profile
+              <h2 className="mt-1 text-[18px] font-semibold tracking-[-0.03em] text-neutral-900 sm:text-[23px]">
+                Your partner can see your photos
               </h2>
 
               <p className="mt-1.5 max-w-md text-[12.5px] leading-relaxed text-neutral-400 sm:text-[13px]">
@@ -373,7 +366,7 @@ export default function ProfileForm() {
                 disabled={
                   updateAvatar.isPending
                 }
-                className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-neutral-900 px-3.5 py-1.5 text-[11px] font-semibold text-white transition-all duration-200 hover:bg-black active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
+                className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-neutral-900 px-3.5 py-2.5 text-[11px] font-semibold text-white transition-all duration-200 hover:bg-black active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
               >
                 <Camera
                   size={12}
