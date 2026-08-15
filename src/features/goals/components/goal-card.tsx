@@ -5,7 +5,6 @@ import Link from 'next/link'
 import {
   ArrowUpRight,
   CalendarDays,
-  CreditCard,
   Heart,
   Target,
   Trash2,
@@ -113,7 +112,10 @@ export default function GoalCard({
 
   const progress =
     target > 0
-      ? Math.min(100, Math.round((totalSaved / target) * 100))
+      ? Math.min(
+          100,
+          Math.round((totalSaved / target) * 100),
+        )
       : 0
 
   const contributors = getContributors(savings)
@@ -125,21 +127,226 @@ export default function GoalCard({
     e.preventDefault()
     e.stopPropagation()
 
-    if (!isConfirming) {
-      setIsConfirming(true)
-      return
-    }
-
-    deleteGoalMutation.mutate(goal.id)
+    setIsConfirming(true)
   }
 
-  const handleCancelClick = (
+  const handleConfirmDelete = (
     e: React.MouseEvent,
   ) => {
     e.preventDefault()
     e.stopPropagation()
+
+    deleteGoalMutation.mutate(goal.id)
+  }
+
+  const handleCancelDelete = (
+    e: React.MouseEvent,
+  ) => {
+    e.preventDefault()
+    e.stopPropagation()
+
     setIsConfirming(false)
   }
+
+  /*
+   * =========================================================
+   * DELETE CONFIRMATION
+   * =========================================================
+   */
+
+  if (isConfirming) {
+    return (
+      <div
+        className="
+          relative
+          flex
+          min-h-[210px]
+          w-full
+          flex-col
+          justify-center
+          overflow-hidden
+          rounded-[1.35rem]
+          bg-white
+          p-3
+          transition-all
+          duration-300
+          sm:min-h-[220px]
+        "
+      >
+        <div
+          className="
+            relative
+            flex
+            h-full
+            flex-1
+            flex-col
+            items-center
+            justify-center
+            overflow-hidden
+            rounded-[1.15rem]
+            bg-neutral-50/70
+            px-5
+            py-5
+            text-center
+            sm:px-6
+            sm:py-6
+          "
+        >
+
+          {/* ICON */}
+
+          <div
+            className="
+              relative
+              flex
+              size-11
+              items-center
+              justify-center
+              rounded-[14px]
+              bg-white
+              text-red-400
+              shadow-[0_5px_18px_rgba(239,68,68,0.10)]
+              sm:size-12
+              sm:rounded-[15px]
+            "
+          >
+            <Trash2
+              size={18}
+              strokeWidth={1.8}
+            />
+          </div>
+
+          {/* TEXT */}
+
+          <div className="relative mt-4">
+            <h3
+              className="
+                mt-1.5
+                max-w-[240px]
+                truncate
+                text-[15px]
+                font-semibold
+                tracking-[-0.03em]
+                text-neutral-900
+                sm:text-[16px]
+              "
+            >
+              Delete “{goal.title}”?
+            </h3>
+
+            <p
+              className="
+                mt-1.5
+                max-w-[270px]
+                text-[10px]
+                leading-5
+                text-neutral-400
+                sm:text-[11px]
+              "
+            >
+              This action cannot be undone.
+            </p>
+          </div>
+
+          {/* ACTIONS */}
+
+          <div
+            className="
+              relative
+              mt-5
+              flex
+              w-full
+              max-w-[280px]
+              gap-2
+            "
+          >
+            <button
+              type="button"
+              onClick={handleCancelDelete}
+              disabled={
+                deleteGoalMutation.isPending
+              }
+              className="
+                flex
+                h-9
+                min-w-0
+                flex-1
+                items-center
+                justify-center
+                rounded-full
+                border
+                border-black/[0.06]
+                bg-white
+                px-4
+                text-[10px]
+                font-semibold
+                text-neutral-500
+                shadow-[0_2px_8px_rgba(0,0,0,0.03)]
+                transition-all
+                duration-200
+                hover:bg-neutral-50
+                hover:text-neutral-700
+                active:scale-[0.97]
+                disabled:cursor-not-allowed
+                disabled:opacity-50
+                sm:h-10
+                sm:text-[11px]
+              "
+            >
+              Cancel
+            </button>
+
+            <button
+              type="button"
+              onClick={handleConfirmDelete}
+              disabled={
+                deleteGoalMutation.isPending
+              }
+              className="
+                flex
+                h-9
+                min-w-0
+                flex-1
+                items-center
+                justify-center
+                gap-1.5
+                rounded-full
+                bg-red-500
+                px-4
+                text-[10px]
+                font-semibold
+                text-white
+                shadow-[0_5px_15px_rgba(239,68,68,0.18)]
+                transition-all
+                duration-200
+                hover:bg-red-600
+                active:scale-[0.97]
+                disabled:cursor-not-allowed
+                disabled:opacity-50
+                sm:h-10
+                sm:text-[11px]
+              "
+            >
+              <Trash2
+                size={11}
+                strokeWidth={2}
+              />
+
+              {deleteGoalMutation.isPending
+                ? 'Deleting...'
+                : 'Delete'}
+            </button>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  /*
+   * =========================================================
+   * NORMAL CARD
+   * =========================================================
+   */
 
   return (
     <Link
@@ -147,7 +354,8 @@ export default function GoalCard({
       className="
         group
         relative
-        block h-fit
+        block
+        h-fit
         w-full
         overflow-hidden
         rounded-[1.35rem]
@@ -176,191 +384,124 @@ export default function GoalCard({
         "
       >
         <div className="relative flex h-full flex-col">
+
           {/* TOP */}
+
           <div className="flex items-start justify-between gap-3">
             <div className="flex min-w-0 items-center gap-2">
               <span
                 className={`
-        size-1.5
-        shrink-0
-        rounded-full
-        ${accent}
-      `}
+                  size-1.5
+                  shrink-0
+                  rounded-full
+                  ${accent}
+                `}
               />
 
               <span
                 className="
-        truncate
-        text-[9px]
-        font-semibold
-        uppercase
-        tracking-[0.2em]
-        text-neutral-400
-      "
+                  truncate
+                  text-[9px]
+                  font-semibold
+                  uppercase
+                  tracking-[0.2em]
+                  text-neutral-400
+                "
               >
                 {categoryLabels[goal.category]}
               </span>
             </div>
 
             <div className="flex shrink-0 items-center gap-1.5">
+
               {/* DELETE */}
-              {isConfirming ? (
-                <div
+
+              <button
+                type="button"
+                aria-label="Delete goal"
+                onClick={handleDeleteClick}
+                className="
+                  group/delete
+                  flex
+                  size-8
+                  items-center
+                  justify-center
+                  rounded-full
+                  border
+                  border-neutral-200/80
+                  bg-white
+                  text-neutral-400
+                  shadow-[0_2px_8px_rgba(0,0,0,0.035)]
+                  transition-all
+                  duration-200
+                  hover:border-red-100
+                  hover:bg-red-50
+                  hover:text-red-500
+                  active:scale-95
+                  sm:size-7.5
+                  sm:border-transparent
+                  sm:bg-white/80
+                  sm:opacity-70
+                  sm:group-hover:opacity-100
+                "
+              >
+                <Trash2
+                  size={13}
+                  strokeWidth={2}
                   className="
-          flex
-          items-center
-          gap-1
-          rounded-full
-          border
-          border-red-100
-          bg-white
-          p-1
-          shadow-[0_3px_12px_rgba(239,68,68,0.10)]
-        "
-                >
-                  <button
-                    onClick={handleDeleteClick}
-                    disabled={deleteGoalMutation.isPending}
-                    className="
-            flex
-            min-h-7
-            items-center
-            justify-center
-            rounded-full
-            bg-red-500
-            px-3
-            text-[9px]
-            font-semibold
-            text-white
-            transition-all
-            duration-200
-            hover:bg-red-600
-            active:scale-95
-            disabled:cursor-not-allowed
-            disabled:opacity-50
-            sm:min-h-7.5
-            sm:px-3.5
-          "
-                  >
-                    {deleteGoalMutation.isPending
-                      ? 'Deleting...'
-                      : 'Delete'}
-                  </button>
-
-                  <button
-                    onClick={handleCancelClick}
-                    disabled={deleteGoalMutation.isPending}
-                    className="
-            flex
-            min-h-7
-            items-center
-            justify-center
-            rounded-full
-            px-3
-            text-[9px]
-            font-semibold
-            text-neutral-500
-            transition-all
-            duration-200
-            hover:bg-neutral-100
-            hover:text-neutral-700
-            active:scale-95
-            disabled:cursor-not-allowed
-            disabled:opacity-50
-            sm:min-h-7.5
-            sm:px-3.5
-          "
-                  >
-                    Cancel
-                  </button>
-                </div>
-              ) : (
-                <button
-                  type="button"
-                  aria-label="Delete goal"
-                  onClick={handleDeleteClick}
-                  className="
-          group/delete
-          flex
-          size-8
-          items-center
-          justify-center
-          rounded-full
-          border
-          border-neutral-200/80
-          bg-white
-          text-neutral-400
-          shadow-[0_2px_8px_rgba(0,0,0,0.035)]
-          transition-all
-          duration-200
-
-          hover:border-red-100
-          hover:bg-red-50
-          hover:text-red-500
-          active:scale-95
-
-          sm:size-7.5
-          sm:border-transparent
-          sm:bg-white/80
-          sm:opacity-70
-          sm:group-hover:opacity-100
-        "
-                >
-                  <Trash2
-                    size={13}
-                    strokeWidth={2}
-                    className="
-            transition-transform
-            duration-200
-            group-hover/delete:scale-105
-          "
-                  />
-                </button>
-              )}
+                    transition-transform
+                    duration-200
+                    group-hover/delete:scale-105
+                  "
+                />
+              </button>
 
               {/* OPEN */}
+
               <div
                 className="
-        flex
-        size-8
-        items-center
-        justify-center
-        rounded-full
-        bg-white
-        text-neutral-400
-        shadow-[0_2px_8px_rgba(0,0,0,0.04)]
-        transition-all
-        duration-300
-        group-hover:bg-neutral-900
-        group-hover:text-white
-        sm:size-7.5
-      "
+                  flex
+                  size-8
+                  items-center
+                  justify-center
+                  rounded-full
+                  bg-white
+                  text-neutral-400
+                  shadow-[0_2px_8px_rgba(0,0,0,0.04)]
+                  transition-all
+                  duration-300
+                  group-hover:bg-neutral-900
+                  group-hover:text-white
+                  sm:size-7.5
+                "
               >
                 <ArrowUpRight
                   size={13}
                   strokeWidth={2}
                   className="
-          transition-transform
-          duration-300
-          group-hover:-translate-y-0.5
-          group-hover:translate-x-0.5
-        "
+                    transition-transform
+                    duration-300
+                    group-hover:-translate-y-0.5
+                    group-hover:translate-x-0.5
+                  "
                 />
               </div>
+
             </div>
           </div>
 
           {/* TITLE */}
+
           <div className="mt-3 min-w-0">
             <h3
               className="
+                mb-5
                 truncate
                 text-[17px]
                 font-semibold
                 leading-tight
                 text-neutral-900
                 sm:text-[19px]
-                mb-5
               "
             >
               {goal.title}
@@ -368,11 +509,15 @@ export default function GoalCard({
           </div>
 
           {/* BOTTOM */}
+
           <div className="mt-auto">
+
             {target > 0 ? (
               <>
                 <div className="flex items-end justify-between gap-3">
+
                   {/* SAVED */}
+
                   <div className="min-w-0">
                     <p
                       className="
@@ -403,6 +548,7 @@ export default function GoalCard({
                   </div>
 
                   {/* PROGRESS */}
+
                   <div className="shrink-0 text-right">
                     <p
                       className="
@@ -429,9 +575,11 @@ export default function GoalCard({
                       {progress}%
                     </p>
                   </div>
+
                 </div>
 
-                {/* PROGRESS */}
+                {/* PROGRESS BAR */}
+
                 <div
                   className="
                     mt-5
@@ -446,7 +594,10 @@ export default function GoalCard({
                     className="
                       h-full
                       rounded-full
-                      bg-linear-90 from-blue-200 via-pink-200 to-neutral-500
+                      bg-linear-90
+                      from-blue-200
+                      via-pink-200
+                      to-neutral-500
                       transition-all
                       duration-700
                       ease-out
@@ -512,8 +663,11 @@ export default function GoalCard({
             )}
 
             {/* FOOTER */}
+
             <div className="mt-3 flex items-center justify-between gap-3">
+
               {/* CONTRIBUTORS */}
+
               <div className="flex min-w-0 items-center">
                 {contributors.length > 0 ? (
                   <>
@@ -580,6 +734,7 @@ export default function GoalCard({
               </div>
 
               {/* DEADLINE */}
+
               {goal.deadline && (
                 <div className="flex shrink-0 items-center gap-1.5">
                   <CalendarDays
@@ -608,6 +763,7 @@ export default function GoalCard({
                   </span>
                 </div>
               )}
+
             </div>
           </div>
         </div>
