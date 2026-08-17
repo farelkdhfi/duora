@@ -4,6 +4,12 @@ export type DebateStatus =
   | 'resolved'
   | 'archived'
 
+  export type AiPersona =
+  | 'formal'
+  | 'lembut'
+  | 'kasar'
+  | 'lebay'
+
 export type DebateMessageRole = 'user' | 'ai'
 
 export interface DebateAnalysis {
@@ -45,6 +51,7 @@ export interface Debate {
   resolved_at: string | null
   ai_processing_requested_by: string | null
   ai_processing_started_at: string | null
+  ai_persona: AiPersona
   created_at: string
   updated_at: string
 }

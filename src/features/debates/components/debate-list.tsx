@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import {
   Loader2,
   MessageSquareText,
@@ -16,6 +17,13 @@ import {
   useDebates,
   useDeleteDebate,
 } from '../queries'
+import { AiPersona } from '../types'
+
+import happyEmot from '@/assets/emoticon/happy-emot.png'
+import neutralEmot from '@/assets/emoticon/neutral-emot.png'
+import sadEmot from '@/assets/emoticon/sad-emot.png'
+import stressedEmot from '@/assets/emoticon/stressed-emot.png'
+import tiredEmot from '@/assets/emoticon/tired-emot.png'
 
 interface DebateListProps {
   relationshipId: string
@@ -40,6 +48,33 @@ const statusLabel = {
   },
 }
 
+const personaOptions: {
+  value: AiPersona
+  label: string
+  image: typeof happyEmot
+}[] = [
+    {
+      value: 'formal',
+      label: 'Formal',
+      image: neutralEmot,
+    },
+    {
+      value: 'lembut',
+      label: 'Lembut',
+      image: happyEmot,
+    },
+    {
+      value: 'kasar',
+      label: 'Nyeletuk',
+      image: stressedEmot,
+    },
+    {
+      value: 'lebay',
+      label: 'Lebay',
+      image: tiredEmot,
+    },
+  ]
+
 function formatDate(dateString: string) {
   return new Date(dateString).toLocaleDateString(
     'id-ID',
@@ -56,10 +91,10 @@ function DebateListItem({
   relationshipId,
 }: {
   debate: ReturnType<typeof useDebates>['data'] extends
-    | (infer T)[]
-    | undefined
-    ? T
-    : never
+  | (infer T)[]
+  | undefined
+  ? T
+  : never
   relationshipId: string
 }) {
   const [isConfirmingDelete, setIsConfirmingDelete] =
@@ -298,6 +333,7 @@ export default function DebateList({
 
   const [showCreate, setShowCreate] = useState(false)
   const [title, setTitle] = useState('')
+  const [selectedPersona, setSelectedPersona] = useState<AiPersona>('formal')
 
   const createDebateMutation = useCreateDebate(
     relationshipId,
@@ -310,10 +346,12 @@ export default function DebateList({
       {
         relationshipId,
         title: title.trim(),
+        aiPersona: selectedPersona,
       },
       {
         onSuccess: () => {
           setTitle('')
+          setSelectedPersona('formal')
           setShowCreate(false)
         },
       },
@@ -496,6 +534,151 @@ export default function DebateList({
 
                   Start discussion
                 </button>
+              </div>
+
+              {/* AI PERSONA */}
+
+              <div className="mt-3">
+                <div className="mb-2 flex items-center justify-between">
+                  <div>
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-neutral-400">
+                      AI Mediator Style
+                    </p>
+
+                    <p className="mt-0.5 text-[10px] text-neutral-300">
+                      Choose how your AI mediator should behave.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+                  {personaOptions.map((option) => {
+                    const isSelected =
+                      selectedPersona === option.value
+
+                    return (
+                      <button
+                        key={option.value}
+                        type="button"
+                        onClick={() =>
+                          setSelectedPersona(option.value)
+                        }
+                        className={`
+            group
+            relative
+            flex
+            items-center
+            gap-2.5
+            overflow-hidden
+            rounded-[1.1rem]
+            border
+            px-3
+            py-2.5
+            text-left
+            transition-all
+            duration-200
+            ${isSelected
+                            ? `
+                  border-neutral-900
+                  bg-neutral-900
+                  text-white
+                  shadow-[0_6px_18px_rgba(0,0,0,0.12)]
+                `
+                            : `
+                  border-black/[0.055]
+                  bg-neutral-50/70
+                  text-neutral-500
+                  hover:border-black/[0.09]
+                  hover:bg-white
+                  hover:text-neutral-800
+                `
+                          }
+          `}
+                      >
+                        {/* subtle accent */}
+                        <span
+                          className={`
+              pointer-events-none
+              absolute
+              -right-4
+              -top-4
+              size-10
+              rounded-full
+              blur-xl
+              transition-opacity
+              ${isSelected
+                              ? 'bg-pink-400/20 opacity-100'
+                              : 'bg-blue-400/10 opacity-0 group-hover:opacity-100'
+                            }
+            `}
+                        />
+
+                        <span
+                          className={`
+    relative
+    flex
+    size-8
+    shrink-0
+    items-center
+    justify-center
+    rounded-[0.75rem]
+    transition
+    ${isSelected
+                              ? 'bg-white/10'
+                              : 'border border-black/[0.045] bg-white shadow-[0_2px_8px_rgba(0,0,0,0.025)]'
+                            }
+  `}
+                        >
+                          <Image
+                            src={option.image}
+                            alt={option.label}
+                            width={24}
+                            height={24}
+                            className="size-6 object-contain"
+                          />
+                        </span>
+
+                        <span className="relative min-w-0">
+                          <span
+                            className={`
+                block
+                text-[10px]
+                font-semibold
+                tracking-[-0.01em]
+                ${isSelected
+                                ? 'text-white'
+                                : 'text-neutral-600'
+                              }
+              `}
+                          >
+                            {option.label}
+                          </span>
+
+                          <span
+                            className={`
+                mt-0.5
+                block
+                text-[8.5px]
+                ${isSelected
+                                ? 'text-white/45'
+                                : 'text-neutral-300'
+                              }
+              `}
+                          >
+                            {option.value === 'formal' &&
+                              'Neutral & structured'}
+                            {option.value === 'lembut' &&
+                              'Calm & empathetic'}
+                            {option.value === 'kasar' &&
+                              'Casual & witty'}
+                            {option.value === 'lebay' &&
+                              'Expressive & dramatic'}
+                          </span>
+                        </span>
+                      </button>
+                    )
+                  })}
+                </div>
               </div>
             </div>
           </div>

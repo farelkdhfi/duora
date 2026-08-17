@@ -22,6 +22,14 @@ import {
   useResolveDebate,
   useSendDebateMessage,
 } from '../queries'
+import { AiPersona } from '../types'
+
+import happyEmot from '@/assets/emoticon/happy-emot.png'
+import neutralEmot from '@/assets/emoticon/neutral-emot.png'
+import sadEmot from '@/assets/emoticon/sad-emot.png'
+import stressedEmot from '@/assets/emoticon/stressed-emot.png'
+import tiredEmot from '@/assets/emoticon/tired-emot.png'
+import Image from 'next/image'
 
 interface DebateRoomProps {
   debateId: string
@@ -50,6 +58,31 @@ const statusConfig = {
   archived: {
     label: 'Archived',
     color: 'bg-neutral-300',
+  },
+}
+
+const personaLabel: Record<
+  AiPersona,
+  {
+    text: string
+    image: typeof happyEmot
+  }
+> = {
+  formal: {
+    text: 'Formal',
+    image: neutralEmot,
+  },
+  lembut: {
+    text: 'Lembut',
+    image: happyEmot,
+  },
+  kasar: {
+    text: 'Nyeletuk',
+    image: stressedEmot,
+  },
+  lebay: {
+    text: 'Lebay',
+    image: tiredEmot,
   },
 }
 
@@ -394,23 +427,60 @@ export default function DebateRoom({
                 {debate.title}
               </h1>
 
-              <div className="mt-1 flex items-center gap-2">
-                <span
-                  className={`size-1.5 rounded-full ${status.color}`}
-                />
+              <div className="mt-1.5 flex min-w-0 items-center gap-2">
+                {/* STATUS */}
+
+                <div className="flex shrink-0 items-center gap-1.5">
+                  <span
+                    className={`size-1.5 rounded-full ${status.color}`}
+                  />
+
+                  <span
+                    className="
+        text-[9.5px]
+        font-medium
+        tracking-[-0.005em]
+        text-neutral-400
+      "
+                  >
+                    {status.label}
+
+                    {isRoomActive &&
+                      ` · ${userMessageCount}/${debate.max_messages}`}
+                  </span>
+                </div>
+
+                {/* PERSONA */}
 
                 <span
                   className="
-                  text-[9.5px]
-                  font-medium
-                  tracking-[-0.005em]
-                  text-neutral-400
-                "
+      flex
+      shrink-0
+      items-center
+      gap-1
+      rounded-full
+      border
+      border-black/[0.045]
+      bg-neutral-50
+      px-2
+      py-0.5
+      text-[9px]
+      font-medium
+      text-neutral-500
+      shadow-[0_2px_8px_rgba(0,0,0,0.025)]
+    "
                 >
-                  {status.label}
+                  <Image
+                    src={personaLabel[debate.ai_persona].image}
+                    alt={personaLabel[debate.ai_persona].text}
+                    width={16}
+                    height={16}
+                    className="size-4 object-contain"
+                  />
 
-                  {isRoomActive &&
-                    ` · ${userMessageCount}/${debate.max_messages}`}
+                  <span>
+                    {personaLabel[debate.ai_persona].text}
+                  </span>
                 </span>
               </div>
             </div>

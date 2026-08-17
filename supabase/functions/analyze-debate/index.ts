@@ -39,8 +39,32 @@ const DEFAULT_PROVIDER_ORDER: AiProvider[] = [
   'groq',
 ]
 
+type AiPersona = 'formal' | 'lembut' | 'kasar' | 'lebay'
+
+const PERSONA_STYLE_INSTRUCTIONS: Record<
+  AiPersona,
+  string
+> = {
+  formal: `GAYA BAHASA: Formal dan profesional, seperti konsultan/mediator berpengalaman. Gunakan bahasa baku, hindari singkatan gaul, tetap hangat tapi terstruktur.`,
+
+  lembut: `GAYA BAHASA: Lembut, hangat, dan penuh empati, seperti sahabat yang sangat perhatian. Gunakan kata-kata yang menenangkan, banyak validasi perasaan, hindari kesan menggurui. Boleh pakai emoji sesekali untuk kehangatan (🤍, 💭).`,
+
+  kasar: `GAYA BAHASA: Sarkastik dan nyeletuk galak, seperti teman deket yang blak-blakan dan suka julid ringan. Boleh nyindir logika yang lemah dengan gaya "yah gitu deh" atau "come on...", boleh pakai bahasa santai/gaul. TAPI TETAP WAJIB: jangan pernah menghina karakter/personal siapa pun, jangan merendahkan, jangan pakai kata kasar/makian. Sarkasme ini soal ARGUMENnya yang lemah, bukan soal orangnya yang buruk.`,
+
+  lebay: `GAYA BAHASA: Ekspresif dan dramatis ala sinetron/drama Korea, penuh emosi berlebihan tapi tetap lucu dan menghibur. Gunakan banyak tanda seru, ungkapan hiperbolik ("ASTAGA", "OMG", "ini drama banget sih"), emoji dramatis (😱💔✨). Tetap sampaikan analisis yang benar, cuma dibungkus dengan gaya yang heboh dan menghibur.`,
+}
+
+const PERSONA_CORE_RULES = `
+ATURAN INTI YANG TIDAK BOLEH DILANGGAR APAPUN GAYA BAHASAMU:
+- Isi analisis (fakta, opini, kesimpulan) harus tetap AKURAT dan NETRAL, tidak berubah karena gaya bahasa.
+- JANGAN PERNAH menghina, merendahkan, atau menyerang karakter/kepribadian salah satu pihak sebagai manusia.
+- Gaya bahasa hanya mengubah CARA PENYAMPAIAN, bukan substansi atau keberpihakan.
+- Kalau ada indikasi kekerasan, pelecehan, atau bahaya nyata dalam percakapan, segera keluar dari gaya bahasa manapun dan sampaikan dengan serius bahwa ini butuh bantuan profesional.
+`
+
 function buildCommentPrompt(
   participantNames: string[],
+  persona: AiPersona,
 ) {
   return `Kamu adalah partisipan diskusi netral yang membantu pasangan (${participantNames.join(' dan ')}) menganalisis perdebatan mereka.
 
@@ -49,9 +73,13 @@ Kamu SUDAH ikut dalam percakapan ini sebelumnya (kalau ada histori komentarmu, l
 Tugasmu di setiap giliran:
 1. Baca argumen terbaru dari kedua pihak.
 2. Pisahkan mana OPINI (perasaan/preferensi) dan mana FAKTA (bisa diverifikasi).
-3. Beri tanggapan singkat dan membangun — boleh menantang logika salah satu pihak dengan sopan kalau ada kelemahan argumen, tapi JANGAN menyerang personal.
+3. Beri tanggapan singkat dan membangun — boleh menantang logika salah satu pihak kalau ada kelemahan argumen.
 4. Saat menyebut salah satu pihak, gunakan NAMA ASLI mereka (${participantNames.join(', ')}), jangan pakai sebutan generik seperti "pihak A" atau "pasangan pertama".
 5. Jangan menyimpulkan pemenang dulu di tahap ini — itu hanya untuk kesimpulan akhir nanti.
+
+${PERSONA_STYLE_INSTRUCTIONS[persona]}
+
+${PERSONA_CORE_RULES}
 
 WAJIB balas HANYA dalam format JSON valid:
 
@@ -59,12 +87,13 @@ WAJIB balas HANYA dalam format JSON valid:
   "facts": ["fakta relevan yang baru muncul"],
   "opinions": ["opini pihak yang relevan, sebut nama aslinya"],
   "common_ground": "titik temu yang mulai terlihat (kalau ada)",
-  "summary": "tanggapanmu ke percakapan ini, natural seperti partisipan diskusi, sapa mereka dengan nama"
+  "summary": "tanggapanmu ke percakapan ini, natural seperti partisipan diskusi, sapa mereka dengan nama, sesuai gaya bahasa yang ditentukan"
 }`
 }
 
 function buildFinalVerdictPrompt(
   participantNames: string[],
+  persona: AiPersona,
 ) {
   return `Kamu adalah mediator netral yang akan memberi KESIMPULAN AKHIR dari sebuah diskusi/perdebatan pasangan bernama ${participantNames.join(' dan ')}.
 
@@ -74,9 +103,12 @@ Tugasmu sekarang:
 1. Rangkum fakta-fakta kunci yang relevan.
 2. Rangkum opini masing-masing pihak — SEBUT NAMA ASLI mereka (${participantNames.join(', ')}), jangan pakai "pihak A/B" atau sebutan generik.
 3. Tentukan secara ANALITIS argumen mana yang lebih kuat/logis, dengan alasan yang jelas dan berbasis fakta/logika — bukan berdasarkan siapa yang "lebih baik" sebagai orang. Sebut nama orangnya secara eksplisit di penjelasan ini.
-4. Tetap hormati kedua pihak: sampaikan dengan nada membangun, bukan menghakimi karakter siapa pun.
-5. Di bagian summary, sapa MASING-MASING orang secara personal dengan nama mereka — buat terasa seperti kesimpulan yang ditujukan khusus untuk mereka berdua, bukan template generik.
-6. Beri titik temu atau langkah konkret yang bisa mereka ambil bersama ke depannya.
+4. Di bagian summary, sapa MASING-MASING orang secara personal dengan nama mereka.
+5. Beri titik temu atau langkah konkret yang bisa mereka ambil bersama ke depannya.
+
+${PERSONA_STYLE_INSTRUCTIONS[persona]}
+
+${PERSONA_CORE_RULES}
 
 WAJIB balas HANYA dalam format JSON valid:
 
@@ -84,8 +116,8 @@ WAJIB balas HANYA dalam format JSON valid:
   "facts": ["fakta kunci 1", "fakta kunci 2"],
   "opinions": ["opini ${participantNames[0] ?? 'pihak pertama'}: ...", "opini ${participantNames[1] ?? 'pihak kedua'}: ..."],
   "common_ground": "titik temu yang bisa mereka sepakati",
-  "stronger_argument": "penjelasan argumen mana yang lebih logis dan kenapa, sebut nama orangnya, disampaikan secara netral dan berbasis fakta",
-  "summary": "kesimpulan akhir yang menyapa kedua nama secara personal, dan saran langkah ke depan"
+  "stronger_argument": "penjelasan argumen mana yang lebih logis dan kenapa, sebut nama orangnya, sesuai gaya bahasa yang ditentukan",
+  "summary": "kesimpulan akhir yang menyapa kedua nama secara personal, sesuai gaya bahasa yang ditentukan, dan saran langkah ke depan"
 }`
 }
 
@@ -262,9 +294,7 @@ async function callAiWithFallback({
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
-    return new Response('ok', {
-      headers: corsHeaders,
-    })
+    return new Response('ok', { headers: corsHeaders })
   }
 
   if (req.method !== 'POST') {
@@ -290,10 +320,9 @@ Deno.serve(async (req) => {
       )
     }
 
-    // Validasi provider kalau user pilih manual
     const preferredProvider: AiProvider | null =
       provider === 'openrouter' ||
-      provider === 'groq'
+        provider === 'groq'
         ? provider
         : null
 
@@ -303,6 +332,23 @@ Deno.serve(async (req) => {
       SUPABASE_URL,
       SUPABASE_SERVICE_ROLE_KEY,
     )
+
+    // Ambil persona dari room debate
+    const {
+      data: debateRow,
+      error: debateError,
+    } = await supabase
+      .from('debates')
+      .select('ai_persona')
+      .eq('id', debateId)
+      .single()
+
+    if (debateError) {
+      throw new Error(debateError.message)
+    }
+
+    const persona: AiPersona =
+      debateRow?.ai_persona ?? 'formal'
 
     const {
       data: messages,
@@ -368,8 +414,14 @@ Deno.serve(async (req) => {
       .join('\n')
 
     const systemPrompt = isFinalVerdict
-      ? buildFinalVerdictPrompt(participantNames)
-      : buildCommentPrompt(participantNames)
+      ? buildFinalVerdictPrompt(
+        participantNames,
+        persona,
+      )
+      : buildCommentPrompt(
+        participantNames,
+        persona,
+      )
 
     const userPrompt = isFinalVerdict
       ? `Berikut seluruh transkrip diskusi:\n\n${transcript}\n\nBerikan kesimpulan akhir dan tentukan argumen mana yang lebih logis. Sapa ${participantNames.join(' dan ')} secara personal.`
@@ -382,7 +434,7 @@ Deno.serve(async (req) => {
       preferredProvider,
       systemPrompt,
       userPrompt,
-      temperature: isFinalVerdict ? 0.3 : 0.5,
+      temperature: isFinalVerdict ? 0.3 : 0.6,
     })
 
     let analysis

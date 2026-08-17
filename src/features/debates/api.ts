@@ -1,5 +1,5 @@
 import { createClient } from '@/lib/supabase/client'
-import type { Debate, DebateMessage } from './types'
+import type { AiPersona, Debate, DebateMessage } from './types'
 
 export async function getDebates(
   relationshipId: string,
@@ -46,9 +46,11 @@ export async function getDebate(
 export async function createDebate({
   relationshipId,
   title,
+  aiPersona = 'formal',
 }: {
   relationshipId: string
   title: string
+  aiPersona?: AiPersona
 }): Promise<Debate> {
   const supabase = createClient()
 
@@ -69,6 +71,7 @@ export async function createDebate({
       relationship_id: relationshipId,
       created_by: user.id,
       title,
+      ai_persona: aiPersona,
     })
     .select()
     .single()
@@ -78,6 +81,27 @@ export async function createDebate({
   }
 
   return data
+}
+
+export async function updateDebatePersona({
+  debateId,
+  aiPersona,
+}: {
+  debateId: string
+  aiPersona: AiPersona
+}) {
+  const supabase = createClient()
+
+  const { error } = await supabase
+    .from('debates')
+    .update({ ai_persona: aiPersona })
+    .eq('id', debateId)
+
+  if (error) {
+    throw new Error(error.message)
+  }
+
+  return debateId
 }
 
 export async function deleteDebate(

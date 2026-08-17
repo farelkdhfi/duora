@@ -15,6 +15,7 @@ import {
   requestAiAnalysis,
   resolveDebate,
   sendDebateMessage,
+  updateDebatePersona,
 } from './api'
 import type { Debate, DebateMessage } from './types'
 
@@ -84,6 +85,28 @@ export function useCreateDebate(
     mutationFn: createDebate,
 
     onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: debatesKeys.list(
+          relationshipId,
+        ),
+      })
+    },
+  })
+}
+
+export function useUpdateDebatePersona(
+  relationshipId: string,
+) {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: updateDebatePersona,
+
+    onSuccess: (debateId) => {
+      queryClient.invalidateQueries({
+        queryKey: debatesKeys.detail(debateId),
+      })
+
       queryClient.invalidateQueries({
         queryKey: debatesKeys.list(
           relationshipId,
@@ -209,13 +232,6 @@ export function useRequestAiAnalysis(
   })
 }
 
-/**
- * Subscribe ke perubahan status debate secara realtime.
- * Kalau status berubah jadi 'pending_verdict', otomatis
- * panggil AI final verdict SEKALI (dijaga pakai ref
- * supaya nggak double-trigger dari kedua pasangan sekaligus
- * atau dari re-render).
- */
 export function useAutoFinalVerdict(
   debateId: string,
 ) {
