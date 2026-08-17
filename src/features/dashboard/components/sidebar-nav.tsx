@@ -14,6 +14,7 @@ import {
   Logs,
   NotebookPen,
   Pin,
+  Smile,
   User2,
 } from 'lucide-react'
 
@@ -59,6 +60,11 @@ const navigation = [
     label: 'Profile',
     href: '/profile',
     icon: User2,
+  },
+  {
+    label: 'Debates',
+    href: '/debates',
+    icon: Smile,
   },
 ]
 
