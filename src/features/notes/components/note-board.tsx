@@ -102,12 +102,12 @@ function NoteEmptyState() {
       </div>
 
       <h3 className="mt-5 text-[13px] font-semibold tracking-[-0.025em] text-neutral-800">
-        Belum ada catatan
+        No notes yet
       </h3>
 
       <p className="mx-auto mt-2 max-w-[250px] text-[11.5px] leading-5 text-neutral-400">
-        Simpan ide, rencana, reminder, atau pesan
-        kecil untuk pasanganmu.
+        Save ideas, plans, reminders, or little messages
+        for your partner.
       </p>
     </div>
   )
@@ -201,7 +201,7 @@ export default function NoteBoard({
                   </p>
 
                   <h3 className="mt-1 text-[14px] font-semibold tracking-[-0.025em] text-neutral-900">
-                    Tulis sesuatu
+                    Write something
                   </h3>
                 </div>
 
@@ -234,7 +234,7 @@ export default function NoteBoard({
                 onChange={(e) =>
                   setNewTitle(e.target.value)
                 }
-                placeholder="Judul catatan"
+                placeholder="Note title"
                 autoFocus
                 className="
                   mt-5
@@ -260,7 +260,7 @@ export default function NoteBoard({
                 onChange={(e) =>
                   setNewContent(e.target.value)
                 }
-                placeholder="Tulis catatan, ide, atau pesan untuk pasangan..."
+                placeholder="Write a note, idea, or message for your partner..."
                 rows={4}
                 className="
                   mt-4
@@ -287,7 +287,7 @@ export default function NoteBoard({
                   onChange={(e) =>
                     setNewCategory(e.target.value)
                   }
-                  placeholder="kategori"
+                  placeholder="category"
                   className="
                     flex-1
                     bg-transparent
@@ -303,7 +303,7 @@ export default function NoteBoard({
 
               <div className="mt-5 flex items-center justify-between border-t border-black/[0.04] pt-4">
                 <p className="text-[10px] text-neutral-300">
-                  Catatan akan tersimpan untuk kalian berdua.
+                  This note will be saved for both of you.
                 </p>
 
                 <button
@@ -337,10 +337,10 @@ export default function NoteBoard({
                         size={12}
                         className="animate-spin"
                       />
-                      Menyimpan...
+                      Saving...
                     </>
                   ) : (
-                    'Simpan catatan'
+                    'Save note'
                   )}
                 </button>
               </div>
@@ -378,7 +378,7 @@ export default function NoteBoard({
               <Plus size={13} strokeWidth={2} />
             </span>
 
-            Tulis catatan baru
+            Write a new note
           </button>
         )}
       </div>

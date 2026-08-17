@@ -5,6 +5,7 @@ import { usePathname, useRouter } from 'next/navigation'
 
 import {
   CalendarDays,
+  ChartBarDecreasing,
   CheckCircle2,
   Goal,
   Heart,
@@ -14,7 +15,6 @@ import {
   Logs,
   NotebookPen,
   Pin,
-  Smile,
   User2,
 } from 'lucide-react'
 
@@ -47,9 +47,9 @@ const navigation = [
     icon: CheckCircle2,
   },
   {
-    label: 'Activities',
-    href: '/activities',
-    icon: Logs,
+    label: 'Debates',
+    href: '/debates',
+    icon: ChartBarDecreasing,
   },
   {
     label: 'Notes',
@@ -62,9 +62,9 @@ const navigation = [
     icon: User2,
   },
   {
-    label: 'Debates',
-    href: '/debates',
-    icon: Smile,
+    label: 'Activities',
+    href: '/activities',
+    icon: Logs,
   },
 ]
 
@@ -111,9 +111,9 @@ export default function SidebarNav({ onNavigate }: SidebarNavProps) {
           <div>
             <div className='flex items-center gap-1'>
               <Image src={logoImage} width={20} height={20} alt='logo' />
-            <p className="text-[17px] uppercase font-bold tracking-[-0.04em] text-[#111111]">
-              duora
-            </p>
+              <p className="text-[17px] uppercase font-bold tracking-[-0.04em] text-[#111111]">
+                duora
+              </p>
             </div>
 
             <p className="mt-0.5 text-[11px] text-neutral-400">
@@ -187,10 +187,9 @@ export default function SidebarNav({ onNavigate }: SidebarNavProps) {
                   rounded-2xl px-3.5 py-3
                   text-[13px] font-medium
                   transition-all duration-200
-                  ${
-                    isActive
-                      ? 'bg-gradient-to-r from-blue-50/90 via-indigo-50/60 to-pink-50/70 text-neutral-900 shadow-[0_4px_15px_-8px_rgba(99,102,241,0.25)]'
-                      : 'text-neutral-500 hover:bg-black/[0.025] hover:text-neutral-900'
+                  ${isActive
+                    ? 'bg-gradient-to-r from-blue-50/90 via-indigo-50/60 to-pink-50/70 text-neutral-900 shadow-[0_4px_15px_-8px_rgba(99,102,241,0.25)]'
+                    : 'text-neutral-500 hover:bg-black/[0.025] hover:text-neutral-900'
                   }
                 `}
               >
@@ -203,10 +202,9 @@ export default function SidebarNav({ onNavigate }: SidebarNavProps) {
                   className={`
                     flex size-8 shrink-0 items-center justify-center
                     rounded-xl transition
-                    ${
-                      isActive
-                        ? 'bg-white text-black shadow-sm'
-                        : 'text-neutral-400 group-hover:text-neutral-700'
+                    ${isActive
+                      ? 'bg-white text-black shadow-sm'
+                      : 'text-neutral-400 group-hover:text-neutral-700'
                     }
                   `}
                 >

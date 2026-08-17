@@ -32,21 +32,21 @@ const activityConfig: Record<
     icon: Target,
     color: 'text-pink-500',
     bg: 'bg-pink-50',
-    label: (m) => `membuat goal baru "${m.goal_title}"`,
+    label: (m) => `created a new goal "${m.goal_title}"`,
   },
 
   goal_updated: {
     icon: Target,
     color: 'text-blue-500',
     bg: 'bg-blue-50',
-    label: (m) => `memperbarui goal "${m.goal_title}"`,
+    label: (m) => `updated the goal "${m.goal_title}"`,
   },
 
   goal_deleted: {
     icon: Target,
     color: 'text-neutral-400',
     bg: 'bg-neutral-100',
-    label: (m) => `menghapus goal "${m.goal_title}"`,
+    label: (m) => `deleted the goal "${m.goal_title}"`,
   },
 
   saving_added: {
@@ -54,9 +54,9 @@ const activityConfig: Record<
     color: 'text-emerald-500',
     bg: 'bg-emerald-50',
     label: (m) =>
-      `menabung Rp ${Number(m.amount).toLocaleString(
+      `saved Rp ${Number(m.amount).toLocaleString(
         'id-ID',
-      )} untuk "${m.goal_title}"`,
+      )} for "${m.goal_title}"`,
   },
 
   saving_deleted: {
@@ -64,44 +64,44 @@ const activityConfig: Record<
     color: 'text-neutral-400',
     bg: 'bg-neutral-100',
     label: (m) =>
-      `menghapus tabungan Rp ${Number(m.amount).toLocaleString(
+      `deleted savings of Rp ${Number(m.amount).toLocaleString(
         'id-ID',
-      )} dari "${m.goal_title}"`,
+      )} from "${m.goal_title}"`,
   },
 
   checkin_added: {
     icon: Smile,
     color: 'text-amber-500',
     bg: 'bg-amber-50',
-    label: () => `melakukan mood check-in hari ini`,
+    label: () => `completed today's mood check-in`,
   },
 
   checkin_updated: {
     icon: Smile,
     color: 'text-amber-400',
     bg: 'bg-amber-50',
-    label: () => `memperbarui mood check-in`,
+    label: () => `updated their mood check-in`,
   },
 
   plan_created: {
     icon: CalendarCheck,
     color: 'text-blue-500',
     bg: 'bg-blue-50',
-    label: (m) => `membuat rencana "${m.plan_title}"`,
+    label: (m) => `created a plan "${m.plan_title}"`,
   },
 
   plan_updated: {
     icon: CalendarCheck,
     color: 'text-blue-400',
     bg: 'bg-blue-50',
-    label: (m) => `memperbarui rencana "${m.plan_title}"`,
+    label: (m) => `updated the plan "${m.plan_title}"`,
   },
 
   plan_deleted: {
     icon: CalendarCheck,
     color: 'text-neutral-400',
     bg: 'bg-neutral-100',
-    label: (m) => `menghapus rencana "${m.plan_title}"`,
+    label: (m) => `deleted the plan "${m.plan_title}"`,
   },
 
   checklist_completed: {
@@ -109,7 +109,7 @@ const activityConfig: Record<
     color: 'text-emerald-500',
     bg: 'bg-emerald-50',
     label: (m) =>
-      `menyelesaikan "${m.checklist_title}" di goal "${m.goal_title}"`,
+      `completed "${m.checklist_title}" in the goal "${m.goal_title}"`,
   },
 
   checklist_uncompleted: {
@@ -117,28 +117,28 @@ const activityConfig: Record<
     color: 'text-neutral-400',
     bg: 'bg-neutral-100',
     label: (m) =>
-      `membatalkan "${m.checklist_title}" di goal "${m.goal_title}"`,
+      `unchecked "${m.checklist_title}" in the goal "${m.goal_title}"`,
   },
 
   note_created: {
     icon: StickyNote,
     color: 'text-pink-500',
     bg: 'bg-pink-50',
-    label: (m) => `membuat catatan "${m.note_title}"`,
+    label: (m) => `created a note "${m.note_title}"`,
   },
 
   note_updated: {
     icon: StickyNote,
     color: 'text-blue-500',
     bg: 'bg-blue-50',
-    label: (m) => `memperbarui catatan "${m.note_title}"`,
+    label: (m) => `updated the note "${m.note_title}"`,
   },
 
   note_deleted: {
     icon: StickyNote,
     color: 'text-neutral-400',
     bg: 'bg-neutral-100',
-    label: (m) => `menghapus catatan "${m.note_title}"`,
+    label: (m) => `deleted the note "${m.note_title}"`,
   },
 }
 
@@ -151,10 +151,10 @@ function formatRelativeTime(dateString: string) {
   const diffHours = Math.floor(diffMinutes / 60)
   const diffDays = Math.floor(diffHours / 24)
 
-  if (diffMinutes < 1) return 'Baru saja'
-  if (diffMinutes < 60) return `${diffMinutes}m lalu`
-  if (diffHours < 24) return `${diffHours}j lalu`
-  if (diffDays < 7) return `${diffDays}h lalu`
+  if (diffMinutes < 1) return 'Just now'
+  if (diffMinutes < 60) return `${diffMinutes}m ago`
+  if (diffHours < 24) return `${diffHours}h ago`
+  if (diffDays < 7) return `${diffDays}d ago`
 
   return date.toLocaleDateString('id-ID', {
     day: 'numeric',
@@ -180,7 +180,7 @@ function ActivityItem({
   const actorName =
     activity.actor.display_name ??
     activity.actor.username ??
-    'Seseorang'
+    'Someone'
 
   return (
     <div className="group relative flex gap-4">
@@ -238,10 +238,9 @@ function ActivityItem({
           min-w-0
           flex-1
           pb-5
-          ${
-            !isLast
-              ? 'border-b border-black/[0.035]'
-              : ''
+          ${!isLast
+            ? 'border-b border-black/[0.035]'
+            : ''
           }
         `}
       >
@@ -341,10 +340,9 @@ function ActivityFeedSkeleton() {
                 min-w-0
                 flex-1
                 pb-5
-                ${
-                  index !== 4
-                    ? 'border-b border-black/[0.035]'
-                    : ''
+                ${index !== 4
+                  ? 'border-b border-black/[0.035]'
+                  : ''
                 }
               `}
             >
@@ -427,7 +425,7 @@ function ActivityEmptyState() {
             text-neutral-800
           "
         >
-          Belum ada aktivitas
+          No activity yet
         </h3>
 
         <p
@@ -440,8 +438,8 @@ function ActivityEmptyState() {
             text-neutral-400
           "
         >
-          Semua kegiatan kamu dan pasangan
-          akan muncul di sini.
+          All activities from you and your partner
+          will appear here.
         </p>
       </div>
     </div>
@@ -568,10 +566,10 @@ export default function ActivityFeed({
                 size={13}
                 className="animate-spin"
               />
-              Memuat aktivitas...
+              Loading activities...
             </>
           ) : (
-            'Muat lebih banyak'
+            'Load more'
           )}
         </button>
       )}

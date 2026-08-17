@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from 'react'
 import {
   AlertCircle,
   ArrowLeft,
-  CheckCircle,
   Loader2,
   RefreshCw,
   Send,
@@ -37,19 +36,19 @@ interface DebateRoomProps {
 
 const statusConfig = {
   active: {
-    label: 'Berlangsung',
+    label: 'Active',
     color: 'bg-emerald-400',
   },
   pending_verdict: {
-    label: 'Menyusun kesimpulan...',
+    label: 'Preparing verdict',
     color: 'bg-amber-400',
   },
   resolved: {
-    label: 'Selesai',
+    label: 'Resolved',
     color: 'bg-neutral-400',
   },
   archived: {
-    label: 'Diarsipkan',
+    label: 'Archived',
     color: 'bg-neutral-300',
   },
 }
@@ -61,7 +60,10 @@ export default function DebateRoom({
   members,
 }: DebateRoomProps) {
   const [input, setInput] = useState('')
-  const [selectedProvider, setSelectedProvider] = useState<'auto' | 'openrouter' | 'groq'>('auto')
+
+  const [selectedProvider, setSelectedProvider] =
+    useState<'auto' | 'openrouter' | 'groq'>('auto')
+
   const [lastAiError, setLastAiError] = useState<{
     mode: 'comment' | 'final_verdict'
     provider?: 'openrouter' | 'groq'
@@ -82,9 +84,8 @@ export default function DebateRoom({
   const requestAiMutation =
     useRequestAiAnalysis(debateId)
 
-  const resolveDebateMutation = useResolveDebate(
-    relationshipId,
-  )
+  const resolveDebateMutation =
+    useResolveDebate(relationshipId)
 
   useAutoFinalVerdict(debateId)
 
@@ -105,7 +106,7 @@ export default function DebateRoom({
     return (
       <div className="flex min-h-[50vh] items-center justify-center">
         <Loader2
-          size={20}
+          size={18}
           className="animate-spin text-neutral-300"
         />
       </div>
@@ -113,6 +114,7 @@ export default function DebateRoom({
   }
 
   const isRoomActive = debate.status === 'active'
+
   const isPendingVerdict =
     debate.status === 'pending_verdict'
 
@@ -175,8 +177,9 @@ export default function DebateRoom({
       !input.trim() ||
       !isRoomActive ||
       isAiProcessing
-    )
+    ) {
       return
+    }
 
     sendMessageMutation.mutate(
       {
@@ -253,370 +256,664 @@ export default function DebateRoom({
   const getAiButtonTooltip = () => {
     if (isAiProcessing) {
       return isAiRequestedByMe
-        ? 'Menunggu respons AI...'
-        : `${aiRequestedByName?.display_name ?? aiRequestedByName?.username ?? 'Pasanganmu'} sedang meminta AI`
+        ? 'Waiting for AI response...'
+        : `${aiRequestedByName?.display_name ?? aiRequestedByName?.username ?? 'Your babe'} is requesting AI assistance`
     }
 
     if (!hasUserMessage) {
-      return 'Kirim pesan dulu sebelum minta AI'
+      return 'Send a message before requesting AI'
     }
 
     if (!hasNewMessageSinceLastAiComment) {
-      return 'Kirim pesan baru dulu sebelum minta AI comment lagi'
+      return 'Send a new message before requesting another AI comment'
     }
 
     return undefined
   }
 
   return (
-    <div className="flex h-[calc(100vh-8rem)] flex-col overflow-hidden rounded-[2rem] border border-black/[0.05] bg-white shadow-[0_20px_70px_-35px_rgba(0,0,0,0.18)]">
-      {/* HEADER */}
+    <div
+      className="
+    fixed
+    inset-x-0
+    top-[60px]
+    bottom-0
+    z-20
+    flex
+    flex-col
+    overflow-hidden
+    bg-neutral-50
+    p-3
+    sm:p-4
 
-      <div className="flex items-center justify-between gap-3 border-b border-black/[0.05] px-5 py-4 sm:px-6">
-        <div className="flex min-w-0 items-center gap-3">
-          <Link
-            href="/debates"
-            className="flex size-8 shrink-0 items-center justify-center rounded-full bg-[#f8f8f7] text-neutral-400 hover:bg-neutral-900 hover:text-white"
-          >
-            <ArrowLeft size={14} />
-          </Link>
+    md:inset-x-auto
+    md:left-65
+    md:right-0
+    md:top-0
+    md:bottom-0
+    md:p-6
+  "
+    >
+      <div
+        className="
+      relative
+      flex
+      min-h-0
+      flex-1
+      flex-col
+      overflow-hidden
+      rounded-[2.25rem]
+      border
+      border-black/[0.055]
+      bg-white
+      shadow-[0_24px_80px_-40px_rgba(0,0,0,0.2)]
+    "
+      >
+        {/* subtle ambient lights */}
 
-          <div className="min-w-0">
-            <h1 className="truncate text-[15px] font-semibold tracking-[-0.02em] text-neutral-900">
-              {debate.title}
-            </h1>
+        <div
+          className="
+          pointer-events-none
+          absolute
+          -right-24
+          -top-24
+          size-56
+          rounded-full
+          bg-pink-400/[0.045]
+          blur-[100px]
+        "
+        />
 
-            <div className="mt-0.5 flex items-center gap-1.5">
-              <span
-                className={`size-1.5 rounded-full ${status.color}`}
+        <div
+          className="
+          pointer-events-none
+          absolute
+          -left-24
+          top-1/3
+          size-56
+          rounded-full
+          bg-blue-400/[0.035]
+          blur-[100px]
+        "
+        />
+
+        {/* HEADER */}
+
+        <header
+          className="
+          relative
+          z-10
+          flex
+          items-center
+          justify-between
+          gap-4
+          border-b
+          border-black/[0.045]
+          px-5
+          py-4.5
+          sm:px-7
+        "
+        >
+          <div className="flex min-w-0 items-center gap-3.5">
+            <Link
+              href="/debates"
+              aria-label="Back to discussions"
+              className="
+              flex
+              size-8
+              shrink-0
+              items-center
+              justify-center
+              rounded-full
+              border
+              border-black/[0.05]
+              bg-neutral-50
+              text-neutral-400
+              transition-all
+              duration-200
+              hover:bg-neutral-900
+              hover:text-white
+            "
+            >
+              <ArrowLeft
+                size={13}
+                strokeWidth={1.8}
               />
+            </Link>
 
-              <span className="text-[10px] font-medium text-neutral-400">
-                {status.label}
-                {isRoomActive &&
-                  ` • ${userMessageCount}/${debate.max_messages} pesan`}
-              </span>
+            <div className="min-w-0">
+              <h1
+                className="
+                truncate
+                text-[14px]
+                font-semibold
+                tracking-[-0.025em]
+                text-neutral-900
+              "
+              >
+                {debate.title}
+              </h1>
+
+              <div className="mt-1 flex items-center gap-2">
+                <span
+                  className={`size-1.5 rounded-full ${status.color}`}
+                />
+
+                <span
+                  className="
+                  text-[9.5px]
+                  font-medium
+                  tracking-[-0.005em]
+                  text-neutral-400
+                "
+                >
+                  {status.label}
+
+                  {isRoomActive &&
+                    ` · ${userMessageCount}/${debate.max_messages}`}
+                </span>
+              </div>
             </div>
           </div>
-        </div>
 
-        {isRoomActive && hasUserMessage && (
-          <div className="shrink-0">
-            {isConfirmingResolve ? (
-              <div className="flex items-center gap-1.5">
+          {isRoomActive && hasUserMessage && (
+            <div className="shrink-0">
+              {isConfirmingResolve ? (
+                <div
+                  className="
+                  flex
+                  items-center
+                  gap-1
+                  rounded-full
+                  border
+                  border-black/[0.055]
+                  bg-neutral-50
+                  p-1
+                "
+                >
+                  <button
+                    type="button"
+                    onClick={handleResolve}
+                    disabled={
+                      resolveDebateMutation.isPending
+                    }
+                    className="
+                    rounded-full
+                    bg-neutral-900
+                    px-3.5
+                    py-1.5
+                    text-[10px]
+                    font-semibold
+                    text-white
+                    transition
+                    hover:bg-black
+                    disabled:opacity-50
+                  "
+                  >
+                    Yes, resolve
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setIsConfirmingResolve(false)
+                    }
+                    className="
+                    rounded-full
+                    px-3
+                    py-1.5
+                    text-[10px]
+                    font-medium
+                    text-neutral-500
+                    transition
+                    hover:bg-white
+                    hover:text-neutral-800
+                  "
+                  >
+                    Cancel
+                  </button>
+                </div>
+              ) : (
                 <button
                   type="button"
                   onClick={handleResolve}
-                  disabled={
-                    resolveDebateMutation.isPending
-                  }
-                  className="rounded-full bg-neutral-900 px-3 py-1.5 text-[11px] font-semibold text-white hover:bg-black disabled:opacity-50"
+                  disabled={isAiProcessing}
+                  className="
+                  rounded-full
+                  px-3
+                  py-1.5
+                  text-[10px]
+                  font-medium
+                  tracking-[-0.005em]
+                  text-neutral-400
+                  transition
+                  hover:bg-neutral-50
+                  hover:text-neutral-700
+                  disabled:cursor-not-allowed
+                  disabled:opacity-30
+                "
                 >
-                  Ya, selesaikan
+                  End discuss
                 </button>
+              )}
+            </div>
+          )}
+        </header>
 
-                <button
-                  type="button"
-                  onClick={() =>
-                    setIsConfirmingResolve(false)
-                  }
-                  className="rounded-full bg-neutral-100 px-3 py-1.5 text-[11px] font-medium text-neutral-500 hover:bg-neutral-200"
-                >
-                  Batal
-                </button>
-              </div>
-            ) : (
-              <button
-                type="button"
-                onClick={handleResolve}
-                disabled={isAiProcessing}
-                className="flex items-center gap-1.5 rounded-full border border-black/[0.08] px-3.5 py-1.5 text-[11px] font-medium text-neutral-500 hover:bg-neutral-50 disabled:cursor-not-allowed disabled:opacity-40"
-              >
-                <CheckCircle size={12} />
-                Selesaikan
-              </button>
-            )}
-          </div>
-        )}
-      </div>
+        {/* MESSAGES */}
 
-      {/* MESSAGES */}
-
-      <div
-        ref={scrollRef}
-        className="flex-1 overflow-y-auto py-4"
-      >
-        {isLoading ? (
-          <div className="flex items-center justify-center py-10">
-            <Loader2
-              size={18}
-              className="animate-spin text-neutral-300"
-            />
-          </div>
-        ) : !messages?.length ? (
-          <div className="flex flex-col items-center justify-center px-6 py-12 text-center">
-            <div className="flex size-12 items-center justify-center rounded-2xl bg-neutral-50">
-              <Sparkles
-                size={18}
-                strokeWidth={1.8}
-                className="text-neutral-300"
+        <div
+          ref={scrollRef}
+          className="
+    relative
+    z-0
+    min-h-0
+    flex-1
+    overflow-x-hidden
+    overflow-y-auto
+    overscroll-contain
+    py-5
+    sm:py-6
+  "
+        >
+          {isLoading ? (
+            <div className="flex items-center justify-center py-14">
+              <Loader2
+                size={17}
+                className="animate-spin text-neutral-300"
               />
             </div>
-
-            <h3 className="mt-4 text-sm font-semibold text-neutral-800">
-              Mulai diskusinya
-            </h3>
-
-            <p className="mt-2 max-w-[240px] text-[12px] leading-5 text-neutral-400">
-              Sampaikan sudut pandangmu, lalu minta
-              AI mediator ikut menanggapi kapan saja.
-            </p>
-          </div>
-        ) : (
-          messages.map((message) => (
-            <DebateMessageBubble
-              key={message.id}
-              message={message}
-              currentUserId={currentUserId}
-            />
-          ))
-        )}
-
-        {/* TYPING INDICATOR — sekarang dari state DATABASE, kelihatan di kedua device */}
-
-        {isAiProcessing && !isPendingVerdict && (
-          <AiTypingIndicator />
-        )}
-
-        {isPendingVerdict && (
-          <AiTypingIndicator isFinalVerdict />
-        )}
-      </div>
-
-      {lastAiError && (
-        <div className="flex items-center justify-between gap-3 border-t border-red-100 bg-red-50 px-4 py-3 sm:px-5">
-          <div className="flex min-w-0 items-center gap-2">
-            <AlertCircle
-              size={14}
-              className="shrink-0 text-red-500"
-            />
-
-            <p className="min-w-0 truncate text-[11.5px] text-red-600">
-              {requestAiMutation.error?.message ??
-                'AI gagal merespons. Kedua provider (OpenRouter & Groq) tidak berhasil.'}
-            </p>
-          </div>
-
-          <button
-            type="button"
-            onClick={handleRetryAiComment}
-            className="
-        flex
-        shrink-0
-        items-center
-        gap-1.5
-        rounded-full
-        bg-red-500
-        px-3
-        py-1.5
-        text-[11px]
-        font-semibold
-        text-white
-        transition
-        hover:bg-red-600
-      "
-          >
-            <RefreshCw size={11} />
-            Coba lagi
-          </button>
-        </div>
-      )}
-
-      {/* FOOTER */}
-
-      {isRoomActive ? (
-        <div className="border-t border-black/[0.05] p-4 sm:p-5">
-          <div className="flex items-end gap-2">
-            <button
-              type="button"
-              onClick={handleRequestAiComment}
-              disabled={
-                requestAiMutation.isPending ||
-                !canRequestAiComment
-              }
-              title={getAiButtonTooltip()}
+          ) : !messages?.length ? (
+            <div
               className="
+              flex
+              min-h-full
+              flex-col
+              items-center
+              justify-center
+              px-6
+              py-12
+              text-center
+            "
+            >
+              <p
+                className="
+                text-[9px]
+                font-semibold
+                uppercase
+                tracking-[0.18em]
+                text-neutral-300
+              "
+              >
+                AI Mediator
+              </p>
+
+              <h3
+                className="
+                mt-3
+                text-[18px]
+                font-semibold
+                tracking-[-0.035em]
+                text-neutral-800
+              "
+              >
+                Start the discussion
+              </h3>
+
+              <p
+                className="
+                mt-2
+                max-w-[280px]
+                text-[11.5px]
+                leading-5
+                text-neutral-400
+              "
+              >
+                Share your perspective honestly. AI will help keep the discussion neutral.
+              </p>
+            </div>
+          ) : (
+            messages.map((message) => (
+              <DebateMessageBubble
+                key={message.id}
+                message={message}
+                currentUserId={currentUserId}
+              />
+            ))
+          )}
+
+          {isAiProcessing && !isPendingVerdict && (
+            <AiTypingIndicator />
+          )}
+
+          {isPendingVerdict && (
+            <AiTypingIndicator isFinalVerdict />
+          )}
+        </div>
+
+        {/* AI ERROR */}
+
+        {lastAiError && (
+          <div
+            className="
+            relative
+            z-10
+            border-t
+            border-red-500/[0.08]
+            bg-red-50/60
+            px-5
+            py-3
+            sm:px-7
+          "
+          >
+            <div className="flex items-center justify-between gap-4">
+              <p
+                className="
+                min-w-0
+                truncate
+                text-[10.5px]
+                leading-5
+                text-red-500/80
+              "
+              >
+                {requestAiMutation.error?.message ??
+                  'AI failed to respond.'}
+              </p>
+
+              <button
+                type="button"
+                onClick={handleRetryAiComment}
+                className="
                 flex
-                h-11
                 shrink-0
                 items-center
                 gap-1.5
                 rounded-full
-                border
-                border-blue-100
-                bg-blue-50
-                px-3.5
-                text-[11px]
-                font-medium
-                text-blue-600
+                px-2.5
+                py-1.5
+                text-[10px]
+                font-semibold
+                text-red-500
                 transition
-                hover:bg-blue-100
+                hover:bg-red-100/70
+              "
+              >
+                <RefreshCw
+                  size={10}
+                  strokeWidth={1.8}
+                />
+
+                Try again
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* COMPOSER */}
+
+        {isRoomActive ? (
+          <div
+            className="
+            relative
+            z-10
+            border-t
+            border-black/[0.045]
+            bg-white/95
+            px-4
+            py-4
+            backdrop-blur-xl
+            sm:px-6
+            sm:py-5
+          "
+          >
+            <div
+              className="
+              flex
+              items-end
+              gap-2
+              rounded-[1.5rem]
+              border
+              border-black/[0.065]
+              bg-neutral-50/80
+              p-1.5
+              shadow-[0_8px_30px_rgba(0,0,0,0.035)]
+              transition-all
+              focus-within:border-black/[0.11]
+              focus-within:bg-white
+              focus-within:shadow-[0_10px_35px_rgba(0,0,0,0.055)]
+            "
+            >
+              {/* AI */}
+
+              <button
+                type="button"
+                onClick={handleRequestAiComment}
+                disabled={
+                  requestAiMutation.isPending ||
+                  !canRequestAiComment
+                }
+                title={getAiButtonTooltip()}
+                className="
+                flex
+                h-10
+                shrink-0
+                items-center
+                gap-1.5
+                rounded-[1.1rem]
+                px-3
+                text-[10px]
+                font-semibold
+                text-neutral-400
+                transition-all
+                hover:bg-white
+                hover:text-neutral-800
+                disabled:pointer-events-none
+                disabled:opacity-30
+              "
+              >
+                {requestAiMutation.isPending ||
+                  isAiProcessing ? (
+                  <Loader2
+                    size={12}
+                    className="animate-spin"
+                  />
+                ) : (
+                  <Sparkles
+                    size={12}
+                    strokeWidth={1.8}
+                  />
+                )}
+
+                <span className="hidden sm:inline">
+                  AI
+                </span>
+              </button>
+
+              {/* PROVIDER */}
+
+              <select
+                value={selectedProvider}
+                onChange={(e) =>
+                  setSelectedProvider(
+                    e.target.value as
+                    | 'auto'
+                    | 'openrouter'
+                    | 'groq',
+                  )
+                }
+                disabled={isAiProcessing}
+                className="
+                h-10
+                shrink-0
+                cursor-pointer
+                appearance-none
+                rounded-[1rem]
+                border
+                border-black/[0.045]
+                bg-white
+                px-2.5
+                text-[9px]
+                font-medium
+                text-neutral-400
+                outline-none
+                transition
+                hover:text-neutral-600
                 disabled:cursor-not-allowed
                 disabled:opacity-40
               "
-            >
-              {requestAiMutation.isPending ||
-                isAiProcessing ? (
-                <Loader2
-                  size={13}
-                  className="animate-spin"
-                />
-              ) : (
-                <Sparkles size={13} />
-              )}
-              <span className="hidden sm:inline">
-                Minta AI
-              </span>
-            </button>
+              >
+                <option value="auto">
+                  Auto
+                </option>
 
-            <select
-              value={selectedProvider}
-              onChange={(e) =>
-                setSelectedProvider(
-                  e.target.value as
-                  | 'auto'
-                  | 'openrouter'
-                  | 'groq',
-                )
-              }
-              disabled={isAiProcessing}
-              className="
-    h-11
-    shrink-0
-    rounded-full
-    border
-    border-black/[0.06]
-    bg-white
-    px-2.5
-    text-[10px]
-    font-medium
-    text-neutral-500
-    outline-none
-    disabled:opacity-50
-  "
-            >
-              <option value="auto">Auto</option>
-              <option value="openrouter">OpenRouter</option>
-              <option value="groq">Groq</option>
-            </select>
+                <option value="openrouter">
+                  OpenRouter
+                </option>
 
-            <textarea
-              value={input}
-              onChange={(e) =>
-                setInput(e.target.value)
-              }
-              onKeyDown={(e) => {
-                if (
-                  e.key === 'Enter' &&
-                  !e.shiftKey
-                ) {
-                  e.preventDefault()
-                  handleSend()
+                <option value="groq">
+                  Groq
+                </option>
+              </select>
+
+              {/* INPUT */}
+
+              <textarea
+                value={input}
+                onChange={(e) =>
+                  setInput(e.target.value)
                 }
-              }}
-              placeholder={
-                isAiProcessing
-                  ? 'Menunggu AI merespons...'
-                  : 'Sampaikan pendapatmu...'
-              }
-              disabled={isAiProcessing}
-              rows={1}
-              className="
-    max-h-24
-    min-h-11
-    flex-1
-    resize-none
-    rounded-2xl
-    border
-    border-black/[0.06]
-    bg-[#f8f8f7]
-    px-4
-    py-2.5
-    text-[13px]
-    text-neutral-900
-    outline-none
-    focus:border-black/[0.12]
-    focus:bg-white
-    disabled:cursor-not-allowed
-    disabled:opacity-50
-  "
-            />
+                onKeyDown={(e) => {
+                  if (
+                    e.key === 'Enter' &&
+                    !e.shiftKey
+                  ) {
+                    e.preventDefault()
+                    handleSend()
+                  }
+                }}
+                placeholder={
+                  isAiProcessing
+                    ? 'Waiting for AI response...'
+                    : 'Share your perspective...'
+                }
+                disabled={isAiProcessing}
+                rows={1}
+                className="
+                max-h-24
+                min-h-10
+                min-w-0
+                flex-1
+                resize-none
+                border-0
+                bg-transparent
+                px-2
+                py-2.5
+                text-[12.5px]
+                leading-5
+                text-neutral-900
+                outline-none
+                placeholder:text-neutral-300
+                disabled:cursor-not-allowed
+                disabled:opacity-50
+              "
+              />
 
-            <button
-              type="button"
-              onClick={handleSend}
-              disabled={
-                !input.trim() ||
-                sendMessageMutation.isPending ||
-                isAiProcessing
-              }
-              className="
-    flex
-    size-11
-    shrink-0
-    items-center
-    justify-center
-    rounded-full
-    bg-neutral-900
-    text-white
-    transition
-    hover:bg-black
-    disabled:cursor-not-allowed
-    disabled:opacity-40
-  "
-            >
-              {sendMessageMutation.isPending ? (
-                <Loader2
-                  size={15}
-                  className="animate-spin"
-                />
-              ) : (
-                <Send size={15} />
-              )}
-            </button>
-          </div>
+              {/* SEND */}
 
-          {/* KETERANGAN kalau AI sedang diproses (oleh siapapun) */}
+              <button
+                type="button"
+                onClick={handleSend}
+                disabled={
+                  !input.trim() ||
+                  sendMessageMutation.isPending ||
+                  isAiProcessing
+                }
+                aria-label="Send message"
+                className="
+                flex
+                size-10
+                shrink-0
+                items-center
+                justify-center
+                rounded-[1.1rem]
+                bg-neutral-900
+                text-white
+                shadow-[0_5px_15px_rgba(0,0,0,0.12)]
+                transition-all
+                hover:-translate-y-0.5
+                hover:bg-black
+                hover:shadow-[0_8px_20px_rgba(0,0,0,0.16)]
+                disabled:pointer-events-none
+                disabled:opacity-25
+              "
+              >
+                {sendMessageMutation.isPending ? (
+                  <Loader2
+                    size={14}
+                    className="animate-spin"
+                  />
+                ) : (
+                  <Send
+                    size={14}
+                    strokeWidth={1.8}
+                  />
+                )}
+              </button>
+            </div>
 
-          {isAiProcessing && (
-            <p className="mt-2 text-[10.5px] text-neutral-400">
-              {isAiRequestedByMe
-                ? 'Menunggu AI merespons... Kamu bisa kirim pesan lagi setelah AI selesai.'
-                : `${aiRequestedByName?.display_name ?? aiRequestedByName?.username ?? 'Pasanganmu'} sedang meminta tanggapan AI, mohon tunggu...`}
-            </p>
-          )}
+            {/* CONTEXT */}
 
-          {!isAiProcessing &&
-            hasUserMessage &&
-            !hasNewMessageSinceLastAiComment && (
-              <p className="mt-2 text-[10.5px] text-neutral-400">
-                AI sudah menanggapi pesan terakhir. Kirim pesan baru untuk minta tanggapan lagi.
+            {isAiProcessing && (
+              <p
+                className="
+                mt-2.5
+                px-2
+                text-[9.5px]
+                leading-4
+                text-neutral-400
+              "
+              >
+                {isAiRequestedByMe
+                  ? 'Waiting for AI to respond. You can continue once AI is finished.'
+                  : `${aiRequestedByName?.display_name ?? aiRequestedByName?.username ?? 'Your babe'} is requesting an AI response.`}
               </p>
             )}
-        </div>
-      ) : (
-        <div className="flex items-center gap-2 border-t border-black/[0.05] bg-neutral-50 px-5 py-3.5">
-          <AlertCircle
-            size={14}
-            className="shrink-0 text-neutral-400"
-          />
-          <p className="text-[11.5px] text-neutral-500">
-            {isPendingVerdict
-              ? 'Diskusi sedang ditutup, menunggu kesimpulan AI.'
-              : 'Diskusi ini sudah selesai dan bersifat read-only.'}
-          </p>
-        </div>
-      )}
+
+            {!isAiProcessing &&
+              hasUserMessage &&
+              !hasNewMessageSinceLastAiComment && (
+                <p
+                  className="
+                  mt-2.5
+                  px-2
+                  text-[9.5px]
+                  leading-4
+                  text-neutral-400
+                "
+                >
+                  AI has already responded to your latest message. Send a new message to request another response.
+                </p>
+              )}
+          </div>
+        ) : (
+          <div
+            className="
+            border-t
+            border-black/[0.045]
+            bg-neutral-50/60
+            px-5
+            py-4
+            text-center
+          "
+          >
+            <p className="text-[10.5px] text-neutral-400">
+              {isPendingVerdict
+                ? 'The discussion is being closed. Waiting for the AI verdict.'
+                : 'This discussion has ended.'}
+            </p>
+          </div>
+        )}
+      </div>
     </div>
   )
 }

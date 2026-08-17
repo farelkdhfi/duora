@@ -39,10 +39,10 @@ function formatRelativeTime(dateString: string) {
   const diffHours = Math.floor(diffMinutes / 60)
   const diffDays = Math.floor(diffHours / 24)
 
-  if (diffMinutes < 1) return 'Baru saja'
-  if (diffMinutes < 60) return `${diffMinutes}m lalu`
-  if (diffHours < 24) return `${diffHours}j lalu`
-  if (diffDays < 7) return `${diffDays}h lalu`
+  if (diffMinutes < 1) return 'Just now'
+  if (diffMinutes < 60) return `${diffMinutes}m ago`
+  if (diffHours < 24) return `${diffHours}h ago`
+  if (diffDays < 7) return `${diffDays}d ago`
 
   return date.toLocaleDateString('id-ID', {
     day: 'numeric',
@@ -205,10 +205,9 @@ export default function NoteCard({
         shadow-[0_8px_28px_rgba(0,0,0,0.035)]
         transition-all
         duration-300
-        ${
-          !isEditing
-            ? 'hover:-translate-y-1 hover:shadow-[0_18px_42px_rgba(0,0,0,0.075)]'
-            : ''
+        ${!isEditing
+          ? 'hover:-translate-y-1 hover:shadow-[0_18px_42px_rgba(0,0,0,0.075)]'
+          : ''
         }
       `}
     >
@@ -262,10 +261,9 @@ export default function NoteCard({
                 rounded-full
                 transition-all
                 hover:bg-white/70
-                ${
-                  note.is_favorite
-                    ? 'text-amber-500'
-                    : 'text-neutral-300'
+                ${note.is_favorite
+                  ? 'text-amber-500'
+                  : 'text-neutral-300'
                 }
               `}
             >
@@ -291,10 +289,9 @@ export default function NoteCard({
                 rounded-full
                 transition-all
                 hover:bg-white/70
-                ${
-                  note.is_pinned
-                    ? 'text-neutral-900'
-                    : 'text-neutral-300'
+                ${note.is_pinned
+                  ? 'text-neutral-900'
+                  : 'text-neutral-300'
                 }
               `}
             >
@@ -322,7 +319,7 @@ export default function NoteCard({
               onChange={(e) =>
                 setTitle(e.target.value)
               }
-              placeholder="Judul catatan"
+              placeholder="Note title"
               autoFocus
               className="
                 w-full
@@ -348,7 +345,7 @@ export default function NoteCard({
               onChange={(e) =>
                 setContent(e.target.value)
               }
-              placeholder="Tulis catatan..."
+              placeholder="Write a note..."
               rows={4}
               className="
                 w-full
@@ -374,7 +371,7 @@ export default function NoteCard({
               onChange={(e) =>
                 setCategory(e.target.value)
               }
-              placeholder="Kategori (opsional)"
+              placeholder="Category (optional)"
               className="
                 w-full
                 rounded-xl
@@ -431,10 +428,9 @@ export default function NoteCard({
                         flex-1
                         truncate
                         text-[11px]
-                        ${
-                          item.is_completed
-                            ? 'text-neutral-400 line-through'
-                            : 'text-neutral-600'
+                        ${item.is_completed
+                          ? 'text-neutral-400 line-through'
+                          : 'text-neutral-600'
                         }
                       `}
                     >
@@ -473,7 +469,7 @@ export default function NoteCard({
                     handleAddChecklistItem()
                   }
                 }}
-                placeholder="Tambah checklist..."
+                placeholder="Add checklist..."
                 className="
                   min-w-0
                   flex-1
@@ -549,8 +545,8 @@ export default function NoteCard({
                     "
                   >
                     {deleteNoteMutation.isPending
-                      ? 'Menghapus...'
-                      : 'Yakin hapus?'}
+                      ? 'Deleting...'
+                      : 'Are you sure?'}
                   </button>
 
                   <button
@@ -569,7 +565,7 @@ export default function NoteCard({
                       hover:bg-neutral-100
                     "
                   >
-                    Batal
+                    Cancel
                   </button>
                 </div>
               ) : (
@@ -592,7 +588,7 @@ export default function NoteCard({
                   "
                 >
                   <Trash2 size={11} />
-                  Hapus
+                  Delete
                 </button>
               )}
 
@@ -611,7 +607,7 @@ export default function NoteCard({
                     hover:text-neutral-700
                   "
                 >
-                  Batal
+                  Cancel
                 </button>
 
                 <button
@@ -644,7 +640,7 @@ export default function NoteCard({
                     />
                   )}
 
-                  Simpan
+                  Save
                 </button>
               </div>
             </div>
@@ -716,10 +712,9 @@ export default function NoteCard({
                           min-w-0
                           truncate
                           text-[11.5px]
-                          ${
-                            item.is_completed
-                              ? 'text-neutral-400 line-through'
-                              : 'text-neutral-600'
+                          ${item.is_completed
+                            ? 'text-neutral-400 line-through'
+                            : 'text-neutral-600'
                           }
                         `}
                       >
@@ -732,7 +727,7 @@ export default function NoteCard({
                   <p className="pl-5 text-[10px] text-neutral-400">
                     +
                     {note.checklist_items.length - 4}{' '}
-                    lainnya
+                    more
                   </p>
                 )}
 
@@ -741,12 +736,11 @@ export default function NoteCard({
                     <div
                       className="h-full rounded-full bg-neutral-400 transition-all"
                       style={{
-                        width: `${
-                          (completedCount /
-                            note.checklist_items
-                              .length) *
+                        width: `${(completedCount /
+                          note.checklist_items
+                            .length) *
                           100
-                        }%`,
+                          }%`,
                       }}
                     />
                   </div>

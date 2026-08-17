@@ -6,7 +6,7 @@ import {
   Loader2,
   MessageSquareText,
   Plus,
-  Sparkles,
+  Smile,
   Trash2,
   X,
 } from 'lucide-react'
@@ -23,20 +23,20 @@ interface DebateListProps {
 
 const statusLabel = {
   active: {
-    text: 'Berlangsung',
-    color: 'bg-emerald-50 text-emerald-600',
+    text: 'Active',
+    color: 'bg-emerald-50/80 text-emerald-600 ring-1 ring-emerald-500/10',
   },
   pending_verdict: {
-    text: 'Menyusun kesimpulan',
-    color: 'bg-amber-50 text-amber-600',
+    text: 'Preparing conclusion',
+    color: 'bg-amber-50/80 text-amber-600 ring-1 ring-amber-500/10',
   },
   resolved: {
-    text: 'Selesai',
-    color: 'bg-neutral-100 text-neutral-500',
+    text: 'Resolved',
+    color: 'bg-neutral-100/80 text-neutral-500 ring-1 ring-black/[0.04]',
   },
   archived: {
-    text: 'Diarsipkan',
-    color: 'bg-neutral-100 text-neutral-400',
+    text: 'Archived',
+    color: 'bg-neutral-100/60 text-neutral-400 ring-1 ring-black/[0.03]',
   },
 }
 
@@ -98,68 +98,153 @@ function DebateListItem({
       href={`/debates/${debate.id}`}
       className="
         group
+        relative
         flex
         items-center
         justify-between
-        gap-3
-        rounded-[1.5rem]
+        gap-4
+        overflow-hidden
+        rounded-[1.75rem]
         border
-        border-black/[0.06]
+        border-black/[0.055]
         bg-white
-        p-4
-        shadow-[0_8px_24px_rgba(0,0,0,0.04)]
+        px-4
+        py-4
+        shadow-[0_10px_35px_rgba(0,0,0,0.035)]
         transition-all
-        duration-200
+        duration-300
         hover:-translate-y-0.5
-        hover:shadow-[0_16px_36px_rgba(0,0,0,0.08)]
-        sm:p-5
+        hover:border-black/[0.09]
+        hover:shadow-[0_18px_45px_rgba(0,0,0,0.07)]
+        sm:px-5
+        sm:py-4.5
       "
     >
-      <div className="flex min-w-0 items-center gap-3">
-        <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-50 to-pink-50">
-          <Sparkles
+      {/* subtle ambient accent */}
+      <div
+        className="
+          pointer-events-none
+          absolute
+          -left-10
+          -top-10
+          size-24
+          rounded-full
+          bg-blue-400/10
+          blur-2xl
+          opacity-0
+          transition-opacity
+          duration-500
+          group-hover:opacity-100
+        "
+      />
+
+      <div className="relative flex min-w-0 items-center gap-3.5">
+        <div
+          className="
+            relative
+            flex
+            size-10
+            shrink-0
+            items-center
+            justify-center
+            overflow-hidden
+            rounded-[1.1rem]
+            border
+            border-black/[0.045]
+            bg-neutral-50
+            shadow-[0_4px_14px_rgba(0,0,0,0.04)]
+          "
+        >
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-400/[0.08] via-transparent to-pink-400/[0.08]" />
+
+          <Smile
             size={14}
-            strokeWidth={2}
-            className="text-blue-500"
+            strokeWidth={1.8}
+            className="relative text-neutral-700"
           />
         </div>
 
         <div className="min-w-0">
-          <h3 className="truncate text-[13.5px] font-semibold tracking-[-0.02em] text-neutral-900">
+          <h3
+            className="
+              truncate
+              text-[13.5px]
+              font-semibold
+              tracking-[-0.025em]
+              text-neutral-900
+            "
+          >
             {debate.title}
           </h3>
 
-          <p className="mt-0.5 text-[10.5px] text-neutral-400">
-            {formatDate(debate.created_at)}
+          <p
+            className="
+              mt-1
+              text-[10px]
+              font-medium
+              tracking-[-0.005em]
+              text-neutral-400
+            "
+          >
+            Started {formatDate(debate.created_at)}
           </p>
         </div>
       </div>
 
-      <div className="flex shrink-0 items-center gap-2">
+      <div className="relative flex shrink-0 items-center gap-2">
         {isConfirmingDelete ? (
-          <div className="flex items-center gap-1">
+          <div
+            className="
+              flex
+              items-center
+              gap-1
+              rounded-full
+              border
+              border-black/[0.06]
+              bg-neutral-50
+              p-1
+            "
+          >
             <button
               type="button"
               onClick={handleDeleteClick}
-              disabled={
-                deleteDebateMutation.isPending
-              }
-              className="rounded-full bg-red-500 px-2.5 py-1 text-[9px] font-semibold text-white hover:bg-red-600 disabled:opacity-50"
+              disabled={deleteDebateMutation.isPending}
+              className="
+                rounded-full
+                bg-neutral-900
+                px-3
+                py-1.5
+                text-[9px]
+                font-semibold
+                text-white
+                transition
+                hover:bg-black
+                disabled:opacity-50
+              "
             >
               {deleteDebateMutation.isPending
                 ? '...'
-                : 'Yakin?'}
+                : 'Delete'}
             </button>
 
             <button
               type="button"
               onClick={handleCancelClick}
-              disabled={
-                deleteDebateMutation.isPending
-              }
-              className="rounded-full bg-neutral-100 px-2.5 py-1 text-[9px] font-semibold text-neutral-500 hover:bg-neutral-200 disabled:opacity-50"
+              disabled={deleteDebateMutation.isPending}
+              className="
+                rounded-full
+                px-3
+                py-1.5
+                text-[9px]
+                font-semibold
+                text-neutral-500
+                transition
+                hover:bg-white
+                hover:text-neutral-800
+                disabled:opacity-50
+              "
             >
-              Batal
+              Cancel
             </button>
           </div>
         ) : (
@@ -175,12 +260,13 @@ function DebateListItem({
               text-neutral-300
               opacity-0
               transition-all
+              duration-200
               hover:bg-red-50
               hover:text-red-500
               group-hover:opacity-100
             "
           >
-            <Trash2 size={12} strokeWidth={2} />
+            <Trash2 size={12} strokeWidth={1.8} />
           </button>
         )}
 
@@ -188,9 +274,10 @@ function DebateListItem({
           className={`
             rounded-full
             px-2.5
-            py-1
-            text-[9.5px]
+            py-1.5
+            text-[9px]
             font-semibold
+            tracking-[-0.01em]
             ${status.color}
           `}
         >
@@ -239,7 +326,14 @@ export default function DebateList({
         {[1, 2].map((item) => (
           <div
             key={item}
-            className="h-20 animate-pulse rounded-[1.5rem] bg-neutral-100"
+            className="
+              h-[76px]
+              animate-pulse
+              rounded-[1.75rem]
+              border
+              border-black/[0.04]
+              bg-neutral-100/70
+            "
           />
         ))}
       </div>
@@ -252,66 +346,157 @@ export default function DebateList({
 
       <div className="mb-5">
         {showCreate ? (
-          <div className="rounded-[1.5rem] border border-black/[0.08] bg-white p-4 shadow-[0_8px_24px_rgba(0,0,0,0.06)]">
-            <div className="flex items-center gap-2">
-              <input
-                value={title}
-                onChange={(e) =>
-                  setTitle(e.target.value)
-                }
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    e.preventDefault()
-                    handleCreate()
+          <div
+            className="
+              relative
+              overflow-hidden
+              rounded-[2rem]
+              border
+              border-black/[0.07]
+              bg-white
+              p-4
+              shadow-[0_18px_50px_rgba(0,0,0,0.07)]
+              sm:p-5
+            "
+          >
+            {/* ambient light */}
+
+            <div
+              className="
+                pointer-events-none
+                absolute
+                -right-16
+                -top-20
+                size-40
+                rounded-full
+                bg-pink-400/[0.08]
+                blur-[70px]
+              "
+            />
+
+            <div
+              className="
+                pointer-events-none
+                absolute
+                -left-16
+                bottom-0
+                size-32
+                rounded-full
+                bg-blue-400/[0.07]
+                blur-[60px]
+              "
+            />
+
+            <div className="relative">
+              <div className="mb-3 flex items-center justify-between">
+                <div>
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-neutral-400">
+                    AI Debate
+                  </p>
+
+                  <p className="mt-1 text-[12px] text-neutral-500">
+                    Choose a topic you want to discuss together.
+                  </p>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setShowCreate(false)}
+                  className="
+                    flex
+                    size-8
+                    items-center
+                    justify-center
+                    rounded-full
+                    border
+                    border-black/[0.05]
+                    bg-neutral-50
+                    text-neutral-400
+                    transition
+                    hover:bg-neutral-900
+                    hover:text-white
+                  "
+                >
+                  <X size={13} strokeWidth={1.8} />
+                </button>
+              </div>
+
+              <div className="flex flex-col gap-2 sm:flex-row">
+                <input
+                  value={title}
+                  onChange={(e) =>
+                    setTitle(e.target.value)
                   }
-                }}
-                placeholder="Topik diskusi, misal: Rencana liburan akhir tahun"
-                autoFocus
-                className="
-                  w-full
-                  rounded-xl
-                  border
-                  border-black/[0.06]
-                  bg-[#f8f8f7]
-                  px-3.5
-                  py-2.5
-                  text-[13px]
-                  text-neutral-900
-                  outline-none
-                  focus:border-black/[0.12]
-                  focus:bg-white
-                "
-              />
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault()
+                      handleCreate()
+                    }
+                  }}
+                  placeholder="Example: Plans for your year-end vacation"
+                  autoFocus
+                  className="
+                    min-w-0
+                    flex-1
+                    rounded-[1.15rem]
+                    border
+                    border-black/[0.06]
+                    bg-neutral-50/80
+                    px-4
+                    py-3
+                    text-[12px]
+                    font-medium
+                    text-neutral-900
+                    outline-none
+                    placeholder:text-neutral-300
+                    transition
+                    focus:border-black/[0.12]
+                    focus:bg-white
+                    focus:shadow-[0_0_0_4px_rgba(0,0,0,0.025)]
+                  "
+                />
 
-              <button
-                type="button"
-                onClick={() =>
-                  setShowCreate(false)
-                }
-                className="flex size-9 shrink-0 items-center justify-center rounded-full bg-[#f8f8f7] text-neutral-400 hover:bg-neutral-900 hover:text-white"
-              >
-                <X size={14} />
-              </button>
-            </div>
+                <button
+                  type="button"
+                  onClick={handleCreate}
+                  disabled={
+                    createDebateMutation.isPending ||
+                    !title.trim()
+                  }
+                  className="
+                    flex
+                    shrink-0
+                    items-center
+                    justify-center
+                    gap-2
+                    rounded-[1.15rem]
+                    bg-neutral-900
+                    px-5
+                    py-3
+                    text-[11px]
+                    font-semibold
+                    tracking-[-0.01em]
+                    text-white
+                    shadow-[0_8px_20px_rgba(0,0,0,0.12)]
+                    transition-all
+                    hover:-translate-y-0.5
+                    hover:bg-black
+                    hover:shadow-[0_12px_25px_rgba(0,0,0,0.16)]
+                    disabled:pointer-events-none
+                    disabled:opacity-40
+                    sm:w-auto
+                  "
+                >
+                  {createDebateMutation.isPending && (
+                    <Loader2
+                      size={12}
+                      className="animate-spin"
+                    />
+                  )}
 
-            <div className="mt-3 flex justify-end">
-              <button
-                type="button"
-                onClick={handleCreate}
-                disabled={
-                  createDebateMutation.isPending ||
-                  !title.trim()
-                }
-                className="flex items-center gap-1.5 rounded-full bg-neutral-900 px-5 py-2 text-[12px] font-semibold text-white hover:bg-black disabled:opacity-50"
-              >
-                {createDebateMutation.isPending && (
-                  <Loader2
-                    size={12}
-                    className="animate-spin"
-                  />
-                )}
-                Mulai diskusi
-              </button>
+                  Start discussion
+                </button>
+              </div>
             </div>
           </div>
         ) : (
@@ -319,28 +504,51 @@ export default function DebateList({
             type="button"
             onClick={() => setShowCreate(true)}
             className="
+              group
+              relative
               flex
               w-full
               items-center
               justify-center
-              gap-2
-              rounded-[1.5rem]
+              gap-2.5
+              overflow-hidden
+              rounded-[1.75rem]
               border
               border-dashed
-              border-black/[0.1]
-              bg-white/50
+              border-black/[0.09]
+              bg-white/60
               py-6
-              text-[13px]
-              font-medium
+              text-[12px]
+              font-semibold
+              tracking-[-0.01em]
               text-neutral-400
-              transition
-              hover:border-black/[0.15]
+              transition-all
+              duration-300
+              hover:border-black/[0.16]
               hover:bg-white
-              hover:text-neutral-600
+              hover:text-neutral-700
+              hover:shadow-[0_10px_30px_rgba(0,0,0,0.04)]
             "
           >
-            <Plus size={16} strokeWidth={2} />
-            Mulai diskusi baru
+            <span
+              className="
+                flex
+                size-7
+                items-center
+                justify-center
+                rounded-full
+                border
+                border-black/[0.06]
+                bg-neutral-50
+                transition
+                group-hover:bg-neutral-900
+                group-hover:text-white
+              "
+            >
+              <Plus size={13} strokeWidth={2} />
+            </span>
+
+            Start a new discussion
           </button>
         )}
       </div>
@@ -348,30 +556,104 @@ export default function DebateList({
       {/* EMPTY */}
 
       {!debates?.length && !showCreate && (
-        <div className="rounded-[2rem] border border-black/[0.06] bg-white p-10 text-center">
-          <div className="mx-auto flex size-12 items-center justify-center rounded-2xl bg-neutral-50">
-            <MessageSquareText
-              size={18}
-              strokeWidth={1.8}
-              className="text-neutral-300"
-            />
+        <div
+          className="
+            relative
+            overflow-hidden
+            rounded-[2rem]
+            border
+            border-black/[0.055]
+            bg-white
+            px-6
+            py-12
+            text-center
+            shadow-[0_12px_40px_rgba(0,0,0,0.025)]
+          "
+        >
+          <div
+            className="
+              pointer-events-none
+              absolute
+              -right-20
+              -top-20
+              size-40
+              rounded-full
+              bg-pink-400/[0.06]
+              blur-[70px]
+            "
+          />
+
+          <div
+            className="
+              pointer-events-none
+              absolute
+              -left-20
+              bottom-0
+              size-40
+              rounded-full
+              bg-blue-400/[0.06]
+              blur-[70px]
+            "
+          />
+
+          <div className="relative">
+            <div
+              className="
+                mx-auto
+                flex
+                size-14
+                items-center
+                justify-center
+                rounded-[1.25rem]
+                border
+                border-black/[0.05]
+                bg-neutral-50
+                shadow-[0_6px_20px_rgba(0,0,0,0.035)]
+              "
+            >
+              <MessageSquareText
+                size={19}
+                strokeWidth={1.6}
+                className="text-neutral-400"
+              />
+            </div>
+
+            <p className="mt-5 text-[10px] font-semibold uppercase tracking-[0.15em] text-neutral-300">
+              Your discussions
+            </p>
+
+            <h3
+              className="
+                mt-2
+                text-[15px]
+                font-semibold
+                tracking-[-0.03em]
+                text-neutral-800
+              "
+            >
+              No discussions yet
+            </h3>
+
+            <p
+              className="
+                mx-auto
+                mt-2
+                max-w-[270px]
+                text-[11.5px]
+                leading-5
+                text-neutral-400
+              "
+            >
+              Start a conversation about something you haven't agreed on, with AI as your neutral mediator.
+            </p>
           </div>
-
-          <h3 className="mt-4 text-sm font-semibold text-neutral-800">
-            Belum ada diskusi
-          </h3>
-
-          <p className="mx-auto mt-2 max-w-[240px] text-[12px] leading-5 text-neutral-400">
-            Diskusikan hal yang belum sepaham
-            dengan bantuan AI mediator netral.
-          </p>
         </div>
       )}
 
       {/* LIST */}
 
       {Boolean(debates?.length) && (
-        <div className="space-y-3">
+        <div className="space-y-2.5">
           {debates!.map((debate) => (
             <DebateListItem
               key={debate.id}
