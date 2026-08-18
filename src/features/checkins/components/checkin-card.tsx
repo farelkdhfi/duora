@@ -1,13 +1,5 @@
 'use client'
 
-import {
-  Brain,
-  Heart,
-  HandHeart,
-  Zap,
-  MessageCircle,
-} from 'lucide-react'
-
 import happyEmot from '@/assets/emoticon/happy-emot.png'
 import neutralEmot from '@/assets/emoticon/neutral-emot.png'
 import sadEmot from '@/assets/emoticon/sad-emot.png'
@@ -33,51 +25,57 @@ const moodInfo: Record<
     border: string
     glow: string
     text: string
+    accent: string
   }
 > = {
   happy: {
     image: happyEmot,
     label: 'Happy',
-    background: 'bg-[#FFF8E7]',
-    border: 'border-[#FFD166]/35',
-    glow: 'bg-[#FFD166]/20',
-    text: 'text-[#D98200]',
+    background: 'bg-amber-50/80',
+    border: 'border-amber-200/50',
+    glow: 'bg-amber-300/[0.12]',
+    text: 'text-amber-700',
+    accent: 'bg-amber-400',
   },
 
   neutral: {
     image: neutralEmot,
     label: 'Neutral',
-    background: 'bg-[#F5F5F7]',
-    border: 'border-neutral-200',
-    glow: 'bg-neutral-200/40',
+    background: 'bg-neutral-100/80',
+    border: 'border-neutral-200/70',
+    glow: 'bg-neutral-300/[0.12]',
     text: 'text-neutral-600',
+    accent: 'bg-neutral-500',
   },
 
   sad: {
     image: sadEmot,
     label: 'Sad',
-    background: 'bg-[#F0F4FF]',
-    border: 'border-[#5A7FBF]/25',
-    glow: 'bg-[#5A7FBF]/15',
-    text: 'text-[#4A5FA8]',
+    background: 'bg-blue-50/80',
+    border: 'border-blue-200/50',
+    glow: 'bg-blue-400/[0.10]',
+    text: 'text-blue-700',
+    accent: 'bg-blue-500',
   },
 
   tired: {
     image: tiredEmot,
     label: 'Tired',
-    background: 'bg-[#F5F2FA]',
-    border: 'border-[#9B8AC4]/30',
-    glow: 'bg-[#9B8AC4]/15',
-    text: 'text-[#7A6FB0]',
+    background: 'bg-violet-50/80',
+    border: 'border-violet-200/50',
+    glow: 'bg-violet-400/[0.10]',
+    text: 'text-violet-700',
+    accent: 'bg-violet-500',
   },
 
   stressed: {
     image: stressedEmot,
     label: 'Stressed',
-    background: 'bg-[#FFF1F1]',
-    border: 'border-[#D62E2E]/25',
-    glow: 'bg-[#D62E2E]/12',
-    text: 'text-[#B0201F]',
+    background: 'bg-rose-50/80',
+    border: 'border-rose-200/50',
+    glow: 'bg-rose-400/[0.10]',
+    text: 'text-rose-700',
+    accent: 'bg-rose-500',
   },
 }
 
@@ -85,30 +83,18 @@ const detailConfig = [
   {
     key: 'liked_today',
     label: 'Liked today',
-    icon: Heart,
-    iconClass: 'text-[#FF3B5C]',
-    bgClass: 'bg-[#FF6B8A]/10',
   },
   {
     key: 'disliked_today',
     label: "Didn't like today",
-    icon: MessageCircle,
-    iconClass: 'text-[#D62E2E]',
-    bgClass: 'bg-[#D62E2E]/10',
   },
   {
     key: 'needs_from_partner',
     label: 'Needs from partner',
-    icon: HandHeart,
-    iconClass: 'text-[#007AFF]',
-    bgClass: 'bg-[#007AFF]/10',
   },
   {
     key: 'note',
     label: 'Note',
-    icon: MessageCircle,
-    iconClass: 'text-[#8E8E93]',
-    bgClass: 'bg-black/[0.04]',
   },
 ] as const
 
@@ -144,91 +130,96 @@ export default function CheckinCard({
         relative
         w-full
         overflow-hidden
-        rounded-[26px]
+        rounded-[1.75rem]
         border border-black/[0.05]
         bg-white
-        shadow-[0_18px_45px_-28px_rgba(0,0,0,0.18)]
-        sm:rounded-[30px]
+        shadow-[0_25px_70px_-40px_rgba(0,0,0,0.22)]
+        transition-shadow
+        duration-300
+        hover:shadow-[0_30px_80px_-40px_rgba(0,0,0,0.28)]
+        sm:rounded-[2rem]
       "
     >
-      {/* ===================================================== */}
-      {/* MOOD AMBIENT */}
-      {/* ===================================================== */}
+      {/* Mood accent */}
+
+      <div
+        className={`
+          absolute
+          inset-x-0
+          top-0
+          h-1
+          ${mood.accent}
+        `}
+      />
+
+      {/* Ambient glow */}
 
       <div
         className={`
           pointer-events-none
           absolute
-          -right-20
-          -top-20
-          size-52
+          -right-24
+          -top-24
+          size-64
           rounded-full
-          blur-[80px]
+          blur-[110px]
           ${mood.glow}
         `}
       />
 
-      <div
-        className={`
-          pointer-events-none
-          absolute
-          -bottom-24
-          -left-20
-          size-44
-          rounded-full
-          blur-[80px]
-          opacity-60
-          ${mood.glow}
-        `}
-      />
-
-      {/* ===================================================== */}
-      {/* CONTENT */}
-      {/* ===================================================== */}
-
-      <div className="relative p-5 sm:p-7">
+      <div className="relative p-5 sm:p-7 lg:p-8">
 
         {/* ================================================= */}
         {/* HEADER */}
         {/* ================================================= */}
 
-        <div className="flex items-start justify-between gap-4">
-
-          {/* User */}
-
+        <header
+          className="
+            flex
+            flex-col
+            gap-5
+            sm:flex-row
+            sm:items-start
+            sm:justify-between
+          "
+        >
           <div className="min-w-0">
 
-            <div className="flex items-center gap-2">
+            <p className="text-[9px] font-semibold uppercase tracking-[0.18em] text-neutral-300">
+              Daily check-in
+            </p>
 
-              <div className="flex size-8 shrink-0 items-center justify-center rounded-[11px] bg-neutral-900 text-white shadow-sm">
+            <div className="mt-2 flex items-baseline gap-2.5">
+              <h2
+                className="
+                  truncate
+                  text-[18px]
+                  font-semibold
+                  tracking-[-0.04em]
+                  text-neutral-900
+                  sm:text-xl
+                "
+              >
+                {name}
+              </h2>
 
-                <Heart
-                  size={13}
-                  strokeWidth={2.3}
-                  fill="currentColor"
-                />
+              <span className="shrink-0 text-[10px] text-neutral-300">
+                /
+              </span>
 
-              </div>
-
-              <div className="min-w-0">
-
-                <p className="truncate text-[14px] font-semibold tracking-[-0.02em] text-neutral-900 sm:text-[15px]">
-                  {name}
-                </p>
-
-                <p className="mt-0.5 text-[10px] font-medium text-neutral-400 sm:text-[11px]">
-                  {date.toLocaleDateString(
-                    'id-ID',
-                    {
-                      day: 'numeric',
-                      month: 'long',
-                      year: 'numeric',
-                    },
-                  )}
-                </p>
-
-              </div>
-
+              <time
+                dateTime={checkin.checkin_date}
+                className="shrink-0 text-[10px] font-medium text-neutral-400 sm:text-[11px]"
+              >
+                {date.toLocaleDateString(
+                  'id-ID',
+                  {
+                    day: 'numeric',
+                    month: 'short',
+                    year: 'numeric',
+                  },
+                )}
+              </time>
             </div>
 
           </div>
@@ -238,75 +229,61 @@ export default function CheckinCard({
 
           <div
             className={`
-              relative
               flex
-              shrink-0
+              w-fit
               items-center
-              gap-2
-              overflow-hidden
-              rounded-[16px]
+              gap-2.5
+              rounded-full
               border
-              px-2.5
+              px-3
               py-1.5
               ${mood.background}
               ${mood.border}
             `}
           >
-
-            <div
-              className={`
-                pointer-events-none
-                absolute
-                -right-4
-                -top-5
-                size-10
-                rounded-full
-                blur-xl
-                ${mood.glow}
-              `}
-            />
-
             <img
               src={mood.image.src}
-              alt={mood.label}
-              className="
-                relative
-                size-7
-                object-contain
-                sm:size-8
-              "
+              alt=""
+              className="size-6 object-contain"
             />
 
             <span
               className={`
-                relative
                 text-[10px]
                 font-semibold
-                sm:text-[11px]
                 ${mood.text}
               `}
             >
               {mood.label}
             </span>
-
           </div>
-
-        </div>
+        </header>
 
 
         {/* ================================================= */}
-        {/* MOOD INTRO */}
+        {/* INTRO */}
         {/* ================================================= */}
 
-        <div className="mt-6">
+        <div className="mt-8 sm:mt-9">
 
-          <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-neutral-300">
-            Today's check-in
+          <p className="text-[9px] font-semibold uppercase tracking-[0.18em] text-neutral-300">
+            A glimpse into their day
           </p>
 
-          <h2 className="mt-1.5 text-[17px] font-semibold tracking-[-0.035em] text-neutral-800 sm:text-[19px]">
-            A little window into their day.
-          </h2>
+          <p
+            className="
+              mt-2
+              max-w-lg
+              text-[15px]
+              leading-6
+              tracking-[-0.02em]
+              text-neutral-500
+              sm:text-[16px]
+            "
+          >
+            Here's how they were feeling,
+            and what was on their mind today.
+          </p>
 
         </div>
 
@@ -315,34 +292,26 @@ export default function CheckinCard({
         {/* STATS */}
         {/* ================================================= */}
 
-        <div className="mt-5 grid grid-cols-2 gap-2.5 sm:gap-3">
-
+        <div
+          className="
+            mt-7
+            grid
+            grid-cols-1
+            gap-2.5
+            sm:grid-cols-2
+          "
+        >
           <StatCard
-            icon={
-              <Zap
-                size={14}
-                strokeWidth={2.5}
-                className="text-[#FF9500]"
-              />
-            }
             label="Energy"
             value={checkin.energy}
-            progressClass="bg-[#FF9500]"
+            progressClass="bg-neutral-900"
           />
 
           <StatCard
-            icon={
-              <Brain
-                size={14}
-                strokeWidth={2.5}
-                className="text-[#AF52DE]"
-              />
-            }
             label="Stress"
             value={checkin.stress}
-            progressClass="bg-[#AF52DE]"
+            progressClass="bg-neutral-400"
           />
-
         </div>
 
 
@@ -351,94 +320,65 @@ export default function CheckinCard({
         {/* ================================================= */}
 
         {details.length > 0 && (
+          <section className="mt-8">
 
-          <div className="mt-6">
-
-            <div className="mb-3 flex items-center gap-2">
-
-              <div className="h-px flex-1 bg-black/[0.05]" />
-
-              <span className="text-[9px] font-semibold uppercase tracking-[0.16em] text-neutral-300">
+            <div
+              className="
+                flex
+                items-center
+                justify-between
+                border-b
+                border-black/[0.05]
+                pb-3
+              "
+            >
+              <p className="text-[11px] font-semibold tracking-[-0.01em] text-neutral-700">
                 Reflection
+              </p>
+
+              <span className="text-[9px] uppercase tracking-[0.14em] text-neutral-300">
+                {details.length}{' '}
+                {details.length === 1
+                  ? 'entry'
+                  : 'entries'}
               </span>
-
-              <div className="h-px flex-1 bg-black/[0.05]" />
-
             </div>
 
 
-            <div className="space-y-2.5">
+            <div className="divide-y divide-black/[0.045]">
 
-              {details.map((detail) => {
+              {details.map((detail) => (
+                <div
+                  key={detail.key}
+                  className="
+                    py-4
+                    first:pt-4
+                    last:pb-1
+                    sm:py-5
+                  "
+                >
+                  <p className="text-[9px] font-semibold uppercase tracking-[0.14em] text-neutral-300">
+                    {detail.label}
+                  </p>
 
-                const Icon = detail.icon
-
-                return (
-                  <div
-                    key={detail.key}
+                  <p
                     className="
-                      group
-                      rounded-[18px]
-                      border
-                      border-black/[0.04]
-                      bg-neutral-50/70
-                      p-3.5
-                      transition-all
-                      duration-200
-                      hover:border-black/[0.06]
-                      hover:bg-neutral-50
+                      mt-2
+                      break-words
+                      text-[12.5px]
+                      leading-[1.7]
+                      text-neutral-600
+                      sm:text-[13px]
                     "
                   >
-
-                    <div className="flex items-start gap-3">
-
-                      {/* Icon */}
-
-                      <div
-                        className={`
-                          flex
-                          size-8
-                          shrink-0
-                          items-center
-                          justify-center
-                          rounded-[11px]
-                          ${detail.bgClass}
-                        `}
-                      >
-
-                        <Icon
-                          size={14}
-                          strokeWidth={2.25}
-                          className={detail.iconClass}
-                        />
-
-                      </div>
-
-
-                      {/* Content */}
-
-                      <div className="min-w-0 flex-1">
-
-                        <p className="text-[9px] font-semibold uppercase tracking-[0.13em] text-neutral-400">
-                          {detail.label}
-                        </p>
-
-                        <p className="mt-1.5 break-words text-[12.5px] leading-[1.65] text-neutral-700 sm:text-[13px]">
-                          {String(detail.value)}
-                        </p>
-
-                      </div>
-
-                    </div>
-
-                  </div>
-                )
-              })}
+                    {String(detail.value)}
+                  </p>
+                </div>
+              ))}
 
             </div>
 
-          </div>
-
+          </section>
         )}
 
 
@@ -446,23 +386,20 @@ export default function CheckinCard({
         {/* FOOTER */}
         {/* ================================================= */}
 
-        <div className="mt-6 flex items-center justify-center gap-1.5">
-
-          <Heart
-            size={10}
-            strokeWidth={2}
-            className="text-pink-300"
-            fill="currentColor"
-          />
-
-          <p className="text-[9px] font-medium text-neutral-300">
+        <div
+          className="
+            mt-7
+            border-t
+            border-black/[0.045]
+            pt-4
+          "
+        >
+          <p className="text-center text-[9px] font-medium tracking-[0.01em] text-neutral-300">
             Understanding each other, one day at a time.
           </p>
-
         </div>
 
       </div>
-
     </article>
   )
 }
@@ -473,12 +410,10 @@ export default function CheckinCard({
 /* ============================================================= */
 
 function StatCard({
-  icon,
   label,
   value,
   progressClass,
 }: {
-  icon: React.ReactNode
   label: string
   value: number
   progressClass: string
@@ -489,40 +424,32 @@ function StatCard({
   return (
     <div
       className="
-        rounded-[18px]
-        border border-black/[0.04]
-        bg-neutral-50/80
-        p-3.5
-        sm:p-4
+        rounded-[1.25rem]
+        border
+        border-black/[0.045]
+        bg-neutral-50/70
+        px-4
+        py-4
+        sm:px-5
+        sm:py-[18px]
       "
     >
+      <div className="flex items-center justify-between gap-4">
 
-      <div className="flex items-center justify-between gap-2">
+        <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-neutral-400">
+          {label}
+        </p>
 
-        <div className="flex items-center gap-1.5">
-
-          {icon}
-
-          <p className="text-[10px] font-medium text-neutral-400 sm:text-[11px]">
-            {label}
-          </p>
-
-        </div>
-
-        <span className="text-[11px] font-semibold tabular-nums text-neutral-500">
+        <p className="text-[13px] font-semibold tabular-nums tracking-[-0.02em] text-neutral-700">
           {value}
-          <span className="font-medium text-neutral-300">
+          <span className="ml-0.5 text-[10px] font-medium text-neutral-300">
             /10
           </span>
-        </span>
+        </p>
 
       </div>
 
-
-      {/* Progress */}
-
-      <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-neutral-200/70">
-
+      <div className="mt-3 h-1 overflow-hidden rounded-full bg-neutral-200/80">
         <div
           className={`
             h-full
@@ -535,9 +462,7 @@ function StatCard({
             width: `${percentage}%`,
           }}
         />
-
       </div>
-
     </div>
   )
 }

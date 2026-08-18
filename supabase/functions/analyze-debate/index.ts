@@ -62,6 +62,14 @@ ATURAN INTI YANG TIDAK BOLEH DILANGGAR APAPUN GAYA BAHASAMU:
 - Kalau ada indikasi kekerasan, pelecehan, atau bahaya nyata dalam percakapan, segera keluar dari gaya bahasa manapun dan sampaikan dengan serius bahwa ini butuh bantuan profesional.
 `
 
+const LANGUAGE_INSTRUCTION = `
+ATURAN BAHASA:
+- Deteksi bahasa yang digunakan pasangan dalam transkrip percakapan (Bahasa Indonesia, English, atau bahasa lain).
+- WAJIB balas dalam BAHASA YANG SAMA dengan yang mereka gunakan. Kalau mereka menulis dalam bahasa Inggris, balas sepenuhnya dalam bahasa Inggris (termasuk field facts, opinions, common_ground, summary, stronger_argument).
+- Kalau mereka bicara campuran (kadang Indonesia kadang Inggris), gunakan bahasa yang paling dominan di transkrip.
+- Instruksi gaya bahasa (formal/lembut/kasar/lebay) tetap berlaku, hanya bahasanya yang menyesuaikan.
+`
+
 function buildCommentPrompt(
   participantNames: string[],
   persona: AiPersona,
@@ -76,6 +84,8 @@ Tugasmu di setiap giliran:
 3. Beri tanggapan singkat dan membangun — boleh menantang logika salah satu pihak kalau ada kelemahan argumen.
 4. Saat menyebut salah satu pihak, gunakan NAMA ASLI mereka (${participantNames.join(', ')}), jangan pakai sebutan generik seperti "pihak A" atau "pasangan pertama".
 5. Jangan menyimpulkan pemenang dulu di tahap ini — itu hanya untuk kesimpulan akhir nanti.
+
+${LANGUAGE_INSTRUCTION}
 
 ${PERSONA_STYLE_INSTRUCTIONS[persona]}
 
@@ -105,6 +115,8 @@ Tugasmu sekarang:
 3. Tentukan secara ANALITIS argumen mana yang lebih kuat/logis, dengan alasan yang jelas dan berbasis fakta/logika — bukan berdasarkan siapa yang "lebih baik" sebagai orang. Sebut nama orangnya secara eksplisit di penjelasan ini.
 4. Di bagian summary, sapa MASING-MASING orang secara personal dengan nama mereka.
 5. Beri titik temu atau langkah konkret yang bisa mereka ambil bersama ke depannya.
+
+${LANGUAGE_INSTRUCTION}
 
 ${PERSONA_STYLE_INSTRUCTIONS[persona]}
 

@@ -750,128 +750,154 @@ export default function DebateRoom({
         {isRoomActive ? (
           <div
             className="
-            relative
-            z-10
-            border-t
-            border-black/[0.045]
-            bg-white/95
-            px-4
-            py-4
-            backdrop-blur-xl
-            sm:px-6
-            sm:py-5
-          "
+      relative
+      z-10
+      border-t
+      border-black/[0.045]
+      bg-white/95
+      px-4
+      py-3.5
+      backdrop-blur-xl
+      sm:px-6
+      sm:py-4
+    "
           >
+            {/* TOOLBAR */}
+
+            <div className="mb-2.5 flex items-center justify-between gap-3 px-1">
+              <div className="flex items-center gap-2">
+                {/* AI BUTTON */}
+
+                <button
+                  type="button"
+                  onClick={handleRequestAiComment}
+                  disabled={
+                    requestAiMutation.isPending ||
+                    !canRequestAiComment
+                  }
+                  title={getAiButtonTooltip()}
+                  className="
+            flex
+            h-8
+            items-center
+            gap-1.5
+            rounded-full
+            border
+            border-black/[0.055]
+            bg-neutral-50
+            px-3
+            text-[9.5px]
+            font-semibold
+            text-neutral-500
+            shadow-[0_3px_10px_rgba(0,0,0,0.025)]
+            transition-all
+            hover:border-black/[0.09]
+            hover:bg-white
+            hover:text-neutral-800
+            hover:shadow-[0_5px_14px_rgba(0,0,0,0.04)]
+            disabled:pointer-events-none
+            disabled:opacity-30
+          "
+                >
+                  {requestAiMutation.isPending ||
+                    isAiProcessing ? (
+                    <Loader2
+                      size={11}
+                      className="animate-spin"
+                    />
+                  ) : (
+                    <Sparkles
+                      size={11}
+                      strokeWidth={1.8}
+                    />
+                  )}
+
+                  <span>Ask AI</span>
+                </button>
+
+                {/* PROVIDER */}
+
+                <select
+                  value={selectedProvider}
+                  onChange={(e) =>
+                    setSelectedProvider(
+                      e.target.value as
+                      | 'auto'
+                      | 'openrouter'
+                      | 'groq',
+                    )
+                  }
+                  disabled={isAiProcessing}
+                  className="
+            h-8
+            cursor-pointer
+            appearance-none
+            rounded-full
+            border
+            border-black/[0.055]
+            bg-neutral-50
+            px-3
+            text-[9px]
+            font-medium
+            text-neutral-400
+            outline-none
+            transition
+            hover:border-black/[0.09]
+            hover:bg-white
+            hover:text-neutral-600
+            disabled:cursor-not-allowed
+            disabled:opacity-40
+          "
+                >
+                  <option value="auto">
+                    Auto
+                  </option>
+
+                  <option value="openrouter">
+                    OpenRouter
+                  </option>
+
+                  <option value="groq">
+                    Groq
+                  </option>
+                </select>
+              </div>
+
+              {/* MESSAGE COUNT */}
+
+              {isRoomActive && (
+                <span
+                  className="
+            text-[9px]
+            font-medium
+            text-neutral-300
+          "
+                >
+                  {userMessageCount}/{debate.max_messages}
+                </span>
+              )}
+            </div>
+
+            {/* INPUT */}
+
             <div
               className="
-              flex
-              items-end
-              gap-2
-              rounded-[1.5rem]
-              border
-              border-black/[0.065]
-              bg-neutral-50/80
-              p-1.5
-              shadow-[0_8px_30px_rgba(0,0,0,0.035)]
-              transition-all
-              focus-within:border-black/[0.11]
-              focus-within:bg-white
-              focus-within:shadow-[0_10px_35px_rgba(0,0,0,0.055)]
-            "
+        flex
+        items-end
+        gap-2
+        rounded-[1.5rem]
+        border
+        border-black/[0.065]
+        bg-neutral-50/80
+        p-1.5
+        shadow-[0_8px_30px_rgba(0,0,0,0.035)]
+        transition-all
+        focus-within:border-black/[0.11]
+        focus-within:bg-white
+        focus-within:shadow-[0_10px_35px_rgba(0,0,0,0.055)]
+      "
             >
-              {/* AI */}
-
-              <button
-                type="button"
-                onClick={handleRequestAiComment}
-                disabled={
-                  requestAiMutation.isPending ||
-                  !canRequestAiComment
-                }
-                title={getAiButtonTooltip()}
-                className="
-                flex
-                h-10
-                shrink-0
-                items-center
-                gap-1.5
-                rounded-[1.1rem]
-                px-3
-                text-[10px]
-                font-semibold
-                text-neutral-400
-                transition-all
-                hover:bg-white
-                hover:text-neutral-800
-                disabled:pointer-events-none
-                disabled:opacity-30
-              "
-              >
-                {requestAiMutation.isPending ||
-                  isAiProcessing ? (
-                  <Loader2
-                    size={12}
-                    className="animate-spin"
-                  />
-                ) : (
-                  <Sparkles
-                    size={12}
-                    strokeWidth={1.8}
-                  />
-                )}
-
-                <span className="hidden sm:inline">
-                  AI
-                </span>
-              </button>
-
-              {/* PROVIDER */}
-
-              <select
-                value={selectedProvider}
-                onChange={(e) =>
-                  setSelectedProvider(
-                    e.target.value as
-                    | 'auto'
-                    | 'openrouter'
-                    | 'groq',
-                  )
-                }
-                disabled={isAiProcessing}
-                className="
-                h-10
-                shrink-0
-                cursor-pointer
-                appearance-none
-                rounded-[1rem]
-                border
-                border-black/[0.045]
-                bg-white
-                px-2.5
-                text-[9px]
-                font-medium
-                text-neutral-400
-                outline-none
-                transition
-                hover:text-neutral-600
-                disabled:cursor-not-allowed
-                disabled:opacity-40
-              "
-              >
-                <option value="auto">
-                  Auto
-                </option>
-
-                <option value="openrouter">
-                  OpenRouter
-                </option>
-
-                <option value="groq">
-                  Groq
-                </option>
-              </select>
-
-              {/* INPUT */}
+              {/* TEXTAREA */}
 
               <textarea
                 value={input}
@@ -895,23 +921,23 @@ export default function DebateRoom({
                 disabled={isAiProcessing}
                 rows={1}
                 className="
-                max-h-24
-                min-h-10
-                min-w-0
-                flex-1
-                resize-none
-                border-0
-                bg-transparent
-                px-2
-                py-2.5
-                text-[12.5px]
-                leading-5
-                text-neutral-900
-                outline-none
-                placeholder:text-neutral-300
-                disabled:cursor-not-allowed
-                disabled:opacity-50
-              "
+          max-h-32
+          min-h-10
+          min-w-0
+          flex-1
+          resize-none
+          border-0
+          bg-transparent
+          px-2.5
+          py-2.5
+          text-[12.5px]
+          leading-5
+          text-neutral-900
+          outline-none
+          placeholder:text-neutral-300
+          disabled:cursor-not-allowed
+          disabled:opacity-50
+        "
               />
 
               {/* SEND */}
@@ -926,22 +952,22 @@ export default function DebateRoom({
                 }
                 aria-label="Send message"
                 className="
-                flex
-                size-10
-                shrink-0
-                items-center
-                justify-center
-                rounded-[1.1rem]
-                bg-neutral-900
-                text-white
-                shadow-[0_5px_15px_rgba(0,0,0,0.12)]
-                transition-all
-                hover:-translate-y-0.5
-                hover:bg-black
-                hover:shadow-[0_8px_20px_rgba(0,0,0,0.16)]
-                disabled:pointer-events-none
-                disabled:opacity-25
-              "
+          flex
+          size-10
+          shrink-0
+          items-center
+          justify-center
+          rounded-[1.1rem]
+          bg-neutral-900
+          text-white
+          shadow-[0_5px_15px_rgba(0,0,0,0.12)]
+          transition-all
+          hover:-translate-y-0.5
+          hover:bg-black
+          hover:shadow-[0_8px_20px_rgba(0,0,0,0.16)]
+          disabled:pointer-events-none
+          disabled:opacity-25
+        "
               >
                 {sendMessageMutation.isPending ? (
                   <Loader2
@@ -962,16 +988,18 @@ export default function DebateRoom({
             {isAiProcessing && (
               <p
                 className="
-                mt-2.5
-                px-2
-                text-[9.5px]
-                leading-4
-                text-neutral-400
-              "
+          mt-2.5
+          px-2
+          text-[9.5px]
+          leading-4
+          text-neutral-400
+        "
               >
                 {isAiRequestedByMe
                   ? 'Waiting for AI to respond. You can continue once AI is finished.'
-                  : `${aiRequestedByName?.display_name ?? aiRequestedByName?.username ?? 'Your babe'} is requesting an AI response.`}
+                  : `${aiRequestedByName?.display_name ??
+                  aiRequestedByName?.username ??
+                  'Your babe'} is requesting an AI response.`}
               </p>
             )}
 
@@ -980,27 +1008,29 @@ export default function DebateRoom({
               !hasNewMessageSinceLastAiComment && (
                 <p
                   className="
-                  mt-2.5
-                  px-2
-                  text-[9.5px]
-                  leading-4
-                  text-neutral-400
-                "
+            mt-2.5
+            px-2
+            text-[9.5px]
+            leading-4
+            text-neutral-400
+          "
                 >
-                  AI has already responded to your latest message. Send a new message to request another response.
+                  AI has already responded to your latest
+                  message. Send a new message to request
+                  another response.
                 </p>
               )}
           </div>
         ) : (
           <div
             className="
-            border-t
-            border-black/[0.045]
-            bg-neutral-50/60
-            px-5
-            py-4
-            text-center
-          "
+      border-t
+      border-black/[0.045]
+      bg-neutral-50/60
+      px-5
+      py-4
+      text-center
+    "
           >
             <p className="text-[10.5px] text-neutral-400">
               {isPendingVerdict
