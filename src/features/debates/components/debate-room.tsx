@@ -30,6 +30,7 @@ import sadEmot from '@/assets/emoticon/sad-emot.png'
 import stressedEmot from '@/assets/emoticon/stressed-emot.png'
 import tiredEmot from '@/assets/emoticon/tired-emot.png'
 import Image from 'next/image'
+import DateSeparator from './date-separator'
 
 interface DebateRoomProps {
   debateId: string
@@ -143,6 +144,13 @@ export default function DebateRoom({
           className="animate-spin text-neutral-300"
         />
       </div>
+    )
+  }
+
+  function isSameDay(dateA: string, dateB: string) {
+    return (
+      new Date(dateA).toDateString() ===
+      new Date(dateB).toDateString()
     )
   }
 
@@ -643,13 +651,31 @@ export default function DebateRoom({
               </p>
             </div>
           ) : (
-            messages.map((message) => (
-              <DebateMessageBubble
-                key={message.id}
-                message={message}
-                currentUserId={currentUserId}
-              />
-            ))
+            messages.map((message, index) => {
+              const previousMessage = messages[index - 1]
+
+              const showDateSeparator =
+                index === 0 ||
+                !isSameDay(
+                  message.created_at,
+                  previousMessage.created_at,
+                )
+
+              return (
+                <div key={message.id}>
+                  {showDateSeparator && (
+                    <DateSeparator
+                      date={message.created_at}
+                    />
+                  )}
+
+                  <DebateMessageBubble
+                    message={message}
+                    currentUserId={currentUserId}
+                  />
+                </div>
+              )
+            })
           )}
 
           {isAiProcessing && !isPendingVerdict && (
