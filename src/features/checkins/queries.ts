@@ -5,7 +5,9 @@ import {
 } from '@tanstack/react-query'
 
 import {
+  getCheckinEditCountToday,
   getCheckinHistory,
+  getCheckinHistoryEntries,
   getTodayCheckin,
   upsertCheckin,
 } from './api'
@@ -80,29 +82,27 @@ export function useCheckinHistory(
 }
 
 export function useUpsertCheckin() {
-  const queryClient =
-    useQueryClient()
+  const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: upsertCheckin,
 
-    onSuccess: (
-      _data,
-      variables,
-    ) => {
+    onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({
-        queryKey:
-          checkinKeys.today(
-            variables.relationshipId,
-            variables.date,
-          ),
+        queryKey: checkinKeys.today(
+          variables.relationshipId,
+          variables.date,
+        ),
       })
 
       queryClient.invalidateQueries({
-        queryKey:
-          checkinKeys.history(
-            variables.relationshipId,
-          ),
+        queryKey: checkinKeys.history(
+          variables.relationshipId,
+        ),
+      })
+
+      queryClient.invalidateQueries({
+        queryKey: [...checkinKeys.all, 'edit-count', variables.relationshipId, variables.date],
       })
     },
   })
@@ -112,5 +112,24 @@ export function useGetPartnerName () {
   return useQuery({
     queryKey: ['partner'],
     queryFn: getPartnerName
+  })
+}
+
+export function useCheckinEditCountToday(
+  relationshipId: string,
+  date: string,
+) {
+  return useQuery({
+    queryKey: [...checkinKeys.all, 'edit-count', relationshipId, date],
+    queryFn: () => getCheckinEditCountToday(relationshipId, date),
+    enabled: Boolean(relationshipId && date),
+  })
+}
+
+export function useCheckinHistoryEntries(checkinId: string | undefined) {
+  return useQuery({
+    queryKey: [...checkinKeys.all, 'history-entries', checkinId],
+    queryFn: () => getCheckinHistoryEntries(checkinId as string),
+    enabled: Boolean(checkinId),
   })
 }

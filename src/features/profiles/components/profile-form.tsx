@@ -18,6 +18,7 @@ import {
   useUpdateMyAvatar,
   useUpdateMyProfile,
 } from '@/features/profiles/queries'
+import ProfileSkeleton from './profile-skeleton'
 
 const MAX_FILE_SIZE_MB = 5
 
@@ -43,18 +44,6 @@ function SectionIcon({
       ].join(' ')}
     >
       {children}
-    </div>
-  )
-}
-
-function LoadingState() {
-  return (
-    <div className="flex items-center justify-center py-20">
-      <div className="flex items-center gap-3 text-[13px] text-neutral-400">
-        <span className="size-4 animate-spin rounded-full border-2 border-neutral-200 border-t-neutral-800" />
-
-        Loading your profile...
-      </div>
     </div>
   )
 }
@@ -225,7 +214,7 @@ export default function ProfileForm() {
    * before hydration is complete.
    */
   if (!mounted || isLoading) {
-    return <LoadingState />
+    return <ProfileSkeleton />
   }
 
   return (

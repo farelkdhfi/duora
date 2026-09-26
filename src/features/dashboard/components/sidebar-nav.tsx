@@ -1,3 +1,5 @@
+// features/dashboard/components/sidebar-nav.tsx
+
 'use client'
 
 import Link from 'next/link'
@@ -7,6 +9,8 @@ import {
   CalendarDays,
   ChartBarDecreasing,
   CheckCircle2,
+  Clock,
+  File,
   Goal,
   Heart,
   Home,
@@ -15,11 +19,13 @@ import {
   Logs,
   NotebookPen,
   Pin,
+  Smile,
   User2,
 } from 'lucide-react'
 
 import { createClient } from '@/lib/supabase/client'
 import { useMyRelationshipDetails } from '@/features/relationship/queries'
+import { PlanBadge } from '@/features/subscription/components/plan-badge' // TAMBAHKAN
 import Image from 'next/image'
 
 import logoImage from '@/assets/duora-logo3.png'
@@ -30,6 +36,11 @@ const navigation = [
     label: 'Overview',
     href: '/dashboard',
     icon: Home,
+  },
+  {
+    label: 'Debates',
+    href: '/debates',
+    icon: ChartBarDecreasing,
   },
   {
     label: 'Goals',
@@ -44,17 +55,22 @@ const navigation = [
   {
     label: 'Daily Check-in',
     href: '/check-in',
-    icon: CheckCircle2,
-  },
-  {
-    label: 'Debates',
-    href: '/debates',
-    icon: ChartBarDecreasing,
+    icon: Smile,
   },
   {
     label: 'Notes',
     href: '/notes',
     icon: NotebookPen,
+  },
+  {
+    label: 'Wrapped',
+    href: '/wrapped',
+    icon: File,
+  },
+  {
+    label: 'Countdown',
+    href: '/countdown',
+    icon: Clock,
   },
   {
     label: 'Profile',
@@ -123,6 +139,11 @@ export default function SidebarNav({ onNavigate }: SidebarNavProps) {
           </div>
 
         </Link>
+
+        {/* PLAN BADGE - TAMBAHKAN */}
+        <div className="mt-3">
+          <PlanBadge />
+        </div>
 
       </div>
 

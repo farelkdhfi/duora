@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/client'
 
 import type {
   DailyCheckin,
+  DailyCheckinHistoryEntry,
 } from './types'
 
 import type {
@@ -135,4 +136,43 @@ export async function upsertCheckin({
   }
 
   return data as DailyCheckin
+}
+
+export async function getCheckinEditCountToday(
+  relationshipId: string,
+  date: string
+): Promise<number> {
+  const supabase = createClient()
+
+  const { data, error } = await supabase.rpc('get_checkin_edit_count_today', {
+    p_relationship_id: relationshipId,
+    p_date: date,
+  })
+
+  if (error) {
+    throw new Error(error.message)
+  }
+
+  return data as number
+}
+
+export async function getCheckinHistoryEntries(
+  checkinId: string,
+): Promise<DailyCheckinHistoryEntry[]> {
+  const supabase = createClient()
+
+  const {
+    data,
+    error,
+  } = await supabase
+    .from('daily_checkin_history')
+    .select('*')
+    .eq('checkin_id', checkinId)
+    .order('changed_at', { ascending: true })
+
+  if (error) {
+    throw new Error(error.message)
+  }
+
+  return data as DailyCheckinHistoryEntry[]
 }

@@ -20,3 +20,19 @@ export interface DailyCheckin {
     created_at: string 
     updated_at: string 
 }
+
+export interface DailyCheckinHistoryEntry {
+  id: string
+  checkin_id: string
+  relationship_id: string
+  user_id: string
+  checkin_date: string
+  mood: Mood
+  energy: number
+  stress: number
+  liked_today: string | null
+  disliked_today: string | null
+  needs_from_partner: string | null
+  note: string | null
+  changed_at: string
+}

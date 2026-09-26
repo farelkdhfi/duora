@@ -220,7 +220,7 @@ export default function LoginForm() {
         <button
           type="submit"
           disabled={loginMutation.isPending}
-          className="group relative w-full overflow-hidden rounded-2xl bg-[#111111] py-3.5 text-[14px] font-semibold text-white shadow-[0_8px_25px_-8px_rgba(0,0,0,0.5)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_12px_30px_-8px_rgba(0,0,0,0.55)] active:translate-y-0 disabled:cursor-not-allowed disabled:opacity-50"
+          className="group relative w-full overflow-hidden rounded-full bg-[#111111] py-3.5 text-[14px] font-semibold text-white shadow-[0_8px_25px_-8px_rgba(0,0,0,0.5)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_12px_30px_-8px_rgba(0,0,0,0.55)] active:translate-y-0 disabled:cursor-not-allowed disabled:opacity-50"
         >
 
           {/* subtle gradient hover */}
@@ -260,7 +260,7 @@ export default function LoginForm() {
         type="button"
         onClick={handleGoogleSignIn}
         disabled={isGoogleLoading || loginMutation.isPending}
-        className="flex h-12 w-full items-center justify-center gap-3 rounded-2xl border border-neutral-200/80 bg-white text-[14px] font-medium text-neutral-700 shadow-sm transition hover:bg-neutral-50 disabled:cursor-not-allowed disabled:opacity-50"
+        className="flex h-12 w-full items-center justify-center gap-3 rounded-full border border-neutral-200/80 bg-white text-[14px] font-medium text-neutral-700 shadow-sm transition hover:bg-neutral-50 disabled:cursor-not-allowed disabled:opacity-50"
       >
         <svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true">
           <path

@@ -11,7 +11,10 @@ import {
 import {
   useTodayCheckin,
   useUpsertCheckin,
+  useCheckinEditCountToday, // TAMBAHKAN
 } from '../queries'
+
+import { useMySubscription } from '@/features/subscription/queries' // TAMBAHKAN, sesuaikan path
 
 import MoodSelector from './mood-selector'
 import type { Mood } from '../types'
@@ -241,9 +244,25 @@ export default function CheckinForm({
     date,
   )
 
+  const { data: subscription } = useMySubscription() // TAMBAHKAN
+
+  const { data: editCountToday } = useCheckinEditCountToday( // TAMBAHKAN
+    relationshipId,
+    date,
+  )
+
   const mutation = useUpsertCheckin()
 
   const existing = data?.[0]
+
+  // TAMBAHKAN: hitung limit
+  const maxEditsPerDay = subscription
+    ? subscription.max_mood_edits_per_day
+    : 3 // fallback ketat: anggap free kalau subscription tidak ada
+
+  const isLimitReached =
+    maxEditsPerDay !== null &&
+    (editCountToday ?? 0) >= maxEditsPerDay
 
   const {
     register,
@@ -365,6 +384,8 @@ export default function CheckinForm({
   function onSubmit(
     values: DailyCheckinFormValues,
   ) {
+    if (isLimitReached) return // TAMBAHKAN: guard tambahan
+
     mutation.mutate(
       {
         relationshipId,
@@ -475,6 +496,33 @@ export default function CheckinForm({
             </div>
           )}
         </div>
+
+        {/* =================================================== */}
+        {/* LIMIT WARNING - TAMBAHKAN SECTION INI */}
+        {/* =================================================== */}
+
+        {maxEditsPerDay !== null && (
+          <div
+            className={`
+              relative
+              mt-6
+              rounded-[1.15rem]
+              border
+              px-4
+              py-3
+              ${isLimitReached
+                ? 'border-amber-200 bg-amber-50'
+                : 'border-black/[0.04] bg-[#f8f8f7]'
+              }
+            `}
+          >
+            <p className={`text-[11px] font-medium leading-5 ${isLimitReached ? 'text-amber-600' : 'text-neutral-400'}`}>
+              {isLimitReached
+                ? `Kamu sudah mengganti mood ${maxEditsPerDay}x hari ini (batas paket Free). Upgrade ke Premium untuk update tanpa batas.`
+                : `${editCountToday ?? 0}/${maxEditsPerDay} perubahan hari ini`}
+            </p>
+          </div>
+        )}
 
         {/* =================================================== */}
         {/* MOOD */}
@@ -687,7 +735,7 @@ export default function CheckinForm({
         <div className="mt-8 sm:mt-9">
           <button
             type="submit"
-            disabled={mutation.isPending}
+            disabled={mutation.isPending || isLimitReached}
             className="
               flex
               h-12.5
@@ -717,6 +765,8 @@ export default function CheckinForm({
                 <span className="mr-2 size-3.5 animate-spin rounded-full border-2 border-white/30 border-t-white" />
                 Saving your check-in...
               </>
+            ) : isLimitReached ? (
+              'Batas harian tercapai'
             ) : (
               existing
                 ? 'Update Check-in'
