@@ -5,6 +5,7 @@ import type { DebateMessage } from '../types'
 interface DebateMessageBubbleProps {
   message: DebateMessage
   currentUserId: string
+  variant?: 'stage' | 'mediator' | 'resolution' | 'history'
 }
 
 function formatTime(dateString: string) {
@@ -26,7 +27,7 @@ function renderListItem(item: unknown): string {
     const obj = item as Record<string, unknown>
 
     const values = Object.values(obj)
-      .filter((v) => typeof v === 'string')
+      .filter((value) => typeof value === 'string')
       .join(': ')
 
     return values || JSON.stringify(item)
@@ -35,374 +36,283 @@ function renderListItem(item: unknown): string {
   return String(item)
 }
 
-export default function DebateMessageBubble({
+/* ===================================================== */
+/* AI MEDIATOR */
+/* ===================================================== */
+
+function MediatorCard({
   message,
-  currentUserId,
-}: DebateMessageBubbleProps) {
-  /* ===================================================== */
-  /* AI MESSAGE */
-  /* ===================================================== */
+  resolution = false,
+}: {
+  message: DebateMessage
+  resolution?: boolean
+}) {
+  const analysis = message.ai_analysis
 
-  if (message.role === 'ai') {
-    const analysis = message.ai_analysis
-    const isFinal = message.is_final_verdict
+  return (
+    <article
+      className={[
+        'relative overflow-hidden rounded-[1.9rem] border',
+        resolution
+          ? 'border-neutral-900/[0.08] bg-neutral-950 text-white shadow-[0_24px_70px_rgba(0,0,0,0.14)]'
+          : 'border-black/[0.055] bg-white text-neutral-900 shadow-[0_15px_50px_rgba(0,0,0,0.055)]',
+      ].join(' ')}
+    >
+      {/* AMBIENT */}
 
-    return (
-      <div className="px-3 py-4 sm:px-5 sm:py-5">
-        <div
-          className={`
-            relative
-            mx-auto
-            w-full
-            max-w-2xl
-            overflow-hidden
-            rounded-[2rem]
-            border
-            ${
-              isFinal
-                ? 'border-neutral-900/[0.08] bg-neutral-950 text-white shadow-[0_18px_50px_rgba(0,0,0,0.12)]'
-                : 'border-black/[0.055] bg-white text-neutral-900 shadow-[0_12px_40px_rgba(0,0,0,0.035)]'
-            }
-          `}
+      {!resolution && (
+        <>
+          <div className="pointer-events-none absolute -right-20 -top-20 size-40 rounded-full bg-blue-300/[0.07] blur-[65px]" />
+
+          <div className="pointer-events-none absolute -left-20 bottom-0 size-40 rounded-full bg-pink-300/[0.06] blur-[65px]" />
+        </>
+      )}
+
+      {resolution && (
+        <div className="pointer-events-none absolute left-1/2 top-0 size-64 -translate-x-1/2 rounded-full bg-white/[0.035] blur-[80px]" />
+      )}
+
+      <div className="relative p-5 sm:p-6">
+        {/* TOP */}
+
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2.5">
+            <div
+              className={[
+                'flex size-8 items-center justify-center rounded-full',
+                resolution
+                  ? 'bg-white/[0.07]'
+                  : 'bg-[#f7f2eb]',
+              ].join(' ')}
+            >
+              <span
+                className={
+                  resolution
+                    ? 'text-sm text-white/70'
+                    : 'text-sm text-neutral-500'
+                }
+              >
+                {resolution ? '♡' : '✦'}
+              </span>
+            </div>
+
+            <div>
+              <p
+                className={[
+                  'text-[8px] font-semibold uppercase tracking-[0.17em]',
+                  resolution
+                    ? 'text-white/30'
+                    : 'text-neutral-300',
+                ].join(' ')}
+              >
+                {resolution
+                  ? 'Resolution'
+                  : 'Duora AI'}
+              </p>
+
+              <p
+                className={[
+                  'mt-0.5 text-[9px]',
+                  resolution
+                    ? 'text-white/40'
+                    : 'text-neutral-400',
+                ].join(' ')}
+              >
+                Neutral mediator
+              </p>
+            </div>
+          </div>
+
+          <span
+            className={[
+              'text-[8.5px]',
+              resolution
+                ? 'text-white/25'
+                : 'text-neutral-300',
+            ].join(' ')}
+          >
+            {formatTime(message.created_at)}
+          </span>
+        </div>
+
+        {/* MAIN STATEMENT */}
+
+        <p
+          className={[
+            'tracking-[-0.012em]',
+            resolution
+              ? 'mt-7 text-[14px] leading-[1.9] text-white/[0.8]'
+              : 'mt-6 text-[13px] leading-[1.8] text-neutral-600',
+          ].join(' ')}
         >
-          {/* subtle ambient accent */}
+          {analysis?.summary ??
+            message.content}
+        </p>
 
-          {!isFinal && (
-            <>
-              <div
-                className="
-                  pointer-events-none
-                  absolute
-                  -right-16
-                  -top-16
-                  size-32
-                  rounded-full
-                  bg-blue-400/[0.055]
-                  blur-[60px]
-                "
-              />
+        {/* STRONGER ARGUMENT */}
 
-              <div
-                className="
-                  pointer-events-none
-                  absolute
-                  -left-16
-                  bottom-0
-                  size-32
-                  rounded-full
-                  bg-pink-400/[0.045]
-                  blur-[60px]
-                "
-              />
-            </>
+        {resolution &&
+          analysis?.stronger_argument && (
+            <div className="mt-7 border-t border-white/[0.08] pt-6">
+              <p className="text-[8px] font-semibold uppercase tracking-[0.17em] text-amber-300/60">
+                Stronger argument
+              </p>
+
+              <p className="mt-2.5 text-[11.5px] leading-6 text-white/[0.64]">
+                {analysis.stronger_argument}
+              </p>
+            </div>
           )}
 
-          {/* CONTENT */}
+        {/* FACTS */}
 
-          <div className="relative p-5 sm:p-6">
-            {/* HEADER */}
-
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <p
-                  className={`
-                    text-[9px]
-                    font-semibold
-                    uppercase
-                    tracking-[0.16em]
-                    ${
-                      isFinal
-                        ? 'text-white/35'
-                        : 'text-neutral-300'
-                    }
-                  `}
-                >
-                  {isFinal
-                    ? 'Verdict'
-                    : 'AI Mediator'}
-                </p>
-
-                {isFinal && (
-                  <h3
-                    className="
-                      mt-1
-                      text-[15px]
-                      font-semibold
-                      tracking-[-0.025em]
-                      text-white
-                    "
-                  >
-                    Discussion verdict
-                  </h3>
-                )}
-              </div>
-
-              <div className="flex items-center gap-2">
-                {message.ai_provider && (
-                  <span
-                    className={`
-                      rounded-full
-                      px-2
-                      py-1
-                      text-[8px]
-                      font-medium
-                      tracking-wide
-                      ${
-                        isFinal
-                          ? 'bg-white/[0.06] text-white/30'
-                          : 'bg-neutral-50 text-neutral-300'
-                      }
-                    `}
-                  >
-                    {message.ai_provider}
-                  </span>
-                )}
-
-                <span
-                  className={`
-                    text-[9px]
-                    ${
-                      isFinal
-                        ? 'text-white/25'
-                        : 'text-neutral-300'
-                    }
-                  `}
-                >
-                  {formatTime(message.created_at)}
-                </span>
-              </div>
-            </div>
-
-            {/* SUMMARY */}
-
+        {Boolean(analysis?.facts?.length) && (
+          <div
+            className={[
+              'mt-7',
+              resolution
+                ? 'border-t border-white/[0.06] pt-6'
+                : 'border-t border-black/[0.045] pt-6',
+            ].join(' ')}
+          >
             <p
-              className={`
-                ${
-                  isFinal
-                    ? 'mt-5 text-[14px] leading-7 text-white/[0.78]'
-                    : 'mt-4 text-[13px] leading-6 text-neutral-600'
-                }
-              `}
+              className={[
+                'text-[8px] font-semibold uppercase tracking-[0.17em]',
+                resolution
+                  ? 'text-white/30'
+                  : 'text-neutral-300',
+              ].join(' ')}
             >
-              {analysis?.summary ?? message.content}
+              Facts
             </p>
 
-            {/* FINAL ARGUMENT */}
-
-            {isFinal &&
-              analysis?.stronger_argument && (
-                <div
-                  className="
-                    mt-6
-                    border-t
-                    border-white/[0.08]
-                    pt-5
-                  "
-                >
-                  <p
-                    className="
-                      text-[9px]
-                      font-semibold
-                      uppercase
-                      tracking-[0.15em]
-                      text-amber-400/70
-                    "
+            <ul className="mt-3 space-y-2.5">
+              {analysis!.facts.map(
+                (fact, index) => (
+                  <li
+                    key={index}
+                    className={[
+                      'pl-3 text-[11px] leading-5',
+                      resolution
+                        ? 'border-l border-white/[0.08] text-white/[0.56]'
+                        : 'border-l border-neutral-200 text-neutral-500',
+                    ].join(' ')}
                   >
-                    Stronger argument
-                  </p>
-
-                  <p
-                    className="
-                      mt-2
-                      text-[12.5px]
-                      leading-6
-                      text-white/[0.72]
-                    "
-                  >
-                    {analysis.stronger_argument}
-                  </p>
-                </div>
+                    {renderListItem(fact)}
+                  </li>
+                ),
               )}
+            </ul>
+          </div>
+        )}
 
-            {/* ANALYSIS */}
+        {/* OPINIONS */}
 
-            <div
-              className={`
-                ${
-                  analysis?.facts?.length ||
-                  analysis?.opinions?.length
-                    ? 'mt-6'
-                    : ''
-                }
-              `}
+        {Boolean(analysis?.opinions?.length) && (
+          <div
+            className={[
+              'mt-6',
+              analysis?.facts?.length
+                ? resolution
+                  ? 'border-t border-white/[0.06] pt-6'
+                  : 'border-t border-black/[0.045] pt-6'
+                : '',
+            ].join(' ')}
+          >
+            <p
+              className={[
+                'text-[8px] font-semibold uppercase tracking-[0.17em]',
+                resolution
+                  ? 'text-white/30'
+                  : 'text-neutral-300',
+              ].join(' ')}
             >
-              {/* FACTS */}
+              Perspectives
+            </p>
 
-              {Boolean(analysis?.facts?.length) && (
-                <div
-                  className={`
-                    ${
-                      analysis?.opinions?.length
-                        ? 'pb-5'
-                        : ''
-                    }
-                  `}
-                >
-                  <p
-                    className={`
-                      text-[9px]
-                      font-semibold
-                      uppercase
-                      tracking-[0.15em]
-                      ${
-                        isFinal
-                          ? 'text-white/30'
-                          : 'text-neutral-300'
-                      }
-                    `}
+            <ul className="mt-3 space-y-2.5">
+              {analysis!.opinions.map(
+                (opinion, index) => (
+                  <li
+                    key={index}
+                    className={[
+                      'pl-3 text-[11px] leading-5',
+                      resolution
+                        ? 'border-l border-pink-300/20 text-white/[0.56]'
+                        : 'border-l border-pink-300/30 text-neutral-500',
+                    ].join(' ')}
                   >
-                    Facts
-                  </p>
-
-                  <ul className="mt-2.5 space-y-2">
-                    {analysis!.facts.map(
-                      (fact, i) => (
-                        <li
-                          key={i}
-                          className={`
-                            pl-3
-                            text-[11.5px]
-                            leading-5
-                            ${
-                              isFinal
-                                ? 'border-l border-white/[0.08] text-white/[0.58]'
-                                : 'border-l border-neutral-200 text-neutral-500'
-                            }
-                          `}
-                        >
-                          {renderListItem(fact)}
-                        </li>
-                      ),
-                    )}
-                  </ul>
-                </div>
+                    {renderListItem(opinion)}
+                  </li>
+                ),
               )}
+            </ul>
+          </div>
+        )}
 
-              {/* OPINIONS */}
+        {/* COMMON GROUND */}
 
-              {Boolean(analysis?.opinions?.length) && (
-                <div
-                  className={`
-                    ${
-                      analysis?.facts?.length
-                        ? `border-t pt-5 ${
-                            isFinal
-                              ? 'border-white/[0.06]'
-                              : 'border-black/[0.045]'
-                          }`
-                        : ''
-                    }
-                  `}
-                >
-                  <p
-                    className={`
-                      text-[9px]
-                      font-semibold
-                      uppercase
-                      tracking-[0.15em]
-                      ${
-                        isFinal
-                          ? 'text-white/30'
-                          : 'text-neutral-300'
-                      }
-                    `}
-                  >
-                    Perspectives
-                  </p>
+        {analysis?.common_ground && (
+          <div
+            className={[
+              'mt-7 rounded-[1.35rem] border p-4.5',
+              resolution
+                ? 'border-white/[0.06] bg-white/[0.035]'
+                : 'border-black/[0.045] bg-[#f8f7f3]',
+            ].join(' ')}
+          >
+            <div className="flex items-center gap-2">
+              <span
+                className={[
+                  'text-sm',
+                  resolution
+                    ? 'text-white/60'
+                    : 'text-neutral-400',
+                ].join(' ')}
+              >
+                ♡
+              </span>
 
-                  <ul className="mt-2.5 space-y-2">
-                    {analysis!.opinions.map(
-                      (opinion, i) => (
-                        <li
-                          key={i}
-                          className={`
-                            pl-3
-                            text-[11.5px]
-                            leading-5
-                            ${
-                              isFinal
-                                ? 'border-l border-pink-400/20 text-white/[0.58]'
-                                : 'border-l border-pink-300/30 text-neutral-500'
-                            }
-                          `}
-                        >
-                          {renderListItem(opinion)}
-                        </li>
-                      ),
-                    )}
-                  </ul>
-                </div>
-              )}
+              <p
+                className={[
+                  'text-[8px] font-semibold uppercase tracking-[0.17em]',
+                  resolution
+                    ? 'text-white/35'
+                    : 'text-neutral-300',
+                ].join(' ')}
+              >
+                Common ground
+              </p>
             </div>
 
-            {/* COMMON GROUND */}
-
-            {analysis?.common_ground && (
-              <div
-                className={`
-                  mt-6
-                  rounded-[1.25rem]
-                  border
-                  p-4
-                  ${
-                    isFinal
-                      ? 'border-white/[0.06] bg-white/[0.035]'
-                      : 'border-black/[0.045] bg-neutral-50/70'
-                  }
-                `}
-              >
-                <p
-                  className={`
-                    text-[9px]
-                    font-semibold
-                    uppercase
-                    tracking-[0.15em]
-                    ${
-                      isFinal
-                        ? 'text-white/30'
-                        : 'text-neutral-300'
-                    }
-                  `}
-                >
-                  Common ground
-                </p>
-
-                <p
-                  className={`
-                    mt-2
-                    text-[11.5px]
-                    leading-5
-                    ${
-                      isFinal
-                        ? 'text-white/[0.62]'
-                        : 'text-neutral-500'
-                    }
-                  `}
-                >
-                  {analysis.common_ground}
-                </p>
-              </div>
-            )}
+            <p
+              className={[
+                'mt-2.5 text-[11.5px] leading-5',
+                resolution
+                  ? 'text-white/[0.64]'
+                  : 'text-neutral-500',
+              ].join(' ')}
+            >
+              {analysis.common_ground}
+            </p>
           </div>
-        </div>
+        )}
       </div>
-    )
-  }
+    </article>
+  )
+}
 
-  /* ===================================================== */
-  /* USER MESSAGE */
-  /* ===================================================== */
+/* ===================================================== */
+/* HISTORY THOUGHT */
+/* ===================================================== */
 
+function HistoryThought({
+  message,
+  currentUserId,
+}: {
+  message: DebateMessage
+  currentUserId: string
+}) {
   const isOwnMessage =
     message.sender_id === currentUserId
 
@@ -413,68 +323,98 @@ export default function DebateMessageBubble({
 
   return (
     <div
-      className={`
-        flex
-        px-4
-        py-1.5
-        sm:px-6
-        ${isOwnMessage ? 'justify-end' : 'justify-start'}
-      `}
+      className={[
+        'group relative py-3',
+        isOwnMessage
+          ? 'pl-8'
+          : 'pr-8',
+      ].join(' ')}
     >
       <div
-        className={`
-          max-w-[78%]
-          ${
-            isOwnMessage
-              ? 'rounded-[1.4rem] rounded-br-md bg-neutral-900 text-white shadow-[0_6px_20px_rgba(0,0,0,0.08)]'
-              : 'rounded-[1.4rem] rounded-bl-md border border-black/[0.045] bg-neutral-50 text-neutral-900'
-          }
-          px-4
-          py-3
-          sm:max-w-[65%]
-        `}
+        className={[
+          'rounded-[1.35rem] border px-4 py-3.5 transition-all duration-200',
+          isOwnMessage
+            ? 'border-black/[0.055] bg-neutral-900 text-white'
+            : 'border-black/[0.045] bg-white text-neutral-800',
+        ].join(' ')}
       >
-        {!isOwnMessage && (
+        <div className="flex items-center justify-between gap-3">
           <p
-            className="
-              mb-1.5
-              text-[9px]
-              font-semibold
-              tracking-[-0.005em]
-              text-neutral-400
-            "
+            className={[
+              'text-[8px] font-semibold uppercase tracking-[0.13em]',
+              isOwnMessage
+                ? 'text-white/35'
+                : 'text-neutral-300',
+            ].join(' ')}
           >
             {senderName}
           </p>
-        )}
+
+          <span
+            className={[
+              'text-[8px]',
+              isOwnMessage
+                ? 'text-white/25'
+                : 'text-neutral-300',
+            ].join(' ')}
+          >
+            {formatTime(
+              message.created_at,
+            )}
+          </span>
+        </div>
 
         <p
-          className="
-            whitespace-pre-line
-            break-words
-            text-[12.5px]
-            leading-[1.65]
-            tracking-[-0.005em]
-          "
+          className={[
+            'mt-2.5 whitespace-pre-line break-words text-[11.5px] leading-[1.7]',
+            isOwnMessage
+              ? 'text-white/[0.72]'
+              : 'text-neutral-600',
+          ].join(' ')}
         >
           {message.content}
         </p>
-
-        <p
-          className={`
-            mt-2
-            text-right
-            text-[8.5px]
-            ${
-              isOwnMessage
-                ? 'text-white/25'
-                : 'text-neutral-300'
-            }
-          `}
-        >
-          {formatTime(message.created_at)}
-        </p>
       </div>
+    </div>
+  )
+}
+
+/* ===================================================== */
+/* EXPORT */
+/* ===================================================== */
+
+export default function DebateMessageBubble({
+  message,
+  currentUserId,
+  variant = 'stage',
+}: DebateMessageBubbleProps) {
+  if (message.role === 'ai') {
+    return (
+      <MediatorCard
+        message={message}
+        resolution={
+          variant === 'resolution' ||
+          Boolean(message.is_final_verdict)
+        }
+      />
+    )
+  }
+
+  if (variant === 'history') {
+    return (
+      <HistoryThought
+        message={message}
+        currentUserId={currentUserId}
+      />
+    )
+  }
+
+  return (
+    <div className="mx-auto w-full max-w-xl">
+      <HistoryThought
+        message={message}
+        currentUserId={currentUserId}
+      />
     </div>
   )
 }
