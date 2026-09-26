@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/client'
 import type { AiPersona, Debate, DebateMessage } from './types'
+import { getMySubscription } from "../subscription/api";
 
 export async function getDebates(
   relationshipId: string,
@@ -43,6 +44,8 @@ export async function getDebate(
   return data
 }
 
+const FREE_TIER_MAX_MESSAGES = 3; // fallback aman: kalau subscription gak ketemu, anggap free
+
 export async function createDebate({
   relationshipId,
   title,
@@ -62,6 +65,12 @@ export async function createDebate({
     throw new Error('Not authenticated')
   }
 
+  const subscription = await getMySubscription();
+
+  const maxMessages = subscription
+    ? subscription.max_debate_messages_per_room ?? 999999
+    : FREE_TIER_MAX_MESSAGES;
+
   const {
     data,
     error,
@@ -72,6 +81,7 @@ export async function createDebate({
       created_by: user.id,
       title,
       ai_persona: aiPersona,
+      max_messages: maxMessages,
     })
     .select()
     .single()

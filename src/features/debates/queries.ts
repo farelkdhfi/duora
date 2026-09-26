@@ -124,28 +124,21 @@ export function useDebate(debateId: string) {
   })
 }
 
-export function useDeleteDebate(
-  relationshipId: string,
-) {
+export function useDeleteDebate(relationshipId: string) {
   const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: deleteDebate,
-
-    onSuccess: (debateId) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: debatesKeys.list(
-          relationshipId,
-        ),
+        queryKey: debatesKeys.list(relationshipId),
       })
-
-      queryClient.removeQueries({
-        queryKey: debatesKeys.detail(debateId),
+      queryClient.invalidateQueries({
+        queryKey: debatesKeys.all,
       })
-
-      queryClient.removeQueries({
-        queryKey: debatesKeys.messages(debateId),
-      })
+    },
+    onError: (error) => {
+      console.error('Delete debate failed:', error)
     },
   })
 }
