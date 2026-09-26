@@ -24,6 +24,7 @@ import {
 } from '@/features/checkins/queries'
 import { useGetMyProfile } from '@/features/profiles/queries'
 import WaitingForPartner from '@/features/dashboard/components/waiting-for-partner'
+import DashboardSkeleton from '@/features/dashboard/components/dashboard-skeleton'
 
 
 export default function DashboardPage() {
@@ -42,9 +43,6 @@ export default function DashboardPage() {
   const {
     data: partner,
   } = useGetPartnerName()
-
-  console.log(data);
-
 
   const {
     data: relationship,
@@ -111,27 +109,7 @@ export default function DashboardPage() {
     relationshipLoading
   ) {
     return (
-      <main className="flex min-h-screen items-center justify-center">
-
-        <div className="text-center">
-
-          <div className="mx-auto mb-4 flex size-10 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-50 to-pink-50">
-
-            <Heart
-              size={17}
-              className="animate-pulse text-black"
-              fill="currentColor"
-            />
-
-          </div>
-
-          <p className="text-sm text-neutral-400">
-            Loading your space...
-          </p>
-
-        </div>
-
-      </main>
+     <DashboardSkeleton />
     )
   }
 
@@ -168,7 +146,7 @@ export default function DashboardPage() {
           <DashboardGreeting
             name={
               user?.display_name ??
-              'thereeee'
+              'there'
             }
           />
 
