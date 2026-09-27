@@ -75,24 +75,10 @@ export default function ProfileForm() {
   const [nameSaved, setNameSaved] =
     useState(false)
 
-  /*
-   * Only render profile-dependent UI after
-   * the client has mounted.
-   *
-   * This prevents hydration mismatch when
-   * profile data is resolved on the client.
-   */
   useEffect(() => {
     setMounted(true)
   }, [])
 
-  /*
-   * Sync the local input with profile data.
-   *
-   * Important:
-   * - only sync when user hasn't started editing
-   * - prevents overwriting what the user is typing
-   */
   useEffect(() => {
     if (!profile || hasEditedName) {
       return
@@ -157,10 +143,6 @@ export default function ProfileForm() {
     const file =
       e.target.files?.[0]
 
-    /*
-     * Reset input value so the same
-     * file can be selected again.
-     */
     e.target.value = ''
 
     if (!file) {

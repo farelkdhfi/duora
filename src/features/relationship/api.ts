@@ -99,3 +99,27 @@ export async function getPartnerName() {
 
   return partner ?? null;
 }
+
+export async function updateRelationship({
+  relationshipName,
+  startedAt,
+}: {
+  relationshipName: string
+  startedAt?: string | null
+}): Promise<Relationship> {
+  const supabase = createClient()
+
+  const { data, error } = await supabase.rpc(
+    'update_relationship',
+    {
+      p_relationship_name: relationshipName,
+      p_started_at: startedAt || null,
+    }
+  )
+
+  if (error) {
+    throw new Error(error.message)
+  }
+
+  return data as Relationship
+}

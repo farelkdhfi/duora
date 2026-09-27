@@ -1,6 +1,6 @@
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
-import { getMyRelationship, getMyRelationshipDetails, getPartnerName } from './api'
+import { getMyRelationship, getMyRelationshipDetails, getPartnerName, updateRelationship } from './api'
 
 export const relationshipKeys = {
   all: ['relationship'] as const,
@@ -27,5 +27,17 @@ export function usePartnerName() {
   return useQuery({
     queryKey: relationshipKeys.partner(),
     queryFn: getPartnerName,
+  })
+}
+
+export function useUpdateRelationship() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: updateRelationship,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: relationshipKeys.mine() })
+      queryClient.invalidateQueries({ queryKey: relationshipKeys.details() })
+    },
   })
 }
