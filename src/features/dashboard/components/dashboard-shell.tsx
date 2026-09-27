@@ -6,7 +6,6 @@ import { useState } from 'react'
 import SidebarDesktop from './sidebar-desktop'
 import MobileBottomNav from './mobile-bottom-nav'
 import MobileMoreSheet from './mobile-more-sheet'
-import NavigationLoading from './navigation-loading'
 
 import { ExpiryWarningModal } from '@/features/subscription/components/expiry-warning-modal'
 import { ScreenTimeTracker } from '@/features/screen-time/components/screen-time-tracker'
@@ -35,8 +34,6 @@ export default function DashboardShell({ children }: DashboardShellProps) {
               : 'relative min-w-0 flex-1 bg-neutral-50 p-4 pb-24 sm:p-5 sm:pb-24 md:p-6 md:pb-6'
           }
         >
-          <NavigationLoading />
-
           {children}
         </main>
 

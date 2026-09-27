@@ -3,6 +3,7 @@
 'use client'
 
 import Link from 'next/link'
+import { useState } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 
 import {
@@ -14,6 +15,7 @@ import {
   Goal,
   Heart,
   Home,
+  Loader2,
   Lock,
   LogOut,
   Logs,
@@ -94,6 +96,7 @@ export default function SidebarNav({ onNavigate }: SidebarNavProps) {
 
   const pathname = usePathname()
   const router = useRouter()
+  const [isLoggingOut, setIsLoggingOut] = useState(false)
 
   const { data, isLoading } = useMyRelationshipDetails()
 
@@ -101,10 +104,18 @@ export default function SidebarNav({ onNavigate }: SidebarNavProps) {
   const locked = isLoading || memberCount < 2
 
   async function handleLogout() {
-    const supabase = createClient()
-    await supabase.auth.signOut()
-    router.push('/login')
-    router.refresh()
+    if (isLoggingOut) return
+
+    setIsLoggingOut(true)
+
+    try {
+      const supabase = createClient()
+      await supabase.auth.signOut()
+      router.push('/login')
+      router.refresh()
+    } catch (error) {
+      setIsLoggingOut(false)
+    }
   }
 
 
@@ -349,13 +360,18 @@ export default function SidebarNav({ onNavigate }: SidebarNavProps) {
         <button
           type="button"
           onClick={handleLogout}
-          className="group flex w-full items-center gap-3 rounded-2xl px-3.5 py-3 text-[13px] font-medium text-neutral-500 transition-all duration-200 hover:bg-rose-50/70 hover:text-rose-600"
+          disabled={isLoggingOut}
+          className="group flex w-full items-center gap-3 rounded-2xl px-3.5 py-3 text-[13px] font-medium text-neutral-500 transition-all duration-200 hover:bg-rose-50/70 hover:text-rose-600 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:bg-transparent disabled:hover:text-neutral-500"
         >
           <span className="flex size-8 shrink-0 items-center justify-center rounded-xl text-neutral-400 transition group-hover:text-rose-500">
-            <LogOut size={17} strokeWidth={1.9} />
+            {isLoggingOut ? (
+              <Loader2 size={17} strokeWidth={1.9} className="animate-spin" />
+            ) : (
+              <LogOut size={17} strokeWidth={1.9} />
+            )}
           </span>
 
-          <span>Log out</span>
+          <span>{isLoggingOut ? 'Logging out...' : 'Log out'}</span>
         </button>
 
         <p className="mt-2 px-3.5 text-[10px] text-neutral-300">
