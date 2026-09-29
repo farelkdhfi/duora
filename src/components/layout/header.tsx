@@ -14,20 +14,14 @@ const Header = ({ icon: Icon, title, description, action }: HeaderProps) => {
     return (
         <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between sm:gap-6">
             <div>
-                <div className="flex items-center gap-2">
-                    <div className="flex size-7 items-center justify-center rounded-xl bg-gradient-to-br from-blue-50 to-pink-50 sm:size-8">
-                        <Icon size={13} strokeWidth={2} className="text-blue-500 sm:hidden" />
-                        <Icon size={15} strokeWidth={2} className="hidden text-blue-500 sm:block" />
-                    </div>
+                <div className="flex gap-x-2 items-center">
 
-                    <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-neutral-300">
-                        Together
-                    </p>
+                    <Icon size={20} className="text-black" />
+
+                    <h1 className=" text-2xl font-semibold tracking-[-0.04em] text-neutral-800 sm:text-3xl lg:text-4xl capitalize">
+                        {title}
+                    </h1>
                 </div>
-
-                <h1 className="mt-3 text-2xl font-semibold tracking-[-0.04em] text-neutral-800 sm:mt-4 sm:text-3xl lg:text-4xl capitalize">
-                    {title}
-                </h1>
 
                 <p className="mt-2 max-w-md text-[13px] leading-6 text-neutral-400 sm:text-sm">
                     {description}
