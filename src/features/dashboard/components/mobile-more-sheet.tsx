@@ -73,7 +73,10 @@ const moreNavigation = [
   },
 ]
 
-export default function MobileMoreSheet({ open, onClose }: MobileMoreSheetProps) {
+export default function MobileMoreSheet({
+  open,
+  onClose,
+}: MobileMoreSheetProps) {
   const pathname = usePathname()
   const router = useRouter()
   const [isLoggingOut, setIsLoggingOut] = useState(false)
@@ -142,17 +145,23 @@ export default function MobileMoreSheet({ open, onClose }: MobileMoreSheetProps)
         type="button"
         aria-label="Close menu"
         onClick={onClose}
-        className="absolute inset-0 bg-black/30 backdrop-blur-[6px]"
+        className="absolute inset-0 bg-black/15 backdrop-blur-[6px]"
       />
 
-      <div className="absolute inset-x-3 bottom-3 max-h-[88dvh] overflow-y-auto rounded-[2rem] border border-white/[0.12] bg-[#101010]/60 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_-25px_70px_-25px_rgba(0,0,0,0.75)] backdrop-blur-2xl backdrop-saturate-150 animate-in slide-in-from-bottom duration-300">
-        <div className="sticky top-0 z-20 bg-transparent px-5 pb-3 pt-3">
-          <div className="mx-auto h-1 w-9 rounded-full bg-white/15" />
+      <div className="absolute inset-x-3 bottom-3 max-h-[88dvh] overflow-y-auto rounded-[2rem] border border-black/[0.07] bg-[#fafaf9]/95 shadow-[0_-25px_70px_-25px_rgba(0,0,0,0.18)] backdrop-blur-2xl backdrop-saturate-150 animate-in slide-in-from-bottom duration-300">
+        <div className="sticky top-0 z-20 bg-[#fafaf9]/90 px-5 pb-3 pt-3 backdrop-blur-xl">
+          <div className="mx-auto h-1 w-9 rounded-full bg-black/10" />
 
           <div className="mt-5 flex items-center justify-between">
-            <div className='flex items-center gap-x-1'>
-              <Image src={logoImg} height={20} width={20} alt='logo' className='invert-100'/>
-              <p className="text-[16px] font-bold uppercase text-white">
+            <div className="flex items-center gap-x-1">
+              <Image
+                src={logoImg}
+                height={20}
+                width={20}
+                alt="logo"
+              />
+
+              <p className="text-[16px] font-bold uppercase text-[#111111]">
                 DUORA
               </p>
             </div>
@@ -161,7 +170,7 @@ export default function MobileMoreSheet({ open, onClose }: MobileMoreSheetProps)
               type="button"
               onClick={onClose}
               aria-label="Close menu"
-              className="flex size-9 items-center justify-center rounded-full border border-white/10 bg-white/[0.06] text-white/45 transition hover:bg-white/10 hover:text-white active:scale-95"
+              className="flex size-9 items-center justify-center rounded-full border border-black/[0.07] bg-black/[0.025] text-black/40 transition hover:bg-black/[0.06] hover:text-black/80 active:scale-95"
             >
               <X size={16} strokeWidth={1.7} />
             </button>
@@ -169,9 +178,9 @@ export default function MobileMoreSheet({ open, onClose }: MobileMoreSheetProps)
         </div>
 
         <div className="px-5 pb-5">
-          <div className="flex items-center justify-between rounded-[1.25rem] border border-white/[0.08] bg-white/[0.045] px-4 py-3 backdrop-blur-md">
+          <div className="flex items-center justify-between rounded-[1.25rem] border border-black/[0.06] bg-white/70 px-4 py-3 shadow-sm">
             <div>
-              <p className="text-[9px] font-medium uppercase tracking-[0.14em] text-white/25">
+              <p className="text-[9px] font-medium uppercase tracking-[0.14em] text-black/30">
                 Current plan
               </p>
 
@@ -180,24 +189,24 @@ export default function MobileMoreSheet({ open, onClose }: MobileMoreSheetProps)
               </div>
             </div>
 
-            <div className="size-1.5 rounded-full bg-white/30" />
+            <div className="size-1.5 rounded-full bg-black/20" />
           </div>
         </div>
 
         <div className="px-5">
           <div className="mb-3 flex items-center justify-between">
-            <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-white/25">
+            <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-black/30">
               Workspace
             </p>
 
             {locked && (
-              <span className="text-[9px] text-white/25">
+              <span className="text-[9px] text-black/30">
                 Waiting for partner
               </span>
             )}
           </div>
 
-          <div className="overflow-hidden rounded-[1.5rem] border border-white/[0.08] bg-white/[0.025] backdrop-blur-md">
+          <div className="overflow-hidden rounded-[1.5rem] border border-black/[0.06] bg-white/65 shadow-sm">
             {moreNavigation.map((item, index) => {
               const Icon = item.icon
               const active = isActive(item.href)
@@ -207,23 +216,27 @@ export default function MobileMoreSheet({ open, onClose }: MobileMoreSheetProps)
                 return (
                   <div
                     key={item.href}
-                    className={`flex items-center gap-3.5 px-3.5 py-3.5 opacity-35 ${index !== moreNavigation.length - 1 ? 'border-b border-white/[0.06]' : ''}`}
+                    className={`flex items-center gap-3.5 px-3.5 py-3.5 opacity-40 ${
+                      index !== moreNavigation.length - 1
+                        ? 'border-b border-black/[0.05]'
+                        : ''
+                    }`}
                   >
-                    <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-white/[0.06] text-white/50">
+                    <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-black/[0.035] text-black/45">
                       <Icon size={17} strokeWidth={1.7} />
                     </div>
 
                     <div className="min-w-0 flex-1">
-                      <p className="text-[12px] font-medium text-white/70">
+                      <p className="text-[12px] font-medium text-black/65">
                         {item.label}
                       </p>
 
-                      <p className="mt-0.5 truncate text-[10px] text-white/30">
+                      <p className="mt-0.5 truncate text-[10px] text-black/35">
                         {item.description}
                       </p>
                     </div>
 
-                    <div className="size-1.5 shrink-0 rounded-full bg-white/20" />
+                    <div className="size-1.5 shrink-0 rounded-full bg-black/15" />
                   </div>
                 )
               }
@@ -233,34 +246,57 @@ export default function MobileMoreSheet({ open, onClose }: MobileMoreSheetProps)
                   key={item.href}
                   href={item.href}
                   onClick={onClose}
-                  className={`group flex items-center gap-3.5 px-3.5 py-3.5 transition-all duration-200 active:bg-white/[0.08] ${index !== moreNavigation.length - 1 ? 'border-b border-white/[0.06]' : ''} ${active ? 'bg-white/[0.07]' : 'hover:bg-white/[0.045]'}`}
+                  className={`group flex items-center gap-3.5 px-3.5 py-3.5 transition-all duration-200 active:bg-black/[0.04] ${
+                    index !== moreNavigation.length - 1
+                      ? 'border-b border-black/[0.05]'
+                      : ''
+                  } ${
+                    active
+                      ? 'bg-black/[0.035]'
+                      : 'hover:bg-black/[0.02]'
+                  }`}
                 >
                   <div
-                    className={`flex size-9 shrink-0 items-center justify-center rounded-xl transition-all duration-200 ${active ? 'bg-white text-black' : 'bg-white/[0.06] text-white/45 group-hover:bg-white/10 group-hover:text-white'}`}
+                    className={`flex size-9 shrink-0 items-center justify-center rounded-xl transition-all duration-200 ${
+                      active
+                        ? 'bg-[#111111] text-white'
+                        : 'bg-black/[0.035] text-black/45 group-hover:bg-black/[0.06] group-hover:text-black/80'
+                    }`}
                   >
-                    <Icon size={17} strokeWidth={active ? 2 : 1.7} />
+                    <Icon
+                      size={17}
+                      strokeWidth={active ? 2 : 1.7}
+                    />
                   </div>
 
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2">
                       <p
-                        className={`text-[12px] font-medium ${active ? 'text-white' : 'text-white/75'}`}
+                        className={`text-[12px] font-medium ${
+                          active
+                            ? 'text-[#111111]'
+                            : 'text-black/70'
+                        }`}
                       >
                         {item.label}
                       </p>
 
                       {active && (
-                        <span className="size-1 rounded-full bg-white" />
+                        <span className="size-1 rounded-full bg-[#111111]" />
                       )}
                     </div>
 
-                    <p className="mt-0.5 truncate text-[10px] text-white/30">
+                    <p className="mt-0.5 truncate text-[10px] text-black/35">
                       {item.description}
                     </p>
                   </div>
 
                   <div
-                    className={`size-1.5 shrink-0 rounded-full transition ${active ? 'bg-white' : 'bg-white/10 group-hover:bg-white/25'}`}
+                    className={`size-1.5 shrink-0 rounded-full transition ${
+                      active
+                        ? 'bg-[#111111]'
+                        : 'bg-black/10 group-hover:bg-black/20'
+                    }`}
                   />
                 </Link>
               )
@@ -270,8 +306,8 @@ export default function MobileMoreSheet({ open, onClose }: MobileMoreSheetProps)
 
         {locked && (
           <div className="px-5 pt-4">
-            <div className="rounded-[1.25rem] border border-white/[0.06] bg-white/[0.025] px-4 py-3.5 backdrop-blur-md">
-              <p className="text-[10px] leading-5 text-white/30">
+            <div className="rounded-[1.25rem] border border-black/[0.05] bg-white/60 px-4 py-3.5 shadow-sm">
+              <p className="text-[10px] leading-5 text-black/35">
                 Your workspace will unlock once your partner joins with the invite code.
               </p>
             </div>
@@ -283,11 +319,15 @@ export default function MobileMoreSheet({ open, onClose }: MobileMoreSheetProps)
             type="button"
             onClick={handleLogout}
             disabled={isLoggingOut}
-            className="flex w-full items-center justify-center gap-2 rounded-[1.2rem] border border-white/[0.07] bg-white/[0.035] px-4 py-3 text-[11px] font-medium text-white/35 transition hover:border-red-400/20 hover:bg-red-400/[0.06] hover:text-red-300 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:border-white/[0.07] disabled:hover:bg-white/[0.035] disabled:hover:text-white/35"
+            className="flex w-full items-center justify-center gap-2 rounded-[1.2rem] border border-black/[0.06] bg-white/60 px-4 py-3 text-[11px] font-medium text-black/40 shadow-sm transition hover:border-red-400/20 hover:bg-red-50 hover:text-red-500 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:border-black/[0.06] disabled:hover:bg-white/60 disabled:hover:text-black/40"
           >
             {isLoggingOut ? (
               <>
-                <Loader2 size={14} strokeWidth={1.7} className="animate-spin" />
+                <Loader2
+                  size={14}
+                  strokeWidth={1.7}
+                  className="animate-spin"
+                />
                 <span>Logging out...</span>
               </>
             ) : (
@@ -298,7 +338,7 @@ export default function MobileMoreSheet({ open, onClose }: MobileMoreSheetProps)
             )}
           </button>
 
-          <p className="mt-4 text-center text-[9px] tracking-[0.12em] text-white/15">
+          <p className="mt-4 text-center text-[9px] tracking-[0.12em] text-black/20">
             GROW TOGETHER WITH DUORA
           </p>
         </div>
