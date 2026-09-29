@@ -8,9 +8,7 @@ import {
 
 import {
   Camera,
-  CircleUserRound,
   Loader2,
-  UserRound,
 } from 'lucide-react'
 
 import {
@@ -18,6 +16,7 @@ import {
   useUpdateMyAvatar,
   useUpdateMyProfile,
 } from '@/features/profiles/queries'
+
 import ProfileSkeleton from './profile-skeleton'
 
 const MAX_FILE_SIZE_MB = 5
@@ -27,26 +26,6 @@ const ACCEPTED_TYPES = [
   'image/jpeg',
   'image/webp',
 ]
-
-function SectionIcon({
-  children,
-  className = '',
-}: {
-  children: React.ReactNode
-  className?: string
-}) {
-  return (
-    <div
-      className={[
-        'flex size-8 shrink-0 items-center justify-center',
-        'rounded-[11px]',
-        className,
-      ].join(' ')}
-    >
-      {children}
-    </div>
-  )
-}
 
 export default function ProfileForm() {
   const {
@@ -191,70 +170,100 @@ export default function ProfileForm() {
     currentName.trim() ===
       profile?.display_name
 
-  /*
-   * Don't render dynamic profile data
-   * before hydration is complete.
-   */
   if (!mounted || isLoading) {
     return <ProfileSkeleton />
   }
 
   return (
-    <div className="relative w-full overflow-hidden rounded-[28px] border border-black/[0.06] bg-white shadow-[0_1px_2px_rgba(0,0,0,0.03),0_20px_50px_-24px_rgba(0,0,0,0.16)]">
-      {/* ================================================= */}
-      {/* AMBIENT */}
-      {/* ================================================= */}
+    <section className="relative overflow-hidden rounded-[1.75rem] border border-black/[0.05] bg-white shadow-[0_15px_40px_-25px_rgba(0,0,0,0.14)]">
+      {/* Ambient background */}
 
-      <div className="pointer-events-none absolute -right-24 -top-24 size-64 rounded-full bg-blue-100/40 blur-3xl" />
+      <div className="pointer-events-none absolute -right-20 -top-20 size-56 rounded-full bg-blue-100/30 blur-3xl" />
 
-      <div className="pointer-events-none absolute -bottom-24 -left-24 size-64 rounded-full bg-pink-100/40 blur-3xl" />
+      <div className="pointer-events-none absolute -bottom-20 -left-20 size-56 rounded-full bg-pink-100/30 blur-3xl" />
 
-      {/* ================================================= */}
-      {/* TOP ACCENT */}
-      {/* ================================================= */}
+      <div className="relative p-6 sm:p-7 lg:p-8">
+        {/* Header */}
 
-      <div className="relative h-[3px] bg-gradient-to-r from-blue-400 via-neutral-900 to-pink-400" />
+        <div>
+          <h2 className="text-lg font-semibold tracking-[-0.03em] text-neutral-900 sm:text-xl">
+            Profile
+          </h2>
 
-      <div className="relative p-5 sm:p-8 lg:p-10">
-
-        {/* ================================================= */}
-        {/* HEADER */}
-        {/* ================================================= */}
-
-        <div className="relative">
-          <div className="pointer-events-none absolute -right-8 -top-8 size-28 rounded-full bg-blue-100/40 blur-3xl" />
-
-          <div className="relative flex items-start gap-3.5 sm:gap-4">
-            <div className="min-w-0">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-neutral-400 sm:text-[11px]">
-                Account
-              </p>
-
-              <h2 className="mt-1 text-[18px] font-semibold tracking-[-0.03em] text-neutral-900 sm:text-[23px]">
-                Your partner can see your photos
-              </h2>
-
-              <p className="mt-1.5 max-w-md text-[12.5px] leading-relaxed text-neutral-400 sm:text-[13px]">
-                Update your name and photo.
-              </p>
-            </div>
-          </div>
+          <p className="mt-1 text-sm leading-6 text-neutral-400">
+            Your name and profile photo.
+          </p>
         </div>
 
-        {/* ================================================= */}
-        {/* DIVIDER */}
-        {/* ================================================= */}
+        {/* Profile preview */}
 
-        <div className="my-7 h-px bg-black/[0.05] sm:my-9" />
+        <div className="mt-7 flex flex-col gap-5 rounded-[1.5rem] bg-neutral-50/80 p-5 sm:flex-row sm:items-center sm:p-6">
+          <button
+            type="button"
+            onClick={handleAvatarClick}
+            disabled={
+              updateAvatar.isPending
+            }
+            className="group relative size-20 shrink-0 overflow-hidden rounded-full bg-neutral-200 outline-none ring-1 ring-black/[0.06] transition-transform duration-200 hover:scale-[1.02] focus-visible:ring-2 focus-visible:ring-neutral-900/20 disabled:cursor-not-allowed"
+          >
+            {profile?.avatar_url ? (
+              <img
+                src={profile.avatar_url}
+                alt={
+                  profile.display_name ??
+                  'Avatar'
+                }
+                className="h-full w-full object-cover"
+              />
+            ) : (
+              <div className="flex h-full w-full items-center justify-center bg-neutral-900 text-xl font-semibold text-white">
+                {(
+                  profile?.display_name ??
+                  profile?.username ??
+                  '?'
+                )
+                  .charAt(0)
+                  .toUpperCase()}
+              </div>
+            )}
 
-        {/* ================================================= */}
-        {/* AVATAR */}
-        {/* ================================================= */}
+            <div className="absolute inset-0 flex items-center justify-center bg-black/0 transition-colors duration-200 group-hover:bg-black/40">
+              {updateAvatar.isPending ? (
+                <Loader2
+                  size={18}
+                  className="animate-spin text-white"
+                />
+              ) : (
+                <Camera
+                  size={17}
+                  strokeWidth={2}
+                  className="text-white opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+                />
+              )}
+            </div>
+          </button>
 
-        <div className="rounded-[22px] border border-black/[0.04] bg-neutral-50/80 p-5 sm:p-6">
-          <div className="flex flex-col items-center gap-5 text-center sm:flex-row sm:text-left">
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept={ACCEPTED_TYPES.join(',')}
+            className="hidden"
+            onChange={
+              handleAvatarChange
+            }
+          />
 
-            {/* Avatar */}
+          <div className="min-w-0 flex-1">
+            <p className="text-[15px] font-semibold tracking-[-0.02em] text-neutral-900">
+              {profile?.display_name ||
+                'Your name'}
+            </p>
+
+            {profile?.username && (
+              <p className="mt-1 text-sm text-neutral-400">
+                @{profile.username}
+              </p>
+            )}
 
             <button
               type="button"
@@ -262,139 +271,39 @@ export default function ProfileForm() {
               disabled={
                 updateAvatar.isPending
               }
-              className="group relative size-24 shrink-0 overflow-hidden rounded-full border-[3px] border-white bg-neutral-100 shadow-[0_8px_24px_-10px_rgba(0,0,0,0.25)] outline-none ring-1 ring-black/[0.06] transition-transform duration-200 hover:scale-[1.02] focus-visible:ring-2 focus-visible:ring-neutral-900/20 disabled:cursor-not-allowed"
+              className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-neutral-900 px-3.5 py-2 text-[11px] font-semibold text-white transition-all duration-200 hover:bg-black active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
             >
-              {profile?.avatar_url ? (
-                <img
-                  src={profile.avatar_url}
-                  alt={
-                    profile.display_name ??
-                    'Avatar'
-                  }
-                  className="h-full w-full object-cover"
-                />
-              ) : (
-                <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-neutral-900 to-neutral-700 text-2xl font-semibold text-white">
-                  {(
-                    profile?.display_name ??
-                    profile?.username ??
-                    '?'
-                  )
-                    .charAt(0)
-                    .toUpperCase()}
-                </div>
-              )}
+              <Camera
+                size={12}
+                strokeWidth={2.2}
+              />
 
-              {/* Hover overlay */}
-
-              <div className="absolute inset-0 flex items-center justify-center bg-black/0 transition-colors duration-200 group-hover:bg-black/45">
-                {updateAvatar.isPending ? (
-                  <Loader2
-                    size={20}
-                    className="animate-spin text-white"
-                  />
-                ) : (
-                  <Camera
-                    size={19}
-                    strokeWidth={2.2}
-                    className="text-white opacity-0 transition-opacity duration-200 group-hover:opacity-100"
-                  />
-                )}
-              </div>
+              Change photo
             </button>
 
-            {/* Hidden file input */}
+            <p className="mt-2 text-[10.5px] text-neutral-400">
+              PNG, JPG, or WEBP · Max 5MB
+            </p>
 
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept={ACCEPTED_TYPES.join(',')}
-              className="hidden"
-              onChange={
-                handleAvatarChange
-              }
-            />
-
-            {/* Avatar info */}
-
-            <div className="min-w-0 flex-1">
-              <p className="text-[15px] font-semibold tracking-[-0.01em] text-neutral-900">
-                {profile?.display_name ||
-                  'Your name'}
+            {avatarError && (
+              <p className="mt-2 text-xs font-medium text-red-500">
+                {avatarError}
               </p>
-
-              {profile?.username && (
-                <p className="mt-1 text-[12.5px] text-neutral-400">
-                  @{profile.username}
-                </p>
-              )}
-
-              <button
-                type="button"
-                onClick={
-                  handleAvatarClick
-                }
-                disabled={
-                  updateAvatar.isPending
-                }
-                className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-neutral-900 px-3.5 py-2.5 text-[11px] font-semibold text-white transition-all duration-200 hover:bg-black active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                <Camera
-                  size={12}
-                  strokeWidth={2.3}
-                />
-
-                Change photo
-              </button>
-
-              <p className="mt-2 text-[10.5px] text-neutral-400">
-                PNG, JPG, or WEBP · Max 5MB
-              </p>
-
-              {avatarError && (
-                <p className="mt-2 text-[12px] font-medium text-red-500">
-                  {avatarError}
-                </p>
-              )}
-            </div>
+            )}
           </div>
         </div>
 
-        {/* ================================================= */}
-        {/* DIVIDER */}
-        {/* ================================================= */}
+        {/* Name */}
 
-        <div className="my-7 h-px bg-black/[0.05] sm:my-9" />
+        <div className="mt-7">
+          <label
+            htmlFor="display_name"
+            className="block text-[13px] font-semibold text-neutral-900"
+          >
+            Display name
+          </label>
 
-        {/* ================================================= */}
-        {/* DISPLAY NAME */}
-        {/* ================================================= */}
-
-        <div>
-          <div className="mb-3 flex items-center gap-2.5">
-            <SectionIcon className="bg-pink-50">
-              <CircleUserRound
-                size={15}
-                strokeWidth={2.25}
-                className="text-pink-500"
-              />
-            </SectionIcon>
-
-            <div>
-              <label
-                htmlFor="display_name"
-                className="block text-[13px] font-semibold text-neutral-900"
-              >
-                Display name
-              </label>
-
-              <p className="mt-0.5 text-[11px] text-neutral-400">
-                This is how your partner will see you.
-              </p>
-            </div>
-          </div>
-
-          <div className="flex flex-col gap-2.5 sm:flex-row">
+          <div className="mt-2.5 flex flex-col gap-2.5 sm:flex-row">
             <input
               id="display_name"
               type="text"
@@ -406,7 +315,7 @@ export default function ProfileForm() {
               }
               placeholder="Your name"
               maxLength={50}
-              className="min-h-12 w-full flex-1 rounded-[16px] border border-black/[0.06] bg-neutral-50 px-4 py-3 text-[14px] text-neutral-900 outline-none transition-all duration-200 placeholder:text-neutral-400 focus:border-neutral-900/20 focus:bg-white focus:ring-4 focus:ring-neutral-900/[0.04]"
+              className="min-h-12 w-full flex-1 rounded-[14px] border border-black/[0.06] bg-neutral-50 px-4 py-3 text-sm text-neutral-900 outline-none transition-all duration-200 placeholder:text-neutral-400 focus:border-neutral-900/20 focus:bg-white focus:ring-4 focus:ring-neutral-900/[0.04]"
             />
 
             <button
@@ -416,46 +325,36 @@ export default function ProfileForm() {
                 updateProfile.isPending ||
                 isNameUnchanged
               }
-              className="flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-[16px] bg-neutral-900 px-6 text-[13px] font-semibold text-white shadow-[0_8px_20px_-10px_rgba(0,0,0,0.5)] transition-all duration-200 hover:bg-black active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-35"
+              className="min-h-12 shrink-0 rounded-[14px] bg-neutral-900 px-6 text-[13px] font-semibold text-white transition-all duration-200 hover:bg-black active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-30"
             >
               {updateProfile.isPending ? (
-                <>
+                <span className="flex items-center justify-center gap-2">
                   <Loader2
-                    size={15}
+                    size={14}
                     className="animate-spin"
                   />
 
-                  Saving...
-                </>
+                  Saving
+                </span>
               ) : (
                 'Save'
               )}
             </button>
           </div>
 
-          {/* Success */}
-
           {nameSaved && (
-            <div className="mt-3 flex items-center gap-2 text-[12px] font-medium text-emerald-500">
-              <span className="flex size-4 items-center justify-center rounded-full bg-emerald-50">
-                ✓
-              </span>
-
-              Name updated successfully.
-            </div>
+            <p className="mt-2.5 text-xs font-medium text-emerald-500">
+              Name updated.
+            </p>
           )}
 
-          {/* Error */}
-
           {updateProfile.isError && (
-            <div className="mt-3 rounded-[14px] border border-red-100 bg-red-50/70 px-3.5 py-2.5">
-              <p className="text-[12px] font-medium text-red-500">
-                Failed to update name. Try again.
-              </p>
-            </div>
+            <p className="mt-2.5 text-xs font-medium text-red-500">
+              Failed to update name. Try again.
+            </p>
           )}
         </div>
       </div>
-    </div>
+    </section>
   )
 }
