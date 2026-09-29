@@ -13,8 +13,6 @@ import { useState } from "react";
 import { useCreateCountdown } from "../queries";
 import type { CountdownMember } from "../types";
 
-const EMOJI_OPTIONS = ["✈️", "🏖️", "🎉", "🏠", "💍", "🎂", "🚗", "❤️"];
-
 interface CreateCountdownFormProps {
   relationshipId: string;
   members: CountdownMember[];
@@ -25,8 +23,6 @@ interface CreateCountdownFormProps {
 
 const inputClass =
   "mt-2 w-full rounded-[1rem] border border-black/[0.06] bg-[#f8f8f7] px-4 py-3.5 text-[13px] text-neutral-900 outline-none transition placeholder:text-neutral-400 focus:border-black/[0.12] focus:bg-white focus:ring-4 focus:ring-black/[0.03] disabled:cursor-not-allowed disabled:bg-neutral-100 disabled:text-neutral-400";
-
-const errorClass = "mt-2 text-[11px] font-medium text-rose-500";
 
 function FieldLabel({
   icon,
@@ -60,7 +56,6 @@ export function CreateCountdownForm({
   const [location, setLocation] = useState("");
   const [meetupDate, setMeetupDate] = useState("");
   const [meetupTime, setMeetupTime] = useState("12:00");
-  const [coverEmoji, setCoverEmoji] = useState<string>(EMOJI_OPTIONS[0]);
   const [locA, setLocA] = useState("");
   const [locB, setLocB] = useState("");
   const [distanceKm, setDistanceKm] = useState("");
@@ -84,7 +79,6 @@ export function CreateCountdownForm({
     setLocation("");
     setMeetupDate("");
     setMeetupTime("12:00");
-    setCoverEmoji(EMOJI_OPTIONS[0]);
     setLocA("");
     setLocB("");
     setDistanceKm("");
@@ -112,7 +106,6 @@ export function CreateCountdownForm({
         title: title.trim(),
         description: description.trim() || null,
         location: location.trim() || null,
-        cover_emoji: coverEmoji,
         meetup_date: combinedDateTime,
         location_user_a_id: memberA?.user_id ?? null,
         location_user_a_text: locA.trim() || null,
@@ -132,7 +125,7 @@ export function CreateCountdownForm({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 p-4 backdrop-blur-sm"
+      className="fixed inset-0 z-53 flex items-center justify-center bg-black/20 p-4 backdrop-blur-sm"
       onMouseDown={(event) => {
         if (event.target === event.currentTarget && !isPending) {
           handleClose();
@@ -231,42 +224,6 @@ export function CreateCountdownForm({
                         required
                         className={inputClass}
                       />
-                    </div>
-
-                    {/* Emoji */}
-
-                    <div>
-                      <FieldLabel
-                        icon={
-                          <span className="text-sm leading-none">
-                            {coverEmoji}
-                          </span>
-                        }
-                      >
-                        Cover
-                      </FieldLabel>
-
-                      <div className="mt-2 flex h-[50px] items-center gap-1.5 overflow-x-auto rounded-[1rem] border border-black/[0.06] bg-[#f8f8f7] px-2.5">
-                        {EMOJI_OPTIONS.map((emoji) => {
-                          const isSelected = coverEmoji === emoji;
-
-                          return (
-                            <button
-                              key={emoji}
-                              type="button"
-                              onClick={() => setCoverEmoji(emoji)}
-                              aria-label={`Pilih ${emoji}`}
-                              className={`flex size-8 shrink-0 items-center justify-center rounded-[0.7rem] text-base transition ${
-                                isSelected
-                                  ? "bg-neutral-900 shadow-sm"
-                                  : "hover:bg-white"
-                              }`}
-                            >
-                              {emoji}
-                            </button>
-                          );
-                        })}
-                      </div>
                     </div>
 
                     {/* Location */}
@@ -530,9 +487,7 @@ export function CreateCountdownForm({
                     disabled={isPending}
                     className="flex h-11 items-center justify-center rounded-full bg-black px-7 text-[12px] font-medium text-white transition hover:bg-neutral-800 disabled:cursor-not-allowed disabled:opacity-50"
                   >
-                    {isPending
-                      ? "Creating..."
-                      : "Create countdown"}
+                    {isPending ? "Creating..." : "Create countdown"}
                   </button>
                 </div>
               </div>

@@ -7,7 +7,6 @@ export interface MeetupCountdown {
   title: string;
   description: string | null;
   location: string | null;
-  cover_emoji: string | null;
   meetup_date: string;
 
   location_user_a_id: string | null;
@@ -38,7 +37,6 @@ export interface CreateCountdownInput {
   title: string;
   description?: string | null;
   location?: string | null;
-  cover_emoji?: string | null;
   meetup_date: string;
 
   location_user_a_id?: string | null;
@@ -53,7 +51,6 @@ export interface UpdateCountdownInput {
   title?: string;
   description?: string | null;
   location?: string | null;
-  cover_emoji?: string | null;
   meetup_date?: string;
   is_completed?: boolean;
   completed_at?: string | null;
