@@ -1,8 +1,8 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toPng } from "html-to-image";
-import { Download, Heart, Share2, Sparkles } from "lucide-react";
+import { Download, Share2, Sparkles } from "lucide-react";
 
 import { WrappedCardSwitcher } from "./wrapped-card-switcher";
 import { WrappedPreferencePicker } from "./wrapped-preference-picker";
@@ -36,8 +36,39 @@ export function WrappedGenerator({
   startedAt,
 }: WrappedGeneratorProps) {
   const [isGenerating, setIsGenerating] = useState(false);
+  const [previewScale, setPreviewScale] = useState(1);
 
   const cardRef = useRef<HTMLDivElement>(null);
+  const previewContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const container = previewContainerRef.current;
+
+    if (!container) return;
+
+    const updateScale = () => {
+      const width = container.clientWidth;
+
+      const horizontalPadding = width < 640 ? 24 : 48;
+
+      const availableWidth = Math.max(
+        width - horizontalPadding,
+        1,
+      );
+
+      setPreviewScale(
+        Math.min(1, availableWidth / 540),
+      );
+    };
+
+    updateScale();
+
+    const observer = new ResizeObserver(updateScale);
+
+    observer.observe(container);
+
+    return () => observer.disconnect();
+  }, []);
 
   const { data: moodSummary, isLoading: isLoadingMood } =
     useMoodSummary(relationshipId);
@@ -89,6 +120,19 @@ export function WrappedGenerator({
 
   const customColorSecondary =
     preference?.custom_color_secondary;
+
+  function scrollToPreview() {
+    const container = previewContainerRef.current;
+
+    if (!container) return;
+
+    requestAnimationFrame(() => {
+      container.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    });
+  }
 
   async function createImage() {
     if (!cardRef.current) return null;
@@ -169,27 +213,31 @@ export function WrappedGenerator({
 
   return (
     <div className="relative overflow-hidden rounded-[1.75rem] border border-black/[0.05] bg-white/80 shadow-[0_25px_70px_rgba(0,0,0,0.045)] backdrop-blur-xl sm:rounded-[2rem]">
-      <div className="grid min-h-[calc(100dvh-12rem)] lg:grid-cols-[minmax(0,1fr)_390px]">
+      <div className="flex flex-col">
         {/* ================================================= */}
         {/* PREVIEW */}
         {/* ================================================= */}
 
-        <div className="relative flex min-h-[680px] min-w-0 flex-col overflow-hidden bg-[#f2f1ef]">
-          <div className="pointer-events-none absolute -right-28 -top-28 size-72 rounded-full bg-pink-200/30 blur-3xl" />
-
-          <div className="pointer-events-none absolute -bottom-32 -left-24 size-80 rounded-full bg-blue-200/20 blur-3xl" />
-
+        <div
+          ref={previewContainerRef}
+          className="relative flex min-w-0 flex-col overflow-hidden bg-white scroll-mt-4"
+        >
           <div className="relative flex min-h-0 flex-1 flex-col">
-            <div className="flex shrink-0 items-center justify-center gap-2 px-6 pb-3 pt-7 text-[10px] font-semibold uppercase tracking-[0.18em] text-neutral-400 sm:pt-8">
-              <span className="size-1.5 rounded-full bg-pink-400" />
-
-              Your relationship story
-            </div>
-
-            <div className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden px-4 pb-8 pt-3 sm:px-8 [scrollbar-width:thin] [scrollbar-color:rgba(163,163,163,0.35)_transparent]">
-              <div className="flex min-h-full w-full items-start justify-center">
+            <div className="min-h-0 flex-1 overflow-auto [scrollbar-width:thin] [scrollbar-color:rgba(163,163,163,0.35)_transparent]">
+              <div
+                className="flex w-full items-start justify-center px-3 py-6 sm:px-6 sm:py-8"
+                style={{
+                  minHeight: `${960 * previewScale + 48}px`,
+                }}
+              >
                 {isLoading ? (
-                  <div className="mt-8 flex h-[520px] w-[292px] shrink-0 items-center justify-center rounded-[2rem] border border-black/[0.05] bg-white shadow-[0_30px_70px_-35px_rgba(0,0,0,0.25)]">
+                  <div
+                    className="flex shrink-0 items-center justify-center rounded-[2rem] border border-black/[0.05] bg-white shadow-[0_30px_70px_-35px_rgba(0,0,0,0.25)]"
+                    style={{
+                      width: `${540 * previewScale}px`,
+                      height: `${960 * previewScale}px`,
+                    }}
+                  >
                     <div className="text-center">
                       <div className="mx-auto flex size-10 items-center justify-center rounded-2xl border border-black/[0.05] bg-neutral-50">
                         <Sparkles
@@ -204,7 +252,15 @@ export function WrappedGenerator({
                     </div>
                   </div>
                 ) : (
-                  <div className="flex shrink-0 origin-top">
+                  <div
+                    className="shrink-0 origin-top"
+                    style={{
+                      width: "540px",
+                      height: "960px",
+                      transform: `scale(${previewScale})`,
+                      marginBottom: `${960 * (previewScale - 1)}px`,
+                    }}
+                  >
                     <WrappedCardSwitcher
                       ref={cardRef}
                       templateId={templateId}
@@ -230,22 +286,6 @@ export function WrappedGenerator({
                 )}
               </div>
             </div>
-
-            <div className="flex shrink-0 items-center justify-center gap-2 px-6 pb-6 pt-2 text-[10px] text-neutral-400 sm:pb-7">
-              <Heart
-                size={10}
-                fill="currentColor"
-                className="text-pink-400"
-              />
-
-              <span>{relationshipName}</span>
-
-              <span className="text-neutral-300">
-                ·
-              </span>
-
-              <span>{totalDays} days</span>
-            </div>
           </div>
         </div>
 
@@ -253,9 +293,8 @@ export function WrappedGenerator({
         {/* CONTROLS */}
         {/* ================================================= */}
 
-        <aside className="flex min-h-0 flex-col border-t border-black/[0.05] bg-white lg:border-l lg:border-t-0">
+        <div className="flex min-h-0 flex-col border-t border-black/[0.05] bg-white lg:border-l lg:border-t-0">
           <div className="border-b border-black/[0.05] px-6 pb-5 pt-6 sm:px-7 sm:pt-7">
-
             <h2 className="mt-3 text-xl font-semibold tracking-[-0.045em] text-neutral-900">
               Make it yours.
             </h2>
@@ -269,28 +308,11 @@ export function WrappedGenerator({
           <div className="min-h-0 flex-1 overflow-y-auto px-6 py-6 sm:px-7 [scrollbar-width:thin] [scrollbar-color:rgba(163,163,163,0.25)_transparent]">
             <WrappedPreferencePicker
               relationshipId={relationshipId}
+              onTemplateSelect={scrollToPreview}
             />
           </div>
 
           <div className="shrink-0 border-t border-black/[0.05] bg-[#fafaf9] px-6 py-5 sm:px-7">
-            <div className="mb-4 flex items-center justify-between">
-              <div>
-                <p className="text-[11px] font-medium text-neutral-500">
-                  Ready to share?
-                </p>
-
-                <p className="mt-0.5 text-[10px] text-neutral-400">
-                  Save your story as an image.
-                </p>
-              </div>
-
-              <Heart
-                size={14}
-                fill="currentColor"
-                className="text-pink-300"
-              />
-            </div>
-
             <div className="grid grid-cols-2 gap-2.5">
               <button
                 type="button"
@@ -325,7 +347,7 @@ export function WrappedGenerator({
               </button>
             </div>
           </div>
-        </aside>
+        </div>
       </div>
     </div>
   );

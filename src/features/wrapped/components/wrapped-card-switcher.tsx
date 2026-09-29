@@ -1,11 +1,13 @@
-// wrapped/components/wrapped-card-switcher.tsx
-
 "use client";
 
 import { forwardRef } from "react";
+
 import { WrappedCardSoft } from "./templates/wrapped-card-soft";
 import { WrappedCardBold } from "./templates/wrapped-card-bold";
-import { WrappedCardMinimal } from "./templates/wrapped-card-minimal";
+import { WrappedCardNoir } from "./templates/wrapped-card-noir";
+import { WrappedCardBloom } from "./templates/wrapped-card-bloom";
+import { WrappedCardNight } from "./templates/wrapped-card-night";
+
 import type {
   MoodSummaryItem,
   GoalsWrappedSummary,
@@ -13,6 +15,7 @@ import type {
   WrappedTemplateId,
   ScreenTimeWrappedSummary,
 } from "../types";
+import { WrappedCardMinimal } from "./templates/wrapped-card-minimal";
 
 interface WrappedCardSwitcherProps {
   templateId: WrappedTemplateId;
@@ -31,8 +34,19 @@ interface WrappedCardSwitcherProps {
   customColorSecondary?: string | null;
 }
 
-export const WrappedCardSwitcher = forwardRef<HTMLDivElement, WrappedCardSwitcherProps>(
-  ({ templateId, customColorPrimary, customColorSecondary, ...commonProps }, ref) => {
+export const WrappedCardSwitcher = forwardRef<
+  HTMLDivElement,
+  WrappedCardSwitcherProps
+>(
+  (
+    {
+      templateId,
+      customColorPrimary,
+      customColorSecondary,
+      ...commonProps
+    },
+    ref
+  ) => {
     switch (templateId) {
       case "bold":
         return (
@@ -43,11 +57,47 @@ export const WrappedCardSwitcher = forwardRef<HTMLDivElement, WrappedCardSwitche
             customColorSecondary={customColorSecondary}
           />
         );
+
       case "minimal":
-        return <WrappedCardMinimal ref={ref} {...commonProps} />;
+        return (
+          <WrappedCardMinimal
+            ref={ref}
+            {...commonProps}
+          />
+        );
+      
+        case "noir":
+        return (
+          <WrappedCardNoir
+            ref={ref}
+            {...commonProps}
+          />
+        );
+
+      case "bloom":
+        return (
+          <WrappedCardBloom
+            ref={ref}
+            {...commonProps}
+          />
+        );
+
+      case "night":
+        return (
+          <WrappedCardNight
+            ref={ref}
+            {...commonProps}
+          />
+        );
+
       case "soft":
       default:
-        return <WrappedCardSoft ref={ref} {...commonProps} />;
+        return (
+          <WrappedCardSoft
+            ref={ref}
+            {...commonProps}
+          />
+        );
     }
   }
 );

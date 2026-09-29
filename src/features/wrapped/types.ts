@@ -29,7 +29,7 @@ export interface GoalsWrappedSummary {
 
 export type MilestoneType = "100_days" | "6_months" | "1_year" | "custom";
 
-export type WrappedTemplateId = "soft" | "bold" | "minimal";
+export type WrappedTemplateId = "soft" | "bold" | "minimal" | "noir" | "bloom" | "night";
 
 export interface WrappedPreference {
   id: string;

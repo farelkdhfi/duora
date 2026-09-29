@@ -24,6 +24,30 @@ export const WRAPPED_TEMPLATES: WrappedTemplateInfo[] = [
     isPremium: true,
     supportsCustomColor: false,
   },
+  {
+    id: "noir",
+    name: "Noir",
+    description: "Dark editorial with a refined feel",
+    isPremium: true,
+    supportsCustomColor: false,
+
+  },
+  {
+    id: "bloom",
+    name: "Bloom",
+    description: "Romantic, airy and softly layered",
+    isPremium: true,
+    supportsCustomColor: false,
+
+  },
+  {
+    id: "night",
+    name: "Night",
+    description: "Cinematic dark with subtle blue glow",
+    isPremium: true,
+    supportsCustomColor: false,
+
+  },
 ];
 
 export function getTemplateInfo(id: string): WrappedTemplateInfo {
