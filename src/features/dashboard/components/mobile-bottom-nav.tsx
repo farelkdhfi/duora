@@ -17,17 +17,14 @@ interface MobileBottomNavProps {
 
 const navigation = [
   {
-    label: 'Home',
     href: '/dashboard',
     icon: Home,
   },
   {
-    label: 'Planner',
     href: '/planner',
     icon: CalendarDays,
   },
   {
-    label: 'Notes',
     href: '/notes',
     icon: Notebook,
   },

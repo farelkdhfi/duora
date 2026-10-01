@@ -19,6 +19,7 @@ export default function DashboardShell({ children }: DashboardShellProps) {
   const [mobileMoreOpen, setMobileMoreOpen] = useState(false)
 
   const isDebateDetail = /^\/debates\/[^/]+$/.test(pathname)
+  const isDashboard = pathname === '/dashboard'
 
   return (
     <div className="min-h-screen bg-[#fafafa] text-[#111111]">
@@ -31,7 +32,9 @@ export default function DashboardShell({ children }: DashboardShellProps) {
           className={
             isDebateDetail
               ? 'relative min-h-screen min-w-0 flex-1 bg-neutral-50'
-              : 'relative min-w-0 flex-1 bg-neutral-50 p-4 pb-24 sm:p-5 sm:pb-24 md:p-6 md:pb-6'
+              : isDashboard
+                ? 'relative min-w-0 flex-1 bg-neutral-50 p-0 pb-24 sm:p-0 sm:pb-24 md:p-6 md:pb-6'
+                : 'relative min-w-0 flex-1 bg-neutral-50 p-4 pb-24 sm:p-5 sm:pb-24 md:p-6 md:pb-6'
           }
         >
           {children}

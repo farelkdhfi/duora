@@ -1,82 +1,104 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import {
-  ArrowUpRight,
-  Brain,
-  HandHeart,
-  Heart,
-  Zap,
-} from 'lucide-react'
+import { ArrowUpRight, Heart } from 'lucide-react'
 
-import happyEmot from '@/assets/emoticon/happy-emot.png'
+import happyEmot1 from '@/assets/emoticon/happy-emot.png'
+import happyEmot2 from '@/assets/emoticon/happy-emot-2.png'
+import happyEmot3 from '@/assets/emoticon/happy-emot-3.png'
+
 import neutralEmot from '@/assets/emoticon/neutral-emot.png'
-import sadEmot from '@/assets/emoticon/sad-emot.png'
-import tiredEmot from '@/assets/emoticon/tired-emot.png'
-import stressedEmot from '@/assets/emoticon/stressed-emot.png'
 
-import type {
-  DailyCheckin,
-  Mood,
-} from '@/features/checkins/types'
+import sadEmot from '@/assets/emoticon/sad-emot.png'
+
+import tiredEmot1 from '@/assets/emoticon/tired-emot.png'
+import tiredEmot2 from '@/assets/emoticon/tired-emot-2.png'
+import tiredEmot3 from '@/assets/emoticon/tired-emot-3.png'
+
+import stressedEmot1 from '@/assets/emoticon/stressed-emot.png'
+import stressedEmot2 from '@/assets/emoticon/stressed-emot-2.png'
+import stressedEmot3 from '@/assets/emoticon/stressed-emot-3.png'
+
+import type { DailyCheckin, Mood } from '@/features/checkins/types'
 
 interface PartnerCheckinCardProps {
-  checkin: DailyCheckin | null
+  userCheckin: DailyCheckin | null
+  partnerCheckin: DailyCheckin | null
+  userName: string
   partnerName: string
 }
 
-/* ============================================================= */
-/* MOOD */
-/* ============================================================= */
+const happyEmotVariants = [
+  happyEmot1,
+  happyEmot2,
+  happyEmot3,
+]
+
+const tiredEmotVariants = [
+  tiredEmot1,
+  tiredEmot2,
+  tiredEmot3,
+]
+
+const stressedEmotVariants = [
+  stressedEmot1,
+  stressedEmot2,
+  stressedEmot3,
+]
 
 const moodInfo: Record<
   Mood,
   {
-    image: typeof happyEmot
-    label: string
+    image: typeof happyEmot1
     badge: string
     text: string
+    glow: string
   }
 > = {
   happy: {
-    image: happyEmot,
-    label: 'Feeling good',
-    badge: 'bg-emerald-50',
+    image: happyEmot1,
+    badge: 'bg-emerald-50/80',
     text: 'text-emerald-600',
+    glow: 'bg-emerald-100/40',
   },
 
   neutral: {
     image: neutralEmot,
-    label: 'Okay',
-    badge: 'bg-neutral-100',
+    badge: 'bg-neutral-100/80',
     text: 'text-neutral-500',
+    glow: 'bg-neutral-100/50',
   },
 
   sad: {
     image: sadEmot,
-    label: 'Feeling low',
-    badge: 'bg-blue-50',
+    badge: 'bg-blue-50/80',
     text: 'text-blue-500',
+    glow: 'bg-blue-100/40',
   },
 
   tired: {
-    image: tiredEmot,
-    label: 'Tired',
-    badge: 'bg-violet-50',
+    image: tiredEmot1,
+    badge: 'bg-violet-50/80',
     text: 'text-violet-500',
+    glow: 'bg-violet-100/35',
   },
 
   stressed: {
-    image: stressedEmot,
-    label: 'Stressed',
-    badge: 'bg-rose-50',
+    image: stressedEmot1,
+    badge: 'bg-rose-50/80',
     text: 'text-rose-500',
+    glow: 'bg-rose-100/35',
   },
 }
 
-/* ============================================================= */
-/* CARD */
-/* ============================================================= */
+const emotVariants: Record<Mood, typeof happyEmot1[]> = {
+  happy: happyEmotVariants,
+  neutral: [neutralEmot],
+  sad: [sadEmot],
+  tired: tiredEmotVariants,
+  stressed: stressedEmotVariants,
+}
 
 function CardShell({
   children,
@@ -84,15 +106,143 @@ function CardShell({
   children: React.ReactNode
 }) {
   return (
-    <div
-      className="
-        relative
-        overflow-hidden
-        rounded-[1.5rem]
-        border border-black/[0.06]
-        bg-white
-      "
-    >
+    <div className="relative overflow-hidden rounded-[2rem] border border-black/[0.045] bg-white shadow-[0_20px_60px_-35px_rgba(0,0,0,0.18)]">
+      <svg
+        className="pointer-events-none absolute -right-20 -top-28 h-[330px] w-[430px] opacity-[0.8]"
+        viewBox="0 0 430 330"
+        fill="none"
+        aria-hidden="true"
+      >
+        <path
+          d="M450 42C390 5 313 12 276 66C241 116 263 157 221 190C185 218 116 196 83 239C55 275 79 314 121 342"
+          stroke="#e9a8bd"
+          strokeOpacity=".28"
+          strokeWidth="1.2"
+        />
+
+        <path
+          d="M456 66C394 31 331 42 302 87C275 129 294 160 260 185C220 214 157 202 120 238C91 266 102 301 135 326"
+          stroke="#9eb9df"
+          strokeOpacity=".3"
+          strokeWidth="1.2"
+        />
+
+        <path
+          d="M442 91C399 66 352 69 328 104C306 137 318 159 293 181C263 207 212 207 180 232C150 255 151 287 174 311"
+          stroke="#e9a8bd"
+          strokeOpacity=".18"
+          strokeWidth="1"
+          strokeDasharray="2 7"
+        />
+
+        <circle
+          cx="335"
+          cy="102"
+          r="3"
+          fill="#9eb9df"
+          fillOpacity=".55"
+        />
+
+        <circle
+          cx="276"
+          cy="184"
+          r="2.5"
+          fill="#e9a8bd"
+          fillOpacity=".6"
+        />
+
+        <circle
+          cx="175"
+          cy="232"
+          r="2"
+          fill="#9eb9df"
+          fillOpacity=".5"
+        />
+      </svg>
+
+      <svg
+        className="pointer-events-none absolute -bottom-28 -left-20 h-[220px] w-[300px] opacity-[0.65]"
+        viewBox="0 0 300 220"
+        fill="none"
+        aria-hidden="true"
+      >
+        <path
+          d="M-20 181C37 153 72 161 103 189C134 217 170 229 209 203C246 178 253 135 316 111"
+          stroke="#9eb9df"
+          strokeOpacity=".22"
+          strokeWidth="1.1"
+        />
+
+        <path
+          d="M-17 157C36 135 73 140 104 166C136 193 171 204 207 180C242 156 252 117 311 94"
+          stroke="#e9a8bd"
+          strokeOpacity=".22"
+          strokeWidth="1.1"
+        />
+
+        <circle
+          cx="103"
+          cy="166"
+          r="2.5"
+          fill="#e9a8bd"
+          fillOpacity=".55"
+        />
+
+        <circle
+          cx="207"
+          cy="180"
+          r="2"
+          fill="#9eb9df"
+          fillOpacity=".55"
+        />
+      </svg>
+
+      <svg
+        className="pointer-events-none absolute right-8 top-8 size-16 opacity-[0.45]"
+        viewBox="0 0 64 64"
+        fill="none"
+        aria-hidden="true"
+      >
+        <circle
+          cx="32"
+          cy="32"
+          r="23"
+          stroke="#171717"
+          strokeOpacity=".07"
+        />
+
+        <circle
+          cx="32"
+          cy="32"
+          r="17"
+          stroke="#e9a8bd"
+          strokeOpacity=".3"
+          strokeDasharray="2 6"
+        />
+
+        <circle
+          cx="32"
+          cy="32"
+          r="10"
+          stroke="#9eb9df"
+          strokeOpacity=".28"
+        />
+
+        <circle
+          cx="48"
+          cy="21"
+          r="2"
+          fill="#e9a8bd"
+        />
+
+        <circle
+          cx="20"
+          cy="46"
+          r="1.7"
+          fill="#9eb9df"
+        />
+      </svg>
+
       <div className="relative p-5 sm:p-6">
         {children}
       </div>
@@ -100,309 +250,208 @@ function CardShell({
   )
 }
 
-/* ============================================================= */
-/* HEADER */
-/* ============================================================= */
-
-function HeaderRow() {
-  return (
-    <div className="flex items-center justify-between">
-
-      <div
-        className="
-          flex size-9
-          items-center justify-center
-          rounded-xl
-          bg-neutral-900
-          text-white
-        "
-      >
-        <Heart
-          size={15}
-          strokeWidth={2.2}
-          fill="currentColor"
-        />
-      </div>
-
-      <Link
-        href="/check-in"
-        aria-label="Open daily check-in"
-        className="
-          flex size-8
-          items-center justify-center
-          rounded-full
-          bg-neutral-100
-          text-neutral-400
-          transition-all
-          duration-200
-          hover:bg-neutral-900
-          hover:text-white
-        "
-      >
-        <ArrowUpRight
-          size={14}
-          strokeWidth={2.3}
-        />
-      </Link>
-
-    </div>
-  )
-}
-
-/* ============================================================= */
-/* STAT */
-/* ============================================================= */
-
-function StatTile({
-  icon,
-  label,
-  value,
-}: {
-  icon: React.ReactNode
-  label: string
-  value: number
-}) {
-  return (
-    <div
-      className="
-        rounded-xl
-        border border-black/[0.05]
-        bg-neutral-50/70
-        px-3.5
-        py-3
-      "
-    >
-      <div className="flex items-center gap-1.5">
-
-        {icon}
-
-        <span className="text-[10px] font-medium text-neutral-400">
-          {label}
-        </span>
-
-      </div>
-
-      <p className="mt-1.5 text-base font-semibold tracking-[-0.02em] text-neutral-800">
-        {value}
-        <span className="ml-0.5 text-[11px] font-medium text-neutral-300">
-          /10
-        </span>
-      </p>
-    </div>
-  )
-}
-
-/* ============================================================= */
-/* MAIN */
-/* ============================================================= */
-
-export default function PartnerCheckinCard({
+function MoodItem({
+  role,
   checkin,
-  partnerName,
-}: PartnerCheckinCardProps) {
+  isUser,
+}: {
+  role: 'You' | 'Partner'
+  checkin: DailyCheckin | null
+  isUser?: boolean
+}) {
+  const [emotIndex, setEmotIndex] = useState(0)
+  const [isFading, setIsFading] = useState(false)
 
-  /* =========================================================== */
-  /* EMPTY */
-  /* =========================================================== */
+  const variants = checkin
+    ? emotVariants[checkin.mood]
+    : []
+
+  useEffect(() => {
+    if (!checkin || variants.length <= 1) return
+
+    const interval = window.setInterval(() => {
+      setIsFading(true)
+
+      window.setTimeout(() => {
+        setEmotIndex((current) => (current + 1) % variants.length)
+        setIsFading(false)
+      }, 100)
+    }, 2500)
+
+    return () => {
+      window.clearInterval(interval)
+    }
+  }, [checkin, variants.length])
+
+  useEffect(() => {
+    setEmotIndex(0)
+    setIsFading(false)
+  }, [checkin?.mood])
 
   if (!checkin) {
     return (
-      <CardShell>
+      <Link
+        href={isUser ? '/check-in' : '#'}
+        className="group relative flex min-h-[132px] flex-1 flex-col items-center justify-center overflow-hidden rounded-[1.5rem]"
+      >
+        <svg
+          className="pointer-events-none absolute -right-6 -top-6 size-20 opacity-50"
+          viewBox="0 0 80 80"
+          fill="none"
+          aria-hidden="true"
+        >
+          <circle
+            cx="40"
+            cy="40"
+            r="27"
+            stroke="#e9a8bd"
+            strokeOpacity=".2"
+          />
 
-        <HeaderRow />
+          <circle
+            cx="40"
+            cy="40"
+            r="20"
+            stroke="#9eb9df"
+            strokeOpacity=".18"
+            strokeDasharray="2 6"
+          />
+        </svg>
 
-        <div className="mt-6">
-
-          <p className="text-[9px] font-semibold uppercase tracking-[0.16em] text-neutral-300">
-            Partner check-in
-          </p>
-
-          <h2 className="mt-2 text-lg font-semibold tracking-[-0.035em] text-neutral-900">
-            {partnerName} hasn't checked in.
-          </h2>
-
-          <p className="mt-2 max-w-sm text-[13px] leading-5 text-neutral-400">
-            Maybe they need a little space,
-            or maybe a little love.
-          </p>
-
+        <div className="relative flex size-12 items-center justify-center rounded-full border border-black/[0.04] bg-white shadow-[0_8px_20px_-14px_rgba(0,0,0,0.25)]">
+          <Heart
+            size={16}
+            strokeWidth={1.6}
+            className="text-pink-300"
+          />
         </div>
 
-        <div className="mt-6 flex items-center gap-2">
+        <p className="relative mt-3 text-[11px] font-medium tracking-[-0.02em] text-neutral-500">
+          {role}
+        </p>
 
-          <div className="flex size-7 items-center justify-center rounded-full bg-pink-50">
+        <div className="relative mt-1 flex items-center gap-1 text-[9px] text-neutral-300">
+          <span>{isUser ? 'Check in' : 'Not yet'}</span>
 
-            <Heart
-              size={12}
-              className="text-pink-400"
-              fill="currentColor"
+          {isUser && (
+            <ArrowUpRight
+              size={10}
+              strokeWidth={1.8}
+              className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
             />
-
-          </div>
-
-          <p className="text-[10px] text-neutral-400">
-            Give them a little moment.
-          </p>
-
+          )}
         </div>
-
-      </CardShell>
+      </Link>
     )
   }
 
-  /* =========================================================== */
-  /* DATA */
-  /* =========================================================== */
-
   const mood = moodInfo[checkin.mood]
-
-  /* =========================================================== */
-  /* CARD */
-  /* =========================================================== */
+  const animatedEmot = variants[emotIndex] ?? variants[0]
 
   return (
+    <div className="relative flex min-h-[132px] flex-1 flex-col items-center justify-center overflow-hidden rounded-[1.5rem] px-4 py-4">
+      <div
+        className={`absolute left-1/2 top-1/2 size-24 -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl ${mood.glow}`}
+      />
+
+      <p className="relative mb-2 text-[11px] font-medium tracking-[-0.02em] text-neutral-600">
+        {role}
+      </p>
+
+      <div className="relative flex size-[68px] items-center justify-center">
+        <svg
+          className="pointer-events-none absolute inset-0 size-full"
+          viewBox="0 0 100 100"
+          fill="none"
+          aria-hidden="true"
+        >
+          <circle
+            cx="50"
+            cy="50"
+            r="38"
+            stroke="#171717"
+            strokeOpacity=".045"
+          />
+
+          <circle
+            cx="50"
+            cy="50"
+            r="45"
+            stroke="#e9a8bd"
+            strokeOpacity=".16"
+            strokeDasharray="2 8"
+          />
+
+          <circle
+            cx="14"
+            cy="30"
+            r="2"
+            fill="#e9a8bd"
+            fillOpacity=".55"
+          />
+
+          <circle
+            cx="83"
+            cy="68"
+            r="1.8"
+            fill="#9eb9df"
+            fillOpacity=".6"
+          />
+        </svg>
+
+        <div className="pointer-events-none absolute bottom-0 left-1/2 h-2.5 w-10 -translate-x-1/2 rounded-full bg-black/40 blur-[7px]" />
+
+        <img
+          key={`${checkin.id}-${checkin.mood}-${emotIndex}`}
+          src={animatedEmot.src}
+          alt={`${mood.text} mood`}
+          className={`relative z-10 size-56 object-contain drop-shadow-[0_10px_8px_rgba(0,0,0,0.10)] transition-opacity duration-350 ${isFading ? 'opacity-0' : 'opacity-100'}`}
+        />
+      </div>
+    </div>
+  )
+}
+
+export default function PartnerCheckinCard({
+  userCheckin,
+  partnerCheckin,
+  userName,
+  partnerName,
+}: PartnerCheckinCardProps) {
+  return (
     <CardShell>
-
-      <HeaderRow />
-
-
-      {/* ===================================================== */}
-      {/* PARTNER */}
-      {/* ===================================================== */}
-
-      <div className="mt-6">
-
-        <p className="text-[9px] font-semibold uppercase tracking-[0.16em] text-neutral-300">
-          Partner check-in
-        </p>
-
-        <div className="mt-1.5 flex items-center justify-between gap-4">
-
-          <div className="min-w-0">
-
-            <h2 className="truncate text-lg font-semibold tracking-[-0.035em] text-neutral-900">
-              {partnerName}
+      <div className="relative">
+        <div className="mt-4 flex items-start justify-between gap-4">
+          <div>
+            <h2 className="text-sm font-medium tracking-[-0.055em] text-neutral-800">
+              How are you two?
             </h2>
 
             <p className="mt-1 text-[11px] text-neutral-400">
-              Shared how they're feeling today.
+              A little glimpse of today.
             </p>
-
           </div>
 
-
-          {/* MOOD */}
-
-          <div>
-
-
-
-            <img
-              src={mood.image.src}
-              alt={mood.label}
-              className="size-23 object-contain"
-            />
-            <div className={`
-              flex w-fit mx-auto
-              items-center
-              rounded-full
-              justify-center
-              px-2
-              py-1.5
-              mt-2
-              ${mood.badge}
-            `}>
-              <p
-                className={`
-                text-[17px]
-                font-semibold text-center
-                ${mood.text}
-              `}
-              >
-                {mood.label}
-              </p>
-
-            </div>
-
-
-          </div>
-
+          <Link href="/check-in" aria-label="Open check-in" className="flex size-9 shrink-0 items-center justify-center rounded-full border border-black/20 bg-white text-neutral-500 shadow-[0_8px_20px_-14px_rgba(0,0,0,0.25)] transition-all duration-300 hover:bg-neutral-900 hover:text-white">
+            <ArrowUpRight size={14} strokeWidth={2.2} />
+          </Link>
         </div>
-
       </div>
 
+      <div className="relative mt-5 flex gap-2.5">
+        <div className="pointer-events-none absolute bottom-4 left-1/2 top-4 z-10 w-1 rounded-full bg-neutral-200" />
 
-      {/* ===================================================== */}
-      {/* STATS */}
-      {/* ===================================================== */}
-
-      <div className="mt-5 grid grid-cols-2 gap-2.5">
-
-        <StatTile
-          icon={
-            <Zap
-              size={12}
-              strokeWidth={2.5}
-              className="text-amber-500"
-            />
-          }
-          label="Energy"
-          value={checkin.energy}
+        <MoodItem
+          role="You"
+          checkin={userCheckin}
+          isUser
         />
 
-        <StatTile
-          icon={
-            <Brain
-              size={12}
-              strokeWidth={2.5}
-              className="text-violet-500"
-            />
-          }
-          label="Stress"
-          value={checkin.stress}
+        <MoodItem
+          role="Partner"
+          checkin={partnerCheckin}
         />
-
       </div>
-
-
-      {/* ===================================================== */}
-      {/* NEEDS */}
-      {/* ===================================================== */}
-
-      {checkin.needs_from_partner && (
-        <div className="mt-3 rounded-xl border border-black/[0.05] bg-neutral-50/70 p-3.5">
-
-          <div className="flex items-center gap-2">
-
-            <div
-              className="
-                flex size-7
-                items-center justify-center
-                rounded-lg
-                bg-white
-                shadow-[0_1px_4px_rgba(0,0,0,0.04)]
-              "
-            >
-              <HandHeart
-                size={13}
-                strokeWidth={2.2}
-                className="text-pink-400"
-              />
-            </div>
-
-            <p className="text-[9px] font-semibold uppercase tracking-[0.14em] text-neutral-400">
-              Needs from you
-            </p>
-
-          </div>
-
-          <p className="mt-2.5 text-[12px] leading-5 text-neutral-700">
-            {checkin.needs_from_partner}
-          </p>
-
-        </div>
-      )}
-
     </CardShell>
   )
 }
