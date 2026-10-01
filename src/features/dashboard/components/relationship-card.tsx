@@ -24,7 +24,7 @@ export default function RelationshipCard({
     : null
 
   return (
-    <section className="relative overflow-hidden rounded-b-[2rem] border border-black/20 bg-[#faf9f7] px-5 py-7 shadow-[0_25px_60px_-35px_rgba(0,0,0,0.18)] sm:rounded-2xl sm:px-8 sm:py-9">
+    <section className="relative overflow-hidden rounded-b-[2rem] border border-black/5 bg-[#faf9f7] px-5 py-7 shadow-[0_25px_60px_-35px_rgba(0,0,0,0.18)] sm:rounded-2xl sm:px-8 sm:py-9">
       {/* SVG LINE ART BACKGROUND */}
 
       <svg
