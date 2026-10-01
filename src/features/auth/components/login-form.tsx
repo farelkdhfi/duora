@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
-import { Eye, EyeOff, LockKeyhole, Mail } from 'lucide-react'
+import { ArrowRight, Eye, EyeOff, LockKeyhole, Mail } from 'lucide-react'
 import { useState } from 'react'
 import {
   loginSchema,
@@ -220,19 +220,18 @@ export default function LoginForm() {
         <button
           type="submit"
           disabled={loginMutation.isPending}
-          className="group relative w-full overflow-hidden rounded-full bg-[#111111] py-3.5 text-[14px] font-semibold text-white shadow-[0_8px_25px_-8px_rgba(0,0,0,0.5)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_12px_30px_-8px_rgba(0,0,0,0.55)] active:translate-y-0 disabled:cursor-not-allowed disabled:opacity-50"
+          className="flex justify-center items-center gap-x-2 w-full overflow-hidden rounded-full bg-white border border-black/5 shadow-lg py-3.5 text-sm font-semibold text-black disabled:cursor-not-allowed disabled:opacity-50"
         >
-
-          {/* subtle gradient hover */}
-
-          <span className="absolute inset-0 bg-gradient-to-r from-blue-500/0 via-blue-500/10 to-pink-500/10 opacity-0 transition duration-300 group-hover:opacity-100" />
-
 
           <span className="relative">
             {loginMutation.isPending
               ? 'Signing in…'
               : 'Sign in'}
           </span>
+
+          <span className="flex size-4.5 items-center justify-center text-black sm:size-5">
+                    <ArrowRight size={10} />
+                  </span>
 
         </button>
 
@@ -260,7 +259,7 @@ export default function LoginForm() {
         type="button"
         onClick={handleGoogleSignIn}
         disabled={isGoogleLoading || loginMutation.isPending}
-        className="flex h-12 w-full items-center justify-center gap-3 rounded-full border border-neutral-200/80 bg-white text-[14px] font-medium text-neutral-700 shadow-sm transition hover:bg-neutral-50 disabled:cursor-not-allowed disabled:opacity-50"
+        className="flex h-12 w-full items-center justify-center gap-3 rounded-full border border-neutral-200/80 bg-white text-sm font-medium text-neutral-700 shadow-lg disabled:cursor-not-allowed disabled:opacity-50"
       >
         <svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true">
           <path
