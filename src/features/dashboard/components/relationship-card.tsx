@@ -24,7 +24,7 @@ export default function RelationshipCard({
     : null
 
   return (
-    <section className="relative overflow-hidden rounded-b-[2rem] border border-black/5 bg-[#faf9f7] px-5 py-7 shadow-[0_25px_60px_-35px_rgba(0,0,0,0.18)] sm:rounded-2xl sm:px-8 sm:py-9">
+    <section className="relative overflow-hidden rounded-b-[2rem] border border-black/5 bg-neutral-800 px-5 py-7 shadow-[0_25px_60px_-35px_rgba(0,0,0,0.18)] sm:rounded-2xl sm:px-8 sm:py-9">
       {/* SVG LINE ART BACKGROUND */}
 
       <svg
@@ -375,7 +375,7 @@ export default function RelationshipCard({
               </p>
             </div>
 
-            <h2 className="text-[20px] font-medium tracking-[-0.055em] text-neutral-800 sm:text-[22px]">
+            <h2 className="text-[20px] font-medium tracking-[-0.055em] text-white sm:text-[22px]">
               Together, always.
             </h2>
           </div>
@@ -426,7 +426,7 @@ export default function RelationshipCard({
             role="You"
             avatarUrl={userAvatarUrl}
             fallbackClass="text-blue-500"
-            ringClass="border-blue-100"
+            ringClass="border-black"
             accent="blue"
           />
 
@@ -440,7 +440,7 @@ export default function RelationshipCard({
 
               <div className="absolute inset-3 rounded-full border border-pink-100/60" />
 
-              <div className="relative flex size-11 items-center justify-center rounded-full border border-white/80 bg-white/90 shadow-[0_10px_30px_-12px_rgba(0,0,0,0.25)] backdrop-blur-md sm:size-14">
+              <div className="relative flex size-11 items-center justify-center rounded-full border border-white/80 bg-neutral-800 shadow-[0_10px_30px_-12px_rgba(0,0,0,0.25)] backdrop-blur-md sm:size-14">
                 <RelationshipHeart />
               </div>
 
@@ -455,7 +455,7 @@ export default function RelationshipCard({
             role="Partner"
             avatarUrl={partnerAvatarUrl}
             fallbackClass="text-pink-500"
-            ringClass="border-pink-100"
+            ringClass="border-black"
             accent="pink"
           />
         </div>
@@ -464,9 +464,7 @@ export default function RelationshipCard({
 
         {daysTogether && (
           <div className="mt-5 flex justify-center">
-            <div className="relative overflow-hidden rounded-full border border-black/[0.045] bg-white/85 px-4 py-2.5 shadow-[0_8px_25px_-18px_rgba(0,0,0,0.2)] backdrop-blur-md">
-              <div className="absolute inset-0 border border-pink-100/40" />
-
+            <div className="relative overflow-hidden rounded-full border border-black/[0.045] bg-black px-4 py-2.5 shadow-[0_8px_25px_-18px_rgba(0,0,0,0.2)] backdrop-blur-md">
               <div className="relative flex items-center gap-2.5">
                 <span className="relative flex size-5 items-center justify-center">
                   <span className="absolute inset-0 rounded-full border border-pink-200/60" />
@@ -500,7 +498,7 @@ export default function RelationshipCard({
 
                 <p className="text-[10px] text-neutral-400">
                   Together for
-                  <span className="ml-1 font-semibold text-neutral-700">
+                  <span className="ml-1 font-semibold text-neutral-100">
                     {daysTogether} days
                   </span>
                 </p>
@@ -537,7 +535,7 @@ function Person({
   return (
     <div className="relative z-10 min-w-0 text-center">
       <div
-        className={`relative mx-auto flex size-[82px] items-center justify-center rounded-full border-[3px] bg-white/90 p-1 shadow-[0_15px_35px_-20px_rgba(0,0,0,0.3)] backdrop-blur-sm sm:size-[104px] sm:border-4 sm:p-1.5 ${ringClass}`}
+        className={`relative mx-auto flex size-[82px] items-center justify-center rounded-full border-[3px] bg-neutral-800 p-1 shadow-[0_15px_35px_-20px_rgba(0,0,0,0.3)] backdrop-blur-sm sm:size-[104px] sm:border-4 sm:p-1.5 ${ringClass}`}
       >
         <div
           className={`absolute inset-1.5 rounded-full border border-dashed ${
@@ -574,11 +572,11 @@ function Person({
         />
       </div>
 
-      <p className="mx-auto mt-3 max-w-[95px] truncate text-[12px] font-semibold tracking-[-0.015em] text-neutral-800 sm:max-w-[125px] sm:text-[13px]">
+      <p className="mx-auto mt-3 max-w-[95px] truncate text-[12px] font-semibold tracking-[-0.015em] text-white sm:max-w-[125px] sm:text-[13px]">
         {name}
       </p>
 
-      <p className="mt-0.5 text-[9px] font-medium uppercase tracking-[0.16em] text-neutral-300">
+      <p className="mt-0.5 text-[9px] font-medium uppercase tracking-[0.16em] text-neutral-500">
         {role}
       </p>
     </div>
