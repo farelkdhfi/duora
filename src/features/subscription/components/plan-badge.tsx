@@ -1,272 +1,152 @@
-// subscription/components/plan-badge.tsx
+'use client'
 
-"use client";
+import Link from 'next/link'
+import { Crown, Sparkles, AlertTriangle, ArrowUpRight } from 'lucide-react'
+import { useMySubscription } from '../queries'
+import {
+  isPremium,
+  isOnTrial,
+  isNearingExpiry,
+  getDaysUntilExpiry,
+} from '../utils'
 
-import Link from "next/link";
-import { Crown, Sparkles, ArrowUpRight, AlertTriangle } from "lucide-react";
-import { useMySubscription } from "../queries";
-import { isPremium, isOnTrial, isNearingExpiry, getDaysUntilExpiry } from "../utils";
+interface PlanBadgeProps {
+  onNavigate?: () => void
+}
 
-export function PlanBadge() {
-  const { data: subscription, isLoading } = useMySubscription();
+export function PlanBadge({ onNavigate }: PlanBadgeProps) {
+  const { data: subscription, isLoading } = useMySubscription()
 
-  if (isLoading) return null;
+  if (isLoading) return null
 
-  const premium = isPremium(subscription ?? null);
-  const trial = isOnTrial(subscription ?? null);
-  const nearingExpiry = isNearingExpiry(subscription ?? null);
-  const daysLeft = getDaysUntilExpiry(subscription ?? null);
-
-  // ============================================================
-  // PREMIUM / TRIAL - NEARING EXPIRY (WARNING STATE)
-  // ============================================================
+  const premium = isPremium(subscription ?? null)
+  const trial = isOnTrial(subscription ?? null)
+  const nearingExpiry = isNearingExpiry(subscription ?? null)
+  const daysLeft = getDaysUntilExpiry(subscription ?? null)
 
   if (premium && nearingExpiry) {
     return (
       <Link
         href="/subscription"
-        className="
-          group
-          relative
-          inline-flex
-          items-center
-          gap-2
-          overflow-hidden
-          rounded-full
-          border
-          border-amber-200/80
-          bg-amber-50/80
-          px-3.5
-          py-2
-          text-left
-          shadow-[0_4px_20px_rgba(0,0,0,0.05)]
-          transition
-          hover:border-amber-300
-          hover:bg-amber-100/70
-        "
+        onClick={onNavigate}
+        className="group flex w-full items-center gap-3.5 rounded-[1.25rem] border border-amber-200/70 bg-amber-50/60 px-3.5 py-3.5 transition-all duration-200 active:bg-amber-50"
       >
-        <span
-          className="
-            pointer-events-none
-            absolute
-            -left-3
-            -top-4
-            size-10
-            rounded-full
-            bg-amber-300/30
-            blur-xl
-          "
-        />
+        <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-amber-100/80 text-amber-500">
+          <AlertTriangle size={17} strokeWidth={1.7} />
+        </div>
 
-        <span
-          className="
-            relative
-            flex
-            size-6
-            items-center
-            justify-center
-            rounded-full
-            bg-white
-            text-amber-500
-            shadow-sm
-          "
-        >
-          <AlertTriangle size={12} strokeWidth={1.8} />
-        </span>
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center gap-2">
+            <p className="text-[12px] font-medium text-amber-800">
+              {trial ? 'Trial' : 'Premium'}
+            </p>
 
-        <div className="relative flex flex-col leading-none">
-          <span className="text-[9px] font-medium uppercase tracking-[0.16em] text-amber-500">
-            {trial ? "Trial" : "Premium"}
-          </span>
+            <span className="size-1 rounded-full bg-amber-400" />
+          </div>
 
-          <span className="mt-1 text-[11px] font-semibold tracking-[-0.01em] text-amber-700">
-            {daysLeft === 0 ? "Berakhir hari ini" : `${daysLeft} hari lagi`}
-          </span>
+          <p className="mt-0.5 truncate text-[10px] text-amber-600/70">
+            {daysLeft === 0 ? 'Berakhir hari ini' : `${daysLeft} hari lagi`}
+          </p>
+        </div>
+
+        <div className="flex size-7 shrink-0 items-center justify-center rounded-full bg-amber-100/70 text-amber-500 transition-transform group-active:translate-x-0.5">
+          <ArrowUpRight size={12} strokeWidth={1.8} />
         </div>
       </Link>
-    );
+    )
   }
-
-  // ============================================================
-  // PREMIUM / TRIAL
-  // ============================================================
 
   if (premium) {
     return (
       <Link
         href="/subscription"
-        className={`
-          relative
-          inline-flex
-          items-center
-          gap-2
-          overflow-hidden
-          rounded-full
-          border
-          px-3.5
-          py-2
-          shadow-[0_4px_20px_rgba(0,0,0,0.05)]
-          transition
-          hover:opacity-90
-
-          ${
-            trial
-              ? "border-pink-200/80 bg-pink-50/80 text-pink-500"
-              : "border-black/[0.08] bg-[#171717] text-white"
-          }
-        `}
+        onClick={onNavigate}
+        className={`group flex w-full items-center gap-3.5 rounded-[1.25rem] border px-3.5 py-3.5 transition-all duration-200 active:bg-black/[0.04] ${
+          trial
+            ? 'border-pink-200/70 bg-pink-50/50'
+            : 'border-black/[0.07] bg-linear-to-tl from-pink-100 via-white to-blue-100'
+        }`}
       >
-        <span
-          className={`
-            pointer-events-none
-            absolute
-            -left-3
-            -top-4
-            size-10
-            rounded-full
-            blur-xl
-
-            ${trial ? "bg-pink-300/30" : "bg-pink-300/10"}
-          `}
-        />
-
-        <span
-          className={`
-            relative
-            flex
-            size-6
-            items-center
-            justify-center
-            rounded-full
-
-            ${
-              trial
-                ? "bg-white text-pink-400 shadow-sm"
-                : "border border-white/10 bg-white/[0.08] text-pink-200"
-            }
-          `}
+        <div
+          className={`flex size-9 shrink-0 items-center justify-center rounded-xl ${
+            trial
+              ? 'bg-pink-100/80 text-pink-500'
+              : 'bg-white text-neutral-800'
+          }`}
         >
           {trial ? (
-            <Sparkles size={12} strokeWidth={1.8} />
+            <Sparkles size={17} strokeWidth={1.7} />
           ) : (
-            <Crown size={12} strokeWidth={1.8} />
+            <Crown size={17} strokeWidth={1.7} />
           )}
-        </span>
+        </div>
 
-        <div className="relative flex flex-col leading-none">
-          <span
-            className={`
-              text-[9px]
-              font-medium
-              uppercase
-              tracking-[0.16em]
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center gap-2">
+            <p
+              className={`text-[12px] font-medium ${
+                trial ? 'text-[#171717]' : 'text-neutral-800'
+              }`}
+            >
+              Duora+
+            </p>
 
-              ${trial ? "text-pink-400" : "text-white/50"}
-            `}
+            <span
+              className={`size-1 rounded-full ${
+                trial ? 'bg-pink-400' : 'bg-pink-300'
+              }`}
+            />
+          </div>
+
+          <p
+            className={`mt-0.5 truncate text-[10px] ${
+              trial ? 'text-pink-500/70' : 'text-neutral-600'
+            }`}
           >
-            Duora+
-          </span>
+            {trial ? 'Trial active' : 'Premium active'}
+          </p>
+        </div>
 
-          <span
-            className={`
-              mt-1
-              text-[11px]
-              font-semibold
-              tracking-[-0.01em]
-
-              ${trial ? "text-[#171717]" : "text-white"}
-            `}
-          >
-            {trial ? "Trial" : "Premium"}
-          </span>
+        <div
+          className={`flex size-7 shrink-0 items-center justify-center rounded-full ${
+            trial
+              ? 'bg-pink-100/80 text-pink-500'
+              : 'bg-white text-neutral-800'
+          } transition-transform group-active:translate-x-0.5`}
+        >
+          <ArrowUpRight size={12} strokeWidth={1.8} />
         </div>
       </Link>
-    );
+    )
   }
-
-  // ============================================================
-  // FREE + UPGRADE
-  // ============================================================
 
   return (
     <Link
       href="/subscription"
-      className="
-        inline-flex
-        items-center
-        overflow-hidden
-        rounded-full
-        border
-        border-black/[0.08]
-        bg-white
-        p-1
-        shadow-[0_4px_20px_rgba(0,0,0,0.05)]
-        transition
-        hover:border-black/[0.12]
-        hover:shadow-[0_6px_24px_rgba(0,0,0,0.07)]
-      "
+      onClick={onNavigate}
+      className="group flex w-full items-center gap-3.5 rounded-[1.25rem] border border-black/[0.06] bg-white/65 px-3.5 py-3.5 transition-all duration-200 active:bg-black/[0.04]"
     >
-      <div className="flex items-center gap-2 px-3 py-1.5">
-        <span
-          className="
-            flex
-            size-6
-            items-center
-            justify-center
-            rounded-full
-            bg-neutral-100
-            text-neutral-400
-          "
-        >
-          <Sparkles size={12} strokeWidth={1.6} />
-        </span>
-
-        <div className="flex flex-col leading-none">
-          <span className="text-[9px] font-medium uppercase tracking-[0.14em] text-neutral-400">
-            Plan
-          </span>
-
-          <span className="mt-1 text-[11px] font-semibold tracking-[-0.01em] text-[#171717]">
-            Free
-          </span>
-        </div>
+      <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-black/[0.035] text-black/45">
+        <Sparkles size={17} strokeWidth={1.7} />
       </div>
 
-      <span
-        className="
-          group
-          flex
-          items-center
-          gap-2
-          rounded-full
-          bg-[#171717]
-          px-3.5
-          py-2
-          text-[10px]
-          font-medium
-          text-white
-          shadow-[0_3px_12px_rgba(0,0,0,0.12)]
-          transition
-          hover:bg-black
-        "
-      >
-        <span>Upgrade</span>
+      <div className="min-w-0 flex-1">
+        <div className="flex items-center gap-2">
+          <p className="text-[12px] font-medium text-black/70">
+            Free
+          </p>
 
-        <span
-          className="
-            flex
-            size-5
-            items-center
-            justify-center
-            rounded-full
-            bg-white/[0.12]
-            transition
-            group-hover:translate-x-0.5
-          "
-        >
-          <ArrowUpRight size={10} strokeWidth={1.8} />
-        </span>
-      </span>
+          <span className="size-1 rounded-full bg-black/15" />
+        </div>
+
+        <p className="mt-0.5 truncate text-[10px] text-black/35">
+          Upgrade to unlock more
+        </p>
+      </div>
+
+      <div className="flex size-7 shrink-0 items-center justify-center rounded-full bg-[#171717] text-white transition-transform group-active:translate-x-0.5">
+        <ArrowUpRight size={12} strokeWidth={1.8} />
+      </div>
     </Link>
-  );
+  )
 }

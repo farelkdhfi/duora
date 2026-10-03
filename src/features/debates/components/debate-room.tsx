@@ -1,30 +1,24 @@
 'use client'
 
 import {
+  useEffect,
   useState,
   type ComponentProps,
 } from 'react'
-import {
-  ArrowLeft,
-  Loader2,
-  RefreshCw,
-  Send,
-  Sparkles,
-  X,
-} from 'lucide-react'
+import { ArrowLeft, Loader2, X } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
 
 import DebateMessageBubble from './debate-message-bubble'
 import DateSeparator from './date-separator'
+import DebateIntro from './debate-intro'
+import DebateComposer from './debate-composer'
 
 import {
   useAutoFinalVerdict,
   useDebate,
   useDebateMessages,
-  useRequestAiAnalysis,
   useResolveDebate,
-  useSendDebateMessage,
 } from '../queries'
 import { AiPersona } from '../types'
 
@@ -32,7 +26,9 @@ import happyEmot from '@/assets/emoticon/happy-emot.png'
 import neutralEmot from '@/assets/emoticon/neutral-emot.png'
 import stressedEmot from '@/assets/emoticon/stressed-emot.png'
 import tiredEmot from '@/assets/emoticon/tired-emot.png'
-import DebateIntro from './debate-intro'
+import PartnerCharacter from './partner-character'
+import AiMemoryPocket from './ai-memory-pocket'
+import AiResponseOverlay from './ai-response-overlay'
 
 interface DebateRoomProps {
   debateId: string
@@ -122,186 +118,6 @@ function formatThoughtCount(count: number) {
 }
 
 /* ===================================================== */
-/* CHARACTER */
-/* ===================================================== */
-
-function PartnerCharacter({
-  name,
-  image,
-  avatarUrl,
-  latestMessage,
-  previousCount,
-  side,
-  onPocketClick,
-  isActive,
-}: {
-  name: string
-  image: typeof happyEmot
-  avatarUrl?: string | null
-  latestMessage?: {
-    content: string
-    created_at: string
-  }
-  previousCount: number
-  side: 'left' | 'right'
-  onPocketClick: () => void
-  isActive: boolean
-}) {
-  const isLeft = side === 'left'
-
-  return (
-    <section
-      className={[
-        'relative flex min-w-0 w-full flex-col items-center',
-        'md:items-center',
-        isLeft ? 'md:items-end' : 'md:items-start',
-      ].join(' ')}
-    >
-      {/* NAME */}
-
-      <div
-        className={[
-          'mb-3 flex max-w-full items-center gap-2 sm:mb-4',
-          isLeft
-            ? 'md:flex-row-reverse'
-            : 'md:flex-row',
-        ].join(' ')}
-      >
-        <span className="max-w-[180px] truncate text-[9px] font-semibold uppercase tracking-[0.14em] text-neutral-400 sm:text-[10px] sm:tracking-[0.16em]">
-          {name}
-        </span>
-      </div>
-
-      {/* CHARACTER */}
-
-      <div className="relative">
-        <div
-          className={[
-            'absolute -inset-4 rounded-full blur-3xl transition-all duration-700 sm:-inset-5',
-            isLeft
-              ? 'bg-pink-300/[0.16]'
-              : 'bg-blue-300/[0.15]',
-            isActive
-              ? 'scale-110 opacity-100'
-              : 'scale-90 opacity-50',
-          ].join(' ')}
-        />
-
-        <div
-          className={[
-            'relative flex size-[78px] items-center justify-center rounded-full border border-black/[0.045] bg-white shadow-[0_16px_35px_rgba(0,0,0,0.07)]',
-            'xs:size-[86px] sm:size-[108px]',
-            isActive
-              ? 'animate-[debate-breathe_4s_ease-in-out_infinite]'
-              : '',
-          ].join(' ')}
-        >
-          <div className="absolute inset-[4px] rounded-full bg-[#f8f7f3] sm:inset-[5px]" />
-
-          {avatarUrl ? (
-            <img
-              src={avatarUrl}
-              alt={name}
-              className="relative z-10 size-[70px] rounded-full object-cover xs:size-[78px] sm:size-[98px]"
-            />
-          ) : (
-            <Image
-              src={image}
-              alt={name}
-              width={82}
-              height={82}
-              className="relative z-10 size-[60px] object-contain xs:size-[66px] sm:size-[82px]"
-            />
-          )}
-        </div>
-
-        {/* MEMORY POCKET */}
-
-        <button
-          type="button"
-          onClick={onPocketClick}
-          disabled={previousCount === 0}
-          aria-label={`Open ${name}'s previous thoughts`}
-          className={[
-            'group absolute -bottom-3 flex min-w-[62px] items-center justify-center gap-1 rounded-[1rem] border border-black/[0.06] bg-white px-2.5 py-1.5 shadow-[0_8px_25px_rgba(0,0,0,0.07)] transition-all duration-300 sm:-bottom-4 sm:min-w-[68px] sm:gap-1.5 sm:rounded-[1.2rem] sm:px-3 sm:py-2',
-            isLeft
-              ? '-right-3 sm:-right-4'
-              : '-left-3 sm:-left-4',
-            previousCount > 0
-              ? 'cursor-pointer hover:-translate-y-1 hover:shadow-[0_14px_35px_rgba(0,0,0,0.1)]'
-              : 'cursor-default opacity-45',
-          ].join(' ')}
-        >
-          <span className="text-[11px] font-semibold tracking-[-0.03em] text-neutral-800 sm:text-[12px]">
-            {previousCount}
-          </span>
-
-          <span className="text-[7px] font-medium uppercase tracking-[0.1em] text-neutral-400 sm:text-[8px] sm:tracking-[0.12em]">
-            saved
-          </span>
-        </button>
-      </div>
-
-      {/* LATEST THOUGHT */}
-
-      <div
-        className={[
-          'mt-10 w-full max-w-[310px] px-1 sm:mt-12 sm:px-0',
-          isLeft
-            ? 'md:mr-0 md:ml-auto'
-            : 'md:ml-0 md:mr-auto',
-        ].join(' ')}
-      >
-        {latestMessage ? (
-          <div
-            className={[
-              'relative overflow-hidden rounded-[1.45rem] border border-black/[0.055] bg-white px-4 py-3.5 shadow-[0_15px_45px_rgba(0,0,0,0.045)] transition-all duration-500 sm:rounded-[1.7rem] sm:px-5 sm:py-4',
-              isActive
-                ? 'translate-y-0 opacity-100'
-                : 'opacity-90',
-            ].join(' ')}
-          >
-            <div
-              className={[
-                'absolute top-0 h-[2px] w-10 rounded-full sm:w-12',
-                isLeft
-                  ? 'left-4 bg-pink-300/60 sm:left-5'
-                  : 'right-4 bg-blue-300/60 sm:right-5',
-              ].join(' ')}
-            />
-
-            <p className="whitespace-pre-line break-words text-[12px] leading-[1.65] tracking-[-0.008em] text-neutral-700 sm:text-[12.5px] sm:leading-[1.7]">
-              {latestMessage.content}
-            </p>
-
-            <div className="mt-3 flex items-center justify-between gap-2">
-              <span className="truncate text-[7px] font-semibold uppercase tracking-[0.12em] text-neutral-300 sm:text-[8px] sm:tracking-[0.14em]">
-                Latest thought
-              </span>
-
-              <span className="shrink-0 text-[7px] text-neutral-300 sm:text-[8px]">
-                {new Date(
-                  latestMessage.created_at,
-                ).toLocaleTimeString('id-ID', {
-                  hour: '2-digit',
-                  minute: '2-digit',
-                })}
-              </span>
-            </div>
-          </div>
-        ) : (
-          <div className="rounded-[1.45rem] border border-dashed border-black/[0.07] bg-white/45 px-4 py-4 text-center sm:rounded-[1.7rem] sm:px-5 sm:py-5">
-            <p className="text-[9px] leading-5 text-neutral-300 sm:text-[10px]">
-              Waiting for their first thought.
-            </p>
-          </div>
-        )}
-      </div>
-    </section>
-  )
-}
-
-/* ===================================================== */
 /* AI MEDIATOR CENTER */
 /* ===================================================== */
 
@@ -310,7 +126,6 @@ function MediatorStage({
   isProcessing,
   hasAiComment,
   isPendingVerdict,
-  latestAiMessage,
   onOpenHistory,
 }: {
   persona: {
@@ -320,13 +135,12 @@ function MediatorStage({
   isProcessing: boolean
   hasAiComment: boolean
   isPendingVerdict: boolean
-  latestAiMessage?: DebateMessage
   onOpenHistory: () => void
 }) {
   const active =
     isProcessing ||
     isPendingVerdict ||
-    Boolean(latestAiMessage)
+    hasAiComment
 
   return (
     <section className="relative flex min-w-0 w-full flex-col items-center justify-center">
@@ -339,11 +153,7 @@ function MediatorStage({
         ].join(' ')}
       />
 
-      {/* CONNECTION LINE */}
-
       <div className="pointer-events-none absolute left-1/2 top-[78px] hidden h-px w-[calc(100%+150px)] -translate-x-1/2 bg-gradient-to-r from-transparent via-black/[0.06] to-transparent md:block" />
-
-      {/* AI OBJECT */}
 
       <button
         type="button"
@@ -376,71 +186,25 @@ function MediatorStage({
             ].join(' ')}
           />
 
-          <p className='text-black text-2xl'>✦</p>
+          <p className="relative z-10 text-black text-2xl">
+            ✦
+          </p>
         </div>
 
         <div className="mt-3 text-center sm:mt-4">
           <p className="text-[8px] font-semibold uppercase tracking-[0.16em] text-neutral-400 sm:text-[9px] sm:tracking-[0.18em]">
             Duora AI
           </p>
-
-          <p className="mt-1 max-w-[180px] text-[9px] leading-4 text-neutral-300 sm:text-[10px]">
-            {isProcessing
-              ? isPendingVerdict
-                ? 'Finding common ground'
-                : 'Listening to both sides'
-              : hasAiComment
-                ? 'Mediator'
-                : 'Here if needed'}
-          </p>
         </div>
       </button>
 
-      {/* AI RESPONSE */}
-
-      {latestAiMessage && !isProcessing && (
-        <div className="relative z-10 mt-7 w-full max-w-[370px] sm:mt-8">
-          <DebateMessageBubble
-            message={latestAiMessage}
-            currentUserId=""
-            variant="mediator"
-          />
-        </div>
-      )}
-
-      {/* PROCESSING STATE */}
-
-      {isProcessing && (
-        <div className="relative z-10 mt-6 flex flex-col items-center sm:mt-7">
-          <div className="flex items-center gap-1.5">
-            <span className="size-1.5 animate-pulse rounded-full bg-neutral-300" />
-            <span className="size-1.5 animate-pulse rounded-full bg-neutral-300 [animation-delay:150ms]" />
-            <span className="size-1.5 animate-pulse rounded-full bg-neutral-300 [animation-delay:300ms]" />
-          </div>
-
-          <p className="mt-2 text-[8px] text-neutral-300 sm:text-[9px]">
-            {isPendingVerdict
-              ? 'Preparing the resolution'
-              : 'Reading both perspectives'}
-          </p>
-        </div>
-      )}
-
-      {/* PERSONA */}
-
-      <div className="mt-4 flex max-w-[calc(100vw-48px)] items-center gap-1.5 rounded-full border border-black/[0.045] bg-white/70 px-2.5 py-1 sm:mt-5">
-        <Image
-          src={persona.image}
-          alt={persona.text}
-          width={17}
-          height={17}
-          className="size-4 shrink-0 object-contain"
-        />
-
-        <span className="truncate text-[8px] font-medium text-neutral-400 sm:text-[8.5px]">
-          {persona.text} mediator
-        </span>
-      </div>
+      <button
+        type="button"
+        onClick={onOpenHistory}
+        className="mt-3 text-[8px] font-medium text-neutral-300 transition hover:text-neutral-600"
+      >
+        View AI memory
+      </button>
     </section>
   )
 }
@@ -493,8 +257,7 @@ function MemoryPocket({
         <div className="relative z-10 min-h-0 flex-1 overflow-y-auto overscroll-contain px-3.5 py-4 sm:px-7 sm:py-5">
           <div className="space-y-1">
             {messages.map((message, index) => {
-              const previousMessage =
-                messages[index - 1]
+              const previousMessage = messages[index - 1]
 
               const showDateSeparator =
                 index === 0 ||
@@ -507,9 +270,7 @@ function MemoryPocket({
               return (
                 <div key={message.id}>
                   {showDateSeparator && (
-                    <DateSeparator
-                      date={message.created_at}
-                    />
+                    <DateSeparator date={message.created_at} />
                   )}
 
                   <DebateMessageBubble
@@ -528,50 +289,6 @@ function MemoryPocket({
 }
 
 /* ===================================================== */
-/* RESOLUTION */
-/* ===================================================== */
-
-function ResolutionScene({
-  message,
-}: {
-  message: DebateMessage
-}) {
-  return (
-    <div className="relative z-10 mt-8 w-full sm:mt-10">
-      <div className="mx-auto max-w-2xl">
-        <div className="mb-4 flex flex-col items-center text-center sm:mb-5">
-          <div className="relative flex size-12 items-center justify-center rounded-full border border-black/[0.055] bg-white shadow-[0_14px_40px_rgba(0,0,0,0.07)] sm:size-14">
-            <div className="absolute -inset-2 rounded-full bg-[#eee5d9]/50 blur-xl" />
-
-            <span className="relative text-lg text-neutral-500 sm:text-xl">
-              ♡
-            </span>
-          </div>
-
-          <p className="mt-3 text-[7px] font-semibold uppercase tracking-[0.18em] text-neutral-300 sm:mt-4 sm:text-[8px] sm:tracking-[0.2em]">
-            Duora
-          </p>
-
-          <h2 className="mt-1 text-[20px] font-semibold tracking-[-0.045em] text-neutral-900 sm:text-[22px]">
-            Resolution
-          </h2>
-
-          <p className="mt-1 max-w-[280px] text-[9px] leading-4 text-neutral-400 sm:text-[10px]">
-            A calmer place to meet in the middle.
-          </p>
-        </div>
-
-        <DebateMessageBubble
-          message={message}
-          currentUserId=""
-          variant="resolution"
-        />
-      </div>
-    </div>
-  )
-}
-
-/* ===================================================== */
 /* MAIN */
 /* ===================================================== */
 
@@ -581,16 +298,7 @@ export default function DebateRoom({
   currentUserId,
   members,
 }: DebateRoomProps) {
-  const [input, setInput] = useState('')
   const [showIntro, setShowIntro] = useState(true)
-
-  const [selectedProvider, setSelectedProvider] =
-    useState<'auto' | 'openrouter' | 'groq'>('auto')
-
-  const [lastAiError, setLastAiError] = useState<{
-    mode: 'comment' | 'final_verdict'
-    provider?: 'openrouter' | 'groq'
-  } | null>(null)
 
   const [isConfirmingResolve, setIsConfirmingResolve] =
     useState(false)
@@ -599,23 +307,54 @@ export default function DebateRoom({
     string | null
   >(null)
 
+  const [showAiMemory, setShowAiMemory] = useState(false)
+  const [showAiOverlay, setShowAiOverlay] = useState(false)
+  const [aiOverlayMessageId, setAiOverlayMessageId] =
+    useState<string | null>(null)
+
   const { data: debate } = useDebate(debateId)
 
-  const {
-    data: messages,
-    isLoading,
-  } = useDebateMessages(debateId)
-
-  const sendMessageMutation =
-    useSendDebateMessage(debateId)
-
-  const requestAiMutation =
-    useRequestAiAnalysis(debateId)
+  const { data: messages, isLoading } =
+    useDebateMessages(debateId)
 
   const resolveDebateMutation =
     useResolveDebate(relationshipId)
 
   useAutoFinalVerdict(debateId)
+
+  const isAiProcessingStale =
+    !!debate?.ai_processing_started_at &&
+    Date.now() - new Date(debate.ai_processing_started_at).getTime() > 60_000
+
+  const isAiProcessing =
+    Boolean(debate?.ai_processing_requested_by) && !isAiProcessingStale
+
+  const aiMessages = messages?.filter((m) => m.role === 'ai') ?? []
+
+  const latestAiMessage = aiMessages.at(-1)
+
+  const finalVerdictMessage = messages
+    ?.filter((m) => m.role === 'ai' && m.is_final_verdict)
+    .at(-1)
+
+  useEffect(() => {
+    if (isAiProcessing) {
+      setShowAiOverlay(true)
+      setAiOverlayMessageId(null)
+    }
+  }, [isAiProcessing])
+
+  useEffect(() => {
+    if (!isAiProcessing && latestAiMessage) {
+      setAiOverlayMessageId(latestAiMessage.id)
+    }
+  }, [isAiProcessing, latestAiMessage?.id])
+
+  useEffect(() => {
+    if (finalVerdictMessage) {
+      setAiOverlayMessageId(finalVerdictMessage.id)
+    }
+  }, [finalVerdictMessage?.id])
 
   if (!debate) {
     return (
@@ -633,19 +372,7 @@ export default function DebateRoom({
   const isPendingVerdict =
     debate.status === 'pending_verdict'
 
-  const isAiProcessingStale =
-    debate.ai_processing_started_at &&
-    Date.now() -
-    new Date(
-      debate.ai_processing_started_at,
-    ).getTime() >
-    60_000
-
-  const isAiProcessing =
-    Boolean(debate.ai_processing_requested_by) &&
-    !isAiProcessingStale
-
-  const aiRequestedByName = isAiProcessing
+  const aiRequester = isAiProcessing
     ? members.find(
       (member) =>
         member.user_id ===
@@ -653,9 +380,13 @@ export default function DebateRoom({
     )
     : null
 
+  const aiRequesterName =
+    aiRequester?.display_name ??
+    aiRequester?.username ??
+    null
+
   const isAiRequestedByMe =
-    debate.ai_processing_requested_by ===
-    currentUserId
+    debate.ai_processing_requested_by === currentUserId
 
   const userMessages =
     messages?.filter(
@@ -689,14 +420,12 @@ export default function DebateRoom({
 
   const currentMember =
     sortedMembers.find(
-      (member) =>
-        member.user_id === currentUserId,
+      (member) => member.user_id === currentUserId,
     ) ?? sortedMembers[0]
 
   const otherMember =
     sortedMembers.find(
-      (member) =>
-        member.user_id !== currentUserId,
+      (member) => member.user_id !== currentUserId,
     ) ?? sortedMembers[1]
 
   const partnerA = currentMember ?? {
@@ -716,9 +445,7 @@ export default function DebateRoom({
 
   const partnerAMessages = userMessages
     .filter(
-      (message) =>
-        message.sender_id ===
-        partnerA.user_id,
+      (message) => message.sender_id === partnerA.user_id,
     )
     .sort(
       (a, b) =>
@@ -728,9 +455,7 @@ export default function DebateRoom({
 
   const partnerBMessages = userMessages
     .filter(
-      (message) =>
-        message.sender_id ===
-        partnerB.user_id,
+      (message) => message.sender_id === partnerB.user_id,
     )
     .sort(
       (a, b) =>
@@ -738,15 +463,13 @@ export default function DebateRoom({
         new Date(b.created_at).getTime(),
     )
 
-  const latestPartnerAMessage =
-    latestUserMessages.get(
-      partnerA.user_id,
-    )
+  const latestPartnerAMessage = latestUserMessages.get(
+    partnerA.user_id,
+  )
 
-  const latestPartnerBMessage =
-    latestUserMessages.get(
-      partnerB.user_id,
-    )
+  const latestPartnerBMessage = latestUserMessages.get(
+    partnerB.user_id,
+  )
 
   const previousPartnerAMessages =
     partnerAMessages.slice(0, -1)
@@ -757,28 +480,25 @@ export default function DebateRoom({
   const latestAiCommentMessage = messages
     ?.filter(
       (message) =>
-        message.role === 'ai' &&
-        !message.is_final_verdict,
-    )
-    .at(-1)
-
-  const finalVerdictMessage = messages
-    ?.filter(
-      (message) =>
-        message.role === 'ai' &&
-        message.is_final_verdict,
+        message.role === 'ai' && !message.is_final_verdict,
     )
     .at(-1)
 
   const lastUserMessage = userMessages.at(-1)
 
+  const aiMemoryMessages = [...aiMessages].reverse()
+
+  const overlayMessage =
+    messages?.find(
+      (message) =>
+        message.id === aiOverlayMessageId,
+    ) ?? latestAiMessage
+
   const hasNewMessageSinceLastAiComment =
     !latestAiCommentMessage ||
     !lastUserMessage ||
     new Date(lastUserMessage.created_at) >
-    new Date(
-      latestAiCommentMessage.created_at,
-    )
+    new Date(latestAiCommentMessage.created_at)
 
   const hasUserMessage = userMessageCount > 0
 
@@ -789,103 +509,22 @@ export default function DebateRoom({
 
   const status = statusConfig[debate.status]
 
-  const handleSend = () => {
-    if (
-      !input.trim() ||
-      !isRoomActive ||
-      isAiProcessing
-    ) {
-      return
-    }
-
-    sendMessageMutation.mutate(
-      {
-        debateId,
-        content: input.trim(),
-      },
-      {
-        onSuccess: () => {
-          setInput('')
-          setLastAiError(null)
-        },
-      },
-    )
-  }
-
   const handleResolve = () => {
     if (!isConfirmingResolve) {
       setIsConfirmingResolve(true)
       return
     }
 
+    setShowAiOverlay(true)
+    setAiOverlayMessageId(null)
+
     resolveDebateMutation.mutate(debateId, {
       onError: (error) => {
         alert(error.message)
         setIsConfirmingResolve(false)
+        setShowAiOverlay(false)
       },
     })
-  }
-
-  const handleRequestAiComment = () => {
-    const providerParam =
-      selectedProvider === 'auto'
-        ? undefined
-        : selectedProvider
-
-    setLastAiError(null)
-
-    requestAiMutation.mutate(
-      {
-        debateId,
-        mode: 'comment',
-        provider: providerParam,
-      },
-      {
-        onError: () => {
-          setLastAiError({
-            mode: 'comment',
-            provider: providerParam,
-          })
-        },
-      },
-    )
-  }
-
-  const handleRetryAiComment = () => {
-    if (!lastAiError) return
-
-    setLastAiError(null)
-
-    requestAiMutation.mutate(
-      {
-        debateId,
-        mode: lastAiError.mode,
-        provider: lastAiError.provider,
-      },
-      {
-        onError: () => {
-          setLastAiError(lastAiError)
-        },
-      },
-    )
-  }
-
-  const getAiButtonTooltip = () => {
-    if (isAiProcessing) {
-      return isAiRequestedByMe
-        ? 'Waiting for AI response...'
-        : `${aiRequestedByName?.display_name ?? aiRequestedByName?.username ?? 'Your babe'} is requesting AI assistance`
-    }
-
-    if (!hasUserMessage) {
-      return 'Send a message before requesting AI'
-    }
-
-    if (!hasNewMessageSinceLastAiComment) {
-      return 'Send a new message before requesting another AI comment'
-    }
-
-    return undefined
   }
 
   const pocketMessages =
@@ -937,16 +576,10 @@ export default function DebateRoom({
         }
       `}</style>
 
-      {/* ================================================= */}
       {/* ROOM SHELL */}
-      {/* ================================================= */}
 
-      <div
-        className="fixed inset-0 z-20 flex flex-col overflow-hidden bg-[#f7f6f2] p-2 xs:p-2.5 sm:p-4 md:p-6"
-      >
-        <div
-          className="relative flex min-h-0 flex-1 flex-col overflow-hidden rounded-[1.6rem] border border-black/[0.055] bg-[#faf9f6] shadow-[0_28px_90px_-45px_rgba(0,0,0,0.22)] sm:rounded-[2rem] md:rounded-[2.4rem]"
-        >
+      <div className="fixed inset-0 z-20 flex flex-col overflow-hidden bg-[#f7f6f2] p-2 xs:p-2.5 sm:p-4 md:p-6">
+        <div className="relative flex min-h-0 flex-1 flex-col overflow-hidden rounded-[1.6rem] border border-black/[0.055] bg-[#faf9f6] shadow-[0_28px_90px_-45px_rgba(0,0,0,0.22)] sm:rounded-[2rem] md:rounded-[2.4rem]">
           {/* AMBIENT */}
 
           <div className="pointer-events-none absolute -right-24 -top-24 size-56 rounded-full bg-pink-300/[0.07] blur-[80px] sm:size-72 sm:blur-[100px]" />
@@ -955,9 +588,7 @@ export default function DebateRoom({
 
           <div className="pointer-events-none absolute bottom-0 left-1/2 size-56 -translate-x-1/2 rounded-full bg-[#eadfce]/[0.08] blur-[80px] sm:size-72 sm:blur-[100px]" />
 
-          {/* ================================================= */}
           {/* HEADER */}
-          {/* ================================================= */}
 
           <header className="relative z-30 flex min-h-[60px] shrink-0 items-center justify-between gap-3 border-b border-black/[0.045] px-3.5 py-3 sm:min-h-[68px] sm:px-7 sm:py-4.5">
             <div className="flex min-w-0 items-center gap-2.5 sm:gap-3">
@@ -966,10 +597,7 @@ export default function DebateRoom({
                 aria-label="Back to discussions"
                 className="flex size-8 shrink-0 items-center justify-center rounded-full border border-black/[0.055] bg-white/70 text-neutral-400 transition-all hover:bg-neutral-900 hover:text-white sm:size-8"
               >
-                <ArrowLeft
-                  size={13}
-                  strokeWidth={1.8}
-                />
+                <ArrowLeft size={13} strokeWidth={1.8} />
               </Link>
 
               <div className="min-w-0">
@@ -1005,22 +633,14 @@ export default function DebateRoom({
 
                   <span className="hidden items-center gap-1 text-[9px] text-neutral-400 sm:flex">
                     <Image
-                      src={
-                        personaLabel[
-                          debate.ai_persona
-                        ].image
-                      }
+                      src={personaLabel[debate.ai_persona].image}
                       alt=""
                       width={15}
                       height={15}
                       className="size-3.5 object-contain"
                     />
 
-                    {
-                      personaLabel[
-                        debate.ai_persona
-                      ].text
-                    }
+                    {personaLabel[debate.ai_persona].text}
                   </span>
                 </div>
               </div>
@@ -1028,57 +648,50 @@ export default function DebateRoom({
 
             {/* RESOLVE */}
 
-            {isRoomActive &&
-              hasUserMessage && (
-                <div className="shrink-0">
-                  {isConfirmingResolve ? (
-                    <div className="flex items-center gap-1 rounded-full border border-black/[0.055] bg-white p-1 shadow-[0_6px_20px_rgba(0,0,0,0.05)]">
-                      <button
-                        type="button"
-                        onClick={handleResolve}
-                        disabled={
-                          resolveDebateMutation.isPending
-                        }
-                        className="rounded-full bg-neutral-900 px-2.5 py-1.5 text-[9px] font-semibold text-white transition hover:bg-black disabled:opacity-50 sm:px-3.5 sm:text-[10px]"
-                      >
-                        Yes, resolve
-                      </button>
-
-                      <button
-                        type="button"
-                        onClick={() =>
-                          setIsConfirmingResolve(
-                            false,
-                          )
-                        }
-                        className="rounded-full px-2.5 py-1.5 text-[9px] font-medium text-neutral-500 transition hover:bg-neutral-50 sm:px-3 sm:text-[10px]"
-                      >
-                        Cancel
-                      </button>
-                    </div>
-                  ) : (
+            {isRoomActive && hasUserMessage && (
+              <div className="shrink-0">
+                {isConfirmingResolve ? (
+                  <div className="flex items-center gap-1 rounded-full border border-black/[0.055] bg-white p-1 shadow-[0_6px_20px_rgba(0,0,0,0.05)]">
                     <button
                       type="button"
                       onClick={handleResolve}
-                      disabled={isAiProcessing}
-                      className="rounded-full px-2 py-1.5 text-[9px] font-medium text-neutral-400 transition hover:bg-white hover:text-neutral-700 disabled:cursor-not-allowed disabled:opacity-30 sm:px-3 sm:text-[10px]"
+                      disabled={
+                        resolveDebateMutation.isPending
+                      }
+                      className="rounded-full bg-neutral-900 px-2.5 py-1.5 text-[9px] font-semibold text-white transition hover:bg-black disabled:opacity-50 sm:px-3.5 sm:text-[10px]"
                     >
-                      <span className="sm:hidden">
-                        End
-                      </span>
-
-                      <span className="hidden sm:inline">
-                        End discussion
-                      </span>
+                      Yes, resolve
                     </button>
-                  )}
-                </div>
-              )}
+
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setIsConfirmingResolve(false)
+                      }
+                      className="rounded-full px-2.5 py-1.5 text-[9px] font-medium text-neutral-500 transition hover:bg-neutral-50 sm:px-3 sm:text-[10px]"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={handleResolve}
+                    disabled={isAiProcessing}
+                    className="rounded-full px-2 py-1.5 text-[9px] font-medium text-neutral-400 transition hover:bg-white hover:text-neutral-700 disabled:cursor-not-allowed disabled:opacity-30 sm:px-3 sm:text-[10px]"
+                  >
+                    <span className="sm:hidden">End</span>
+
+                    <span className="hidden sm:inline">
+                      End discussion
+                    </span>
+                  </button>
+                )}
+              </div>
+            )}
           </header>
 
-          {/* ================================================= */}
           {/* STAGE */}
-          {/* ================================================= */}
 
           <main className="relative z-10 min-h-0 flex-1 overflow-y-auto overflow-x-hidden overscroll-contain px-3.5 py-6 sm:px-7 sm:py-8 lg:px-10">
             {isLoading ? (
@@ -1103,32 +716,20 @@ export default function DebateRoom({
               </div>
             ) : (
               <div className="mx-auto max-w-6xl">
-                <div className="mb-6 text-center sm:mb-8">
-                  <p className="text-[7px] font-semibold uppercase tracking-[0.18em] text-neutral-300 sm:text-[8px] sm:tracking-[0.22em]">
-                    two perspectives · one conversation
-                  </p>
-                </div>
 
-                {/* ================================================= */}
                 {/* DESKTOP */}
-                {/* ================================================= */}
-
                 <div className="hidden items-start gap-8 md:grid md:grid-cols-[minmax(0,1fr)_minmax(260px,380px)_minmax(0,1fr)] lg:gap-12">
                   <PartnerCharacter
-                    name='you'
+                    name="you"
                     image={happyEmot}
                     avatarUrl={partnerA.avatar_url}
-                    latestMessage={
-                      latestPartnerAMessage
-                    }
+                    latestMessage={latestPartnerAMessage}
                     previousCount={
                       previousPartnerAMessages.length
                     }
                     side="left"
                     onPocketClick={() =>
-                      setOpenPocket(
-                        partnerA.user_id,
-                      )
+                      setOpenPocket(partnerA.user_id)
                     }
                     isActive={
                       lastUserMessage?.sender_id ===
@@ -1137,41 +738,26 @@ export default function DebateRoom({
                   />
 
                   <MediatorStage
-                    persona={
-                      personaLabel[
-                      debate.ai_persona
-                      ]
-                    }
-                    isProcessing={
-                      isAiProcessing
-                    }
+                    persona={personaLabel[debate.ai_persona]}
+                    isProcessing={isAiProcessing}
                     hasAiComment={Boolean(
                       latestAiCommentMessage,
                     )}
-                    isPendingVerdict={
-                      isPendingVerdict
-                    }
-                    latestAiMessage={
-                      latestAiCommentMessage
-                    }
-                    onOpenHistory={() => { }}
+                    isPendingVerdict={isPendingVerdict}
+                    onOpenHistory={() => setShowAiMemory(true)}
                   />
 
                   <PartnerCharacter
                     name={partnerBName}
                     image={neutralEmot}
                     avatarUrl={partnerB.avatar_url}
-                    latestMessage={
-                      latestPartnerBMessage
-                    }
+                    latestMessage={latestPartnerBMessage}
                     previousCount={
                       previousPartnerBMessages.length
                     }
                     side="right"
                     onPocketClick={() =>
-                      setOpenPocket(
-                        partnerB.user_id,
-                      )
+                      setOpenPocket(partnerB.user_id)
                     }
                     isActive={
                       lastUserMessage?.sender_id ===
@@ -1180,26 +766,20 @@ export default function DebateRoom({
                   />
                 </div>
 
-                {/* ================================================= */}
                 {/* MOBILE / TABLET */}
-                {/* ================================================= */}
 
                 <div className="mx-auto flex w-full max-w-[430px] flex-col gap-10 md:hidden sm:gap-12">
                   <PartnerCharacter
-                    name='you'
+                    name="you"
                     image={happyEmot}
                     avatarUrl={partnerA.avatar_url}
-                    latestMessage={
-                      latestPartnerAMessage
-                    }
+                    latestMessage={latestPartnerAMessage}
                     previousCount={
                       previousPartnerAMessages.length
                     }
                     side="left"
                     onPocketClick={() =>
-                      setOpenPocket(
-                        partnerA.user_id,
-                      )
+                      setOpenPocket(partnerA.user_id)
                     }
                     isActive={
                       lastUserMessage?.sender_id ===
@@ -1211,24 +791,13 @@ export default function DebateRoom({
                     <div className="absolute left-1/2 top-0 h-full w-px -translate-x-1/2 bg-gradient-to-b from-transparent via-black/[0.045] to-transparent" />
 
                     <MediatorStage
-                      persona={
-                        personaLabel[
-                        debate.ai_persona
-                        ]
-                      }
-                      isProcessing={
-                        isAiProcessing
-                      }
+                      persona={personaLabel[debate.ai_persona]}
+                      isProcessing={isAiProcessing}
                       hasAiComment={Boolean(
                         latestAiCommentMessage,
                       )}
-                      isPendingVerdict={
-                        isPendingVerdict
-                      }
-                      latestAiMessage={
-                        latestAiCommentMessage
-                      }
-                      onOpenHistory={() => { }}
+                      isPendingVerdict={isPendingVerdict}
+                      onOpenHistory={() => setShowAiMemory(true)}
                     />
                   </div>
 
@@ -1236,17 +805,13 @@ export default function DebateRoom({
                     name={partnerBName}
                     image={neutralEmot}
                     avatarUrl={partnerB.avatar_url}
-                    latestMessage={
-                      latestPartnerBMessage
-                    }
+                    latestMessage={latestPartnerBMessage}
                     previousCount={
                       previousPartnerBMessages.length
                     }
                     side="right"
                     onPocketClick={() =>
-                      setOpenPocket(
-                        partnerB.user_id,
-                      )
+                      setOpenPocket(partnerB.user_id)
                     }
                     isActive={
                       lastUserMessage?.sender_id ===
@@ -1257,233 +822,32 @@ export default function DebateRoom({
 
                 {/* FINAL RESOLUTION */}
 
-                {finalVerdictMessage && (
+                {/* {finalVerdictMessage && (
                   <ResolutionScene
-                    message={
-                      finalVerdictMessage
-                    }
+                    message={finalVerdictMessage}
                   />
-                )}
+                )} */}
               </div>
             )}
           </main>
 
-          {/* ================================================= */}
-          {/* AI ERROR */}
-          {/* ================================================= */}
+          {/* AI ERROR + COMPOSER */}
 
-          {lastAiError && (
-            <div className="relative z-30 shrink-0 border-t border-red-500/[0.08] bg-red-50/70 px-3.5 py-2.5 sm:px-7 sm:py-3">
-              <div className="flex items-center justify-between gap-2 sm:gap-4">
-                <p className="min-w-0 flex-1 truncate text-[9px] leading-5 text-red-500/80 sm:text-[10.5px]">
-                  {requestAiMutation.error?.message ??
-                    'AI failed to respond.'}
-                </p>
-
-                <button
-                  type="button"
-                  onClick={
-                    handleRetryAiComment
-                  }
-                  className="flex shrink-0 items-center gap-1.5 rounded-full px-2 py-1.5 text-[9px] font-semibold text-red-500 transition hover:bg-red-100/70 sm:px-2.5 sm:text-[10px]"
-                >
-                  <RefreshCw
-                    size={10}
-                    strokeWidth={1.8}
-                  />
-
-                  <span className="hidden xs:inline">
-                    Try again
-                  </span>
-
-                  <span className="xs:hidden">
-                    Retry
-                  </span>
-                </button>
-              </div>
-            </div>
-          )}
-
-          {/* ================================================= */}
-          {/* COMPOSER */}
-          {/* ================================================= */}
-
-          {isRoomActive ? (
-            <div className="relative z-30 shrink-0 border-t border-black/[0.045] bg-[#faf9f6]/95 px-3 py-3 backdrop-blur-xl sm:px-6 sm:py-4">
-              <div className="mx-auto max-w-4xl">
-                {/* AI ACTION */}
-
-                <div className="mb-2 flex items-center justify-between gap-2 px-1 sm:mb-2.5 sm:gap-3">
-                  <div className="flex min-w-0 items-center gap-1.5 sm:gap-2">
-                    <button
-                      type="button"
-                      onClick={
-                        handleRequestAiComment
-                      }
-                      disabled={
-                        requestAiMutation.isPending ||
-                        !canRequestAiComment
-                      }
-                      title={getAiButtonTooltip()}
-                      className="group flex h-8 shrink-0 items-center gap-1.5 rounded-full border border-black/[0.055] bg-white px-2.5 text-[9px] font-semibold text-neutral-500 shadow-[0_4px_15px_rgba(0,0,0,0.025)] transition-all hover:-translate-y-0.5 hover:border-black/[0.09] hover:text-neutral-800 disabled:pointer-events-none disabled:opacity-30 sm:px-3 sm:text-[9.5px]"
-                    >
-                      {requestAiMutation.isPending ||
-                        isAiProcessing ? (
-                        <Loader2
-                          size={11}
-                          className="animate-spin"
-                        />
-                      ) : (
-                        <Sparkles
-                          size={11}
-                          strokeWidth={1.8}
-                        />
-                      )}
-
-                      <span className="hidden xs:inline">
-                        Ask Duora AI
-                      </span>
-
-                      <span className="xs:hidden">
-                        AI
-                      </span>
-                    </button>
-
-                    <select
-                      value={
-                        selectedProvider
-                      }
-                      onChange={(e) =>
-                        setSelectedProvider(
-                          e.target
-                            .value as
-                          | 'auto'
-                          | 'openrouter'
-                          | 'groq',
-                        )
-                      }
-                      disabled={
-                        isAiProcessing
-                      }
-                      aria-label="AI provider"
-                      className="h-8 max-w-[80px] cursor-pointer appearance-none rounded-full border border-black/[0.055] bg-white px-2.5 text-[8px] font-medium text-neutral-400 outline-none transition hover:border-black/[0.09] hover:text-neutral-600 disabled:cursor-not-allowed disabled:opacity-40 sm:max-w-none sm:px-3 sm:text-[9px]"
-                    >
-                      <option value="auto">
-                        Auto
-                      </option>
-
-                      <option value="openrouter">
-                        OpenRouter
-                      </option>
-
-                      <option value="groq">
-                        Groq
-                      </option>
-                    </select>
-                  </div>
-
-                  <span className="shrink-0 text-[8px] font-medium text-neutral-300 sm:text-[9px]">
-                    {userMessageCount}/
-                    {debate.max_messages >= 999999
-                      ? '∞'
-                      : debate.max_messages}
-                  </span>
-                </div>
-
-                {/* INPUT */}
-
-                <div className="relative flex items-end gap-1.5 rounded-[1.35rem] border border-black/[0.065] bg-white p-1.5 shadow-[0_10px_35px_rgba(0,0,0,0.045)] transition-all focus-within:border-black/[0.11] focus-within:shadow-[0_14px_45px_rgba(0,0,0,0.065)] sm:gap-2 sm:rounded-[1.6rem]">
-                  <textarea
-                    value={input}
-                    onChange={(e) =>
-                      setInput(e.target.value)
-                    }
-                    onKeyDown={(e) => {
-                      if (
-                        e.key === 'Enter' &&
-                        !e.shiftKey
-                      ) {
-                        e.preventDefault()
-                        handleSend()
-                      }
-                    }}
-                    placeholder={
-                      isAiProcessing
-                        ? 'Waiting for the mediator...'
-                        : "Say what's on your mind..."
-                    }
-                    disabled={
-                      isAiProcessing
-                    }
-                    rows={1}
-                    className="max-h-28 min-h-10 min-w-0 flex-1 resize-none border-0 bg-transparent px-2.5 py-2.5 text-[12px] leading-5 text-neutral-900 outline-none placeholder:text-neutral-300 disabled:cursor-not-allowed disabled:opacity-50 sm:max-h-32 sm:px-3 sm:text-[12.5px]"
-                  />
-
-                  <button
-                    type="button"
-                    onClick={handleSend}
-                    disabled={
-                      !input.trim() ||
-                      sendMessageMutation.isPending ||
-                      isAiProcessing
-                    }
-                    aria-label="Share thought"
-                    className="flex size-10 shrink-0 items-center justify-center rounded-[1rem] bg-neutral-900 text-white shadow-[0_7px_20px_rgba(0,0,0,0.12)] transition-all hover:-translate-y-0.5 hover:bg-black hover:shadow-[0_10px_25px_rgba(0,0,0,0.16)] disabled:pointer-events-none disabled:opacity-20 sm:rounded-[1.15rem]"
-                  >
-                    {sendMessageMutation.isPending ? (
-                      <Loader2
-                        size={14}
-                        className="animate-spin"
-                      />
-                    ) : (
-                      <Send
-                        size={14}
-                        strokeWidth={1.8}
-                      />
-                    )}
-                  </button>
-                </div>
-
-                {/* CONTEXT */}
-
-                <div className="mt-1.5 flex items-center justify-between gap-3 px-2 sm:mt-2">
-                  <p className="hidden text-[8px] text-neutral-300 sm:block sm:text-[8.5px]">
-                    Enter to share · Shift + Enter
-                    for a new line
-                  </p>
-
-                  <p className="text-[7.5px] text-neutral-300 sm:hidden">
-                    Enter to share
-                  </p>
-
-                  {isAiProcessing && (
-                    <p className="min-w-0 truncate text-right text-[7.5px] text-neutral-400 sm:text-[8.5px]">
-                      {isAiRequestedByMe
-                        ? 'The mediator is listening...'
-                        : `${aiRequestedByName?.display_name ?? aiRequestedByName?.username ?? 'Your partner'} invited the mediator`}
-                    </p>
-                  )}
-
-                  {!isAiProcessing &&
-                    hasUserMessage &&
-                    !hasNewMessageSinceLastAiComment && (
-                      <p className="hidden text-right text-[8.5px] text-neutral-300 sm:block">
-                        Share another thought to
-                        invite the mediator again.
-                      </p>
-                    )}
-                </div>
-              </div>
-            </div>
-          ) : (
-            <div className="relative z-30 shrink-0 border-t border-black/[0.045] bg-white/60 px-4 py-3.5 text-center sm:px-5 sm:py-4">
-              <p className="text-[9.5px] text-neutral-400 sm:text-[10.5px]">
-                {isPendingVerdict
-                  ? 'The mediator is preparing your resolution.'
-                  : 'This discussion has ended.'}
-              </p>
-            </div>
-          )}
+          <DebateComposer
+            debateId={debateId}
+            isRoomActive={isRoomActive}
+            isPendingVerdict={isPendingVerdict}
+            isAiProcessing={isAiProcessing}
+            isAiRequestedByMe={isAiRequestedByMe}
+            aiRequesterName={aiRequesterName}
+            userMessageCount={userMessageCount}
+            maxMessages={debate.max_messages}
+            hasUserMessage={hasUserMessage}
+            hasNewMessageSinceLastAiComment={
+              hasNewMessageSinceLastAiComment
+            }
+            canRequestAiComment={canRequestAiComment}
+          />
         </div>
       </div>
 
@@ -1494,9 +858,30 @@ export default function DebateRoom({
           name={pocketName}
           messages={pocketMessages}
           currentUserId={currentUserId}
-          onClose={() =>
-            setOpenPocket(null)
+          onClose={() => setOpenPocket(null)}
+        />
+      )}
+
+      {showAiMemory && aiMemoryMessages.length > 0 && (
+        <AiMemoryPocket
+          messages={aiMemoryMessages}
+          onClose={() => setShowAiMemory(false)}
+        />
+      )}
+
+      {showAiOverlay && (
+        <AiResponseOverlay
+          message={overlayMessage}
+          isProcessing={isAiProcessing}
+          isPendingVerdict={isPendingVerdict}
+          personaName={
+            personaLabel[debate.ai_persona].text
           }
+          requesterName={aiRequesterName}
+          onClose={() => {
+            setShowAiOverlay(false)
+            setAiOverlayMessageId(null)
+          }}
         />
       )}
     </>

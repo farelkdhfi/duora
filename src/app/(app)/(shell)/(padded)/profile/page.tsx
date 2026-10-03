@@ -12,7 +12,6 @@ export default function ProfilePage() {
       <Header
         title='Profile'
         description='Update your name and photos'
-        icon={UserRound}
       />
 
       <div className="mt-6 max-w-2xl space-y-6 sm:mt-8">

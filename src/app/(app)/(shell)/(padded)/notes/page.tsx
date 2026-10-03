@@ -36,7 +36,6 @@ export default function NotesPage() {
             <Header 
             title='notes' 
             description='Keep the little thoughts and moments you want to remember together.' 
-            icon={StickyNote}
             />
 
             <section className="mt-6 sm:mt-8">

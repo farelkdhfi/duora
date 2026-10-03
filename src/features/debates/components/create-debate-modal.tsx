@@ -302,11 +302,6 @@ function PersonaPicker({
                         />
                     </button>
                 </div>
-
-                {/* Swipe hint */}
-                <p className="mt-4 text-center text-xs font-medium uppercase tracking-[0.16em] text-neutral-300">
-                    Swipe to choose
-                </p>
             </div>
         </div>
     )
@@ -375,7 +370,7 @@ export default function CreateDebateModal({
                     <div>
                         <h2
                             id="create-debate-title"
-                            className="mt-1.5 text-[20px] font-semibold tracking-[-0.045em] text-neutral-900 sm:text-[22px]"
+                            className="mt-1.5 text-sm font-semibold tracking-[-0.045em] text-neutral-900 sm:text-[22px]"
                         >
                             What are you disagreeing about?
                         </h2>
@@ -434,7 +429,7 @@ export default function CreateDebateModal({
                     {/* Persona */}
                     <div className="mt-7 overflow-x-hidden">
                         <div className="text-center">
-                            <p className="text-sm font-semibold uppercase text-neutral-700">
+                            <p className="text-sm font-semibold text-neutral-700">
                                 Choose your mediator
                             </p>
 

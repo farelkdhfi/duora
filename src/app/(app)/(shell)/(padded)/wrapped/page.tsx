@@ -101,7 +101,6 @@ export default function WrappedPage() {
       <Header
         title="wrapped"
         description="Turn your shared moments into something worth keeping."
-        icon={Sparkles}
       />
 
       <div className="relative mt-6 sm:mt-8">

@@ -60,7 +60,6 @@ export default function EventList({
       )
     })
 
-
   /* =========================================================
      CALENDAR DATA
   ========================================================= */
@@ -97,7 +96,6 @@ export default function EventList({
     ]
   }, [currentMonth])
 
-
   /* =========================================================
      EVENT DATES
   ========================================================= */
@@ -110,9 +108,7 @@ export default function EventList({
     )
   }, [events])
 
-
   const today = new Date()
-
 
   /* =========================================================
      NAVIGATION
@@ -140,7 +136,6 @@ export default function EventList({
     )
   }
 
-
   /* =========================================================
      LOADING
   ========================================================= */
@@ -149,59 +144,60 @@ export default function EventList({
     return (
       <div className="grid gap-4 md:grid-cols-[0.85fr_1.15fr]">
 
-        {/* Calendar skeleton */}
+        {/* =====================================================
+            LEFT — CALENDAR SKELETON
+        ===================================================== */}
 
-        <div className="animate-pulse rounded-[2rem] bg-[#111111] p-7 md:p-9">
+        <div className="animate-pulse rounded-[2rem] bg-neutral-800 p-7 text-white shadow-[0_25px_70px_rgba(0,0,0,0.10)] md:p-9">
 
-          <div className="h-2.5 w-16 rounded-full bg-white/10" />
+          <div className="flex items-center justify-between">
 
-          <div className="mt-3 h-5 w-32 rounded-lg bg-white/10" />
+            <div>
+              <div className="h-2.5 w-16 rounded-full bg-white/[0.08]" />
 
-          <div className="mt-10 grid grid-cols-7 gap-2">
-            {Array.from({ length: 35 }).map(
-              (_, index) => (
-                <div
-                  key={index}
-                  className="flex justify-center"
-                >
-                  <div className="size-8 rounded-full bg-white/[0.06]" />
-                </div>
-              ),
-            )}
+              <div className="mt-3 h-5 w-32 rounded-lg bg-white/[0.10]" />
+            </div>
+
+            <div className="flex items-center gap-1">
+
+              <div className="size-8 rounded-full bg-white/[0.06]" />
+
+              <div className="size-8 rounded-full bg-white/[0.06]" />
+
+            </div>
+
           </div>
 
-          <div className="mt-10 border-t border-white/[0.07] pt-5">
-            <div className="h-2.5 w-32 rounded-full bg-white/[0.08]" />
-          </div>
+          <div className="mt-10">
 
-        </div>
+            {/* Week days */}
 
+            <div className="grid grid-cols-7 gap-1 text-center">
 
-        {/* Event skeleton */}
-
-        <div className="rounded-[2rem] border border-black/[0.06] bg-white p-3 shadow-[0_25px_70px_rgba(0,0,0,0.05)]">
-
-          <div className="rounded-[1.7rem] bg-[#f8f8f7] p-5 md:p-7">
-
-            <div className="h-2.5 w-28 rounded-full bg-neutral-200" />
-
-            <div className="mt-3 h-5 w-56 rounded-lg bg-neutral-200" />
-
-            <div className="mt-8 space-y-2">
-
-              {[1, 2, 3, 4].map(
-                (item) => (
+              {Array.from({ length: 7 }).map(
+                (_, index) => (
                   <div
-                    key={item}
-                    className="flex items-center gap-4 rounded-[1.25rem] bg-white p-4"
+                    key={index}
+                    className="flex justify-center py-2"
                   >
-                    <div className="size-12 rounded-[1rem] bg-neutral-100" />
+                    <div className="h-2 w-2.5 rounded-full bg-white/[0.07]" />
+                  </div>
+                ),
+              )}
 
-                    <div className="flex-1">
-                      <div className="h-2 w-20 rounded-full bg-neutral-100" />
-                      <div className="mt-2 h-3 w-36 rounded-full bg-neutral-100" />
-                      <div className="mt-2 h-2 w-28 rounded-full bg-neutral-100" />
-                    </div>
+            </div>
+
+            {/* Dates */}
+
+            <div className="mt-1 grid grid-cols-7 gap-y-2">
+
+              {Array.from({ length: 35 }).map(
+                (_, index) => (
+                  <div
+                    key={index}
+                    className="flex justify-center"
+                  >
+                    <div className="size-8 rounded-full bg-white/[0.06]" />
                   </div>
                 ),
               )}
@@ -212,10 +208,84 @@ export default function EventList({
 
         </div>
 
+
+        {/* =====================================================
+            RIGHT — UPCOMING EVENTS SKELETON
+            No wrapper background
+        ===================================================== */}
+
+        <div className="animate-pulse p-1 md:p-2">
+
+          {/* Header */}
+
+          <div className="flex items-center justify-between">
+
+            <div>
+
+              <div className="h-2.5 w-28 rounded-full bg-neutral-200" />
+
+              <div className="mt-3 h-5 w-56 rounded-lg bg-neutral-200" />
+
+            </div>
+
+            <div className="size-10 rounded-full bg-neutral-100" />
+
+          </div>
+
+
+          {/* Event list */}
+
+          <div className="mt-8 space-y-2">
+
+            {[1, 2, 3, 4].map(
+              (item) => (
+                <div
+                  key={item}
+                  className="flex items-center gap-4 rounded-[1.25rem] border border-black/[0.04] bg-white p-4"
+                >
+
+                  <div className="size-12 shrink-0 rounded-[1rem] bg-neutral-100" />
+
+                  <div className="min-w-0 flex-1">
+
+                    <div className="h-2 w-20 rounded-full bg-neutral-100" />
+
+                    <div className="mt-2 h-3 w-36 rounded-full bg-neutral-100" />
+
+                    <div className="mt-2 h-2 w-28 rounded-full bg-neutral-100" />
+
+                  </div>
+
+                  <div className="size-8 shrink-0 rounded-full bg-neutral-100" />
+
+                </div>
+              ),
+            )}
+
+          </div>
+
+
+          {/* Bottom */}
+
+          <div className="mt-4 flex items-center justify-between rounded-[1.4rem] bg-white p-4">
+
+            <div>
+
+              <div className="h-2.5 w-8 rounded-full bg-neutral-100" />
+
+              <div className="mt-2 h-3 w-36 rounded-full bg-neutral-100" />
+
+            </div>
+
+            <div className="size-9 rounded-full bg-neutral-200" />
+
+          </div>
+
+        </div>
+
       </div>
     )
   }
-
 
   /* =========================================================
      ERROR
@@ -260,7 +330,6 @@ export default function EventList({
     )
   }
 
-
   /* =========================================================
      EMPTY
   ========================================================= */
@@ -269,27 +338,32 @@ export default function EventList({
     return (
       <div className="grid gap-4 md:grid-cols-[0.85fr_1.15fr]">
 
-        {/* Calendar */}
+        {/* =====================================================
+            LEFT — CALENDAR
+        ===================================================== */}
 
-        <div className="relative overflow-hidden rounded-[2rem] bg-[#111111] p-7 text-white shadow-[0_25px_70px_rgba(0,0,0,0.10)] md:p-9">
+        <div className="relative overflow-hidden rounded-[2rem] bg-neutral-800 p-7 text-white shadow-[0_25px_70px_rgba(0,0,0,0.10)] md:p-9">
 
           <div className="pointer-events-none absolute -right-20 -top-20 size-64 rounded-full bg-pink-500/[0.10] blur-[90px]" />
 
           <div className="pointer-events-none absolute -bottom-20 -left-10 size-56 rounded-full bg-blue-500/[0.08] blur-[90px]" />
 
           <div className="relative">
-
-            <p className="text-[10px] uppercase tracking-[0.18em] text-white/30">
-              Your month
-            </p>
-
             <h3 className="mt-2 text-xl font-semibold tracking-[-0.04em]">
               {getMonthName(currentMonth)}
             </h3>
 
             <div className="mt-10 grid grid-cols-7 gap-1 text-center">
 
-              {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map(
+              {[
+                'S',
+                'M',
+                'T',
+                'W',
+                'T',
+                'F',
+                'S',
+              ].map(
                 (day, index) => (
                   <span
                     key={`${day}-${index}`}
@@ -320,44 +394,36 @@ export default function EventList({
         </div>
 
 
-        {/* Empty content */}
+        {/* =====================================================
+            RIGHT — EMPTY
+            No wrapper background
+        ===================================================== */}
 
-        <div className="rounded-[2rem] border border-black/[0.06] bg-white p-3 shadow-[0_25px_70px_rgba(0,0,0,0.05)]">
+        <div className="relative flex min-h-[360px] items-center justify-center overflow-hidden p-6 md:p-10">
 
-          <div className="relative overflow-hidden rounded-[1.7rem] bg-[#f8f8f7] p-10 text-center md:p-12">
+          <div className="pointer-events-none absolute -right-16 -top-16 size-40 rounded-full bg-blue-500/[0.06] blur-[80px]" />
 
-            <div className="pointer-events-none absolute -right-16 -top-16 size-40 rounded-full bg-blue-500/[0.06] blur-[80px]" />
+          <div className="pointer-events-none absolute -bottom-16 -left-16 size-40 rounded-full bg-pink-500/[0.07] blur-[80px]" />
 
-            <div className="pointer-events-none absolute -bottom-16 -left-16 size-40 rounded-full bg-pink-500/[0.07] blur-[80px]" />
+          <div className="relative text-center">
 
-            <div className="relative mx-auto flex size-14 items-center justify-center rounded-full bg-white shadow-sm">
+            <div className="mx-auto flex size-14 items-center justify-center rounded-full bg-white shadow-[0_8px_30px_rgba(0,0,0,0.05)]">
+
               <CalendarDays
                 size={22}
                 strokeWidth={1.8}
                 className="text-neutral-400"
               />
+
             </div>
 
-            <p className="relative mt-5 text-[10px] uppercase tracking-[0.18em] text-neutral-400">
+            <p className="mt-5 text-[10px] uppercase tracking-[0.18em] text-neutral-400">
               Nothing planned yet
             </p>
 
-            <h3 className="relative mt-2 text-[16px] font-semibold tracking-[-0.025em]">
+            <h3 className="mt-2 text-[16px] font-semibold tracking-[-0.025em]">
               Give yourselves something to look forward to.
             </h3>
-
-            <p className="relative mx-auto mt-2 max-w-xs text-[13px] leading-relaxed text-neutral-400">
-              Create your first plan and start filling your calendar together.
-            </p>
-
-            <div className="relative mt-5 flex items-center justify-center gap-1.5 text-[11px] font-medium text-neutral-400">
-              <Sparkles
-                size={12}
-                className="text-pink-400"
-              />
-              <span>Make memories together</span>
-            </div>
-
           </div>
 
         </div>
@@ -366,7 +432,6 @@ export default function EventList({
     )
   }
 
-
   /* =========================================================
      MAIN UI
   ========================================================= */
@@ -374,19 +439,17 @@ export default function EventList({
   return (
     <div className="grid gap-4 md:grid-cols-[0.85fr_1.15fr]">
 
-
       {/* =====================================================
           LEFT — CALENDAR
       ===================================================== */}
 
-      <div className="relative overflow-hidden rounded-[2rem] border border-black/[0.06] bg-[#111111] p-7 text-white shadow-[0_25px_70px_rgba(0,0,0,0.10)] md:p-9">
+      <div className="relative overflow-hidden rounded-[2rem] border border-black/[0.06] bg-neutral-800 p-7 text-white shadow-[0_25px_70px_rgba(0,0,0,0.10)] md:p-9">
 
         {/* Ambient */}
 
         <div className="pointer-events-none absolute -right-20 -top-20 size-64 rounded-full bg-pink-500/[0.10] blur-[90px]" />
 
         <div className="pointer-events-none absolute -bottom-20 -left-10 size-56 rounded-full bg-blue-500/[0.08] blur-[90px]" />
-
 
         <div className="relative">
 
@@ -396,16 +459,11 @@ export default function EventList({
 
             <div>
 
-              <p className="text-[10px] uppercase tracking-[0.18em] text-white/30">
-                Your month
-              </p>
-
               <h3 className="mt-2 text-xl font-semibold tracking-[-0.04em]">
                 {getMonthName(currentMonth)}
               </h3>
 
             </div>
-
 
             {/* Navigation */}
 
@@ -430,7 +488,6 @@ export default function EventList({
             </div>
 
           </div>
-
 
           {/* Calendar */}
 
@@ -458,7 +515,6 @@ export default function EventList({
               ))}
 
             </div>
-
 
             {/* Dates */}
 
@@ -537,29 +593,6 @@ export default function EventList({
 
           </div>
 
-
-          {/* Footer */}
-
-          <div className="mt-10 flex items-center gap-3 border-t border-white/[0.07] pt-5">
-
-            <div className="flex -space-x-2">
-
-              <div className="flex size-7 items-center justify-center rounded-full border-2 border-[#111111] bg-blue-400/20 text-[9px]">
-                F
-              </div>
-
-              <div className="flex size-7 items-center justify-center rounded-full border-2 border-[#111111] bg-pink-400/20 text-[9px]">
-                Y
-              </div>
-
-            </div>
-
-            <p className="text-[10px] text-white/30">
-              {events.length} moments planned
-            </p>
-
-          </div>
-
         </div>
 
       </div>
@@ -569,83 +602,19 @@ export default function EventList({
           RIGHT — UPCOMING EVENTS
       ===================================================== */}
 
-      <div className="rounded-[2rem] border border-black/[0.06] bg-white p-3 shadow-[0_25px_70px_rgba(0,0,0,0.05)]">
+      <div className="p-1 md:p-2">
+        {/* Events */}
 
-        <div className="rounded-[1.7rem] bg-[#f8f8f7] p-5 md:p-7">
+        <div className="space-y-2">
 
-          {/* Header */}
-
-          <div className="flex items-center justify-between">
-
-            <div>
-
-              <p className="text-[10px] uppercase tracking-[0.18em] text-neutral-400">
-                Upcoming moments
-              </p>
-
-              <h3 className="mt-2 text-xl font-semibold tracking-[-0.04em]">
-                Things to look forward to.
-              </h3>
-
-            </div>
-
-
-            <div className="flex size-10 items-center justify-center rounded-full bg-white shadow-sm">
-
-              <CalendarDays
-                size={16}
-                className="text-neutral-500"
-              />
-
-            </div>
-
-          </div>
-
-
-          {/* Events */}
-
-          <div className="mt-8 space-y-2">
-
-            {events.map((event) => (
-              <EventCard
-                key={event.id}
-                event={event}
-              />
-            ))}
-
-          </div>
-
-
-          {/* Bottom */}
-
-          <div className="mt-4 flex items-center justify-between rounded-[1.4rem] bg-white p-4">
-
-            <div>
-
-              <p className="text-[10px] text-neutral-400">
-                {getMonthShort(currentMonth)}
-              </p>
-
-              <p className="mt-1 text-sm font-medium tracking-[-0.02em]">
-                {events.length} moments together
-              </p>
-
-            </div>
-
-
-            <button
-              type="button"
-              className="flex size-9 items-center justify-center rounded-full bg-black text-white transition hover:bg-neutral-800"
-            >
-              <ArrowUpRight size={14} />
-            </button>
-
-          </div>
-
+          {events.map((event) => (
+            <EventCard
+              key={event.id}
+              event={event}
+            />
+          ))}
         </div>
-
       </div>
-
     </div>
   )
 }

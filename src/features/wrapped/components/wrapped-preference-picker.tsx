@@ -533,7 +533,7 @@ export function WrappedPreferencePicker({
                     handleApplyCustomColor
                   }
                   disabled={isPending}
-                  className="mt-3 flex h-10 w-full items-center justify-center gap-2 rounded-xl bg-neutral-900 text-xs font-medium text-white transition hover:bg-neutral-800 disabled:opacity-40"
+                  className="mt-3 flex h-11 w-full items-center justify-center gap-2 rounded-full bg-neutral-800 text-xs font-medium text-white transition hover:bg-neutral-800 disabled:opacity-40"
                 >
                   <span>
                     {isPending

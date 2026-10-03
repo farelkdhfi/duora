@@ -165,7 +165,7 @@ export function CountdownList({
                 {countdowns.map((countdown) => (
                     <div
                         key={countdown.id}
-                        className="w-full shrink-0 snap-center px-4 pb-4 sm:px-8"
+                        className="w-full shrink-0 snap-center"
                     >
                         <CountdownCard
                             countdown={countdown}

@@ -130,11 +130,7 @@ export default function SubscriptionPage() {
   return (
     <>
       <main className="min-h-screen bg-[#fafaf9]">
-        <div className="relative mx-auto max-w-5xl overflow-hidden px-4 py-8 sm:px-6 sm:py-10 lg:px-8 lg:py-14">
-          <div className="pointer-events-none absolute left-1/2 top-[-180px] size-[420px] -translate-x-1/2 rounded-full bg-pink-200/20 blur-[110px]" />
-          <div className="pointer-events-none absolute bottom-[180px] right-[-180px] size-[380px] rounded-full bg-blue-200/20 blur-[120px]" />
-          <div className="pointer-events-none absolute left-[-180px] top-[480px] size-[320px] rounded-full bg-pink-100/25 blur-[110px]" />
-
+        <div className="relative mx-auto max-w-5xl overflow-hidden">
           <div className="relative">
             {/* HEADER */}
 

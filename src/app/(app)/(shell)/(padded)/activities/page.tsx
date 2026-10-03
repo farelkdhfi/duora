@@ -34,10 +34,9 @@ export default function ActivitiesPage() {
   return (
     <div>
       {/* HEADER */}
-      <Header 
-      title='Activities'
-      description='See the little moments and activities you share together.'
-      icon={ListChecks}
+      <Header
+        title='Activities'
+        description='See the little moments and activities you share together.'
       />
 
       {/* ACTIVITY FEED */}

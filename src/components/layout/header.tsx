@@ -1,7 +1,7 @@
 import { LucideIcon, Plus } from "lucide-react";
 
 interface HeaderProps {
-    icon: LucideIcon;
+    icon?: LucideIcon;
     title: string;
     description: string;
     action?: {
@@ -14,11 +14,10 @@ const Header = ({ icon: Icon, title, description, action }: HeaderProps) => {
     return (
         <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between sm:gap-6">
             <div>
-                <div className="flex gap-x-2 items-center">
+                <div className="flex items-center gap-x-2">
+                    {Icon && <Icon size={20} className="text-black" />}
 
-                    <Icon size={20} className="text-black" />
-
-                    <h1 className=" text-2xl font-semibold tracking-[-0.04em] text-neutral-800 sm:text-3xl lg:text-4xl capitalize">
+                    <h1 className="text-2xl font-semibold tracking-[-0.04em] text-neutral-800 sm:text-3xl lg:text-4xl capitalize">
                         {title}
                     </h1>
                 </div>

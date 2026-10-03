@@ -27,8 +27,6 @@ import WaitingForPartner from '@/features/dashboard/components/waiting-for-partn
 import DashboardSkeleton from '@/features/dashboard/components/dashboard-skeleton'
 import DashboardGreeting from '@/features/dashboard/components/dashboard-greeting'
 import EmptyPlannerCard from '@/features/dashboard/components/empty-planner-card'
-import YourCheckinCard from '@/features/dashboard/components/your-checkin-card'
-import MiniStatCard from '@/features/dashboard/components/mini-stat-card'
 
 export default function DashboardPage() {
 

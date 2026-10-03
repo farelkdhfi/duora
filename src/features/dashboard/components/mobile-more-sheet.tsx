@@ -9,10 +9,10 @@ import {
   BarChart3,
   Clock3,
   FileText,
-  Goal,
   Heart,
   Loader2,
   LogOut,
+  NotebookPen,
   User2,
   X,
 } from 'lucide-react'
@@ -21,7 +21,7 @@ import Image from 'next/image'
 import { createClient } from '@/lib/supabase/client'
 import { useMyRelationshipDetails } from '@/features/relationship/queries'
 import { PlanBadge } from '@/features/subscription/components/plan-badge'
-import logoImg from '@/assets/duora-logo3.png'
+import logoImg from '@/assets/logo.png'
 
 interface MobileMoreSheetProps {
   open: boolean
@@ -30,10 +30,10 @@ interface MobileMoreSheetProps {
 
 const moreNavigation = [
   {
-    label: 'Goals',
-    description: 'Things you want to achieve together',
-    href: '/goals',
-    icon: Goal,
+    label: 'Notes',
+    description: 'Keep little things worth remembering',
+    href: '/notes',
+    icon: NotebookPen,
   },
   {
     label: 'Check-in',
@@ -141,56 +141,39 @@ export default function MobileMoreSheet({
 
   return (
     <div className="fixed inset-0 z-52 md:hidden">
-      <button
-        type="button"
-        aria-label="Close menu"
-        onClick={onClose}
-        className="absolute inset-0 bg-black/15 backdrop-blur-[6px]"
-      />
+      <button type="button" aria-label="Close menu" onClick={onClose} className="absolute inset-0 bg-black/15 backdrop-blur-[6px]" />
 
-      <div className="absolute inset-x-3 bottom-3 max-h-[88dvh] overflow-y-auto rounded-[2rem] border border-black/[0.07] bg-[#fafaf9]/95 shadow-[0_-25px_70px_-25px_rgba(0,0,0,0.18)] backdrop-blur-2xl backdrop-saturate-150 animate-in slide-in-from-bottom duration-300">
-        <div className="sticky top-0 z-20 bg-[#fafaf9]/90 px-5 pb-3 pt-3 backdrop-blur-xl">
+      <div className="absolute inset-x-3 bottom-3 max-h-[88dvh] overflow-y-auto rounded-[2rem] border border-black/[0.07] bg-white shadow-[0_-25px_70px_-25px_rgba(0,0,0,0.18)] backdrop-blur-2xl backdrop-saturate-150 animate-in slide-in-from-bottom duration-300">
+        <div className="sticky top-0 z-20 bg-white px-5 pb-3 pt-3 backdrop-blur-xl">
           <div className="mx-auto h-1 w-9 rounded-full bg-black/10" />
 
           <div className="mt-5 flex items-center justify-between">
             <div className="flex items-center gap-x-1">
-              <Image
-                src={logoImg}
-                height={20}
-                width={20}
-                alt="logo"
-              />
+              <Image src={logoImg} height={20} width={20} alt="logo" />
 
               <p className="text-[16px] font-bold uppercase text-[#111111]">
                 DUORA
               </p>
             </div>
 
-            <button
-              type="button"
-              onClick={onClose}
-              aria-label="Close menu"
-              className="flex size-9 items-center justify-center rounded-full border border-black/[0.07] bg-black/[0.025] text-black/40 transition hover:bg-black/[0.06] hover:text-black/80 active:scale-95"
-            >
+            <button type="button" onClick={onClose} aria-label="Close menu" className="flex size-9 items-center justify-center rounded-full border border-black/[0.07] bg-black/[0.025] text-black/40 transition hover:bg-black/[0.06] hover:text-black/80 active:scale-95">
               <X size={16} strokeWidth={1.7} />
             </button>
           </div>
         </div>
 
         <div className="px-5 pb-5">
-          <div className="flex items-center justify-between rounded-[1.25rem] border border-black/[0.06] bg-white/70 px-4 py-3 shadow-sm">
-            <div>
-              <p className="text-[9px] font-medium uppercase tracking-[0.14em] text-black/30">
-                Current plan
-              </p>
+          <div className="mb-3 flex items-center justify-between">
+            <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-black/30">
+              Subscription
+            </p>
 
-              <div className="mt-3">
-                <PlanBadge />
-              </div>
-            </div>
-
-            <div className="size-1.5 rounded-full bg-black/20" />
+            <span className="text-[9px] text-black/25">
+              Manage plan
+            </span>
           </div>
+
+          <PlanBadge onNavigate={onClose} />
         </div>
 
         <div className="px-5">
@@ -214,14 +197,7 @@ export default function MobileMoreSheet({
 
               if (disabled) {
                 return (
-                  <div
-                    key={item.href}
-                    className={`flex items-center gap-3.5 px-3.5 py-3.5 opacity-40 ${
-                      index !== moreNavigation.length - 1
-                        ? 'border-b border-black/[0.05]'
-                        : ''
-                    }`}
-                  >
+                  <div key={item.href} className={`flex items-center gap-3.5 px-3.5 py-3.5 opacity-40 ${index !== moreNavigation.length - 1 ? 'border-b border-black/[0.05]' : ''}`}>
                     <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-black/[0.035] text-black/45">
                       <Icon size={17} strokeWidth={1.7} />
                     </div>
@@ -229,10 +205,6 @@ export default function MobileMoreSheet({
                     <div className="min-w-0 flex-1">
                       <p className="text-[12px] font-medium text-black/65">
                         {item.label}
-                      </p>
-
-                      <p className="mt-0.5 truncate text-[10px] text-black/35">
-                        {item.description}
                       </p>
                     </div>
 
@@ -242,62 +214,20 @@ export default function MobileMoreSheet({
               }
 
               return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={onClose}
-                  className={`group flex items-center gap-3.5 px-3.5 py-3.5 transition-all duration-200 active:bg-black/[0.04] ${
-                    index !== moreNavigation.length - 1
-                      ? 'border-b border-black/[0.05]'
-                      : ''
-                  } ${
-                    active
-                      ? 'bg-black/[0.035]'
-                      : 'hover:bg-black/[0.02]'
-                  }`}
-                >
-                  <div
-                    className={`flex size-9 shrink-0 items-center justify-center rounded-xl transition-all duration-200 ${
-                      active
-                        ? 'bg-[#111111] text-white'
-                        : 'bg-black/[0.035] text-black/45 group-hover:bg-black/[0.06] group-hover:text-black/80'
-                    }`}
-                  >
-                    <Icon
-                      size={17}
-                      strokeWidth={active ? 2 : 1.7}
-                    />
+                <Link key={item.href} href={item.href} onClick={onClose} className={`group flex items-center gap-3.5 px-3.5 py-3.5 transition-all duration-200 active:bg-black/[0.04] ${index !== moreNavigation.length - 1 ? 'border-b border-black/[0.05]' : ''} ${active ? 'bg-black/[0.035]' : 'hover:bg-black/[0.02]'}`}>
+                  <div className={`flex size-9 shrink-0 items-center justify-center rounded-xl transition-all duration-200 ${active ? 'bg-white text-black' : 'bg-black/[0.035] text-black/45 group-hover:bg-black/[0.06] group-hover:text-black/80'}`}>
+                    <Icon size={17} strokeWidth={active ? 2 : 1.7} />
                   </div>
 
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2">
-                      <p
-                        className={`text-[12px] font-medium ${
-                          active
-                            ? 'text-[#111111]'
-                            : 'text-black/70'
-                        }`}
-                      >
+                      <p className={`text-[12px] font-medium ${active ? 'text-neutral-800' : 'text-neutral-500'}`}>
                         {item.label}
                       </p>
-
-                      {active && (
-                        <span className="size-1 rounded-full bg-[#111111]" />
-                      )}
                     </div>
-
-                    <p className="mt-0.5 truncate text-[10px] text-black/35">
-                      {item.description}
-                    </p>
                   </div>
 
-                  <div
-                    className={`size-1.5 shrink-0 rounded-full transition ${
-                      active
-                        ? 'bg-[#111111]'
-                        : 'bg-black/10 group-hover:bg-black/20'
-                    }`}
-                  />
+                  <div className={`size-1.5 shrink-0 rounded-full transition ${active ? 'bg-neutral-800' : 'bg-black/10 group-hover:bg-black/20'}`} />
                 </Link>
               )
             })}
@@ -315,19 +245,10 @@ export default function MobileMoreSheet({
         )}
 
         <div className="px-5 pb-[max(1rem,env(safe-area-inset-bottom))] pt-5">
-          <button
-            type="button"
-            onClick={handleLogout}
-            disabled={isLoggingOut}
-            className="flex w-full items-center justify-center gap-2 rounded-[1.2rem] border border-black/[0.06] bg-white/60 px-4 py-3 text-[11px] font-medium text-black/40 shadow-sm transition hover:border-red-400/20 hover:bg-red-50 hover:text-red-500 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:border-black/[0.06] disabled:hover:bg-white/60 disabled:hover:text-black/40"
-          >
+          <button type="button" onClick={handleLogout} disabled={isLoggingOut} className="flex w-full items-center justify-center gap-2 rounded-[1.2rem] border border-black/[0.06] bg-white/60 px-4 py-3 text-[11px] font-medium text-black/40 shadow-sm transition hover:border-red-400/20 hover:bg-red-50 hover:text-red-500 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:border-black/[0.06] disabled:hover:bg-white/60 disabled:hover:text-black/40">
             {isLoggingOut ? (
               <>
-                <Loader2
-                  size={14}
-                  strokeWidth={1.7}
-                  className="animate-spin"
-                />
+                <Loader2 size={14} strokeWidth={1.7} className="animate-spin" />
                 <span>Logging out...</span>
               </>
             ) : (

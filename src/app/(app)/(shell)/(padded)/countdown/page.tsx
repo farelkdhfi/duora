@@ -104,21 +104,10 @@ export default function CountdownPage() {
     };
 
     return (
-        <main className="relative min-h-[100svh] overflow-hidden bg-[#fafaf9]">
-            {/* Ambient background */}
-            <div className="pointer-events-none absolute inset-0 overflow-hidden">
-                <div className="absolute -left-32 -top-32 size-96 rounded-full bg-pink-100/30 blur-[100px]" />
-                <div className="absolute -right-32 top-20 size-[28rem] rounded-full bg-blue-100/30 blur-[110px]" />
-                <div className="absolute bottom-[-10rem] left-1/2 size-[30rem] -translate-x-1/2 rounded-full bg-purple-100/20 blur-[120px]" />
-            </div>
-
+        <main className="relative min-h-[100svh] overflow-hidden">
             {/* Top minimal navigation */}
             <div className="relative z-10 flex items-center justify-between px-5 py-5 sm:px-8 sm:py-7">
                 <div>
-                    <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-neutral-300">
-                        Duora
-                    </p>
-
                     <h1 className="mt-1 text-sm font-semibold tracking-[-0.025em] text-neutral-700 sm:text-base">
                         Countdown
                     </h1>

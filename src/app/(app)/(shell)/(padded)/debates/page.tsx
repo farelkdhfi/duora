@@ -45,13 +45,8 @@ export default function DebatesPage() {
 
   return (
     <div className="relative min-h-full overflow-hidden">
-      <div className="pointer-events-none absolute -right-32 -top-32 size-72 rounded-full bg-pink-300/[0.07] blur-[100px]" />
-      <div className="pointer-events-none absolute -left-32 top-[35%] size-72 rounded-full bg-blue-300/[0.055] blur-[100px]" />
-      <div className="pointer-events-none absolute bottom-0 left-1/2 size-64 -translate-x-1/2 rounded-full bg-[#eadfce]/[0.08] blur-[90px]" />
-
       <div className="relative">
-        <Header title="AI Debates" description="Discuss things you disagree on with the help of a neutral AI mediator." icon={ChartBarDecreasing} />
-
+<Header title="AI Debates" description="Resolve disagreements with a neutral AI mediator." />
         <section className="mt-6 sm:mt-8">
           <DebateList relationshipId={relationshipId} />
         </section>

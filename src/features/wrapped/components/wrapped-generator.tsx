@@ -321,7 +321,7 @@ export function WrappedGenerator({
                   isGenerating ||
                   isLoading
                 }
-                className="flex h-11 items-center justify-center gap-2 rounded-xl border border-black/[0.07] bg-white text-xs font-medium text-neutral-700 shadow-sm transition hover:bg-neutral-50 hover:text-neutral-900 disabled:cursor-not-allowed disabled:opacity-40"
+                className="flex h-11 items-center justify-center gap-2 rounded-full border border-black/[0.07] bg-white text-xs font-medium text-neutral-700 shadow-sm transition hover:bg-neutral-50 hover:text-neutral-900 disabled:cursor-not-allowed disabled:opacity-40"
               >
                 <Download size={14} />
 
@@ -337,7 +337,7 @@ export function WrappedGenerator({
                   isGenerating ||
                   isLoading
                 }
-                className="flex h-11 items-center justify-center gap-2 rounded-xl bg-neutral-900 text-xs font-medium text-white shadow-[0_10px_30px_-15px_rgba(0,0,0,0.5)] transition hover:bg-neutral-800 disabled:cursor-not-allowed disabled:opacity-40"
+                className="flex h-11 items-center justify-center gap-2 rounded-full bg-neutral-800 text-xs font-medium text-white shadow-[0_10px_30px_-15px_rgba(0,0,0,0.5)] transition hover:bg-neutral-800 disabled:cursor-not-allowed disabled:opacity-40"
               >
                 <Share2 size={14} />
 

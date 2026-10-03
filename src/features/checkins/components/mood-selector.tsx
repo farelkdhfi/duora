@@ -1,5 +1,7 @@
 'use client'
 
+import { useRef, useState } from 'react'
+
 import type { Mood } from '../types'
 
 import happyEmot from '@/assets/emoticon/happy-emot.png'
@@ -25,7 +27,7 @@ const moods: {
     image: happyEmot,
     label: 'Happy',
     accent: 'bg-pink-400',
-    glow: 'bg-pink-400/[0.10]',
+    glow: 'bg-pink-400/[0.12]',
   },
   {
     value: 'neutral',
@@ -39,218 +41,89 @@ const moods: {
     image: sadEmot,
     label: 'Sad',
     accent: 'bg-blue-400',
-    glow: 'bg-blue-400/[0.10]',
+    glow: 'bg-blue-400/[0.11]',
   },
   {
     value: 'tired',
     image: tiredEmot,
     label: 'Tired',
     accent: 'bg-indigo-400',
-    glow: 'bg-indigo-400/[0.09]',
+    glow: 'bg-indigo-400/[0.10]',
   },
   {
     value: 'stressed',
     image: stressedEmot,
     label: 'Stressed',
     accent: 'bg-rose-400',
-    glow: 'bg-rose-400/[0.09]',
+    glow: 'bg-rose-400/[0.10]',
   },
 ]
 
-export default function MoodSelector({
-  value,
-  onChange,
-}: MoodSelectorProps) {
+export default function MoodSelector({ value, onChange }: MoodSelectorProps) {
+  const activeIndex = moods.findIndex((mood) => mood.value === value)
+  const currentMood = moods[activeIndex] ?? moods[0]
+
+  const startX = useRef(0)
+  const [dragging, setDragging] = useState(false)
+
+  const changeMood = (direction: 1 | -1) => {
+    const nextIndex = activeIndex + direction
+
+    if (nextIndex < 0 || nextIndex >= moods.length) return
+
+    onChange(moods[nextIndex].value)
+  }
+
+  const handlePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
+    startX.current = event.clientX
+    setDragging(true)
+    event.currentTarget.setPointerCapture(event.pointerId)
+  }
+
+  const handlePointerUp = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (!dragging) return
+
+    const distance = event.clientX - startX.current
+    const threshold = 45
+
+    if (Math.abs(distance) >= threshold) {
+      changeMood(distance < 0 ? 1 : -1)
+    }
+
+    setDragging(false)
+  }
+
+  const handlePointerCancel = () => {
+    setDragging(false)
+  }
+
   return (
-    <div
-      className="
-        grid
-        grid-cols-3
-        gap-2
+    <div className="w-full">
+      <div role="group" aria-label="Mood selector" onPointerDown={handlePointerDown} onPointerUp={handlePointerUp} onPointerCancel={handlePointerCancel} className={`relative flex min-h-[330px] w-full touch-pan-y select-none items-center justify-center overflow-hidden outline-none sm:min-h-[380px] ${dragging ? 'cursor-grabbing' : 'cursor-grab'}`}>
+        <div className={`relative flex flex-col items-center justify-center transition-transform duration-200 ${dragging ? 'scale-[0.96]' : 'scale-100'}`}>
+          <div className="flex size-56 items-center justify-center sm:size-64">
+            <img src={currentMood.image.src} alt={currentMood.label} draggable={false} className="h-56 w-56 object-contain drop-shadow-[0_18px_28px_rgba(0,0,0,0.10)] transition-all duration-500 sm:h-56 sm:w-56" />
+          </div>
 
-        sm:grid-cols-5
-        sm:gap-2.5
+          <span className="mt-2 text-[30px] font-medium tracking-[-0.055em] text-neutral-900 sm:text-[34px]">
+            {currentMood.label}
+          </span>
 
-        lg:gap-3
-      "
-    >
-      {moods.map((mood) => {
-        const selected = value === mood.value
+          <span className="mt-2 text-[11px] font-medium tracking-[-0.01em] text-neutral-400">
+            Swipe to change
+          </span>
+        </div>
+      </div>
 
-        return (
-          <button
-            key={mood.value}
-            type="button"
-            onClick={() => onChange(mood.value)}
-            aria-pressed={selected}
-            className={`
-              group
-              relative
-              flex
-              min-h-[100px]
-              w-full
-              flex-col
-              items-center
-              justify-center
-              overflow-hidden
-              rounded-[1.15rem]
-              border
-              px-2
-              py-3
-              outline-none
-              transition-all
-              duration-300
+      <div className="mt-5 flex items-center justify-center gap-1.5">
+        {moods.map((mood, index) => {
+          const selected = index === activeIndex
 
-              sm:min-h-[112px]
-              sm:rounded-[1.25rem]
-              sm:px-3
-              sm:py-4
-
-              lg:min-h-[118px]
-
-              focus-visible:ring-4
-              focus-visible:ring-black/[0.04]
-
-              active:scale-[0.98]
-
-              ${
-                selected
-                  ? `
-                    border-black/[0.09]
-                    bg-white
-                    shadow-[0_12px_30px_-18px_rgba(0,0,0,0.25)]
-                    -translate-y-0.5
-                  `
-                  : `
-                    border-black/[0.04]
-                    bg-white/60
-
-                    hover:-translate-y-0.5
-                    hover:border-black/[0.07]
-                    hover:bg-white
-                    hover:shadow-[0_10px_25px_-18px_rgba(0,0,0,0.20)]
-                  `
-              }
-            `}
-          >
-            {/* ================================================= */}
-            {/* AMBIENT */}
-            {/* ================================================= */}
-
-            {selected && (
-              <div
-                className={`
-                  pointer-events-none
-                  absolute
-                  -right-8
-                  -top-8
-                  size-20
-                  rounded-full
-                  blur-[28px]
-                  ${mood.glow}
-                `}
-              />
-            )}
-
-            {/* ================================================= */}
-            {/* EMOTICON */}
-            {/* ================================================= */}
-
-            <div
-              className="
-                relative
-                flex
-                h-11
-                items-center
-                justify-center
-
-                sm:h-14
-              "
-            >
-              <img
-                src={mood.image.src}
-                alt={mood.label}
-                className={`
-                  object-contain
-                  transition-all
-                  duration-300
-
-                  ${
-                    selected
-                      ? `
-                        h-11
-                        w-11
-                        sm:h-14
-                        sm:w-14
-                      `
-                      : `
-                        h-9
-                        w-9
-                        opacity-65
-                        grayscale-[20%]
-
-                        sm:h-11
-                        sm:w-11
-
-                        group-hover:scale-105
-                        group-hover:opacity-90
-                      `
-                  }
-                `}
-              />
-            </div>
-
-            {/* ================================================= */}
-            {/* LABEL */}
-            {/* ================================================= */}
-
-            <span
-              className={`
-                relative
-                mt-2
-                text-center
-                text-[9px]
-                leading-none
-                tracking-[-0.01em]
-                transition-colors
-                duration-200
-
-                sm:mt-2.5
-                sm:text-[10px]
-
-                ${
-                  selected
-                    ? 'font-semibold text-neutral-800'
-                    : 'font-medium text-neutral-400 group-hover:text-neutral-600'
-                }
-              `}
-            >
-              {mood.label}
-            </span>
-
-            {/* ================================================= */}
-            {/* SELECTED INDICATOR */}
-            {/* ================================================= */}
-
-            <span
-              className={`
-                relative
-                mt-2.5
-                size-1
-                rounded-full
-                transition-all
-                duration-300
-
-                ${
-                  selected
-                    ? `${mood.accent} opacity-100`
-                    : 'scale-0 opacity-0'
-                }
-              `}
-            />
-          </button>
-        )
-      })}
+          return (
+            <button key={mood.value} type="button" aria-label={`Select ${mood.label}`} onClick={() => onChange(mood.value)} className={`h-1.5 rounded-full transition-all duration-300 ${selected ? `w-6 ${mood.accent}` : 'w-1.5 bg-neutral-200 hover:bg-neutral-300'}`} />
+          )
+        })}
+      </div>
     </div>
   )
 }

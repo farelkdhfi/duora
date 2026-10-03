@@ -137,16 +137,6 @@ export default function PlannerSummaryCard({
               </p>
             </div>
           )}
-
-          <div className="relative mt-3 flex items-center justify-between border-t border-black/[0.05] pt-3">
-            <span className="text-[10px] uppercase tracking-[0.14em] text-neutral-300">
-              Shared planner
-            </span>
-
-            <Link href="/planner" className="text-[10px] font-medium text-neutral-300 transition-colors hover:text-neutral-500">
-              View planner
-            </Link>
-          </div>
         </div>
       </div>
     </div>

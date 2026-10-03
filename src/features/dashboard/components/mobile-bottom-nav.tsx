@@ -9,6 +9,8 @@ import {
   MoreHorizontal,
   Notebook,
   NotebookPen,
+  PiggyBank,
+  Target,
 } from 'lucide-react'
 
 interface MobileBottomNavProps {
@@ -25,8 +27,8 @@ const navigation = [
     icon: CalendarDays,
   },
   {
-    href: '/notes',
-    icon: Notebook,
+    href: '/goals',
+    icon: PiggyBank,
   },
 ]
 
