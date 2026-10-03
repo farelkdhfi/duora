@@ -3,11 +3,11 @@
 import { useState } from 'react'
 import { ChevronDown, X } from 'lucide-react'
 
-import happyEmot from '@/assets/emoticon/happy-emot.png'
-import neutralEmot from '@/assets/emoticon/neutral-emot.png'
-import sadEmot from '@/assets/emoticon/sad-emot.png'
-import tiredEmot from '@/assets/emoticon/tired-emot.png'
-import stressedEmot from '@/assets/emoticon/stressed-emot.png'
+import happyEmot from '@/assets/emoticon/happy-fluffy.png'
+import neutralEmot from '@/assets/emoticon/neutral-fluffy.png'
+import sadEmot from '@/assets/emoticon/sad-fluffy.png'
+import tiredEmot from '@/assets/emoticon/tired-fluffy.png'
+import stressedEmot from '@/assets/emoticon/stressed-fluffy.png'
 
 import { useCheckinHistoryEntries } from '../queries'
 import type { Mood } from '../types'

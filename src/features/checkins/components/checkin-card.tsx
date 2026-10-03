@@ -3,11 +3,11 @@
 import { useState } from 'react'
 import { ChevronDown, History } from 'lucide-react'
 
-import happyEmot from '@/assets/emoticon/happy-emot.png'
-import neutralEmot from '@/assets/emoticon/neutral-emot.png'
-import sadEmot from '@/assets/emoticon/sad-emot.png'
-import tiredEmot from '@/assets/emoticon/tired-emot.png'
-import stressedEmot from '@/assets/emoticon/stressed-emot.png'
+import happyEmot from '@/assets/emoticon/happy-fluffy.png'
+import neutralEmot from '@/assets/emoticon/neutral-fluffy.png'
+import sadEmot from '@/assets/emoticon/sad-fluffy.png'
+import tiredEmot from '@/assets/emoticon/tired-fluffy.png'
+import stressedEmot from '@/assets/emoticon/stressed-fluffy.png'
 
 import { useCheckinHistoryEntries } from '../queries'
 import { CheckinHistoryModal } from './checkin-history-modal'
@@ -125,7 +125,7 @@ export default function CheckinCard({ checkin, name }: CheckinCardProps) {
           >
             {/* Mood */}
             <div className={``}>
-              <img src={mood.image.src} alt="" className="size-20 object-contain sm:size-9" />
+              <img src={mood.image.src} alt="" className="size-20 brightness-110 object-contain sm:size-9" />
             </div>
 
             {/* Name + date */}

@@ -4,11 +4,11 @@ import { useRef, useState } from 'react'
 
 import type { Mood } from '../types'
 
-import happyEmot from '@/assets/emoticon/happy-emot.png'
-import neutralEmot from '@/assets/emoticon/neutral-emot.png'
-import sadEmot from '@/assets/emoticon/sad-emot.png'
-import tiredEmot from '@/assets/emoticon/tired-emot.png'
-import stressedEmot from '@/assets/emoticon/stressed-emot.png'
+import happyEmot from '@/assets/emoticon/happy-fluffy.png'
+import neutralEmot from '@/assets/emoticon/neutral-fluffy.png'
+import sadEmot from '@/assets/emoticon/sad-fluffy.png'
+import tiredEmot from '@/assets/emoticon/tired-fluffy.png'
+import stressedEmot from '@/assets/emoticon/stressed-fluffy.png'
 
 interface MoodSelectorProps {
   value: Mood
@@ -20,42 +20,36 @@ const moods: {
   image: typeof happyEmot
   label: string
   accent: string
-  glow: string
 }[] = [
   {
     value: 'happy',
     image: happyEmot,
     label: 'Happy',
     accent: 'bg-pink-400',
-    glow: 'bg-pink-400/[0.12]',
   },
   {
     value: 'neutral',
     image: neutralEmot,
     label: 'Neutral',
     accent: 'bg-neutral-400',
-    glow: 'bg-neutral-400/[0.08]',
   },
   {
     value: 'sad',
     image: sadEmot,
     label: 'Sad',
     accent: 'bg-blue-400',
-    glow: 'bg-blue-400/[0.11]',
   },
   {
     value: 'tired',
     image: tiredEmot,
     label: 'Tired',
     accent: 'bg-indigo-400',
-    glow: 'bg-indigo-400/[0.10]',
   },
   {
     value: 'stressed',
     image: stressedEmot,
     label: 'Stressed',
     accent: 'bg-rose-400',
-    glow: 'bg-rose-400/[0.10]',
   },
 ]
 
@@ -98,14 +92,15 @@ export default function MoodSelector({ value, onChange }: MoodSelectorProps) {
   }
 
   return (
-    <div className="w-full">
-      <div role="group" aria-label="Mood selector" onPointerDown={handlePointerDown} onPointerUp={handlePointerUp} onPointerCancel={handlePointerCancel} className={`relative flex min-h-[330px] w-full touch-pan-y select-none items-center justify-center overflow-hidden outline-none sm:min-h-[380px] ${dragging ? 'cursor-grabbing' : 'cursor-grab'}`}>
-        <div className={`relative flex flex-col items-center justify-center transition-transform duration-200 ${dragging ? 'scale-[0.96]' : 'scale-100'}`}>
-          <div className="flex size-56 items-center justify-center sm:size-64">
-            <img src={currentMood.image.src} alt={currentMood.label} draggable={false} className="h-56 w-56 object-contain drop-shadow-[0_18px_28px_rgba(0,0,0,0.10)] transition-all duration-500 sm:h-56 sm:w-56" />
+    <div className="relative w-full overflow-visible">
+      <div role="group" aria-label="Mood selector" onPointerDown={handlePointerDown} onPointerUp={handlePointerUp} onPointerCancel={handlePointerCancel} className={`relative flex min-h-[360px] w-full touch-pan-y select-none items-center justify-center overflow-visible outline-none sm:min-h-[410px] ${dragging ? 'cursor-grabbing' : 'cursor-grab'}`}>
+        <div className={`relative flex flex-col items-center justify-center transition-transform duration-300 ease-out ${dragging ? 'scale-[0.97]' : 'scale-100'}`}>
+          <div className="relative flex h-[270px] w-64 items-center justify-center sm:h-[300px] sm:w-72">
+            <div className={`pointer-events-none absolute bottom-[20px] left-1/2 z-0 h-[18px] w-[145px] -translate-x-1/2 rounded-[50%] bg-black/[0.16] blur-[14px] transition-all duration-500 sm:bottom-[20px] sm:h-[21px] sm:w-[170px] ${dragging ? 'scale-x-75 opacity-50' : 'scale-x-100 opacity-100'}`} />
+            <img src={currentMood.image.src} alt={currentMood.label} draggable={false} className={`relative z-10 h-56 w-56 object-contain transition-transform duration-500 ease-out sm:h-60 sm:w-60 ${dragging ? 'translate-y-2' : '-translate-y-2'}`} />
           </div>
 
-          <span className="mt-2 text-[30px] font-medium tracking-[-0.055em] text-neutral-900 sm:text-[34px]">
+          <span className="mt-0 text-[30px] font-medium tracking-[-0.055em] text-neutral-900 sm:text-[34px]">
             {currentMood.label}
           </span>
 
@@ -120,7 +115,7 @@ export default function MoodSelector({ value, onChange }: MoodSelectorProps) {
           const selected = index === activeIndex
 
           return (
-            <button key={mood.value} type="button" aria-label={`Select ${mood.label}`} onClick={() => onChange(mood.value)} className={`h-1.5 rounded-full transition-all duration-300 ${selected ? `w-6 ${mood.accent}` : 'w-1.5 bg-neutral-200 hover:bg-neutral-300'}`} />
+            <button key={mood.value} type="button" aria-label={`Select ${mood.label}`} onClick={() => onChange(mood.value)} className={`h-1.5 rounded-full transition-all duration-300 ${selected ? `w-6 ${mood.accent}` : 'w-1.5 bg-neutral-300/70 hover:bg-neutral-400'}`} />
           )
         })}
       </div>
