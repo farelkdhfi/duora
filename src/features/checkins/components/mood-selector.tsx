@@ -35,37 +35,37 @@ const moods: {
   label: string
   accent: string
 }[] = [
-  {
-    value: 'happy',
-    images: [happyEmot1, happyEmot2, happyEmot3],
-    label: 'Happy',
-    accent: 'bg-pink-400',
-  },
-  {
-    value: 'neutral',
-    images: [neutralEmot1, neutralEmot2, neutralEmot3],
-    label: 'Neutral',
-    accent: 'bg-neutral-400',
-  },
-  {
-    value: 'sad',
-    images: [sadEmot1, sadEmot2, sadEmot3],
-    label: 'Sad',
-    accent: 'bg-blue-400',
-  },
-  {
-    value: 'tired',
-    images: [tiredEmot1, tiredEmot2, tiredEmot3],
-    label: 'Tired',
-    accent: 'bg-indigo-400',
-  },
-  {
-    value: 'stressed',
-    images: [stressedEmot1, stressedEmot2, stressedEmot3],
-    label: 'Stressed',
-    accent: 'bg-rose-400',
-  },
-]
+    {
+      value: 'happy',
+      images: [happyEmot1, happyEmot2, happyEmot3],
+      label: 'Happy',
+      accent: 'bg-pink-400',
+    },
+    {
+      value: 'neutral',
+      images: [neutralEmot1, neutralEmot2, neutralEmot3],
+      label: 'Neutral',
+      accent: 'bg-neutral-400',
+    },
+    {
+      value: 'sad',
+      images: [sadEmot1, sadEmot2, sadEmot3],
+      label: 'Sad',
+      accent: 'bg-blue-400',
+    },
+    {
+      value: 'tired',
+      images: [tiredEmot1, tiredEmot2, tiredEmot3],
+      label: 'Tired',
+      accent: 'bg-indigo-400',
+    },
+    {
+      value: 'stressed',
+      images: [stressedEmot1, stressedEmot2, stressedEmot3],
+      label: 'Stressed',
+      accent: 'bg-rose-400',
+    },
+  ]
 
 export default function MoodSelector({
   value,
@@ -197,23 +197,20 @@ export default function MoodSelector({
         onPointerDown={handlePointerDown}
         onPointerUp={handlePointerUp}
         onPointerCancel={handlePointerCancel}
-        className={`relative flex min-h-[360px] w-full touch-pan-y select-none items-center justify-center overflow-visible outline-none sm:min-h-[410px] ${
-          dragging ? 'cursor-grabbing' : 'cursor-grab'
-        }`}
+        className={`relative flex min-h-[360px] w-full touch-pan-y select-none items-center justify-center overflow-visible outline-none sm:min-h-[410px] ${dragging ? 'cursor-grabbing' : 'cursor-grab'
+          }`}
       >
         <div
-          className={`relative flex flex-col items-center justify-center transition-transform duration-300 ease-out ${
-            dragging ? 'scale-[0.97]' : 'scale-100'
-          }`}
+          className={`relative flex flex-col items-center justify-center transition-transform duration-300 ease-out ${dragging ? 'scale-[0.97]' : 'scale-100'
+            }`}
         >
           <div className="relative flex h-[270px] w-64 items-center justify-center sm:h-[300px] sm:w-72">
             {/* Shadow */}
             <div
-              className={`pointer-events-none absolute bottom-[20px] left-1/2 z-0 h-[18px] w-[145px] -translate-x-1/2 rounded-[50%] bg-black/[0.16] blur-[14px] transition-all duration-500 sm:bottom-[20px] sm:h-[21px] sm:w-[170px] ${
-                dragging
+              className={`pointer-events-none absolute bottom-[20px] left-1/2 z-0 h-[18px] w-[145px] -translate-x-1/2 rounded-[50%] bg-black/[0.16] blur-[14px] transition-all duration-500 sm:bottom-[20px] sm:h-[21px] sm:w-[170px] ${dragging
                   ? 'scale-x-75 opacity-50'
                   : 'scale-x-100 opacity-100'
-              }`}
+                }`}
             />
 
             {/* Loading indicator */}
@@ -225,22 +222,20 @@ export default function MoodSelector({
 
             {/* Mood images */}
             <div
-              className={`relative z-10 h-56 w-56 transition-transform duration-500 ease-out sm:h-60 sm:w-60 ${
-                dragging
+              className={`relative z-10 h-56 w-56 transition-transform duration-500 ease-out sm:h-60 sm:w-60 ${dragging
                   ? 'translate-y-2'
                   : '-translate-y-2'
-              }`}
+                }`}
             >
               {/* Current image */}
               <img
                 src={currentImage.src}
                 alt={currentMood.label}
                 draggable={false}
-                className={`absolute inset-0 h-full w-full object-contain transition-opacity duration-[900ms] ease-in-out ${
-                  currentImageLoaded
+                className={`absolute inset-0 h-full w-full animate-mood-float object-contain transition-opacity duration-[900ms] ease-in-out ${currentImageLoaded
                     ? 'opacity-100'
                     : 'opacity-0'
-                }`}
+                  }`}
               />
 
               {/* Next image preload / dissolve layer */}
@@ -277,11 +272,10 @@ export default function MoodSelector({
               aria-label={`Select ${mood.label}`}
               aria-pressed={selected}
               onClick={() => onChange(mood.value)}
-              className={`h-1.5 rounded-full transition-all duration-300 ${
-                selected
+              className={`h-1.5 rounded-full transition-all duration-300 ${selected
                   ? `w-6 ${mood.accent}`
                   : 'w-1.5 bg-neutral-300/70 hover:bg-neutral-400'
-              }`}
+                }`}
             />
           )
         })}
