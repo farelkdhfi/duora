@@ -4,11 +4,11 @@ import { useRef, useState } from 'react'
 
 import type { Mood } from '../types'
 
-import happyEmot from '@/assets/emoticon/happy-fluffy.png'
-import neutralEmot from '@/assets/emoticon/neutral-fluffy.png'
-import sadEmot from '@/assets/emoticon/sad-fluffy.png'
-import tiredEmot from '@/assets/emoticon/tired-fluffy.png'
-import stressedEmot from '@/assets/emoticon/stressed-fluffy.png'
+import happyEmot from '@/assets/emoticon/happy-fluffy.webp'
+import neutralEmot from '@/assets/emoticon/neutral-fluffy.webp'
+import sadEmot from '@/assets/emoticon/sad-fluffy.webp'
+import tiredEmot from '@/assets/emoticon/tired-fluffy.webp'
+import stressedEmot from '@/assets/emoticon/stressed-fluffy.webp'
 
 interface MoodSelectorProps {
   value: Mood
