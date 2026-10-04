@@ -4,21 +4,25 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { ArrowUpRight, Heart } from 'lucide-react'
 
-import happyEmot1 from '@/assets/emoticon/happy-emot.png'
-import happyEmot2 from '@/assets/emoticon/happy-emot-2.png'
-import happyEmot3 from '@/assets/emoticon/happy-emot-3.png'
+import happyEmot1 from '@/assets/emoticon/happy-fluffy.webp'
+import happyEmot2 from '@/assets/emoticon/happy-fluffy-2.webp'
+import happyEmot3 from '@/assets/emoticon/happy-fluffy-3.webp'
 
-import neutralEmot from '@/assets/emoticon/neutral-emot.png'
+import neutralEmot1 from '@/assets/emoticon/neutral-fluffy.webp'
+import neutralEmot2 from '@/assets/emoticon/neutral-fluffy-2.webp'
+import neutralEmot3 from '@/assets/emoticon/neutral-fluffy-3.webp'
 
-import sadEmot from '@/assets/emoticon/sad-emot.png'
+import sadEmot1 from '@/assets/emoticon/sad-fluffy.webp'
+import sadEmot2 from '@/assets/emoticon/sad-fluffy-2.webp'
+import sadEmot3 from '@/assets/emoticon/sad-fluffy-3.webp'
 
-import tiredEmot1 from '@/assets/emoticon/tired-emot.png'
-import tiredEmot2 from '@/assets/emoticon/tired-emot-2.png'
-import tiredEmot3 from '@/assets/emoticon/tired-emot-3.png'
+import tiredEmot1 from '@/assets/emoticon/tired-fluffy.webp'
+import tiredEmot2 from '@/assets/emoticon/tired-fluffy-2.webp'
+import tiredEmot3 from '@/assets/emoticon/tired-fluffy-3.webp'
 
-import stressedEmot1 from '@/assets/emoticon/stressed-emot.png'
-import stressedEmot2 from '@/assets/emoticon/stressed-emot-2.png'
-import stressedEmot3 from '@/assets/emoticon/stressed-emot-3.png'
+import stressedEmot1 from '@/assets/emoticon/stressed-fluffy.webp'
+import stressedEmot2 from '@/assets/emoticon/stressed-fluffy-2.webp'
+import stressedEmot3 from '@/assets/emoticon/stressed-fluffy-3.webp'
 
 import type { DailyCheckin, Mood } from '@/features/checkins/types'
 
@@ -33,6 +37,18 @@ const happyEmotVariants = [
   happyEmot1,
   happyEmot2,
   happyEmot3,
+]
+
+const neutralEmotVariants = [
+  neutralEmot1,
+  neutralEmot2,
+  neutralEmot3,
+]
+
+const sadEmotVariants = [
+  sadEmot1,
+  sadEmot2,
+  sadEmot3,
 ]
 
 const tiredEmotVariants = [
@@ -64,14 +80,14 @@ const moodInfo: Record<
   },
 
   neutral: {
-    image: neutralEmot,
+    image: neutralEmot1,
     badge: 'bg-neutral-100/80',
     text: 'text-neutral-500',
     glow: 'bg-neutral-100/50',
   },
 
   sad: {
-    image: sadEmot,
+    image: sadEmot1,
     badge: 'bg-blue-50/80',
     text: 'text-blue-500',
     glow: 'bg-blue-100/40',
@@ -94,8 +110,8 @@ const moodInfo: Record<
 
 const emotVariants: Record<Mood, typeof happyEmot1[]> = {
   happy: happyEmotVariants,
-  neutral: [neutralEmot],
-  sad: [sadEmot],
+  neutral: neutralEmotVariants,
+  sad: sadEmotVariants,
   tired: tiredEmotVariants,
   stressed: stressedEmotVariants,
 }
@@ -358,7 +374,7 @@ function MoodItem({
         {role}
       </p>
 
-      <div className="relative flex size-[68px] items-center justify-center">
+      <div className="relative flex size-[80px] items-center justify-center">
         <svg
           className="pointer-events-none absolute inset-0 size-full"
           viewBox="0 0 100 100"
@@ -439,7 +455,7 @@ export default function PartnerCheckinCard({
       </div>
 
       <div className="relative mt-5 flex gap-2.5">
-        <div className="pointer-events-none absolute bottom-4 left-1/2 top-4 z-10 w-1 rounded-full bg-neutral-200" />
+        <div className="pointer-events-none absolute bottom-4 left-1/2 top-4 z-10 w-[1px] rounded-full bg-neutral-400" />
 
         <MoodItem
           role="You"

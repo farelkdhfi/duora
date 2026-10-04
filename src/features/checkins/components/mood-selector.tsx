@@ -4,11 +4,25 @@ import { useEffect, useRef, useState } from 'react'
 
 import type { Mood } from '../types'
 
-import happyEmot from '@/assets/emoticon/happy-fluffy.webp'
-import neutralEmot from '@/assets/emoticon/neutral-fluffy.webp'
-import sadEmot from '@/assets/emoticon/sad-fluffy.webp'
-import tiredEmot from '@/assets/emoticon/tired-fluffy.webp'
-import stressedEmot from '@/assets/emoticon/stressed-fluffy.webp'
+import happyEmot1 from '@/assets/emoticon/happy-fluffy.webp'
+import happyEmot2 from '@/assets/emoticon/happy-fluffy-2.webp'
+import happyEmot3 from '@/assets/emoticon/happy-fluffy-3.webp'
+
+import neutralEmot1 from '@/assets/emoticon/neutral-fluffy.webp'
+import neutralEmot2 from '@/assets/emoticon/neutral-fluffy-2.webp'
+import neutralEmot3 from '@/assets/emoticon/neutral-fluffy-3.webp'
+
+import sadEmot1 from '@/assets/emoticon/sad-fluffy.webp'
+import sadEmot2 from '@/assets/emoticon/sad-fluffy-2.webp'
+import sadEmot3 from '@/assets/emoticon/sad-fluffy-3.webp'
+
+import tiredEmot1 from '@/assets/emoticon/tired-fluffy.webp'
+import tiredEmot2 from '@/assets/emoticon/tired-fluffy-2.webp'
+import tiredEmot3 from '@/assets/emoticon/tired-fluffy-3.webp'
+
+import stressedEmot1 from '@/assets/emoticon/stressed-fluffy.webp'
+import stressedEmot2 from '@/assets/emoticon/stressed-fluffy-2.webp'
+import stressedEmot3 from '@/assets/emoticon/stressed-fluffy-3.webp'
 
 interface MoodSelectorProps {
   value: Mood
@@ -17,37 +31,37 @@ interface MoodSelectorProps {
 
 const moods: {
   value: Mood
-  image: typeof happyEmot
+  images: typeof happyEmot1[]
   label: string
   accent: string
 }[] = [
   {
     value: 'happy',
-    image: happyEmot,
+    images: [happyEmot1, happyEmot2, happyEmot3],
     label: 'Happy',
     accent: 'bg-pink-400',
   },
   {
     value: 'neutral',
-    image: neutralEmot,
+    images: [neutralEmot1, neutralEmot2, neutralEmot3],
     label: 'Neutral',
     accent: 'bg-neutral-400',
   },
   {
     value: 'sad',
-    image: sadEmot,
+    images: [sadEmot1, sadEmot2, sadEmot3],
     label: 'Sad',
     accent: 'bg-blue-400',
   },
   {
     value: 'tired',
-    image: tiredEmot,
+    images: [tiredEmot1, tiredEmot2, tiredEmot3],
     label: 'Tired',
     accent: 'bg-indigo-400',
   },
   {
     value: 'stressed',
-    image: stressedEmot,
+    images: [stressedEmot1, stressedEmot2, stressedEmot3],
     label: 'Stressed',
     accent: 'bg-rose-400',
   },
@@ -63,46 +77,69 @@ export default function MoodSelector({
   const startX = useRef(0)
 
   const [dragging, setDragging] = useState(false)
+  const [currentVariant, setCurrentVariant] = useState(0)
   const [loadedImages, setLoadedImages] = useState<Set<string>>(
     () => new Set(),
   )
 
   /*
-   * Preload semua gambar mood ketika component pertama kali muncul.
+   * Reset variasi ketika mood berubah.
+   * Jadi setiap mood selalu dimulai dari variasi pertama.
+   */
+  useEffect(() => {
+    setCurrentVariant(0)
+  }, [value])
+
+  /*
+   * Automatic dissolve animation.
    *
-   * Ini penting terutama saat production/deploy karena browser mungkin
-   * belum pernah mengambil file .webp dari server/CDN.
+   * Setiap 2.8 detik pindah ke variasi berikutnya.
+   * CSS opacity transition membuat pergantiannya terlihat seperti dissolve.
+   */
+  useEffect(() => {
+    const interval = window.setInterval(() => {
+      setCurrentVariant((previous) => (previous + 1) % currentMood.images.length)
+    }, 2800)
+
+    return () => {
+      window.clearInterval(interval)
+    }
+  }, [currentMood.images.length, value])
+
+  /*
+   * Preload semua variasi gambar.
    */
   useEffect(() => {
     let mounted = true
 
     moods.forEach((mood) => {
-      const image = new Image()
+      mood.images.forEach((image) => {
+        const preloadImage = new Image()
 
-      image.src = mood.image.src
+        preloadImage.src = image.src
 
-      const markAsLoaded = () => {
-        if (!mounted) return
+        const markAsLoaded = () => {
+          if (!mounted) return
 
-        setLoadedImages((previous) => {
-          if (previous.has(mood.value)) {
-            return previous
-          }
+          setLoadedImages((previous) => {
+            if (previous.has(image.src)) {
+              return previous
+            }
 
-          const next = new Set(previous)
-          next.add(mood.value)
+            const next = new Set(previous)
+            next.add(image.src)
 
-          return next
-        })
-      }
+            return next
+          })
+        }
 
-      image.onload = markAsLoaded
-      image.onerror = markAsLoaded
+        preloadImage.onload = markAsLoaded
+        preloadImage.onerror = markAsLoaded
 
-      // Kalau browser sudah punya gambar di cache
-      if (image.complete) {
-        markAsLoaded()
-      }
+        if (preloadImage.complete) {
+          markAsLoaded()
+        }
+      })
     })
 
     return () => {
@@ -110,7 +147,11 @@ export default function MoodSelector({
     }
   }, [])
 
-  const currentImageLoaded = loadedImages.has(currentMood.value)
+  const currentImage = currentMood.images[currentVariant]
+  const nextImage =
+    currentMood.images[(currentVariant + 1) % currentMood.images.length]
+
+  const currentImageLoaded = loadedImages.has(currentImage.src)
 
   const changeMood = (direction: 1 | -1) => {
     const nextIndex = activeIndex + direction
@@ -182,33 +223,36 @@ export default function MoodSelector({
               </div>
             )}
 
-            {/* Character */}
-            <img
-              src={currentMood.image.src}
-              alt={currentMood.label}
-              draggable={false}
-              onLoad={() => {
-                setLoadedImages((previous) => {
-                  if (previous.has(currentMood.value)) {
-                    return previous
-                  }
-
-                  const next = new Set(previous)
-                  next.add(currentMood.value)
-
-                  return next
-                })
-              }}
-              className={`relative z-10 h-56 w-56 object-contain transition-all duration-500 ease-out sm:h-60 sm:w-60 ${
+            {/* Mood images */}
+            <div
+              className={`relative z-10 h-56 w-56 transition-transform duration-500 ease-out sm:h-60 sm:w-60 ${
                 dragging
                   ? 'translate-y-2'
                   : '-translate-y-2'
-              } ${
-                currentImageLoaded
-                  ? 'opacity-100'
-                  : 'opacity-0'
               }`}
-            />
+            >
+              {/* Current image */}
+              <img
+                src={currentImage.src}
+                alt={currentMood.label}
+                draggable={false}
+                className={`absolute inset-0 h-full w-full object-contain transition-opacity duration-[900ms] ease-in-out ${
+                  currentImageLoaded
+                    ? 'opacity-100'
+                    : 'opacity-0'
+                }`}
+              />
+
+              {/* Next image preload / dissolve layer */}
+              <img
+                key={`${currentMood.value}-${currentVariant}-next`}
+                src={nextImage.src}
+                alt=""
+                aria-hidden="true"
+                draggable={false}
+                className="absolute inset-0 h-full w-full object-contain opacity-0"
+              />
+            </div>
           </div>
 
           <span className="mt-0 text-[30px] font-medium tracking-[-0.055em] text-neutral-900 sm:text-[34px]">

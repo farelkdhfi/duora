@@ -1,13 +1,13 @@
 'use client'
 
-import { useState } from 'react'
-import { ChevronDown, History } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { ChevronDown } from 'lucide-react'
 
-import happyEmot from '@/assets/emoticon/happy-fluffy.png'
-import neutralEmot from '@/assets/emoticon/neutral-fluffy.png'
-import sadEmot from '@/assets/emoticon/sad-fluffy.png'
-import tiredEmot from '@/assets/emoticon/tired-fluffy.png'
-import stressedEmot from '@/assets/emoticon/stressed-fluffy.png'
+import happyEmot from '@/assets/emoticon/happy-fluffy.webp'
+import neutralEmot from '@/assets/emoticon/neutral-fluffy.webp'
+import sadEmot from '@/assets/emoticon/sad-fluffy.webp'
+import tiredEmot from '@/assets/emoticon/tired-fluffy.webp'
+import stressedEmot from '@/assets/emoticon/stressed-fluffy.webp'
 
 import { useCheckinHistoryEntries } from '../queries'
 import { CheckinHistoryModal } from './checkin-history-modal'
@@ -19,7 +19,18 @@ interface CheckinCardProps {
   name: string
 }
 
-const moodInfo: Record<Mood, { image: typeof happyEmot; label: string; background: string; border: string; glow: string; text: string; accent: string }> = {
+const moodInfo: Record<
+  Mood,
+  {
+    image: typeof happyEmot
+    label: string
+    background: string
+    border: string
+    glow: string
+    text: string
+    accent: string
+  }
+> = {
   happy: {
     image: happyEmot,
     label: 'Happy',
@@ -86,15 +97,49 @@ const detailConfig = [
   },
 ] as const
 
-export default function CheckinCard({ checkin, name }: CheckinCardProps) {
+export default function CheckinCard({
+  checkin,
+  name,
+}: CheckinCardProps) {
   const [isExpanded, setIsExpanded] = useState(false)
   const [isHistoryOpen, setIsHistoryOpen] = useState(false)
+  const [imageLoaded, setImageLoaded] = useState(false)
 
   const { data: historyEntries } = useCheckinHistoryEntries(checkin.id)
+
   const historyCount = historyEntries?.length ?? 0
   const hasMultipleChanges = historyCount > 1
 
   const mood = moodInfo[checkin.mood] ?? moodInfo.neutral
+
+  /*
+   * Reset loading state whenever the mood changes.
+   */
+  useEffect(() => {
+    setImageLoaded(false)
+
+    const image = new Image()
+
+    image.src = mood.image.src
+
+    const handleLoad = () => {
+      setImageLoaded(true)
+    }
+
+    image.onload = handleLoad
+
+    /*
+     * If the image is already cached by the browser,
+     * complete can already be true immediately.
+     */
+    if (image.complete) {
+      setImageLoaded(true)
+    }
+
+    return () => {
+      image.onload = null
+    }
+  }, [mood.image.src])
 
   const date = new Date(`${checkin.checkin_date}T00:00:00`)
 
@@ -112,8 +157,9 @@ export default function CheckinCard({ checkin, name }: CheckinCardProps) {
   return (
     <>
       <article className="relative w-full overflow-hidden rounded-[1.75rem] border border-black/[0.05] bg-white shadow-[0_25px_70px_-40px_rgba(0,0,0,0.22)] transition-shadow duration-300 hover:shadow-[0_30px_80px_-40px_rgba(0,0,0,0.28)] sm:rounded-[2rem]">
-
-        <div className={`pointer-events-none absolute -right-24 -top-24 size-64 rounded-full blur-[110px] ${mood.glow}`} />
+        <div
+          className={`pointer-events-none absolute -right-24 -top-24 size-64 rounded-full blur-[110px] ${mood.glow}`}
+        />
 
         <div className="relative p-5 sm:p-7 lg:p-8">
           {/* COLLAPSED HEADER */}
@@ -124,8 +170,26 @@ export default function CheckinCard({ checkin, name }: CheckinCardProps) {
             aria-expanded={isExpanded}
           >
             {/* Mood */}
-            <div className={``}>
-              <img src={mood.image.src} alt="" className="size-20 brightness-110 object-contain sm:size-9" />
+            <div className="relative flex size-20 shrink-0 items-center justify-center sm:size-9">
+              {/* Loading */}
+              {!imageLoaded && (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="size-4 animate-spin rounded-full border-2 border-neutral-200 border-t-neutral-600" />
+                </div>
+              )}
+
+              {/* Mood Image */}
+              <img
+                src={mood.image.src}
+                alt=""
+                draggable={false}
+                onLoad={() => setImageLoaded(true)}
+                className={`size-20 object-contain brightness-110 transition-all duration-300 sm:size-9 ${
+                  imageLoaded
+                    ? 'scale-100 opacity-100'
+                    : 'scale-95 opacity-0'
+                }`}
+              />
             </div>
 
             {/* Name + date */}
@@ -135,7 +199,9 @@ export default function CheckinCard({ checkin, name }: CheckinCardProps) {
                   {name}
                 </h2>
 
-                <span className={`shrink-0 text-[9px] font-semibold ${mood.text}`}>
+                <span
+                  className={`shrink-0 text-[9px] font-semibold ${mood.text}`}
+                >
                   {mood.label}
                 </span>
               </div>
@@ -161,19 +227,36 @@ export default function CheckinCard({ checkin, name }: CheckinCardProps) {
               <div className="flex size-8 items-center justify-center rounded-full border border-black/20 bg-neutral-50 text-neutral-700 transition-all duration-300 group-hover:bg-neutral-100 group-hover:text-neutral-600">
                 <ChevronDown
                   size={14}
-                  className={`transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`}
+                  className={`transition-transform duration-300 ${
+                    isExpanded ? 'rotate-180' : ''
+                  }`}
                 />
               </div>
             </div>
           </button>
 
           {/* EXPANDED CONTENT */}
-          <div className={`grid transition-[grid-template-rows,opacity,margin] duration-300 ease-out ${isExpanded ? 'mt-7 grid-rows-[1fr] opacity-100' : 'mt-0 grid-rows-[0fr] opacity-0'}`}>
+          <div
+            className={`grid transition-[grid-template-rows,opacity,margin] duration-300 ease-out ${
+              isExpanded
+                ? 'mt-7 grid-rows-[1fr] opacity-100'
+                : 'mt-0 grid-rows-[0fr] opacity-0'
+            }`}
+          >
             <div className="min-h-0 overflow-hidden">
               {/* Stats */}
               <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
-                <StatCard label="Energy" value={checkin.energy} progressClass="bg-neutral-900" />
-                <StatCard label="Stress" value={checkin.stress} progressClass="bg-neutral-400" />
+                <StatCard
+                  label="Energy"
+                  value={checkin.energy}
+                  progressClass="bg-neutral-900"
+                />
+
+                <StatCard
+                  label="Stress"
+                  value={checkin.stress}
+                  progressClass="bg-neutral-400"
+                />
               </div>
 
               {/* Reflections */}
@@ -185,13 +268,17 @@ export default function CheckinCard({ checkin, name }: CheckinCardProps) {
                     </p>
 
                     <span className="text-[9px] uppercase tracking-[0.14em] text-neutral-300">
-                      {details.length} {details.length === 1 ? 'entry' : 'entries'}
+                      {details.length}{' '}
+                      {details.length === 1 ? 'entry' : 'entries'}
                     </span>
                   </div>
 
                   <div className="divide-y divide-black/[0.045]">
                     {details.map((detail) => (
-                      <div key={detail.key} className="py-4 first:pt-4 last:pb-1 sm:py-5">
+                      <div
+                        key={detail.key}
+                        className="py-4 first:pt-4 last:pb-1 sm:py-5"
+                      >
                         <p className="text-[9px] font-semibold uppercase tracking-[0.14em] text-neutral-300">
                           {detail.label}
                         </p>
@@ -216,7 +303,7 @@ export default function CheckinCard({ checkin, name }: CheckinCardProps) {
                     Lihat riwayat ({historyCount}x)
                   </button>
                 </div>
-              )}              
+              )}
             </div>
           </div>
         </div>
