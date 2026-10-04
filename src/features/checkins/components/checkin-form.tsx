@@ -34,11 +34,11 @@ const HORIZON = 54
 // wall  = colour of the backdrop paper
 // shade = same hue but deeper, used for light falloff and the cove
 const moodTheme: Record<Mood, { wall: string; shade: string }> = {
-  happy:   { wall: '255, 242, 184', shade: '230, 190, 90' },
+  happy: { wall: '255, 242, 184', shade: '230, 190, 90' },
   neutral: { wall: '236, 238, 237', shade: '170, 175, 173' },
-  sad:     { wall: '190, 220, 255', shade: '90, 145, 210' },
-  tired:   { wall: '220, 200, 250', shade: '150, 115, 200' },
-  stressed:{ wall: '255, 195, 195', shade: '210, 100, 100' },
+  sad: { wall: '190, 220, 255', shade: '90, 145, 210' },
+  tired: { wall: '220, 200, 250', shade: '150, 115, 200' },
+  stressed: { wall: '255, 195, 195', shade: '210, 100, 100' },
 }
 
 const MOOD_KEYS = Object.keys(moodTheme) as Mood[]
@@ -181,8 +181,14 @@ export default function CheckinForm({ relationshipId, date }: CheckinFormProps) 
   const mutation = useUpsertCheckin()
   const existing = data?.[0]
 
-  const maxEditsPerDay = subscription ? subscription.max_mood_edits_per_day : 3
-  const isLimitReached = maxEditsPerDay !== null && (editCountToday ?? 0) >= maxEditsPerDay
+  const maxEditsPerDay = subscription
+    ? subscription.max_mood_edits_per_day
+    : 3
+
+  const editCount = editCountToday ?? 0
+  const isUnlimitedMood = maxEditsPerDay === null
+  const isLimitReached = !isUnlimitedMood && editCount >= maxEditsPerDay
+  const remainingEdits = isUnlimitedMood ? null : Math.max(maxEditsPerDay - editCount, 0)
 
   const {
     register,
@@ -283,18 +289,25 @@ export default function CheckinForm({ relationshipId, date }: CheckinFormProps) 
             </div>
           </div>
 
-          {maxEditsPerDay !== null && (
+          {isUnlimitedMood ? (
+            <div className="mt-5 flex items-center justify-between px-1">
+              <p className="text-[10px] font-medium text-neutral-400">
+                Unlimited mood changes today
+              </p>
+            </div>
+          ) : (
             <div className="mt-5 flex items-center justify-between px-1">
               <p className={`text-[10px] font-medium ${isLimitReached ? 'text-amber-500' : 'text-neutral-400'}`}>
-                {isLimitReached ? 'Mood update limit reached' : `${editCountToday ?? 0}/${maxEditsPerDay} mood changes today`}
+                {isLimitReached
+                  ? 'Daily mood limit reached'
+                  : `${editCount}/${maxEditsPerDay} mood changes today`}
               </p>
             </div>
           )}
 
           <div className="flex flex-1 flex-col justify-center py-5 sm:py-7">
             <div className="relative flex min-h-[360px] flex-1 items-center justify-center sm:min-h-[410px]">
-              <MoodSelector value={mood} onChange={(value) => setValue('mood', value, { shouldDirty: true, shouldValidate: true })} />
-            </div>
+              <MoodSelector disabled={isLimitReached} value={mood} onChange={(value) => setValue('mood', value, { shouldDirty: true, shouldValidate: true })} />            </div>
 
             {errors.mood && <p className="mt-2 text-center text-[11px] font-medium text-rose-500">{errors.mood.message}</p>}
 

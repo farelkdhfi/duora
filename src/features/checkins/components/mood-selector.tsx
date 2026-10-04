@@ -27,6 +27,7 @@ import stressedEmot3 from '@/assets/emoticon/stressed-fluffy-3.webp'
 interface MoodSelectorProps {
   value: Mood
   onChange: (mood: Mood) => void
+  disabled?: boolean
 }
 
 const moods: {
@@ -70,6 +71,7 @@ const moods: {
 export default function MoodSelector({
   value,
   onChange,
+  disabled = false,
 }: MoodSelectorProps) {
   const activeIndex = moods.findIndex((mood) => mood.value === value)
   const currentMood = moods[activeIndex] ?? moods[0]
@@ -154,6 +156,8 @@ export default function MoodSelector({
   const currentImageLoaded = loadedImages.has(currentImage.src)
 
   const changeMood = (direction: 1 | -1) => {
+    if (disabled) return
+
     const nextIndex = activeIndex + direction
 
     if (nextIndex < 0 || nextIndex >= moods.length) return
@@ -164,6 +168,8 @@ export default function MoodSelector({
   const handlePointerDown = (
     event: React.PointerEvent<HTMLDivElement>,
   ) => {
+    if (disabled) return
+
     startX.current = event.clientX
     setDragging(true)
 
@@ -208,8 +214,8 @@ export default function MoodSelector({
             {/* Shadow */}
             <div
               className={`pointer-events-none absolute bottom-[20px] left-1/2 z-0 h-[18px] w-[145px] -translate-x-1/2 rounded-[50%] bg-black/[0.16] blur-[14px] transition-all duration-500 sm:bottom-[20px] sm:h-[21px] sm:w-[170px] ${dragging
-                  ? 'scale-x-75 opacity-50'
-                  : 'scale-x-100 opacity-100'
+                ? 'scale-x-75 opacity-50'
+                : 'scale-x-100 opacity-100'
                 }`}
             />
 
@@ -223,8 +229,8 @@ export default function MoodSelector({
             {/* Mood images */}
             <div
               className={`relative z-10 h-56 w-56 transition-transform duration-500 ease-out sm:h-60 sm:w-60 ${dragging
-                  ? 'translate-y-2'
-                  : '-translate-y-2'
+                ? 'translate-y-2'
+                : '-translate-y-2'
                 }`}
             >
               {/* Current image */}
@@ -233,8 +239,8 @@ export default function MoodSelector({
                 alt={currentMood.label}
                 draggable={false}
                 className={`absolute inset-0 h-full w-full animate-mood-float object-contain transition-opacity duration-[900ms] ease-in-out ${currentImageLoaded
-                    ? 'opacity-100'
-                    : 'opacity-0'
+                  ? 'opacity-100'
+                  : 'opacity-0'
                   }`}
               />
 
@@ -271,11 +277,13 @@ export default function MoodSelector({
               type="button"
               aria-label={`Select ${mood.label}`}
               aria-pressed={selected}
-              onClick={() => onChange(mood.value)}
+              onClick={() => {
+                if (!disabled) onChange(mood.value)
+              }}
               className={`h-1.5 rounded-full transition-all duration-300 ${selected
-                  ? `w-6 ${mood.accent}`
-                  : 'w-1.5 bg-neutral-300/70 hover:bg-neutral-400'
-                }`}
+                ? `w-6 ${mood.accent}`
+                : 'w-1.5 bg-neutral-300/70 hover:bg-neutral-400'
+                } ${disabled ? 'cursor-not-allowed opacity-50' : ''}`}
             />
           )
         })}

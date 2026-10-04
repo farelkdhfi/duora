@@ -159,7 +159,7 @@ export default function MobileBottomNav({ onMore }: MobileBottomNavProps) {
           aria-label="Duora AI Debates"
           className={`absolute left-1/2 top-1/2 z-20 flex size-[3rem] -translate-x-1/2 -translate-y-[calc(50%+1.55rem)] items-center justify-center rounded-full shadow-[0_12px_30px_-10px_rgba(0,0,0,0.28)] ring-[0.55rem] transition-all duration-200 active:scale-95 ${
             debateActive
-              ? ' bg-neutral-900 text-white ring-neutral-900'
+              ? ' bg-primary text-white ring-white'
               : ' bg-neutral-100 text-black ring-white'
           }`}
         >

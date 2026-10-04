@@ -15,6 +15,11 @@ import {
 } from '../queries'
 import { AiPersona } from '../types'
 
+import {
+  useMySubscription,
+  useDebateRoomsCreatedThisMonth,
+} from '@/features/subscription/queries'
+
 import happyEmot from '@/assets/emoticon/happy-emot.png'
 import neutralEmot from '@/assets/emoticon/neutral-emot.png'
 import stressedEmot from '@/assets/emoticon/stressed-emot.png'
@@ -263,11 +268,33 @@ export default function DebateList({
   const { data: debates, isLoading } =
     useDebates(relationshipId)
 
+  const { data: subscription } =
+    useMySubscription()
+
+  const { data: roomsThisMonth } =
+    useDebateRoomsCreatedThisMonth(relationshipId)
+
   const [showCreate, setShowCreate] =
     useState(false)
 
   const [activeFilter, setActiveFilter] =
     useState<DebateFilter>('all')
+
+  const maxRoomsPerMonth = subscription
+    ? subscription.max_debate_rooms_per_month
+    : 3
+
+  const isRoomLimitReached =
+    maxRoomsPerMonth !== null &&
+    (roomsThisMonth ?? 0) >= maxRoomsPerMonth
+
+  const handleCreateClick = () => {
+    if (isRoomLimitReached) {
+      return
+    }
+
+    setShowCreate(true)
+  }
 
   if (isLoading) {
     return (
@@ -357,9 +384,23 @@ export default function DebateList({
 
         <button
           type="button"
-          onClick={() => setShowCreate(true)}
-          aria-label="Start a new debate"
-          className="flex size-9 shrink-0 items-center justify-center rounded-full bg-neutral-800 text-white transition-all duration-200 hover:scale-105 hover:bg-black active:scale-95"
+          onClick={handleCreateClick}
+          disabled={isRoomLimitReached}
+          aria-label={
+            isRoomLimitReached
+              ? 'Monthly debate room limit reached'
+              : 'Start a new debate'
+          }
+          title={
+            isRoomLimitReached
+              ? `Monthly limit reached (${roomsThisMonth ?? 0}/${maxRoomsPerMonth})`
+              : 'Start a new debate'
+          }
+          className={`flex size-9 shrink-0 items-center justify-center rounded-full text-white transition-all duration-200 ${
+            isRoomLimitReached
+              ? 'cursor-not-allowed bg-neutral-200 text-neutral-400'
+              : 'bg-neutral-800 hover:scale-105 hover:bg-black active:scale-95'
+          }`}
         >
           <Plus
             size={15}

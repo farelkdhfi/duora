@@ -247,7 +247,7 @@ export default function DashboardPage() {
         </section>
 
         <div className='p-4 sm:p-0'>
-          <section className="mt-8">
+          <section className="mt-3">
             <div className="mb-4 flex items-center gap-4">
               <div className="shrink-0">
                 <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-neutral-500">

@@ -443,7 +443,7 @@ export default function EventList({
           LEFT — CALENDAR
       ===================================================== */}
 
-      <div className="relative overflow-hidden rounded-[2rem] border border-black/[0.06] bg-neutral-800 p-7 text-white shadow-[0_25px_70px_rgba(0,0,0,0.10)] md:p-9">
+      <div className="relative overflow-hidden rounded-[2rem] border border-black/[0.06] bg-primary p-7 text-white shadow-[0_25px_70px_rgba(0,0,0,0.10)] md:p-9">
 
         {/* Ambient */}
 

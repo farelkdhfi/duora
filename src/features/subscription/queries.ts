@@ -1,6 +1,14 @@
+// subscription/queries.ts
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { activatePremiumManual, getMySubscription, markExpiryWarningShown, markTrialModalSeen, startTrialManual } from "./api";
+import {
+  getMySubscription,
+  activatePlanManual,
+  startTrialManual,
+  markTrialModalSeen,
+  markExpiryWarningShown,
+  getDebateRoomsCreatedThisMonth,
+} from "./api";
 
 export const subscriptionKeys = {
   all: ["subscription"] as const,
@@ -11,26 +19,22 @@ export function useMySubscription() {
   return useQuery({
     queryKey: subscriptionKeys.mine(),
     queryFn: getMySubscription,
-    staleTime: 1000 * 60, // 1 menit, biar gak terlalu sering re-fetch tapi tetap cukup fresh
+    staleTime: 1000 * 60,
   });
 }
 
-export function useActivatePremiumManual() {
+// GANTI nama hook: useActivatePremiumManual -> useActivatePlanManual
+export function useActivatePlanManual() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (durationDays?: number) => activatePremiumManual(durationDays),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: subscriptionKeys.mine() });
-    },
-  });
-}
-
-export function useMarkTrialModalSeen() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: markTrialModalSeen,
+    mutationFn: ({
+      planType,
+      durationDays,
+    }: {
+      planType: "plus" | "pro";
+      durationDays?: number;
+    }) => activatePlanManual(planType, durationDays),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: subscriptionKeys.mine() });
     },
@@ -48,6 +52,17 @@ export function useStartTrialManual() {
   });
 }
 
+export function useMarkTrialModalSeen() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: markTrialModalSeen,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: subscriptionKeys.mine() });
+    },
+  });
+}
+
 export function useMarkExpiryWarningShown() {
   const queryClient = useQueryClient();
 
@@ -56,5 +71,14 @@ export function useMarkExpiryWarningShown() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: subscriptionKeys.mine() });
     },
+  });
+}
+
+// TAMBAH BARU
+export function useDebateRoomsCreatedThisMonth(relationshipId: string | undefined) {
+  return useQuery({
+    queryKey: [...subscriptionKeys.all, "debate-rooms-this-month", relationshipId ?? ""],
+    queryFn: () => getDebateRoomsCreatedThisMonth(relationshipId as string),
+    enabled: !!relationshipId,
   });
 }

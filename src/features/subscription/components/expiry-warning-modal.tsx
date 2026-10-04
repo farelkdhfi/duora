@@ -2,18 +2,18 @@
 
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
+import { useRouter } from "next/navigation";
 import { AlertTriangle, X, Crown } from "lucide-react";
 import { useMySubscription, useMarkExpiryWarningShown } from "../queries";
 import { shouldShowExpiryWarning, getDaysUntilExpiry } from "../utils";
-import { UpgradeModal } from "./upgrade-modal";
 
 export function ExpiryWarningModal() {
+  const router = useRouter();
   const { data: subscription } = useMySubscription();
   const { mutate: markShown } = useMarkExpiryWarningShown();
 
   const [mounted, setMounted] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [isUpgradeOpen, setIsUpgradeOpen] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -35,7 +35,7 @@ export function ExpiryWarningModal() {
   function handleUpgradeClick() {
     markShown();
     setIsOpen(false);
-    setIsUpgradeOpen(true);
+    router.push("/subscription/plan");
   }
 
   if (!mounted || !isOpen || !subscription) return null;
@@ -97,8 +97,6 @@ export function ExpiryWarningModal() {
           Nanti saja
         </button>
       </div>
-
-      {isUpgradeOpen && <UpgradeModal onClose={() => setIsUpgradeOpen(false)} />}
     </div>
   );
 

@@ -24,7 +24,7 @@ export default function RelationshipCard({
     : null
 
   return (
-    <section className="relative overflow-hidden rounded-b-[7rem] border border-white/[0.07] bg-neutral-900 px-5 py-7 shadow-[0_25px_60px_-30px_rgba(0,0,0,0.8)] sm:rounded-2xl sm:px-8 sm:py-9">
+    <section className="relative overflow-hidden rounded-b-[7rem] border-b-10 border-white shadow-lg bg-primary px-5 py-7 sm:rounded-2xl sm:px-8 sm:py-9">
       {/* DARK WAVE BACKGROUND */}
       <svg
         className="pointer-events-none absolute inset-0 h-full w-full"
@@ -316,58 +316,16 @@ export default function RelationshipCard({
             <stop offset="1" stopColor="#e8a7bd" stopOpacity=".5" />
           </linearGradient>
         </defs>
-
-        <path
-          d="M-30 105C80 30 155 100 250 78C345 55 390 112 475 85C505 76 525 65 550 50"
-          stroke="url(#top-wave-gradient)"
-          strokeWidth="1.1"
-        />
-
-        <path
-          d="M-35 130C75 58 160 123 252 102C345 81 395 138 478 110C510 100 530 88 555 73"
-          stroke="#bdb8c6"
-          strokeWidth=".7"
-          strokeOpacity=".28"
-        />
-
-        <path
-          d="M-35 155C75 83 165 148 255 127C350 105 398 163 482 136C510 127 532 115 555 100"
-          stroke="#e8a7bd"
-          strokeWidth=".65"
-          strokeOpacity=".26"
-          strokeDasharray="3 8"
-        />
       </svg>
 
       {/* CONTENT */}
 
       <div className="relative z-10">
-        {/* HEADER */}
-
-        <div className="flex items-end justify-between">
-          <div>
-            <div className="mb-2 flex items-center gap-2">
-              <span className="h-px w-5 bg-[#e4a5bb]" />
-
-              <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-white/40">
-                Your relationship
-              </p>
-            </div>
-
-            <h2 className="text-[20px] font-medium tracking-[-0.055em] text-white sm:text-[22px]">
-              Together, always.
-            </h2>
-          </div>
-
-          <div className="hidden items-center gap-1.5 sm:flex">
-            <span className="size-1 rounded-full bg-pink-300" />
-            <span className="size-1 rounded-full bg-blue-300" />
-          </div>
-        </div>
 
         {/* PEOPLE */}
 
-        <div className="relative mt-9 flex items-start justify-center gap-2 sm:gap-8">
+        <div className="relative flex items-start justify-center gap-2 sm:gap-8">
+
           {/* CONNECTING WAVE */}
 
           <svg
@@ -427,7 +385,7 @@ export default function RelationshipCard({
 
               <div className="absolute inset-3 rounded-full border border-pink-200/15" />
 
-              <div className="relative flex size-11 items-center justify-center rounded-full border border-white/[0.1] bg-[#1c1e22]/90 shadow-[0_12px_35px_-12px_rgba(0,0,0,0.8)] backdrop-blur-md sm:size-14">
+              <div className="relative flex size-11 items-center justify-center rounded-full border border-white shadow-[0_12px_35px_-12px_rgba(0,0,0,0.8)] backdrop-blur-md sm:size-14">
                 <RelationshipHeart />
               </div>
 

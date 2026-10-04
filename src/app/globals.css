@@ -1,5 +1,11 @@
 @import "tailwindcss"; 
 
+/* color template */
+
+@theme {
+  --color-primary: #1e1318;
+}
+
 
 .modal-scroll::-webkit-scrollbar {
   background-color: white;

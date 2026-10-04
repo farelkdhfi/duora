@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase/client'
 import type { AiPersona, Debate, DebateMessage } from './types'
-import { getMySubscription } from "../subscription/api";
+import { getDebateRoomsCreatedThisMonth, getMySubscription } from "../subscription/api";
 
 export async function getDebates(
   relationshipId: string,
@@ -44,7 +44,9 @@ export async function getDebate(
   return data
 }
 
-const FREE_TIER_MAX_MESSAGES = 3; // fallback aman: kalau subscription gak ketemu, anggap free
+const FREE_TIER_MAX_MESSAGES = 3;
+const FREE_TIER_MAX_ROOMS_PER_MONTH = 3;
+const UNLIMITED_FALLBACK = 999999;
 
 export async function createDebate({
   relationshipId,
@@ -68,8 +70,23 @@ export async function createDebate({
   const subscription = await getMySubscription();
 
   const maxMessages = subscription
-    ? subscription.max_debate_messages_per_room ?? 999999
+    ? subscription.max_debate_messages_per_room ?? UNLIMITED_FALLBACK
     : FREE_TIER_MAX_MESSAGES;
+
+  const maxRoomsPerMonth = subscription
+    ? subscription.max_debate_rooms_per_month
+    : FREE_TIER_MAX_ROOMS_PER_MONTH;
+
+  // Cek limit room per bulan SEBELUM insert
+  if (maxRoomsPerMonth !== null) {
+    const roomsThisMonth = await getDebateRoomsCreatedThisMonth(relationshipId);
+
+    if (roomsThisMonth >= maxRoomsPerMonth) {
+      throw new Error(
+        `Kamu sudah mencapai batas ${maxRoomsPerMonth} room debat bulan ini. Upgrade untuk membuat lebih banyak.`
+      );
+    }
+  }
 
   const {
     data,
