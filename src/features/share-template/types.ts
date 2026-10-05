@@ -1,4 +1,7 @@
-// share-template/types.ts
+export type CountdownPlanAccess =
+  | "free"
+  | "plus"
+  | "pro";
 
 export interface ShareTemplatePreference {
   id: string;
@@ -13,10 +16,27 @@ export interface ShareTemplatePreference {
 export interface TemplatePreset {
   id: string;
   name: string;
-  isPremium: boolean;
+  minPlan: CountdownPlanAccess;
   colorFrom: string;
   colorVia: string;
   colorTo: string;
-  // tailwind class untuk dipakai langsung (biar konsisten dengan gradient yang sudah ada)
   gradientClass: string;
+}
+
+export function canAccessTemplate(
+  preset: TemplatePreset,
+  plan: CountdownPlanAccess,
+): boolean {
+  if (plan === "pro") {
+    return true;
+  }
+
+  if (plan === "plus") {
+    return (
+      preset.minPlan === "free" ||
+      preset.minPlan === "plus"
+    );
+  }
+
+  return preset.minPlan === "free";
 }

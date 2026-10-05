@@ -9,13 +9,22 @@ import {
   Palette,
 } from "lucide-react";
 
-import { WRAPPED_TEMPLATES } from "../template-registry";
+import {
+  WRAPPED_TEMPLATES,
+  canAccessWrappedTemplate,
+} from "../template-registry";
+
 import {
   useWrappedPreference,
   useUpsertWrappedPreference,
 } from "../queries";
+
 import { useMySubscription } from "@/features/subscription/queries";
-import type { WrappedTemplateId } from "../types";
+
+import type {
+  WrappedPlanAccess,
+  WrappedTemplateId,
+} from "../types";
 
 interface WrappedPreferencePickerProps {
   relationshipId: string;
@@ -38,11 +47,12 @@ export function WrappedPreferencePicker({
     isPending,
   } = useUpsertWrappedPreference();
 
-  const isPremium = subscription
-    ? subscription.plan_type === "premium" &&
-      (subscription.status === "trialing" ||
-        subscription.status === "active")
-    : false;
+  const currentPlan: WrappedPlanAccess =
+    subscription?.plan_type === "pro"
+      ? "pro"
+      : subscription?.plan_type === "plus"
+        ? "plus"
+        : "free";
 
   const [templateId, setTemplateId] =
     useState<WrappedTemplateId>(
@@ -66,13 +76,13 @@ export function WrappedPreferencePicker({
   const [customPrimary, setCustomPrimary] =
     useState(
       preference?.custom_color_primary ??
-        "#171717",
+      "#171717",
     );
 
   const [customSecondary, setCustomSecondary] =
     useState(
       preference?.custom_color_secondary ??
-        "#ec4899",
+      "#ec4899",
     );
 
   const [templatePage, setTemplatePage] =
@@ -104,14 +114,14 @@ export function WrappedPreferencePicker({
 
   const totalTemplatePages = Math.ceil(
     WRAPPED_TEMPLATES.length /
-      TEMPLATES_PER_PAGE,
+    TEMPLATES_PER_PAGE,
   );
 
   const visibleTemplates =
     WRAPPED_TEMPLATES.slice(
       templatePage * TEMPLATES_PER_PAGE,
       templatePage * TEMPLATES_PER_PAGE +
-        TEMPLATES_PER_PAGE,
+      TEMPLATES_PER_PAGE,
     );
 
   function persist(
@@ -145,6 +155,16 @@ export function WrappedPreferencePicker({
         customSecondary,
     };
 
+    const selectedTemplate =
+      WRAPPED_TEMPLATES.find(
+        (template) =>
+          template.id === next.templateId,
+      );
+
+    const canCustomize =
+      selectedTemplate?.supportsCustomColor ===
+      true && currentPlan !== "free";
+
     savePreference({
       relationshipId,
       templateId: next.templateId,
@@ -152,31 +172,32 @@ export function WrappedPreferencePicker({
       showMeetup: next.showMeetup,
       showGoals: next.showGoals,
       showScreenTime: next.showScreenTime,
-      customColorPrimary:
-        next.templateId === "bold" &&
-        isPremium
-          ? next.customPrimary
-          : null,
-      customColorSecondary:
-        next.templateId === "bold" &&
-        isPremium
-          ? next.customSecondary
-          : null,
+      customColorPrimary: canCustomize
+        ? next.customPrimary
+        : null,
+      customColorSecondary: canCustomize
+        ? next.customSecondary
+        : null,
     });
   }
 
   function handleSelectTemplate(
     id: WrappedTemplateId,
   ) {
-    const template =
-      WRAPPED_TEMPLATES.find(
-        (item) => item.id === id,
-      );
+    const template = WRAPPED_TEMPLATES.find(
+      (item) => item.id === id,
+    );
 
-    if (
-      template?.isPremium &&
-      !isPremium
-    ) {
+    if (!template) {
+      return;
+    }
+
+    const hasAccess = canAccessWrappedTemplate(
+      template,
+      currentPlan,
+    );
+
+    if (!hasAccess) {
       return;
     }
 
@@ -302,8 +323,10 @@ export function WrappedPreferencePicker({
           {visibleTemplates.map(
             (template) => {
               const isLocked =
-                template.isPremium &&
-                !isPremium;
+                !canAccessWrappedTemplate(
+                  template,
+                  currentPlan,
+                );
 
               const isSelected =
                 templateId === template.id;
@@ -320,15 +343,13 @@ export function WrappedPreferencePicker({
                       template.id,
                     )
                   }
-                  className={`group relative flex w-full items-center gap-3.5 rounded-2xl border px-3.5 py-3 text-left transition-all duration-200 ${
-                    isSelected
+                  className={`group relative flex w-full items-center gap-3.5 rounded-2xl border px-3.5 py-3 text-left transition-all duration-200 ${isSelected
                       ? "border-black/[0.10] bg-neutral-50"
                       : "border-black/[0.05] bg-white hover:border-black/[0.09] hover:bg-neutral-50/70"
-                  } ${
-                    isLocked
+                    } ${isLocked
                       ? "cursor-not-allowed opacity-55"
                       : ""
-                  }`}
+                    }`}
                 >
                   <TemplatePreview
                     templateId={template.id}
@@ -341,9 +362,11 @@ export function WrappedPreferencePicker({
                         {template.name}
                       </span>
 
-                      {template.isPremium && (
+                      {template.minPlan !== "free" && (
                         <span className="rounded-full border border-pink-100 bg-pink-50 px-1.5 py-0.5 text-[8px] font-semibold uppercase tracking-[0.08em] text-pink-500">
-                          Pro
+                          {template.minPlan === "plus"
+                            ? "Plus"
+                            : "Pro"}
                         </span>
                       )}
                     </div>
@@ -354,11 +377,10 @@ export function WrappedPreferencePicker({
                   </div>
 
                   <div
-                    className={`flex size-6 shrink-0 items-center justify-center rounded-full border transition ${
-                      isSelected
+                    className={`flex size-6 shrink-0 items-center justify-center rounded-full border transition ${isSelected
                         ? "border-neutral-900 bg-neutral-900 text-white"
                         : "border-black/[0.07] bg-white text-transparent"
-                    }`}
+                      }`}
                   >
                     {isLocked ? (
                       <Lock
@@ -402,14 +424,12 @@ export function WrappedPreferencePicker({
                   onClick={() =>
                     setTemplatePage(index)
                   }
-                  aria-label={`Go to template page ${
-                    index + 1
-                  }`}
-                  className={`size-1.5 rounded-full transition-all ${
-                    templatePage === index
+                  aria-label={`Go to template page ${index + 1
+                    }`}
+                  className={`size-1.5 rounded-full transition-all ${templatePage === index
                       ? "w-4 bg-neutral-900"
                       : "bg-neutral-200 hover:bg-neutral-300"
-                  }`}
+                    }`}
                 />
               ))}
             </div>
@@ -507,7 +527,7 @@ export function WrappedPreferencePicker({
               </div>
             </div>
 
-            {isPremium ? (
+            {currentPlan !== "free" ? (
               <div className="mt-5">
                 <div className="grid grid-cols-2 gap-3">
                   <ColorInput
@@ -555,13 +575,12 @@ export function WrappedPreferencePicker({
 
                   <div>
                     <p className="text-xs font-semibold text-neutral-800">
-                      Premium customization
+                      Plus customization
                     </p>
 
                     <p className="mt-1 text-[10px] leading-4 text-neutral-400">
-                      Custom colors and premium
-                      wrapped styles are available
-                      with Duora Premium.
+                      Custom colors are available
+                      starting from the Duora Plus plan.
                     </p>
                   </div>
                 </div>
@@ -588,11 +607,10 @@ function TemplatePreview({
   if (templateId === "bold") {
     return (
       <div
-        className={`relative flex h-14 w-10 shrink-0 overflow-hidden rounded-lg border ${
-          selected
+        className={`relative flex h-14 w-10 shrink-0 overflow-hidden rounded-lg border ${selected
             ? "border-black/[0.10]"
             : "border-black/[0.06]"
-        } bg-neutral-900`}
+          } bg-neutral-900`}
       >
         <div className="absolute -right-4 -top-4 size-10 rounded-full bg-pink-500/30 blur-md" />
 
@@ -612,11 +630,10 @@ function TemplatePreview({
   if (templateId === "noir") {
     return (
       <div
-        className={`relative flex h-14 w-10 shrink-0 overflow-hidden rounded-lg border ${
-          selected
+        className={`relative flex h-14 w-10 shrink-0 overflow-hidden rounded-lg border ${selected
             ? "border-black/[0.14]"
             : "border-black/[0.06]"
-        } bg-[#11110f]`}
+          } bg-[#11110f]`}
       >
         <div className="absolute -right-4 -top-4 size-9 rounded-full bg-[#b69b79]/20 blur-md" />
 
@@ -636,11 +653,10 @@ function TemplatePreview({
   if (templateId === "bloom") {
     return (
       <div
-        className={`relative flex h-14 w-10 shrink-0 overflow-hidden rounded-lg border ${
-          selected
+        className={`relative flex h-14 w-10 shrink-0 overflow-hidden rounded-lg border ${selected
             ? "border-[#d99aad]/40"
             : "border-black/[0.06]"
-        } bg-[#fbf7f6]`}
+          } bg-[#fbf7f6]`}
       >
         <div className="absolute -left-3 -top-3 size-9 rounded-full bg-[#efc8d4]/70 blur-md" />
 
@@ -662,11 +678,10 @@ function TemplatePreview({
   if (templateId === "night") {
     return (
       <div
-        className={`relative flex h-14 w-10 shrink-0 overflow-hidden rounded-lg border ${
-          selected
+        className={`relative flex h-14 w-10 shrink-0 overflow-hidden rounded-lg border ${selected
             ? "border-[#8195ff]/40"
             : "border-black/[0.06]"
-        } bg-[#0b1020]`}
+          } bg-[#0b1020]`}
       >
         <div className="absolute -right-4 -top-4 size-10 rounded-full bg-[#7386ff]/25 blur-md" />
 
@@ -685,11 +700,10 @@ function TemplatePreview({
 
   return (
     <div
-      className={`relative flex h-14 w-10 shrink-0 overflow-hidden rounded-lg border ${
-        selected
+      className={`relative flex h-14 w-10 shrink-0 overflow-hidden rounded-lg border ${selected
           ? "border-black/[0.10]"
           : "border-black/[0.06]"
-      } bg-[#f3f1ee]`}
+        } bg-[#f3f1ee]`}
     >
       <div className="absolute -right-3 -top-3 size-8 rounded-full bg-pink-200/60 blur-md" />
 
@@ -727,11 +741,10 @@ function PreferenceRow({
 }) {
   return (
     <div
-      className={`flex items-center justify-between gap-4 bg-white px-3.5 py-3 transition hover:bg-neutral-50 ${
-        !first
+      className={`flex items-center justify-between gap-4 bg-white px-3.5 py-3 transition hover:bg-neutral-50 ${!first
           ? "border-t border-black/[0.045]"
           : ""
-      }`}
+        }`}
     >
       <div className="min-w-0">
         <p className="text-xs font-medium text-neutral-700">
@@ -749,22 +762,19 @@ function PreferenceRow({
         aria-checked={checked}
         disabled={disabled}
         onClick={() => onChange(!checked)}
-        className={`relative flex h-5 w-9 shrink-0 items-center rounded-full p-0.5 transition-colors duration-200 ${
-          checked
+        className={`relative flex h-5 w-9 shrink-0 items-center rounded-full p-0.5 transition-colors duration-200 ${checked
             ? "bg-neutral-900"
             : "bg-neutral-200"
-        } ${
-          disabled
+          } ${disabled
             ? "cursor-not-allowed opacity-50"
             : "cursor-pointer"
-        }`}
+          }`}
       >
         <span
-          className={`block size-4 rounded-full bg-white shadow-[0_1px_4px_rgba(0,0,0,0.2)] transition-transform duration-200 ease-out ${
-            checked
+          className={`block size-4 rounded-full bg-white shadow-[0_1px_4px_rgba(0,0,0,0.2)] transition-transform duration-200 ease-out ${checked
               ? "translate-x-4"
               : "translate-x-0"
-          }`}
+            }`}
         />
       </button>
     </div>

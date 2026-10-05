@@ -2,7 +2,6 @@
 
 import type { MySubscription, SubscriptionPlanType } from "./types";
 
-// GANTI: isPremium() dulu cuma cek binary, sekarang perlu bedain level
 export function getActivePlanType(subscription: MySubscription | null): SubscriptionPlanType {
   if (!subscription) return "free";
 

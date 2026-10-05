@@ -1,5 +1,3 @@
-// wrapped/types.ts
-
 import type { Mood } from "../checkins/types";
 
 export interface MeetupSummary {
@@ -27,9 +25,21 @@ export interface GoalsWrappedSummary {
   goals: GoalSavingsSummaryItem[];
 }
 
-export type MilestoneType = "100_days" | "6_months" | "1_year" | "custom";
+export type MilestoneType =
+  | "100_days"
+  | "6_months"
+  | "1_year"
+  | "custom";
 
-export type WrappedTemplateId = "soft" | "bold" | "minimal" | "noir" | "bloom" | "night";
+export type WrappedTemplateId =
+  | "soft"
+  | "bold"
+  | "minimal"
+  | "noir"
+  | "bloom"
+  | "night";
+
+export type WrappedPlanAccess = "free" | "plus" | "pro";
 
 export interface WrappedPreference {
   id: string;
@@ -47,7 +57,7 @@ export interface WrappedTemplateInfo {
   id: WrappedTemplateId;
   name: string;
   description: string;
-  isPremium: boolean;
+  minPlan: WrappedPlanAccess;
   supportsCustomColor: boolean;
 }
 

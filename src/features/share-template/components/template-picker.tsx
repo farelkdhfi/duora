@@ -3,7 +3,18 @@
 import { useState } from "react";
 import { Check, ChevronRight, Lock, Palette, Sparkles } from "lucide-react";
 
-import { TEMPLATE_PRESETS } from "../presets";
+import {
+  TEMPLATE_PRESETS,
+} from "../presets";
+
+import {
+  canAccessTemplate,
+} from "../types";
+
+import type {
+  CountdownPlanAccess,
+} from "../types";
+
 import {
   useTemplatePreference,
   useUpsertTemplatePreference,
@@ -38,9 +49,15 @@ export function TemplatePicker({
     preference?.custom_color_to ?? "#fdba74"
   );
 
-  const canCustomize = subscription
-    ? subscription.can_customize_share_template
-    : false;
+  const currentPlan: CountdownPlanAccess =
+    subscription?.plan_type === "pro"
+      ? "pro"
+      : subscription?.plan_type === "plus"
+        ? "plus"
+        : "free";
+
+  const canCustomize =
+    currentPlan !== "free";
 
   const selectedPresetId =
     preference?.preset_id ?? "sunset";
@@ -48,7 +65,26 @@ export function TemplatePicker({
   const isCustomMode =
     preference?.template_mode === "custom";
 
-  function handleSelectPreset(presetId: string) {
+  function handleSelectPreset(
+    presetId: string,
+  ) {
+    const preset = TEMPLATE_PRESETS.find(
+      (item) => item.id === presetId,
+    );
+
+    if (!preset) {
+      return;
+    }
+
+    const hasAccess = canAccessTemplate(
+      preset,
+      currentPlan,
+    );
+
+    if (!hasAccess) {
+      return;
+    }
+
     savePreference({
       relationshipId,
       templateMode: "preset",
@@ -115,7 +151,10 @@ export function TemplatePicker({
         <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3">
           {TEMPLATE_PRESETS.map((preset) => {
             const isLocked =
-              preset.isPremium && !canCustomize;
+              !canAccessTemplate(
+                preset,
+                currentPlan,
+              );
 
             const isSelected =
               !isCustomMode &&
@@ -129,15 +168,13 @@ export function TemplatePicker({
                 onClick={() =>
                   handleSelectPreset(preset.id)
                 }
-                className={`group relative overflow-hidden rounded-[16px] text-left transition-all duration-200 ${
-                  isSelected
-                    ? "ring-1 ring-[#171717] ring-offset-2 ring-offset-white"
-                    : ""
-                } ${
-                  isLocked
+                className={`group relative overflow-hidden rounded-[16px] text-left transition-all duration-200 ${isSelected
+                  ? "ring-1 ring-[#171717] ring-offset-2 ring-offset-white"
+                  : ""
+                  } ${isLocked
                     ? "cursor-not-allowed"
                     : "hover:-translate-y-0.5"
-                }`}
+                  }`}
               >
                 {/* Gradient preview */}
                 <div
@@ -173,20 +210,21 @@ export function TemplatePicker({
 
                 {/* Label */}
                 <div
-                  className={`flex items-center justify-between border px-3 py-2.5 ${
-                    isSelected
-                      ? "border-[#171717]/10 bg-[#fafaf9]"
-                      : "border-black/[0.055] bg-white"
-                  }`}
+                  className={`flex items-center justify-between border px-3 py-2.5 ${isSelected
+                    ? "border-[#171717]/10 bg-[#fafaf9]"
+                    : "border-black/[0.055] bg-white"
+                    }`}
                 >
                   <div className="min-w-0">
                     <p className="truncate text-[11px] font-medium text-[#171717]">
                       {preset.name}
                     </p>
 
-                    {preset.isPremium && (
+                    {preset.minPlan !== "free" && (
                       <p className="mt-0.5 text-[9px] text-black/30">
-                        Premium
+                        {preset.minPlan === "plus"
+                          ? "Plus"
+                          : "Pro"}
                       </p>
                     )}
                   </div>
