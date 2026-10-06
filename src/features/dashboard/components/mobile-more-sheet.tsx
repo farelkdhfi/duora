@@ -5,15 +5,8 @@ import { useEffect, useState } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 
 import {
-  Activity,
-  BarChart3,
-  Clock3,
-  FileText,
-  Heart,
   Loader2,
   LogOut,
-  NotebookPen,
-  User2,
   X,
 } from 'lucide-react'
 
@@ -33,43 +26,41 @@ const moreNavigation = [
     label: 'Notes',
     description: 'Keep little things worth remembering',
     href: '/notes',
-    icon: NotebookPen,
   },
   {
     label: 'Check-in',
     description: 'Share how you feel today',
     href: '/check-in',
-    icon: Heart,
   },
   {
     label: 'Debates',
     description: 'Talk things through together',
     href: '/debates',
-    icon: BarChart3,
+  },
+  {
+    label: 'Q&A',
+    description: 'Discover more about each other',
+    href: '/qna',
   },
   {
     label: 'Countdown',
     description: 'Count down to your next moment',
     href: '/countdown',
-    icon: Clock3,
   },
   {
     label: 'Wrapped',
     description: 'Look back at your relationship',
     href: '/wrapped',
-    icon: FileText,
   },
   {
     label: 'Activities',
     description: 'Everything that happened recently',
     href: '/activities',
-    icon: Activity,
   },
   {
     label: 'Profile',
     description: 'Your account and relationship',
     href: '/profile',
-    icon: User2,
   },
 ]
 
@@ -141,7 +132,12 @@ export default function MobileMoreSheet({
 
   return (
     <div className="fixed inset-0 z-52 md:hidden">
-      <button type="button" aria-label="Close menu" onClick={onClose} className="absolute inset-0 bg-black/15 backdrop-blur-[6px]" />
+      <button
+        type="button"
+        aria-label="Close menu"
+        onClick={onClose}
+        className="absolute inset-0 bg-black/15 backdrop-blur-[6px]"
+      />
 
       <div className="absolute inset-x-3 bottom-3 max-h-[88dvh] overflow-y-auto rounded-[2rem] border border-black/[0.07] bg-white shadow-[0_-25px_70px_-25px_rgba(0,0,0,0.18)] backdrop-blur-2xl backdrop-saturate-150 animate-in slide-in-from-bottom duration-300">
         <div className="sticky top-0 z-20 bg-white px-5 pb-3 pt-3 backdrop-blur-xl">
@@ -149,14 +145,24 @@ export default function MobileMoreSheet({
 
           <div className="mt-5 flex items-center justify-between">
             <div className="flex items-center gap-x-1">
-              <Image src={logoImg} height={20} width={20} alt="logo" />
+              <Image
+                src={logoImg}
+                height={20}
+                width={20}
+                alt="logo"
+              />
 
               <p className="text-[16px] font-bold uppercase text-[#111111]">
                 DUORA
               </p>
             </div>
 
-            <button type="button" onClick={onClose} aria-label="Close menu" className="flex size-9 items-center justify-center rounded-full border border-black/[0.07] bg-black/[0.025] text-black/40 transition hover:bg-black/[0.06] hover:text-black/80 active:scale-95">
+            <button
+              type="button"
+              onClick={onClose}
+              aria-label="Close menu"
+              className="flex size-9 items-center justify-center rounded-full border border-black/[0.07] bg-black/[0.025] text-black/40 transition hover:bg-black/[0.06] hover:text-black/80 active:scale-95"
+            >
               <X size={16} strokeWidth={1.7} />
             </button>
           </div>
@@ -191,17 +197,19 @@ export default function MobileMoreSheet({
 
           <div className="overflow-hidden rounded-[1.5rem] border border-black/[0.06] bg-white/65 shadow-sm">
             {moreNavigation.map((item, index) => {
-              const Icon = item.icon
               const active = isActive(item.href)
               const disabled = locked
 
               if (disabled) {
                 return (
-                  <div key={item.href} className={`flex items-center gap-3.5 px-3.5 py-3.5 opacity-40 ${index !== moreNavigation.length - 1 ? 'border-b border-black/[0.05]' : ''}`}>
-                    <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-black/[0.035] text-black/45">
-                      <Icon size={17} strokeWidth={1.7} />
-                    </div>
-
+                  <div
+                    key={item.href}
+                    className={`flex items-center px-3.5 py-3.5 opacity-40 ${
+                      index !== moreNavigation.length - 1
+                        ? 'border-b border-black/[0.05]'
+                        : ''
+                    }`}
+                  >
                     <div className="min-w-0 flex-1">
                       <p className="text-[12px] font-medium text-black/65">
                         {item.label}
@@ -214,20 +222,41 @@ export default function MobileMoreSheet({
               }
 
               return (
-                <Link key={item.href} href={item.href} onClick={onClose} className={`group flex items-center gap-3.5 px-3.5 py-3.5 transition-all duration-200 active:bg-black/[0.04] ${index !== moreNavigation.length - 1 ? 'border-b border-black/[0.05]' : ''} ${active ? 'bg-black/[0.035]' : 'hover:bg-black/[0.02]'}`}>
-                  <div className={`flex size-9 shrink-0 items-center justify-center rounded-xl transition-all duration-200 ${active ? 'bg-white text-black' : 'bg-black/[0.035] text-black/45 group-hover:bg-black/[0.06] group-hover:text-black/80'}`}>
-                    <Icon size={17} strokeWidth={active ? 2 : 1.7} />
-                  </div>
-
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={onClose}
+                  className={`group flex items-center px-3.5 py-3.5 transition-all duration-200 active:bg-black/[0.04] ${
+                    index !== moreNavigation.length - 1
+                      ? 'border-b border-black/[0.05]'
+                      : ''
+                  } ${
+                    active
+                      ? 'bg-black/[0.035]'
+                      : 'hover:bg-black/[0.02]'
+                  }`}
+                >
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2">
-                      <p className={`text-[12px] font-medium ${active ? 'text-neutral-800' : 'text-neutral-500'}`}>
+                      <p
+                        className={`text-[12px] font-medium ${
+                          active
+                            ? 'text-neutral-800'
+                            : 'text-neutral-500'
+                        }`}
+                      >
                         {item.label}
                       </p>
                     </div>
                   </div>
 
-                  <div className={`size-1.5 shrink-0 rounded-full transition ${active ? 'bg-neutral-800' : 'bg-black/10 group-hover:bg-black/20'}`} />
+                  <div
+                    className={`size-1.5 shrink-0 rounded-full transition ${
+                      active
+                        ? 'bg-neutral-800'
+                        : 'bg-black/10 group-hover:bg-black/20'
+                    }`}
+                  />
                 </Link>
               )
             })}
@@ -245,10 +274,19 @@ export default function MobileMoreSheet({
         )}
 
         <div className="px-5 pb-[max(1rem,env(safe-area-inset-bottom))] pt-5">
-          <button type="button" onClick={handleLogout} disabled={isLoggingOut} className="flex w-full items-center justify-center gap-2 rounded-[1.2rem] border border-black/[0.06] bg-white/60 px-4 py-3 text-[11px] font-medium text-black/40 shadow-sm transition hover:border-red-400/20 hover:bg-red-50 hover:text-red-500 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:border-black/[0.06] disabled:hover:bg-white/60 disabled:hover:text-black/40">
+          <button
+            type="button"
+            onClick={handleLogout}
+            disabled={isLoggingOut}
+            className="flex w-full items-center justify-center gap-2 rounded-[1.2rem] border border-black/[0.06] bg-white/60 px-4 py-3 text-[11px] font-medium text-black/40 shadow-sm transition hover:border-red-400/20 hover:bg-red-50 hover:text-red-500 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:border-black/[0.06] disabled:hover:bg-white/60 disabled:hover:text-black/40"
+          >
             {isLoggingOut ? (
               <>
-                <Loader2 size={14} strokeWidth={1.7} className="animate-spin" />
+                <Loader2
+                  size={14}
+                  strokeWidth={1.7}
+                  className="animate-spin"
+                />
                 <span>Logging out...</span>
               </>
             ) : (
