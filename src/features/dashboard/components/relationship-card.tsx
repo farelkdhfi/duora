@@ -24,7 +24,7 @@ export default function RelationshipCard({
     : null
 
   return (
-    <section className="relative overflow-hidden rounded-b-[7rem] border-b-10 border-white shadow-lg bg-primary px-5 py-7 sm:rounded-2xl sm:px-8 sm:py-9">
+    <section className="relative overflow-hidden rounded-b-[7rem]  shadow-lg bg-white px-5 py-7 sm:rounded-2xl sm:px-8 sm:py-9">
       {/* DARK WAVE BACKGROUND */}
       <svg
         className="pointer-events-none absolute inset-0 h-full w-full"
@@ -371,7 +371,7 @@ export default function RelationshipCard({
             role="You"
             avatarUrl={userAvatarUrl}
             fallbackClass="text-blue-300"
-            ringClass="border-[#292c31]"
+            ringClass="border-[#fff]"
             accent="blue"
           />
 
@@ -400,7 +400,7 @@ export default function RelationshipCard({
             role="Partner"
             avatarUrl={partnerAvatarUrl}
             fallbackClass="text-pink-300"
-            ringClass="border-[#292c31]"
+            ringClass="border-[#fff]"
             accent="pink"
           />
         </div>
@@ -441,9 +441,9 @@ export default function RelationshipCard({
                   </svg>
                 </span>
 
-                <p className="text-[10px] text-white/45">
+                <p className="text-[10px] text-black/45">
                   Together for
-                  <span className="ml-1 font-semibold text-white/75">
+                  <span className="ml-1 font-semibold text-black/75">
                     {daysTogether} days
                   </span>
                 </p>
@@ -480,7 +480,7 @@ function Person({
   return (
     <div className="relative z-10 min-w-0 text-center">
       <div
-        className={`relative mx-auto flex size-[82px] items-center justify-center rounded-full border-[3px] bg-[#191b1f] p-1 shadow-[0_15px_35px_-15px_rgba(0,0,0,0.8)] backdrop-blur-sm sm:size-[104px] sm:border-4 sm:p-1.5 ${ringClass}`}
+        className={`relative mx-auto flex size-[82px] items-center justify-center rounded-full border-[3px] bg-[#b4bccc] p-1 shadow-[0_15px_35px_-15px_rgba(0,0,0,0.8)] backdrop-blur-sm sm:size-[104px] sm:border-4 sm:p-1.5 ${ringClass}`}
       >
         <div
           className={`absolute inset-1.5 rounded-full border border-dashed ${
@@ -515,11 +515,11 @@ function Person({
         />
       </div>
 
-      <p className="mx-auto mt-3 max-w-[95px] truncate text-[12px] font-semibold tracking-[-0.015em] text-white/90 sm:max-w-[125px] sm:text-[13px]">
+      <p className="mx-auto mt-3 max-w-[95px] truncate text-[12px] font-semibold tracking-[-0.015em] text-black/90 sm:max-w-[125px] sm:text-[13px]">
         {name}
       </p>
 
-      <p className="mt-0.5 text-[9px] font-medium uppercase tracking-[0.16em] text-white/35">
+      <p className="mt-0.5 text-[9px] font-medium uppercase tracking-[0.16em] text-black/35">
         {role}
       </p>
     </div>
