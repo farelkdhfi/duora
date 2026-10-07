@@ -25,9 +25,11 @@ const ORB_EASE_HALF = [ORB_EASE, ORB_EASE].join(";");
 
 interface LoveWaveProps {
   size?: number
+  /** Bayangan lembut di bawah orb. Default: false supaya nyatu dengan background parent. */
+  shadow?: boolean
 }
 
-export default function LoveWave({ size = 190 }: LoveWaveProps) {
+export default function LoveWave({ size = 190, shadow = false }: LoveWaveProps) {
   return (
     <div
       className="duora-love-wrap"
@@ -47,21 +49,23 @@ export default function LoveWave({ size = 190 }: LoveWaveProps) {
               flex-shrink: 0;
             }
 
+            /* Glow berbentuk cincin: tengahnya kosong supaya
+               warna background parent tetap terlihat di dalam orb */
             .duora-love-glow {
               position: absolute;
-              width: 120px;
-              height: 120px;
               border-radius: 9999px;
               background:
                 radial-gradient(
-                  circle,
-                  rgba(129, 140, 248, 0.22) 0%,
-                  rgba(192, 132, 252, 0.16) 38%,
-                  rgba(244, 114, 182, 0.09) 62%,
-                  transparent 78%
+                  circle closest-side,
+                  transparent 0%,
+                  transparent 50%,
+                  rgba(147, 160, 255, 0.22) 66%,
+                  rgba(200, 165, 255, 0.15) 80%,
+                  rgba(255, 170, 215, 0.08) 90%,
+                  transparent 100%
                 );
-              filter: blur(26px);
               animation: duoraLoveGlow 7s ease-in-out infinite;
+              pointer-events: none;
             }
 
             .duora-love-svg {
@@ -98,10 +102,6 @@ export default function LoveWave({ size = 190 }: LoveWaveProps) {
             .duora-orb-ribbon-b {
               animation: duoraOrbRibbonB 8s ease-in-out infinite;
               animation-delay: -21s;
-            }
-
-            .duora-orb-core {
-              animation: duoraOrbCore 3s ease-in-out infinite;
             }
 
             .duora-orb-caustic {
@@ -205,17 +205,6 @@ export default function LoveWave({ size = 190 }: LoveWaveProps) {
               }
             }
 
-            @keyframes duoraOrbCore {
-              0%,
-              100% {
-                transform: translate(0px, 0px) scale(1);
-              }
-
-              50% {
-                transform: translate(3px, -2px) scale(1.04);
-              }
-            }
-
             @keyframes duoraOrbCaustic {
               0%,
               100% {
@@ -262,7 +251,6 @@ export default function LoveWave({ size = 190 }: LoveWaveProps) {
               .duora-orb-flow-c,
               .duora-orb-ribbon-a,
               .duora-orb-ribbon-b,
-              .duora-orb-core,
               .duora-orb-caustic,
               .duora-orb-spec-a,
               .duora-orb-spec-b {
@@ -276,9 +264,9 @@ export default function LoveWave({ size = 190 }: LoveWaveProps) {
       <div
         className="duora-love-glow"
         style={{
-          width: size * 0.63,
-          height: size * 0.63,
-          filter: `blur(${size * 0.137}px)`,
+          width: size,
+          height: size,
+          filter: `blur(${size * 0.05}px)`,
         }}
       />
 
@@ -295,68 +283,94 @@ export default function LoveWave({ size = 190 }: LoveWaveProps) {
         <defs>
           {/* ---------- Gradients ---------- */}
 
-          {/* Atmospheric glow */}
+          {/* Atmospheric glow (pastel) */}
           <radialGradient id="duoraOrbAtmosA" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#5a6bff" stopOpacity="0.5" />
-            <stop offset="62%" stopColor="#6d5cff" stopOpacity="0.42" />
-            <stop offset="74%" stopColor="#8a5cf6" stopOpacity="0.3" />
-            <stop offset="88%" stopColor="#a96bff" stopOpacity="0.12" />
-            <stop offset="100%" stopColor="#a96bff" stopOpacity="0" />
+            <stop offset="0%" stopColor="#8fa2ff" stopOpacity="0.38" />
+            <stop offset="62%" stopColor="#9a8cff" stopOpacity="0.3" />
+            <stop offset="74%" stopColor="#b08cf8" stopOpacity="0.2" />
+            <stop offset="88%" stopColor="#c9a4ff" stopOpacity="0.08" />
+            <stop offset="100%" stopColor="#c9a4ff" stopOpacity="0" />
           </radialGradient>
 
           <radialGradient id="duoraOrbAtmosB" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#ff6ad5" stopOpacity="0.35" />
-            <stop offset="62%" stopColor="#f472b6" stopOpacity="0.3" />
-            <stop offset="74%" stopColor="#e879f9" stopOpacity="0.22" />
-            <stop offset="88%" stopColor="#f0abfc" stopOpacity="0.08" />
-            <stop offset="100%" stopColor="#f0abfc" stopOpacity="0" />
+            <stop offset="0%" stopColor="#ff9fdc" stopOpacity="0.3" />
+            <stop offset="62%" stopColor="#ffa8d2" stopOpacity="0.24" />
+            <stop offset="74%" stopColor="#f5a4ec" stopOpacity="0.17" />
+            <stop offset="88%" stopColor="#f6c3f7" stopOpacity="0.06" />
+            <stop offset="100%" stopColor="#f6c3f7" stopOpacity="0" />
           </radialGradient>
 
-          {/* Dark translucent glass body */}
+          {/* Soft ground shadow (opsional lewat prop `shadow`) */}
+          <radialGradient id="duoraOrbShadow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#5b63c9" stopOpacity="0.32" />
+            <stop offset="60%" stopColor="#7b7fd8" stopOpacity="0.14" />
+            <stop offset="100%" stopColor="#7b7fd8" stopOpacity="0" />
+          </radialGradient>
+
+          {/* Clear glass body: tengah transparan, hanya tepi yang
+              punya tint tipis supaya bentuk orb tetap terbaca */}
           <radialGradient
             id="duoraOrbBase"
             cx="100"
             cy="100"
-            r="66"
-            fx="95"
-            fy="90"
+            r="68"
+            fx="90"
+            fy="84"
             gradientUnits="userSpaceOnUse"
           >
-            <stop offset="0%" stopColor="#02030a" stopOpacity="1" />
-            <stop offset="50%" stopColor="#050719" stopOpacity="0.98" />
-            <stop offset="80%" stopColor="#0a1030" stopOpacity="0.94" />
-            <stop offset="100%" stopColor="#141a4a" stopOpacity="0.9" />
+            <stop offset="0%" stopColor="#ffffff" stopOpacity="0" />
+            <stop offset="55%" stopColor="#f3f4ff" stopOpacity="0" />
+            <stop offset="80%" stopColor="#d5dbff" stopOpacity="0.12" />
+            <stop offset="100%" stopColor="#b4bffa" stopOpacity="0.3" />
           </radialGradient>
 
-          {/* Internal light blobs */}
+          {/* Gradient untuk mask pelubang tengah.
+              Putih = tampil, transparan = hilang.
+              - Ubah "48%" jadi lebih besar  -> lubang tengah lebih lebar
+              - Ubah "86%" jadi lebih kecil  -> warna di tepi lebih tipis */}
+          <radialGradient
+            id="duoraOrbCenterFade"
+            cx="100"
+            cy="100"
+            r="66"
+            gradientUnits="userSpaceOnUse"
+          >
+            <stop offset="0%" stopColor="#ffffff" stopOpacity="0" />
+            <stop offset="48%" stopColor="#ffffff" stopOpacity="0" />
+            <stop offset="66%" stopColor="#ffffff" stopOpacity="0.3" />
+            <stop offset="86%" stopColor="#ffffff" stopOpacity="1" />
+            <stop offset="100%" stopColor="#ffffff" stopOpacity="1" />
+          </radialGradient>
+
+          {/* Internal light blobs (pastel) */}
           <radialGradient id="duoraOrbBlue" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#5b8cff" stopOpacity="1" />
-            <stop offset="45%" stopColor="#2f55ff" stopOpacity="0.85" />
-            <stop offset="100%" stopColor="#1d2fd8" stopOpacity="0" />
+            <stop offset="0%" stopColor="#7fa3ff" stopOpacity="0.95" />
+            <stop offset="45%" stopColor="#8aa4ff" stopOpacity="0.68" />
+            <stop offset="100%" stopColor="#9aa8ff" stopOpacity="0" />
           </radialGradient>
 
           <radialGradient id="duoraOrbCyan" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#7ff3ff" stopOpacity="1" />
-            <stop offset="50%" stopColor="#22d3ee" stopOpacity="0.7" />
-            <stop offset="100%" stopColor="#0ea5e9" stopOpacity="0" />
+            <stop offset="0%" stopColor="#96e8f8" stopOpacity="0.95" />
+            <stop offset="50%" stopColor="#7adcf2" stopOpacity="0.62" />
+            <stop offset="100%" stopColor="#6fd0ee" stopOpacity="0" />
           </radialGradient>
 
           <radialGradient id="duoraOrbViolet" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#b794ff" stopOpacity="1" />
-            <stop offset="50%" stopColor="#7c4dff" stopOpacity="0.8" />
-            <stop offset="100%" stopColor="#5b21b6" stopOpacity="0" />
+            <stop offset="0%" stopColor="#c0a4ff" stopOpacity="0.95" />
+            <stop offset="50%" stopColor="#b293ff" stopOpacity="0.66" />
+            <stop offset="100%" stopColor="#a98bff" stopOpacity="0" />
           </radialGradient>
 
           <radialGradient id="duoraOrbMagenta" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#ff7be5" stopOpacity="1" />
-            <stop offset="50%" stopColor="#e040d0" stopOpacity="0.8" />
-            <stop offset="100%" stopColor="#a21caf" stopOpacity="0" />
+            <stop offset="0%" stopColor="#ff98e8" stopOpacity="0.9" />
+            <stop offset="50%" stopColor="#f08ad9" stopOpacity="0.6" />
+            <stop offset="100%" stopColor="#e07ad0" stopOpacity="0" />
           </radialGradient>
 
           <radialGradient id="duoraOrbPink" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#ffb3d9" stopOpacity="1" />
-            <stop offset="50%" stopColor="#ff6fb5" stopOpacity="0.75" />
-            <stop offset="100%" stopColor="#f43f5e" stopOpacity="0" />
+            <stop offset="0%" stopColor="#ffc0dc" stopOpacity="0.95" />
+            <stop offset="50%" stopColor="#ffa3cb" stopOpacity="0.66" />
+            <stop offset="100%" stopColor="#ff8fb8" stopOpacity="0" />
           </radialGradient>
 
           {/* Light ribbons */}
@@ -368,11 +382,11 @@ export default function LoveWave({ size = 190 }: LoveWaveProps) {
             y2="132"
             gradientUnits="userSpaceOnUse"
           >
-            <stop offset="0%" stopColor="#3b82f6" stopOpacity="0" />
-            <stop offset="25%" stopColor="#38bdf8" stopOpacity="1" />
-            <stop offset="55%" stopColor="#5b7cff" stopOpacity="0.95" />
-            <stop offset="85%" stopColor="#8b5cf6" stopOpacity="0.7" />
-            <stop offset="100%" stopColor="#8b5cf6" stopOpacity="0" />
+            <stop offset="0%" stopColor="#60a5fa" stopOpacity="0" />
+            <stop offset="25%" stopColor="#4cc2f5" stopOpacity="0.95" />
+            <stop offset="55%" stopColor="#6e8bff" stopOpacity="0.9" />
+            <stop offset="85%" stopColor="#9a74f6" stopOpacity="0.65" />
+            <stop offset="100%" stopColor="#9a74f6" stopOpacity="0" />
           </linearGradient>
 
           <linearGradient
@@ -383,10 +397,10 @@ export default function LoveWave({ size = 190 }: LoveWaveProps) {
             y2="120"
             gradientUnits="userSpaceOnUse"
           >
-            <stop offset="0%" stopColor="#a855f7" stopOpacity="0" />
-            <stop offset="30%" stopColor="#d946ef" stopOpacity="0.95" />
-            <stop offset="65%" stopColor="#f472b6" stopOpacity="1" />
-            <stop offset="100%" stopColor="#fb7185" stopOpacity="0" />
+            <stop offset="0%" stopColor="#b56cf7" stopOpacity="0" />
+            <stop offset="30%" stopColor="#df62f0" stopOpacity="0.9" />
+            <stop offset="65%" stopColor="#f77fbd" stopOpacity="0.95" />
+            <stop offset="100%" stopColor="#fb7e92" stopOpacity="0" />
           </linearGradient>
 
           <linearGradient
@@ -397,9 +411,9 @@ export default function LoveWave({ size = 190 }: LoveWaveProps) {
             y2="46"
             gradientUnits="userSpaceOnUse"
           >
-            <stop offset="0%" stopColor="#6366f1" stopOpacity="0" />
-            <stop offset="50%" stopColor="#a78bfa" stopOpacity="0.9" />
-            <stop offset="100%" stopColor="#67e8f9" stopOpacity="0" />
+            <stop offset="0%" stopColor="#7a7df5" stopOpacity="0" />
+            <stop offset="50%" stopColor="#a58bfa" stopOpacity="0.85" />
+            <stop offset="100%" stopColor="#6fe0f2" stopOpacity="0" />
           </linearGradient>
 
           <linearGradient
@@ -410,28 +424,15 @@ export default function LoveWave({ size = 190 }: LoveWaveProps) {
             y2="146"
             gradientUnits="userSpaceOnUse"
           >
-            <stop offset="0%" stopColor="#f0abfc" stopOpacity="0" />
-            <stop offset="50%" stopColor="#60a5fa" stopOpacity="0.8" />
-            <stop offset="100%" stopColor="#22d3ee" stopOpacity="0" />
+            <stop offset="0%" stopColor="#ee9ffc" stopOpacity="0" />
+            <stop offset="50%" stopColor="#6aa8fb" stopOpacity="0.75" />
+            <stop offset="100%" stopColor="#35d4ee" stopOpacity="0" />
           </linearGradient>
 
-          {/* Dark core + faint inner caustic */}
-          <radialGradient
-            id="duoraOrbCore"
-            cx="100"
-            cy="100"
-            r="50"
-            gradientUnits="userSpaceOnUse"
-          >
-            <stop offset="0%" stopColor="#010208" stopOpacity="0.98" />
-            <stop offset="55%" stopColor="#02030a" stopOpacity="0.92" />
-            <stop offset="85%" stopColor="#05071a" stopOpacity="0.45" />
-            <stop offset="100%" stopColor="#05071a" stopOpacity="0" />
-          </radialGradient>
-
+          {/* Faint inner caustic untuk kedalaman */}
           <radialGradient id="duoraOrbCaustic" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#6f86ff" stopOpacity="0.5" />
-            <stop offset="100%" stopColor="#6f86ff" stopOpacity="0" />
+            <stop offset="0%" stopColor="#98a6ff" stopOpacity="0.26" />
+            <stop offset="100%" stopColor="#98a6ff" stopOpacity="0" />
           </radialGradient>
 
           {/* Iridescent rim — gradient itself slowly drifts around the edge */}
@@ -451,15 +452,15 @@ export default function LoveWave({ size = 190 }: LoveWaveProps) {
               dur="48s"
               repeatCount="indefinite"
             />
-            <stop offset="0%" stopColor="#22d3ee" stopOpacity="0.9" />
-            <stop offset="25%" stopColor="#3b6cff" stopOpacity="0.9" />
-            <stop offset="50%" stopColor="#a855f7" stopOpacity="0.85" />
-            <stop offset="72%" stopColor="#e040d0" stopOpacity="0.9" />
-            <stop offset="88%" stopColor="#f472b6" stopOpacity="0.8" />
-            <stop offset="100%" stopColor="#22d3ee" stopOpacity="0.9" />
+            <stop offset="0%" stopColor="#5fd2ee" stopOpacity="0.9" />
+            <stop offset="25%" stopColor="#7e9bff" stopOpacity="0.9" />
+            <stop offset="50%" stopColor="#b88cf7" stopOpacity="0.85" />
+            <stop offset="72%" stopColor="#ee82da" stopOpacity="0.9" />
+            <stop offset="88%" stopColor="#f8a0c8" stopOpacity="0.8" />
+            <stop offset="100%" stopColor="#5fd2ee" stopOpacity="0.9" />
           </linearGradient>
 
-          {/* Glass surface sheen */}
+          {/* Glass surface sheen: tipis, hampir transparan */}
           <linearGradient
             id="duoraOrbGloss"
             x1="60"
@@ -468,10 +469,10 @@ export default function LoveWave({ size = 190 }: LoveWaveProps) {
             y2="164"
             gradientUnits="userSpaceOnUse"
           >
-            <stop offset="0%" stopColor="#ffffff" stopOpacity="0.2" />
-            <stop offset="30%" stopColor="#ffffff" stopOpacity="0.05" />
-            <stop offset="60%" stopColor="#bcd0ff" stopOpacity="0" />
-            <stop offset="100%" stopColor="#9bb7ff" stopOpacity="0.14" />
+            <stop offset="0%" stopColor="#ffffff" stopOpacity="0.24" />
+            <stop offset="30%" stopColor="#ffffff" stopOpacity="0.06" />
+            <stop offset="60%" stopColor="#dfe6ff" stopOpacity="0" />
+            <stop offset="100%" stopColor="#8f9cf5" stopOpacity="0.16" />
           </linearGradient>
 
           {/* Specular crescents */}
@@ -483,9 +484,9 @@ export default function LoveWave({ size = 190 }: LoveWaveProps) {
             y2="46.2"
             gradientUnits="userSpaceOnUse"
           >
-            <stop offset="0%" stopColor="#bfe9ff" stopOpacity="0" />
-            <stop offset="35%" stopColor="#ffffff" stopOpacity="0.9" />
-            <stop offset="70%" stopColor="#f5e6ff" stopOpacity="0.85" />
+            <stop offset="0%" stopColor="#ffffff" stopOpacity="0" />
+            <stop offset="35%" stopColor="#ffffff" stopOpacity="0.95" />
+            <stop offset="70%" stopColor="#ffffff" stopOpacity="0.9" />
             <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
           </linearGradient>
 
@@ -497,9 +498,9 @@ export default function LoveWave({ size = 190 }: LoveWaveProps) {
             y2="46.2"
             gradientUnits="userSpaceOnUse"
           >
-            <stop offset="0%" stopColor="#a5f3fc" stopOpacity="0" />
-            <stop offset="40%" stopColor="#c7e6ff" stopOpacity="0.9" />
-            <stop offset="70%" stopColor="#e9d5ff" stopOpacity="0.8" />
+            <stop offset="0%" stopColor="#ffffff" stopOpacity="0" />
+            <stop offset="40%" stopColor="#ffffff" stopOpacity="0.9" />
+            <stop offset="70%" stopColor="#fdf7ff" stopOpacity="0.8" />
             <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
           </linearGradient>
 
@@ -509,6 +510,45 @@ export default function LoveWave({ size = 190 }: LoveWaveProps) {
               <animate {...ORB_MORPH_ANIMATION} />
             </path>
           </clipPath>
+
+          {/* Mask pelubang tengah: semua isi orb dipotong di bagian tengah,
+              jadi yang terlihat di tengah adalah background parent */}
+          <mask
+            id="duoraOrbCenterMask"
+            maskUnits="userSpaceOnUse"
+            x="0"
+            y="0"
+            width="200"
+            height="200"
+          >
+            <rect
+              x="0"
+              y="0"
+              width="200"
+              height="200"
+              fill="url(#duoraOrbCenterFade)"
+            />
+          </mask>
+
+          {/* Mask "lubang" berbentuk orb: dipakai untuk memotong glow
+              atmosfer di dalam orb */}
+          <mask
+            id="duoraOrbHole"
+            maskUnits="userSpaceOnUse"
+            x="0"
+            y="0"
+            width="200"
+            height="200"
+          >
+            <rect x="0" y="0" width="200" height="200" fill="#ffffff" />
+            <path
+              d={ORB_SHAPE_1}
+              fill="#000000"
+              filter="url(#duoraOrbBlurMask)"
+            >
+              <animate {...ORB_MORPH_ANIMATION} />
+            </path>
+          </mask>
 
           {/* ---------- Filters ---------- */}
           <filter
@@ -521,6 +561,30 @@ export default function LoveWave({ size = 190 }: LoveWaveProps) {
             colorInterpolationFilters="sRGB"
           >
             <feGaussianBlur stdDeviation="9" />
+          </filter>
+
+          <filter
+            id="duoraOrbBlurMask"
+            filterUnits="userSpaceOnUse"
+            x="0"
+            y="0"
+            width="200"
+            height="200"
+            colorInterpolationFilters="sRGB"
+          >
+            <feGaussianBlur stdDeviation="2" />
+          </filter>
+
+          <filter
+            id="duoraOrbBlurShadow"
+            filterUnits="userSpaceOnUse"
+            x="0"
+            y="0"
+            width="200"
+            height="200"
+            colorInterpolationFilters="sRGB"
+          >
+            <feGaussianBlur stdDeviation="5" />
           </filter>
 
           <filter
@@ -701,49 +765,83 @@ export default function LoveWave({ size = 190 }: LoveWaveProps) {
           </filter>
         </defs>
 
-        {/* 1. Atmospheric glow (breathing) */}
-        <g filter="url(#duoraOrbBlurGlow)">
-          <circle cx="96" cy="106" r="80" fill="url(#duoraOrbAtmosA)">
-            <animate
-              attributeName="r"
-              values="78;88;78"
-              keyTimes="0;0.5;1"
-              keySplines={ORB_EASE_HALF}
-              calcMode="spline"
-              dur="9s"
-              repeatCount="indefinite"
-            />
-            <animate
-              attributeName="opacity"
-              values="0.55;0.95;0.55"
-              keyTimes="0;0.5;1"
-              keySplines={ORB_EASE_HALF}
-              calcMode="spline"
-              dur="9s"
-              repeatCount="indefinite"
-            />
-          </circle>
+        {/* 0. Soft contact shadow (opsional) */}
+        {shadow && (
+          <g filter="url(#duoraOrbBlurShadow)">
+            <ellipse
+              cx="100"
+              cy="176"
+              rx="46"
+              ry="7"
+              fill="url(#duoraOrbShadow)"
+            >
+              <animate
+                attributeName="rx"
+                values="42;52;42"
+                keyTimes="0;0.5;1"
+                keySplines={ORB_EASE_HALF}
+                calcMode="spline"
+                dur="9s"
+                repeatCount="indefinite"
+              />
+              <animate
+                attributeName="opacity"
+                values="0.7;1;0.7"
+                keyTimes="0;0.5;1"
+                keySplines={ORB_EASE_HALF}
+                calcMode="spline"
+                dur="9s"
+                repeatCount="indefinite"
+              />
+            </ellipse>
+          </g>
+        )}
 
-          <circle cx="106" cy="92" r="76" fill="url(#duoraOrbAtmosB)">
-            <animate
-              attributeName="r"
-              values="74;84;74"
-              keyTimes="0;0.5;1"
-              keySplines={ORB_EASE_HALF}
-              calcMode="spline"
-              dur="11s"
-              repeatCount="indefinite"
-            />
-            <animate
-              attributeName="opacity"
-              values="0.8;0.4;0.8"
-              keyTimes="0;0.5;1"
-              keySplines={ORB_EASE_HALF}
-              calcMode="spline"
-              dur="11s"
-              repeatCount="indefinite"
-            />
-          </circle>
+        {/* 1. Atmospheric glow (breathing) — hanya di luar orb berkat mask */}
+        <g mask="url(#duoraOrbHole)">
+          <g filter="url(#duoraOrbBlurGlow)">
+            <circle cx="96" cy="106" r="80" fill="url(#duoraOrbAtmosA)">
+              <animate
+                attributeName="r"
+                values="78;88;78"
+                keyTimes="0;0.5;1"
+                keySplines={ORB_EASE_HALF}
+                calcMode="spline"
+                dur="9s"
+                repeatCount="indefinite"
+              />
+              <animate
+                attributeName="opacity"
+                values="0.55;0.95;0.55"
+                keyTimes="0;0.5;1"
+                keySplines={ORB_EASE_HALF}
+                calcMode="spline"
+                dur="9s"
+                repeatCount="indefinite"
+              />
+            </circle>
+
+            <circle cx="106" cy="92" r="76" fill="url(#duoraOrbAtmosB)">
+              <animate
+                attributeName="r"
+                values="74;84;74"
+                keyTimes="0;0.5;1"
+                keySplines={ORB_EASE_HALF}
+                calcMode="spline"
+                dur="11s"
+                repeatCount="indefinite"
+              />
+              <animate
+                attributeName="opacity"
+                values="0.8;0.4;0.8"
+                keyTimes="0;0.5;1"
+                keySplines={ORB_EASE_HALF}
+                calcMode="spline"
+                dur="11s"
+                repeatCount="indefinite"
+              />
+            </circle>
+          </g>
         </g>
 
         {/* 2. Soft edge halo following the morphing silhouette */}
@@ -752,13 +850,13 @@ export default function LoveWave({ size = 190 }: LoveWaveProps) {
           fill="none"
           stroke="url(#duoraOrbRimGrad)"
           strokeWidth="10"
-          opacity="0.38"
+          opacity="0.32"
           filter="url(#duoraOrbBlurHalo)"
         >
           <animate {...ORB_MORPH_ANIMATION} />
           <animate
             attributeName="opacity"
-            values="0.28;0.5;0.28"
+            values="0.22;0.42;0.22"
             keyTimes="0;0.5;1"
             keySplines={ORB_EASE_HALF}
             calcMode="spline"
@@ -767,241 +865,239 @@ export default function LoveWave({ size = 190 }: LoveWaveProps) {
           />
         </path>
 
-        {/* 3. The orb itself — everything inside is clipped to the morphing blob */}
+        {/* 3. The orb itself — dipotong ke bentuk blob, lalu tengahnya
+               dilubangi lewat mask supaya benar-benar transparan */}
         <g clipPath="url(#duoraOrbClip)">
-          {/* Dark translucent glass body */}
-          <rect
-            x="20"
-            y="20"
-            width="160"
-            height="160"
-            fill="url(#duoraOrbBase)"
-          />
-
-          {/* Internal flowing light, warped by the refraction filter */}
-          <g filter="url(#duoraOrbRefract)">
-            {/* Soft colour masses */}
-            <g filter="url(#duoraOrbBlurLg)">
-              <g className="duora-orb-layer duora-orb-flow-a">
-                <ellipse
-                  cx="66"
-                  cy="126"
-                  rx="40"
-                  ry="24"
-                  transform="rotate(-32 66 126)"
-                  fill="url(#duoraOrbBlue)"
-                />
-                <ellipse
-                  cx="112"
-                  cy="150"
-                  rx="34"
-                  ry="15"
-                  transform="rotate(-8 112 150)"
-                  fill="url(#duoraOrbCyan)"
-                />
-              </g>
-
-              <g className="duora-orb-layer duora-orb-flow-b">
-                <ellipse
-                  cx="54"
-                  cy="82"
-                  rx="30"
-                  ry="20"
-                  transform="rotate(-50 54 82)"
-                  fill="url(#duoraOrbViolet)"
-                />
-                <ellipse
-                  cx="88"
-                  cy="44"
-                  rx="26"
-                  ry="12"
-                  transform="rotate(-12 88 44)"
-                  fill="url(#duoraOrbBlue)"
-                />
-              </g>
-
-              <g className="duora-orb-layer duora-orb-flow-c">
-                <ellipse
-                  cx="148"
-                  cy="76"
-                  rx="32"
-                  ry="22"
-                  transform="rotate(35 148 76)"
-                  fill="url(#duoraOrbMagenta)"
-                />
-                <ellipse
-                  cx="150"
-                  cy="122"
-                  rx="22"
-                  ry="30"
-                  transform="rotate(-15 150 122)"
-                  fill="url(#duoraOrbPink)"
-                />
-              </g>
-            </g>
-
-            {/* Thin flowing light ribbons */}
-            <g filter="url(#duoraOrbBlurSm)">
-              <g className="duora-orb-layer duora-orb-ribbon-a">
-                <path
-                  d="M52,112 C54,134 74,152 100,154 C120,155 136,146 146,132"
-                  fill="none"
-                  stroke="url(#duoraOrbRibbonBlue)"
-                  strokeWidth="7"
-                  strokeLinecap="round"
-                />
-                <path
-                  d="M132,118 C128,136 112,146 96,146"
-                  fill="none"
-                  stroke="url(#duoraOrbRibbonMix)"
-                  strokeWidth="3.5"
-                  strokeLinecap="round"
-                />
-              </g>
-
-              <g className="duora-orb-layer duora-orb-ribbon-b">
-                <path
-                  d="M118,48 C140,52 154,68 156,90 C157,102 154,112 150,120"
-                  fill="none"
-                  stroke="url(#duoraOrbRibbonPink)"
-                  strokeWidth="6"
-                  strokeLinecap="round"
-                />
-                <path
-                  d="M50,92 C48,70 62,52 84,46"
-                  fill="none"
-                  stroke="url(#duoraOrbRibbonViolet)"
-                  strokeWidth="5"
-                  strokeLinecap="round"
-                />
-              </g>
-            </g>
-          </g>
-
-          {/* Dark inner core keeps the centre deep and glassy */}
-          <g className="duora-orb-layer duora-orb-core">
-            <circle cx="100" cy="100" r="50" fill="url(#duoraOrbCore)" />
-          </g>
-
-          {/* Faint inner caustic for depth */}
-          <g className="duora-orb-layer duora-orb-caustic">
-            <ellipse
-              cx="108"
-              cy="106"
-              rx="24"
-              ry="14"
-              transform="rotate(-25 108 106)"
-              fill="url(#duoraOrbCaustic)"
+          <g mask="url(#duoraOrbCenterMask)">
+            {/* Clear glass body (tengah transparan, tepi tint tipis) */}
+            <rect
+              x="20"
+              y="20"
+              width="160"
+              height="160"
+              fill="url(#duoraOrbBase)"
             />
-          </g>
 
-          {/* Iridescent inner rim glow */}
-          <path
-            d={ORB_SHAPE_1}
-            fill="none"
-            stroke="url(#duoraOrbRimGrad)"
-            strokeWidth="9"
-            opacity="0.8"
-            filter="url(#duoraOrbBlurRim)"
-          >
-            <animate {...ORB_MORPH_ANIMATION} />
-          </path>
+            {/* Internal flowing light, warped by the refraction filter */}
+            <g filter="url(#duoraOrbRefract)">
+              {/* Soft colour masses */}
+              <g filter="url(#duoraOrbBlurLg)">
+                <g className="duora-orb-layer duora-orb-flow-a">
+                  <ellipse
+                    cx="66"
+                    cy="126"
+                    rx="40"
+                    ry="24"
+                    transform="rotate(-32 66 126)"
+                    fill="url(#duoraOrbBlue)"
+                  />
+                  <ellipse
+                    cx="112"
+                    cy="150"
+                    rx="34"
+                    ry="15"
+                    transform="rotate(-8 112 150)"
+                    fill="url(#duoraOrbCyan)"
+                  />
+                </g>
 
-          {/* Very subtle edge definition (no hard border) */}
-          <path
-            d={ORB_SHAPE_1}
-            fill="none"
-            stroke="url(#duoraOrbRimGrad)"
-            strokeWidth="2"
-            opacity="0.32"
-            filter="url(#duoraOrbBlurEdge)"
-          >
-            <animate {...ORB_MORPH_ANIMATION} />
-          </path>
+                <g className="duora-orb-layer duora-orb-flow-b">
+                  <ellipse
+                    cx="54"
+                    cy="82"
+                    rx="30"
+                    ry="20"
+                    transform="rotate(-50 54 82)"
+                    fill="url(#duoraOrbViolet)"
+                  />
+                  <ellipse
+                    cx="88"
+                    cy="44"
+                    rx="26"
+                    ry="12"
+                    transform="rotate(-12 88 44)"
+                    fill="url(#duoraOrbBlue)"
+                  />
+                </g>
 
-          {/* Glass surface sheen */}
-          <rect
-            x="20"
-            y="20"
-            width="160"
-            height="160"
-            fill="url(#duoraOrbGloss)"
-          />
+                <g className="duora-orb-layer duora-orb-flow-c">
+                  <ellipse
+                    cx="148"
+                    cy="76"
+                    rx="32"
+                    ry="22"
+                    transform="rotate(35 148 76)"
+                    fill="url(#duoraOrbMagenta)"
+                  />
+                  <ellipse
+                    cx="150"
+                    cy="122"
+                    rx="22"
+                    ry="30"
+                    transform="rotate(-15 150 122)"
+                    fill="url(#duoraOrbPink)"
+                  />
+                </g>
+              </g>
 
-          {/* Edge sheens that drift slowly along the glass */}
-          <g filter="url(#duoraOrbBlurSheen)">
-            <path
-              d={ORB_SHAPE_1}
-              fill="none"
-              stroke="#ffffff"
-              strokeWidth="7"
-              strokeLinecap="round"
-              pathLength={100}
-              strokeDasharray="10 90"
-              opacity="0.75"
-            >
-              <animate {...ORB_MORPH_ANIMATION} />
-              <animate
-                attributeName="stroke-dashoffset"
-                values="12;22;12"
-                keyTimes="0;0.5;1"
-                keySplines={ORB_EASE_HALF}
-                calcMode="spline"
-                dur="21s"
-                repeatCount="indefinite"
-              />
-            </path>
+              {/* Thin flowing light ribbons */}
+              <g filter="url(#duoraOrbBlurSm)">
+                <g className="duora-orb-layer duora-orb-ribbon-a">
+                  <path
+                    d="M52,112 C54,134 74,152 100,154 C120,155 136,146 146,132"
+                    fill="none"
+                    stroke="url(#duoraOrbRibbonBlue)"
+                    strokeWidth="7"
+                    strokeLinecap="round"
+                  />
+                  <path
+                    d="M132,118 C128,136 112,146 96,146"
+                    fill="none"
+                    stroke="url(#duoraOrbRibbonMix)"
+                    strokeWidth="3.5"
+                    strokeLinecap="round"
+                  />
+                </g>
 
-            <path
-              d={ORB_SHAPE_1}
-              fill="none"
-              stroke="#c7d2fe"
-              strokeWidth="6"
-              strokeLinecap="round"
-              pathLength={100}
-              strokeDasharray="14 86"
-              opacity="0.45"
-            >
-              <animate {...ORB_MORPH_ANIMATION} />
-              <animate
-                attributeName="stroke-dashoffset"
-                values="-30;-42;-30"
-                keyTimes="0;0.5;1"
-                keySplines={ORB_EASE_HALF}
-                calcMode="spline"
-                dur="27s"
-                repeatCount="indefinite"
-              />
-            </path>
-          </g>
+                <g className="duora-orb-layer duora-orb-ribbon-b">
+                  <path
+                    d="M118,48 C140,52 154,68 156,90 C157,102 154,112 150,120"
+                    fill="none"
+                    stroke="url(#duoraOrbRibbonPink)"
+                    strokeWidth="6"
+                    strokeLinecap="round"
+                  />
+                  <path
+                    d="M50,92 C48,70 62,52 84,46"
+                    fill="none"
+                    stroke="url(#duoraOrbRibbonViolet)"
+                    strokeWidth="5"
+                    strokeLinecap="round"
+                  />
+                </g>
+              </g>
+            </g>
 
-          {/* White specular highlights */}
-          <g filter="url(#duoraOrbBlurHi)">
-            <g className="duora-orb-layer duora-orb-spec-a">
-              <path
-                d="M47.8,86 C54.6,60.7 78.6,43.9 104.7,46.2 C86,51 60,66 47.8,86 Z"
-                fill="url(#duoraOrbSpec)"
-              />
+            {/* Faint inner caustic for depth */}
+            <g className="duora-orb-layer duora-orb-caustic">
               <ellipse
-                cx="71"
-                cy="58"
-                rx="7"
-                ry="2.2"
-                transform="rotate(-35 71 58)"
-                fill="#ffffff"
-                opacity="0.95"
+                cx="108"
+                cy="106"
+                rx="24"
+                ry="14"
+                transform="rotate(-25 108 106)"
+                fill="url(#duoraOrbCaustic)"
               />
             </g>
 
-            <g
-              className="duora-orb-layer duora-orb-spec-b"
-              opacity="0.5"
+            {/* Iridescent inner rim glow */}
+            <path
+              d={ORB_SHAPE_1}
+              fill="none"
+              stroke="url(#duoraOrbRimGrad)"
+              strokeWidth="9"
+              opacity="0.75"
+              filter="url(#duoraOrbBlurRim)"
             >
+              <animate {...ORB_MORPH_ANIMATION} />
+            </path>
+
+            {/* Very subtle edge definition (no hard border) */}
+            <path
+              d={ORB_SHAPE_1}
+              fill="none"
+              stroke="url(#duoraOrbRimGrad)"
+              strokeWidth="2"
+              opacity="0.45"
+              filter="url(#duoraOrbBlurEdge)"
+            >
+              <animate {...ORB_MORPH_ANIMATION} />
+            </path>
+
+            {/* Glass surface sheen */}
+            <rect
+              x="20"
+              y="20"
+              width="160"
+              height="160"
+              fill="url(#duoraOrbGloss)"
+            />
+
+            {/* Edge sheens that drift slowly along the glass */}
+            <g filter="url(#duoraOrbBlurSheen)">
               <path
-                d="M47.8,86 C54.6,60.7 78.6,43.9 104.7,46.2 C86,51 60,66 47.8,86 Z"
-                transform="rotate(180 100 100)"
-                fill="url(#duoraOrbSpecB)"
-              />
+                d={ORB_SHAPE_1}
+                fill="none"
+                stroke="#ffffff"
+                strokeWidth="7"
+                strokeLinecap="round"
+                pathLength={100}
+                strokeDasharray="10 90"
+                opacity="0.85"
+              >
+                <animate {...ORB_MORPH_ANIMATION} />
+                <animate
+                  attributeName="stroke-dashoffset"
+                  values="12;22;12"
+                  keyTimes="0;0.5;1"
+                  keySplines={ORB_EASE_HALF}
+                  calcMode="spline"
+                  dur="21s"
+                  repeatCount="indefinite"
+                />
+              </path>
+
+              <path
+                d={ORB_SHAPE_1}
+                fill="none"
+                stroke="#ffffff"
+                strokeWidth="6"
+                strokeLinecap="round"
+                pathLength={100}
+                strokeDasharray="14 86"
+                opacity="0.55"
+              >
+                <animate {...ORB_MORPH_ANIMATION} />
+                <animate
+                  attributeName="stroke-dashoffset"
+                  values="-30;-42;-30"
+                  keyTimes="0;0.5;1"
+                  keySplines={ORB_EASE_HALF}
+                  calcMode="spline"
+                  dur="27s"
+                  repeatCount="indefinite"
+                />
+              </path>
+            </g>
+
+            {/* White specular highlights */}
+            <g filter="url(#duoraOrbBlurHi)">
+              <g className="duora-orb-layer duora-orb-spec-a">
+                <path
+                  d="M47.8,86 C54.6,60.7 78.6,43.9 104.7,46.2 C86,51 60,66 47.8,86 Z"
+                  fill="url(#duoraOrbSpec)"
+                />
+                <ellipse
+                  cx="71"
+                  cy="58"
+                  rx="7"
+                  ry="2.2"
+                  transform="rotate(-35 71 58)"
+                  fill="#ffffff"
+                  opacity="0.98"
+                />
+              </g>
+
+              <g
+                className="duora-orb-layer duora-orb-spec-b"
+                opacity="0.6"
+              >
+                <path
+                  d="M47.8,86 C54.6,60.7 78.6,43.9 104.7,46.2 C86,51 60,66 47.8,86 Z"
+                  transform="rotate(180 100 100)"
+                  fill="url(#duoraOrbSpecB)"
+                />
+              </g>
             </g>
           </g>
         </g>

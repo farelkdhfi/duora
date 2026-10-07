@@ -7,7 +7,7 @@ import {
   CalendarDays,
   Home,
   MoreHorizontal,
-  PiggyBank,
+  Wallet,
 } from 'lucide-react'
 
 import LoveWave from '@/components/ui/love-wave'
@@ -27,7 +27,7 @@ const navigation = [
   },
   {
     href: '/goals',
-    icon: PiggyBank,
+    icon: Wallet,
   },
 ]
 
