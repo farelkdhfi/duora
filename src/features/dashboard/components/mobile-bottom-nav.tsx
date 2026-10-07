@@ -7,11 +7,10 @@ import {
   CalendarDays,
   Home,
   MoreHorizontal,
-  Notebook,
-  NotebookPen,
   PiggyBank,
-  Target,
 } from 'lucide-react'
+
+import LoveWave from '@/components/ui/love-wave'
 
 interface MobileBottomNavProps {
   onMore: () => void
@@ -32,27 +31,6 @@ const navigation = [
   },
 ]
 
-function AiTypographyIcon() {
-  return (
-    <span
-      className="flex flex-col items-center justify-center leading-none"
-      aria-hidden="true"
-    >
-      <svg
-        viewBox="0 0 24 24"
-        fill="none"
-        className="h-[19px] w-[19px]"
-      >
-        <path
-          d="M12 1.5C12.8 7.2 16.8 11.2 22.5 12C16.8 12.8 12.8 16.8 12 22.5C11.2 16.8 7.2 12.8 1.5 12C7.2 11.2 11.2 7.2 12 1.5Z"
-          fill="currentColor"
-        />
-      </svg>
-
-    </span>
-  )
-}
-
 export default function MobileBottomNav({ onMore }: MobileBottomNavProps) {
   const pathname = usePathname()
 
@@ -64,8 +42,9 @@ export default function MobileBottomNav({ onMore }: MobileBottomNavProps) {
     return pathname === href || pathname?.startsWith(`${href}/`)
   }
 
-  const debateActive =
-    pathname === '/debates' || pathname?.startsWith('/debates/')
+  const aiActive =
+    pathname === '/ai-assistant' ||
+    pathname?.startsWith('/ai-assistant/')
 
   return (
     <nav className="fixed inset-x-0 bottom-0 z-51 px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] md:hidden">
@@ -97,13 +76,8 @@ export default function MobileBottomNav({ onMore }: MobileBottomNavProps) {
                     strokeWidth={active ? 2.15 : 1.65}
                   />
 
-                  <span
-                    className={`text-[10px] leading-none ${
-                      active
-                        ? 'font-medium text-black'
-                        : 'font-normal text-black/40'
-                    }`}
-                  >
+                  <span className="text-[10px] leading-none">
+                    &nbsp;
                   </span>
                 </Link>
               )
@@ -132,13 +106,8 @@ export default function MobileBottomNav({ onMore }: MobileBottomNavProps) {
                     strokeWidth={active ? 2.15 : 1.65}
                   />
 
-                  <span
-                    className={`text-[10px] leading-none ${
-                      active
-                        ? 'font-medium text-black'
-                        : 'font-normal text-black/40'
-                    }`}
-                  >
+                  <span className="text-[10px] leading-none">
+                    &nbsp;
                   </span>
                 </Link>
               )
@@ -155,15 +124,17 @@ export default function MobileBottomNav({ onMore }: MobileBottomNavProps) {
         </div>
 
         <Link
-          href="/debates"
-          aria-label="Duora AI Debates"
-          className={`absolute left-1/2 top-1/2 z-20 flex size-[3rem] -translate-x-1/2 -translate-y-[calc(50%+1.55rem)] items-center justify-center rounded-full shadow-[0_12px_30px_-10px_rgba(0,0,0,0.28)] ring-[0.55rem] transition-all duration-200 active:scale-95 ${
-            debateActive
-              ? ' bg-primary text-white ring-white'
-              : ' bg-neutral-100 text-black ring-white'
+          href="/ai-assistant"
+          aria-label="Duora AI Assistant"
+          className={`absolute left-1/2 top-1/2 z-20 flex size-[3.15rem] -translate-x-1/2 -translate-y-[calc(50%+1.55rem)] items-center justify-center rounded-full shadow-[0_12px_30px_-10px_rgba(0,0,0,0.28)] ring-[0.55rem] transition-all duration-200 active:scale-95 ${
+            aiActive
+              ? 'bg-neutral-950 ring-white'
+              : 'bg-neutral-100 ring-white'
           }`}
         >
-          <AiTypographyIcon />
+          <div className="pointer-events-none flex size-[3rem] items-center justify-center overflow-hidden rounded-full">
+            <LoveWave size={54} />
+          </div>
         </Link>
       </div>
     </nav>
