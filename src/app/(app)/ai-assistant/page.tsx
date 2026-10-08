@@ -183,7 +183,7 @@ export default function AiAssistantLandingPage() {
       {/* =========================
           MAIN
       ========================== */}
-      <main className="relative flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">        
+      <main className="relative flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
         {/* =========================
             CHAT STARTED
         ========================== */}
@@ -198,13 +198,15 @@ export default function AiAssistantLandingPage() {
 
             <div className="relative z-10 shrink-0 px-4 pb-4 pt-2 sm:px-8 sm:pb-6">
               <div className="mx-auto w-full max-w-2xl">
+                {/*
+                  FIX: `disabled` hanya untuk limit harian.
+                  Status "sedang mengirim" cukup lewat `isSending`,
+                  supaya kotak peringatan limit tidak muncul sesaat.
+                */}
                 <ChatInput
                   onSend={handleFirstMessage}
                   isSending={isStartingChat}
-                  disabled={
-                    isLimitReached ||
-                    isStartingChat
-                  }
+                  disabled={isLimitReached}
                   disabledMessage={`Batas ${dailyLimit} pesan hari ini sudah tercapai. Coba lagi besok.`}
                 />
 
@@ -251,10 +253,7 @@ export default function AiAssistantLandingPage() {
                 <ChatInput
                   onSend={handleFirstMessage}
                   isSending={false}
-                  disabled={
-                    isLimitReached ||
-                    isStartingChat
-                  }
+                  disabled={isLimitReached}
                   disabledMessage={`Batas ${dailyLimit} pesan hari ini sudah tercapai. Coba lagi besok.`}
                 />
 
