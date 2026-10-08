@@ -15,383 +15,148 @@ export default function RelationshipCard({
 }: RelationshipCardProps) {
   const daysTogether = connectedAt
     ? Math.max(
-      1,
-      Math.floor(
-        (Date.now() - new Date(connectedAt).getTime()) /
-        (1000 * 60 * 60 * 24),
-      ),
-    )
+        1,
+        Math.floor(
+          (Date.now() - new Date(connectedAt).getTime()) /
+            (1000 * 60 * 60 * 24),
+        ),
+      )
     : null
 
   return (
-    <section className="relative overflow-hidden rounded-b-[3rem] shadow-lg bg-white px-5 py-7 sm:rounded-2xl sm:px-8 sm:py-9">
-      {/* DARK WAVE BACKGROUND */}
-      <svg
-        className="pointer-events-none absolute inset-0 h-full w-full"
-        viewBox="0 0 900 500"
-        preserveAspectRatio="none"
-        fill="none"
-        aria-hidden="true"
-      >
-        <defs>
-          <linearGradient
-            id="wave-pink-blue"
-            x1="0"
-            y1="0"
-            x2="900"
-            y2="500"
-            gradientUnits="userSpaceOnUse"
-          >
-            <stop stopColor="#e49ab5" stopOpacity=".85" />
-            <stop offset=".45" stopColor="#a9a1b3" stopOpacity=".7" />
-            <stop offset="1" stopColor="#91afd4" stopOpacity=".85" />
-          </linearGradient>
+    <section className="relative overflow-hidden rounded-b-[2.75rem] bg-[#000000] px-5 py-8 shadow-[0_30px_80px_-40px_rgba(20,10,30,0.8)] sm:rounded-[2rem] sm:px-8 sm:py-10">
+      {/* BACKGROUND */}
 
-          <linearGradient
-            id="wave-blue-pink"
-            x1="900"
-            y1="0"
-            x2="0"
-            y2="500"
-            gradientUnits="userSpaceOnUse"
-          >
-            <stop stopColor="#91afd4" stopOpacity=".85" />
-            <stop offset=".5" stopColor="#aaa2b3" stopOpacity=".65" />
-            <stop offset="1" stopColor="#e49ab5" stopOpacity=".85" />
-          </linearGradient>
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        {/* Ambient light */}
 
-          <radialGradient id="pink-bubble">
-            <stop offset="0" stopColor="#e9a8bd" stopOpacity=".34" />
-            <stop offset=".65" stopColor="#e9a8bd" stopOpacity=".1" />
-            <stop offset="1" stopColor="#e9a8bd" stopOpacity="0" />
-          </radialGradient>
+        <div className="absolute -left-[20%] -top-[35%] size-[420px] rounded-full bg-[#e987ad]/20 blur-[120px]" />
 
-          <radialGradient id="blue-bubble">
-            <stop offset="0" stopColor="#9eb9df" stopOpacity=".34" />
-            <stop offset=".65" stopColor="#9eb9df" stopOpacity=".1" />
-            <stop offset="1" stopColor="#9eb9df" stopOpacity="0" />
-          </radialGradient>
+        <div className="absolute -right-[20%] -top-[30%] size-[400px] rounded-full bg-[#789fe5]/20 blur-[120px]" />
 
-          <filter
-            id="wave-blur"
-            x="-20%"
-            y="-50%"
-            width="140%"
-            height="200%"
-          >
-            <feGaussianBlur stdDeviation="7" />
-          </filter>
-        </defs>
+        <div className="absolute bottom-[-45%] left-1/2 size-[500px] -translate-x-1/2 rounded-full bg-[#a879bd]/10 blur-[130px]" />
 
-        {/* SOFT WAVE GLOW */}
+        {/* Subtle vertical gradient */}
 
-        <path
-          d="M-100 90C40 15 135 45 245 100C355 155 430 175 535 115C650 48 765 45 1000 125"
-          stroke="url(#wave-pink-blue)"
-          strokeWidth="20"
-          strokeOpacity=".1"
-          filter="url(#wave-blur)"
-        />
+        <div className="absolute inset-0 bg-linear-to-b from-white/[0.025] via-transparent to-black/10" />
 
-        <path
-          d="M-100 390C40 315 145 345 255 400C365 455 440 465 545 405C660 338 775 330 1000 415"
-          stroke="url(#wave-blue-pink)"
-          strokeWidth="20"
-          strokeOpacity=".09"
-          filter="url(#wave-blur)"
-        />
-        
+        {/* Elegant flowing lines */}
 
-        {/* MIDDLE FLOWING WAVES */}
+        <svg
+          className="absolute inset-0 h-full w-full opacity-60"
+          viewBox="0 0 900 500"
+          preserveAspectRatio="none"
+          fill="none"
+          aria-hidden="true"
+        >
+          <defs>
+            <linearGradient
+              id="elegant-wave"
+              x1="0"
+              y1="0"
+              x2="900"
+              y2="0"
+              gradientUnits="userSpaceOnUse"
+            >
+              <stop stopColor="#8ebcff" stopOpacity="0" />
+              <stop offset=".25" stopColor="#8ebcff" stopOpacity=".28" />
+              <stop offset=".5" stopColor="#ffafd0" stopOpacity=".4" />
+              <stop offset=".75" stopColor="#c49bea" stopOpacity=".28" />
+              <stop offset="1" stopColor="#ffafd0" stopOpacity="0" />
+            </linearGradient>
 
-        <path
-          d="M-100 235C45 175 140 205 250 242C365 281 445 290 545 245C650 198 770 192 1000 240"
-          stroke="url(#wave-pink-blue)"
-          strokeWidth="1"
-          strokeOpacity=".32"
-          strokeLinecap="round"
-        />
+            <filter
+              id="soft-wave"
+              x="-20%"
+              y="-100%"
+              width="140%"
+              height="300%"
+            >
+              <feGaussianBlur stdDeviation="12" />
+            </filter>
+          </defs>
 
-        <path
-          d="M-100 260C45 200 140 230 250 267C365 306 445 315 545 270C650 223 770 217 1000 265"
-          stroke="url(#wave-blue-pink)"
-          strokeWidth=".8"
-          strokeOpacity=".27"
-          strokeLinecap="round"
-        />
+          <path
+            d="M-80 145C90 65 170 90 300 150C430 210 520 220 650 145C760 82 850 95 980 145"
+            stroke="url(#elegant-wave)"
+            strokeWidth="34"
+            strokeOpacity=".1"
+            filter="url(#soft-wave)"
+          />
 
-        <path
-          d="M-100 285C45 225 140 255 250 292C365 331 445 340 545 295C650 248 770 242 1000 290"
-          stroke="#b8b1c0"
-          strokeWidth=".65"
-          strokeOpacity=".22"
-          strokeDasharray="3 10"
-          strokeLinecap="round"
-        />
+          <path
+            d="M-80 250C70 195 165 200 290 250C410 300 500 315 625 250C750 185 850 200 980 250"
+            stroke="url(#elegant-wave)"
+            strokeWidth="1.2"
+            strokeLinecap="round"
+          />
 
-        {/* BUBBLES — LEFT */}
+          <path
+            d="M-80 385C70 325 170 340 300 395C420 445 520 450 650 385C770 325 850 335 980 390"
+            stroke="url(#elegant-wave)"
+            strokeWidth="18"
+            strokeOpacity=".06"
+            filter="url(#soft-wave)"
+          />
+        </svg>
 
-        <circle
-          cx="72"
-          cy="92"
-          r="34"
-          fill="url(#pink-bubble)"
-        />
+        {/* Minimal grain */}
 
-        <circle
-          cx="72"
-          cy="92"
-          r="16"
-          stroke="#e4a5bb"
-          strokeWidth=".9"
-          strokeOpacity=".38"
-        />
-
-        <circle
-          cx="72"
-          cy="92"
-          r="4"
-          fill="#e4a5bb"
-          fillOpacity=".32"
-        />
-
-        <circle
-          cx="145"
-          cy="205"
-          r="22"
-          fill="url(#blue-bubble)"
-        />
-
-        <circle
-          cx="145"
-          cy="205"
-          r="10"
-          stroke="#9eb9df"
-          strokeWidth=".8"
-          strokeOpacity=".34"
-        />
-
-        <circle
-          cx="145"
-          cy="205"
-          r="2.5"
-          fill="#9eb9df"
-          fillOpacity=".36"
-        />
-
-        <circle
-          cx="48"
-          cy="330"
-          r="12"
-          fill="url(#pink-bubble)"
-        />
-
-        {/* BUBBLES — RIGHT */}
-
-        <circle
-          cx="830"
-          cy="92"
-          r="38"
-          fill="url(#blue-bubble)"
-        />
-
-        <circle
-          cx="830"
-          cy="92"
-          r="18"
-          stroke="#9eb9df"
-          strokeWidth=".9"
-          strokeOpacity=".38"
-        />
-
-        <circle
-          cx="830"
-          cy="92"
-          r="4"
-          fill="#9eb9df"
-          fillOpacity=".32"
-        />
-
-        <circle
-          cx="755"
-          cy="205"
-          r="20"
-          fill="url(#pink-bubble)"
-        />
-
-        <circle
-          cx="755"
-          cy="205"
-          r="9"
-          stroke="#e4a5bb"
-          strokeWidth=".8"
-          strokeOpacity=".34"
-        />
-
-        <circle
-          cx="755"
-          cy="205"
-          r="2.5"
-          fill="#e4a5bb"
-          fillOpacity=".36"
-        />
-
-        <circle
-          cx="855"
-          cy="345"
-          r="14"
-          fill="url(#blue-bubble)"
-        />
-
-        {/* SMALL FLOATING BUBBLES */}
-
-        <circle
-          cx="210"
-          cy="65"
-          r="3"
-          fill="#e4a5bb"
-          fillOpacity=".55"
-        />
-
-        <circle
-          cx="275"
-          cy="180"
-          r="2"
-          fill="#9eb9df"
-          fillOpacity=".55"
-        />
-
-        <circle
-          cx="650"
-          cy="70"
-          r="3"
-          fill="#9eb9df"
-          fillOpacity=".55"
-        />
-
-        <circle
-          cx="700"
-          cy="185"
-          r="2"
-          fill="#e4a5bb"
-          fillOpacity=".55"
-        />
-
-        <circle
-          cx="110"
-          cy="395"
-          r="2.5"
-          fill="#e4a5bb"
-          fillOpacity=".48"
-        />
-
-        <circle
-          cx="790"
-          cy="405"
-          r="2.5"
-          fill="#9eb9df"
-          fillOpacity=".48"
-        />
-      </svg>
-
-      {/* SOFT TOP RIGHT WAVE */}
-
-      <svg
-        className="pointer-events-none absolute -right-16 -top-10 h-[230px] w-[430px] sm:-right-20 sm:-top-16 sm:h-[280px] sm:w-[520px]"
-        viewBox="0 0 520 280"
-        fill="none"
-        aria-hidden="true"
-      >
-        <defs>
-          <linearGradient
-            id="top-wave-gradient"
-            x1="0"
-            y1="0"
-            x2="520"
-            y2="280"
-            gradientUnits="userSpaceOnUse"
-          >
-            <stop stopColor="#a8c1df" stopOpacity=".1" />
-            <stop offset=".5" stopColor="#cfc2d3" stopOpacity=".4" />
-            <stop offset="1" stopColor="#e8a7bd" stopOpacity=".5" />
-          </linearGradient>
-        </defs>
-      </svg>
+        <div className="absolute inset-0 opacity-[0.025] [background-image:radial-gradient(rgba(255,255,255,0.8)_0.6px,transparent_0.6px)] [background-size:7px_7px]" />
+      </div>
 
       {/* CONTENT */}
 
       <div className="relative z-10">
+        {/* TOP LABEL */}
+
+        <div className="mb-7 flex items-center justify-center">
+          <div className="flex items-center gap-2">
+            <span className="h-px w-8 bg-linear-to-r from-transparent to-white/20" />
+
+            <span className="text-[9px] font-medium uppercase tracking-[0.28em] text-white/35">
+              Your relationship
+            </span>
+
+            <span className="h-px w-8 bg-linear-to-l from-transparent to-white/20" />
+          </div>
+        </div>
 
         {/* PEOPLE */}
 
-        <div className="relative flex items-start justify-center gap-2 sm:gap-8">
+        <div className="relative flex items-center justify-center gap-5 sm:gap-14">
+          {/* CONNECTION LINE */}
 
-          {/* CONNECTING WAVE */}
-
-          <svg
-            className="pointer-events-none absolute left-1/2 top-[42px] hidden h-20 w-[360px] -translate-x-1/2 sm:block md:w-[430px]"
-            viewBox="0 0 430 80"
-            fill="none"
-            aria-hidden="true"
-          >
-            <defs>
-              <linearGradient
-                id="relationship-connection-wave"
-                x1="20"
-                y1="40"
-                x2="410"
-                y2="40"
-                gradientUnits="userSpaceOnUse"
-              >
-                <stop stopColor="#9eb9df" stopOpacity=".35" />
-                <stop offset=".5" stopColor="#d2c1d2" stopOpacity=".75" />
-                <stop offset="1" stopColor="#e5a5bb" stopOpacity=".35" />
-              </linearGradient>
-            </defs>
-
-            <path
-              d="M10 40C65 12 110 15 145 40C180 65 205 65 215 40C225 15 250 15 285 40C320 65 365 68 420 40"
-              stroke="url(#relationship-connection-wave)"
-              strokeWidth="1"
-              strokeLinecap="round"
-            />
-
-            <path
-              d="M10 47C65 20 108 22 143 47C177 70 205 72 215 47C225 22 253 22 287 47C322 72 365 75 420 47"
-              stroke="#bdb7c5"
-              strokeWidth=".55"
-              strokeOpacity=".25"
-              strokeDasharray="3 8"
-              strokeLinecap="round"
-            />
-          </svg>
+          <div className="pointer-events-none absolute left-1/2 top-1/2 hidden h-px w-[270px] -translate-x-1/2 -translate-y-1/2 bg-linear-to-r from-[#8ebcff]/20 via-[#ffafd0]/60 to-[#ffafd0]/20 sm:block md:w-[340px]" />
 
           <Person
             name={userName}
             role="You"
             avatarUrl={userAvatarUrl}
-            fallbackClass="text-blue-300"
-            ringClass="border-[#fff]"
             accent="blue"
           />
 
-          {/* CENTER CONNECTION */}
+          {/* CENTER */}
 
-          <div className="relative z-20 flex shrink-0 flex-col items-center pt-8 sm:pt-11">
-            <div className="relative flex size-[64px] items-center justify-center sm:size-[76px]">
-              <div className="absolute inset-0 rounded-full border border-pink-300/30" />
+          <div className="relative z-20 flex shrink-0 items-center justify-center">
+            <div className="relative flex size-[58px] items-center justify-center sm:size-[68px]">
+              {/* Outer glow */}
 
-              <div className="absolute inset-[5px] rounded-full border border-blue-300/25 border-dashed" />
+              <div className="absolute inset-0 rounded-full bg-[#e99aba]/10 blur-xl" />
 
-              <div className="absolute inset-3 rounded-full border border-pink-200/15" />
+              {/* Thin ring */}
 
-              <div className="relative flex size-11 items-center justify-center rounded-full border border-white shadow-[0_12px_35px_-12px_rgba(0,0,0,0.8)] backdrop-blur-md sm:size-14">
+              <div className="absolute inset-0 rounded-full border border-white/10" />
+
+              {/* Gradient ring */}
+
+              <div className="absolute inset-[5px] rounded-full border border-[#ffb0cd]/20" />
+
+              {/* Core */}
+
+              <div className="relative flex size-10 items-center justify-center rounded-full border border-white/10 bg-[#2b2335]/90 shadow-[0_15px_35px_-15px_rgba(0,0,0,.9)] backdrop-blur-xl sm:size-12">
                 <RelationshipHeart />
               </div>
-
-              <span className="absolute right-[5px] top-[9px] size-1.5 rounded-full bg-pink-300" />
-
-              <span className="absolute bottom-[8px] left-[3px] size-1 rounded-full bg-blue-300" />
             </div>
           </div>
 
@@ -399,56 +164,25 @@ export default function RelationshipCard({
             name={partnerName}
             role="Partner"
             avatarUrl={partnerAvatarUrl}
-            fallbackClass="text-pink-300"
-            ringClass="border-[#fff]"
             accent="pink"
           />
         </div>
 
-        {/* LOWER INFO */}
+        {/* RELATIONSHIP INFO */}
 
         {daysTogether && (
-          <div className="mt-5 flex justify-center">
-            <div className="relative overflow-hidden rounded-full border border-white/[0.08] bg-linear-to-t from-pink-50 to-blue-50 px-4 py-2.5 shadow-[0_8px_25px_-15px_rgba(0,0,0,0.8)] backdrop-blur-md">
-              <div className="relative flex items-center gap-2.5">
-                <span className="relative flex size-5 items-center justify-center">
-                  <span className="absolute inset-0 rounded-full border border-pink-200/25" />
+          <div className="mt-8 flex flex-col items-center">
+            <div className="flex items-baseline gap-2">
+              <span className="bg-linear-to-r from-[#ffb2ce] via-[#d5b0ed] to-[#9bc5ff] bg-clip-text text-[30px] font-semibold tracking-[-0.05em] text-transparent sm:text-[34px]">
+                {daysTogether}
+              </span>
 
-                  <svg
-                    viewBox="0 0 24 24"
-                    className="relative size-2.5"
-                    fill="none"
-                    aria-hidden="true"
-                  >
-                    <defs>
-                      <linearGradient
-                        id="mini-heart-gradient"
-                        x1="5"
-                        y1="5"
-                        x2="19"
-                        y2="19"
-                        gradientUnits="userSpaceOnUse"
-                      >
-                        <stop stopColor="#e9a8bd" />
-                        <stop offset="1" stopColor="#9eb9df" />
-                      </linearGradient>
-                    </defs>
-
-                    <path
-                      d="M12 19S4.5 14.5 4.5 9.3C4.5 6.7 6.2 5 8.5 5C10.1 5 11.3 5.9 12 7.1C12.7 5.9 13.9 5 15.5 5C17.8 5 19.5 6.7 19.5 9.3C19.5 14.5 12 19 12 19Z"
-                      fill="url(#mini-heart-gradient)"
-                    />
-                  </svg>
-                </span>
-
-                <p className="text-[10px] text-black/45">
-                  Together for
-                  <span className="ml-1 font-semibold text-black/75">
-                    {daysTogether} days
-                  </span>
-                </p>
-              </div>
+              <span className="text-[10px] font-medium uppercase tracking-[0.18em] text-white/35">
+                days together
+              </span>
             </div>
+
+            <div className="mt-2 h-px w-14 bg-linear-to-r from-transparent via-white/20 to-transparent" />
           </div>
         )}
       </div>
@@ -464,15 +198,11 @@ function Person({
   name,
   role,
   avatarUrl,
-  fallbackClass,
-  ringClass,
   accent,
 }: {
   name: string
   role: string
   avatarUrl?: string | null
-  fallbackClass: string
-  ringClass: string
   accent: 'blue' | 'pink'
 }) {
   const isBlue = accent === 'blue'
@@ -480,101 +210,104 @@ function Person({
   return (
     <div className="relative z-10 min-w-0 text-center">
       <div
-        className={`relative mx-auto flex size-[82px] items-center justify-center rounded-full border-[3px] bg-[#b4bccc] p-1 shadow-[0_15px_35px_-15px_rgba(0,0,0,0.8)] backdrop-blur-sm sm:size-[104px] sm:border-4 sm:p-1.5 ${ringClass}`}
+        className={`relative mx-auto size-[82px] rounded-full p-[2px] sm:size-[104px] sm:p-[3px] ${
+          isBlue
+            ? 'bg-linear-to-br from-[#9fcaff] via-[#789fda]/70 to-[#526989]/20'
+            : 'bg-linear-to-br from-[#ffb7d1] via-[#d586a9]/70 to-[#74445b]/20'
+        }`}
       >
+        {/* Outer glow */}
+
         <div
-          className={`absolute inset-1.5 rounded-full border border-dashed ${
-            isBlue ? 'border-blue-300/35' : 'border-pink-300/35'
+          className={`absolute -inset-2 rounded-full opacity-30 blur-xl ${
+            isBlue ? 'bg-[#82b5f5]' : 'bg-[#ef91b5]'
           }`}
         />
 
-        {avatarUrl ? (
-          <img
-            src={avatarUrl}
-            alt={name}
-            className="relative h-full w-full rounded-full object-cover"
-          />
-        ) : (
-          <div
-            className={`relative flex h-full w-full items-center justify-center rounded-full ${
-              isBlue ? 'bg-[#171d27]' : 'bg-[#241a20]'
-            }`}
-          >
-            <span
-              className={`text-2xl font-medium tracking-[-0.05em] sm:text-3xl ${fallbackClass}`}
+        {/* Avatar */}
+
+        <div className="relative h-full w-full overflow-hidden rounded-full bg-[#27202f] p-[3px] sm:p-1">
+          {avatarUrl ? (
+            <img
+              src={avatarUrl}
+              alt={name}
+              className="h-full w-full rounded-full object-cover"
+            />
+          ) : (
+            <div
+              className={`flex h-full w-full items-center justify-center rounded-full ${
+                isBlue
+                  ? 'bg-linear-to-br from-[#334766] to-[#1b2433]'
+                  : 'bg-linear-to-br from-[#593348] to-[#2b2028]'
+              }`}
             >
-              {name.slice(0, 1).toUpperCase()}
-            </span>
-          </div>
-        )}
+              <span
+                className={`text-[25px] font-medium tracking-[-0.06em] sm:text-[30px] ${
+                  isBlue ? 'text-[#b7d5ff]' : 'text-[#ffc1d8]'
+                }`}
+              >
+                {name.slice(0, 1).toUpperCase()}
+              </span>
+            </div>
+          )}
+        </div>
+
+        {/* Online indicator */}
 
         <span
-          className={`absolute right-0.5 top-2 size-2 rounded-full border-2 border-[#191b1f] ${
-            isBlue ? 'bg-blue-300' : 'bg-pink-300'
+          className={`absolute bottom-1.5 right-1.5 size-3 rounded-full border-[2px] border-[#211b2b] sm:bottom-2 sm:right-2 ${
+            isBlue ? 'bg-[#9bc6ff]' : 'bg-[#ffafd0]'
           }`}
         />
       </div>
 
-      <p className="mx-auto mt-3 max-w-[95px] truncate text-[12px] font-semibold tracking-[-0.015em] text-black/90 sm:max-w-[125px] sm:text-[13px]">
-        {name}
-      </p>
+      <div className="mt-3">
+        <p className="mx-auto max-w-[105px] truncate text-[12px] font-semibold tracking-[-0.02em] text-white/85 sm:max-w-[135px] sm:text-[13px]">
+          {name}
+        </p>
 
-      <p className="mt-0.5 text-[9px] font-medium uppercase tracking-[0.16em] text-black/35">
-        {role}
-      </p>
+        <p
+          className={`mt-1 text-[8px] font-medium uppercase tracking-[0.22em] ${
+            isBlue ? 'text-[#9bc6ff]/45' : 'text-[#ffafd0]/45'
+          }`}
+        >
+          {role}
+        </p>
+      </div>
     </div>
   )
 }
 
 /* ============================================================= */
-/* RELATIONSHIP HEART SVG */
+/* RELATIONSHIP HEART */
 /* ============================================================= */
 
 function RelationshipHeart() {
   return (
     <svg
       viewBox="0 0 48 48"
-      className="size-7 sm:size-8"
+      className="size-6 sm:size-7"
       fill="none"
       aria-hidden="true"
     >
       <defs>
         <linearGradient
           id="relationship-heart-gradient"
-          x1="8"
-          y1="9"
-          x2="40"
-          y2="39"
+          x1="9"
+          y1="10"
+          x2="39"
+          y2="38"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="#e9a8bd" />
-          <stop offset=".45" stopColor="#efbfd0" />
-          <stop offset=".58" stopColor="#c9bdd1" />
-          <stop offset="1" stopColor="#9eb9df" />
+          <stop stopColor="#ff9fc3" />
+          <stop offset=".5" stopColor="#d4a8eb" />
+          <stop offset="1" stopColor="#91c4ff" />
         </linearGradient>
-
-        <filter
-          id="relationship-heart-glow"
-          x="-50%"
-          y="-50%"
-          width="200%"
-          height="200%"
-        >
-          <feGaussianBlur stdDeviation="1.8" />
-        </filter>
       </defs>
 
       <path
         d="M24 37C21.5 34.9 10 27.5 10 18.5C10 13.8 13.2 10.5 17.5 10.5C20.3 10.5 22.6 12 24 14.3C25.4 12 27.7 10.5 30.5 10.5C34.8 10.5 38 13.8 38 18.5C38 27.5 26.5 34.9 24 37Z"
-        fill="#efbfd0"
-        fillOpacity=".22"
-        filter="url(#relationship-heart-glow)"
-      />
-
-      <path
-        d="M24 37C21.5 34.9 10 27.5 10 18.5C10 13.8 13.2 10.5 17.5 10.5C20.3 10.5 22.6 12 24 14.3C25.4 12 27.7 10.5 30.5 10.5C34.8 10.5 38 13.8 38 18.5C38 27.5 26.5 34.9 24 37Z"
         fill="url(#relationship-heart-gradient)"
-        fillOpacity=".95"
       />
 
       <path
@@ -583,14 +316,6 @@ function RelationshipHeart() {
         strokeOpacity=".75"
         strokeWidth="1.3"
         strokeLinecap="round"
-      />
-
-      <circle
-        cx="24"
-        cy="20"
-        r="1.2"
-        fill="white"
-        fillOpacity=".6"
       />
     </svg>
   )

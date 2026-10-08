@@ -338,7 +338,7 @@ function ConversationView({
     !pending;
 
   return (
-    <div className="fixed inset-0 z-50 flex min-h-0 overflow-hidden bg-[#fafaf9]">
+    <div className="fixed inset-0 z-50 flex min-h-0 overflow-hidden bg-white">
       {/* =========================
           SHARED AI SIDEBAR
       ========================== */}
@@ -361,14 +361,6 @@ function ConversationView({
           MAIN CHAT
       ========================== */}
       <main className="relative flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
-        {/* Ambient background */}
-        <div className="pointer-events-none absolute inset-0 overflow-hidden">
-          <div className="absolute left-1/2 top-[22%] h-64 w-64 -translate-x-1/2 rounded-full bg-pink-200/20 blur-3xl" />
-
-          <div className="absolute right-[10%] top-[10%] h-48 w-48 rounded-full bg-violet-200/15 blur-3xl" />
-
-          <div className="absolute bottom-[8%] left-[12%] h-56 w-56 rounded-full bg-blue-200/10 blur-3xl" />
-        </div>
 
         {/* =========================
             MESSAGES

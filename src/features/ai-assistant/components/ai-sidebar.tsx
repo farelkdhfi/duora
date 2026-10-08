@@ -215,7 +215,7 @@ export function AiSidebar({
               </div>
 
               {/* BOTTOM ACTIONS */}
-              <div className="mt-3 shrink-0 space-y-2">
+              <div className="mt-3 shrink-0 space-y-2 border-t border-t-black/20 py-3">
                 {/* NEW CONVERSATION */}
                 <button
                   type="button"
@@ -234,29 +234,7 @@ export function AiSidebar({
                 >
                   Back to dashboard
                 </button>
-              </div>
-
-              {/* MOBILE USAGE */}
-              <div className="mt-3 shrink-0 rounded-xl border border-neutral-200 bg-white p-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-medium uppercase tracking-wider text-neutral-400">
-                    Daily usage
-                  </span>
-
-                  <span className="text-[11px] font-medium text-neutral-600">
-                    {messagesSentToday}/{dailyLimit}
-                  </span>
-                </div>
-
-                <div className="mt-2 h-1 overflow-hidden rounded-full bg-neutral-100">
-                  <div
-                    className="h-full rounded-full bg-neutral-900 transition-all duration-500"
-                    style={{
-                      width: `${usagePercentage}%`,
-                    }}
-                  />
-                </div>
-              </div>
+              </div>              
             </div>
           </aside>
         </div>

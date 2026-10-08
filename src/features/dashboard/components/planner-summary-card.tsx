@@ -39,7 +39,7 @@ export default function PlannerSummaryCard({
   const parsedDate = new Date(`${date}T00:00:00`)
 
   return (
-    <div className="relative overflow-hidden rounded-[2rem] border border-black/[0.045] bg-indigo-100 shadow-[0_20px_60px_-35px_rgba(0,0,0,0.18)]">
+    <div className="relative overflow-hidden rounded-[2rem] border border-black/[0.045] bg-white shadow-[0_20px_60px_-35px_rgba(0,0,0,0.18)]">
       <svg className="pointer-events-none absolute -right-20 -top-28 h-[330px] w-[430px] opacity-[0.8]" viewBox="0 0 430 330" fill="none" aria-hidden="true">
         <path d="M450 42C390 5 313 12 276 66C241 116 263 157 221 190C185 218 116 196 83 239C55 275 79 314 121 342" stroke="#e9a8bd" strokeOpacity=".28" strokeWidth="1.2" />
         <path d="M456 66C394 31 331 42 302 87C275 129 294 160 260 185C220 214 157 202 120 238C91 266 102 301 135 326" stroke="#9eb9df" strokeOpacity=".3" strokeWidth="1.2" />

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { ArrowUp, Loader2 } from "lucide-react";
+import { ArrowUp, Loader2, SendHorizonal } from "lucide-react";
 
 interface ChatInputProps {
   onSend: (message: string) => void;
@@ -17,20 +17,32 @@ export function ChatInput({
   disabledMessage,
 }: ChatInputProps) {
   const [input, setInput] = useState("");
+  const [isExpanded, setIsExpanded] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   function resizeTextarea() {
-    const textarea = textareaRef.current;
+  const textarea = textareaRef.current;
 
-    if (!textarea) return;
+  if (!textarea) return;
 
-    textarea.style.height = "auto";
-    textarea.style.height = `${Math.min(textarea.scrollHeight, 180)}px`;
+  textarea.style.height = "auto";
+
+  const { scrollHeight } = textarea;
+
+  textarea.style.height = `${Math.min(scrollHeight, 180)}px`;
+
+  // Kosong → kembali sejajar. Lebih dari 1 baris → pindah ke layout expanded.
+  // Collapse hanya saat kosong supaya layout tidak flicker bolak-balik.
+  if (!input) {
+    setIsExpanded(false);
+  } else if (scrollHeight > 48) {
+    setIsExpanded(true);
   }
+}
 
-  useEffect(() => {
-    resizeTextarea();
-  }, [input]);
+useEffect(() => {
+  resizeTextarea();
+}, [input, isExpanded]);
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -61,43 +73,50 @@ export function ChatInput({
   const canSend = Boolean(input.trim()) && !isSending;
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="relative rounded-[22px] border border-neutral-200 bg-white p-2 shadow-[0_10px_40px_rgba(0,0,0,0.07)] transition focus-within:border-neutral-300 focus-within:shadow-[0_14px_45px_rgba(0,0,0,0.09)]"
+  <form
+    onSubmit={handleSubmit}
+    className={`flex gap-2 rounded-[22px] border border-neutral-200 bg-white p-2 shadow-[0_10px_40px_rgba(0,0,0,0.07)] transition focus-within:border-neutral-300 focus-within:shadow-[0_14px_45px_rgba(0,0,0,0.09)] ${
+      isExpanded ? "flex-col" : "flex-row items-end"
+    }`}
+  >
+    <textarea
+      ref={textareaRef}
+      value={input}
+      onChange={(e) => setInput(e.target.value)}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" && !e.shiftKey) {
+          e.preventDefault();
+          handleSubmit(e);
+        }
+      }}
+      placeholder="Tanya sesuatu..."
+      rows={1}
+      className={`min-h-[44px] max-h-[180px] min-w-0 resize-none overflow-y-auto bg-transparent px-3 py-2.5 text-sm leading-6 text-neutral-900 outline-none placeholder:text-neutral-400 ${
+        isExpanded ? "w-full" : "flex-1"
+      }`}
+    />
+
+    {/* Mode 1 baris: sejajar di kanan. Mode panjang: container w-full sendiri di bawah */}
+    <div
+      className={
+        isExpanded
+          ? "flex w-full items-center justify-end px-1 pb-0.5"
+          : "mb-0.5 shrink-0"
+      }
     >
-      <textarea
-        ref={textareaRef}
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" && !e.shiftKey) {
-            e.preventDefault();
-            handleSubmit(e);
-          }
-        }}
-        placeholder="Tanya sesuatu tentang hubungan kalian..."
-        rows={1}
-        className="block max-h-[180px] min-h-[52px] w-full resize-none bg-transparent px-3 py-3 pr-14 text-sm leading-6 text-neutral-900 outline-none placeholder:text-neutral-400"
-      />
-
-      <div className="flex items-center justify-between px-2 pb-1">
-        <p className="text-[10px] text-neutral-300">
-          Duora AI can make mistakes, please crosscheck.
-        </p>
-
-        <button
-          type="submit"
-          disabled={!canSend}
-          aria-label="Kirim pesan"
-          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-neutral-950 text-white transition hover:bg-neutral-800 disabled:cursor-not-allowed disabled:bg-neutral-100 disabled:text-neutral-300"
-        >
-          {isSending ? (
-            <Loader2 size={16} className="animate-spin" />
-          ) : (
-            <ArrowUp size={17} strokeWidth={2.2} />
-          )}
-        </button>
-      </div>
-    </form>
-  );
+      <button
+        type="submit"
+        disabled={!canSend}
+        aria-label="Kirim pesan"
+        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-neutral-800 text-white transition hover:bg-neutral-800 disabled:cursor-not-allowed disabled:bg-neutral-100 disabled:text-neutral-300"
+      >
+        {isSending ? (
+          <Loader2 size={16} className="animate-spin" />
+        ) : (
+          <SendHorizonal size={14} strokeWidth={2.2} />
+        )}
+      </button>
+    </div>
+  </form>
+);
 }
