@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { memo, useEffect, useState } from 'react'
 import Link from 'next/link'
 import { ArrowUpRight, Heart } from 'lucide-react'
 
@@ -63,51 +63,6 @@ const stressedEmotVariants = [
   stressedEmot3,
 ]
 
-const moodInfo: Record<
-  Mood,
-  {
-    image: typeof happyEmot1
-    badge: string
-    text: string
-    glow: string
-  }
-> = {
-  happy: {
-    image: happyEmot1,
-    badge: 'bg-emerald-50/80',
-    text: 'text-emerald-600',
-    glow: 'bg-emerald-100/40',
-  },
-
-  neutral: {
-    image: neutralEmot1,
-    badge: 'bg-neutral-100/80',
-    text: 'text-neutral-500',
-    glow: 'bg-neutral-100/50',
-  },
-
-  sad: {
-    image: sadEmot1,
-    badge: 'bg-blue-50/80',
-    text: 'text-blue-500',
-    glow: 'bg-blue-100/40',
-  },
-
-  tired: {
-    image: tiredEmot1,
-    badge: 'bg-violet-50/80',
-    text: 'text-violet-500',
-    glow: 'bg-violet-100/35',
-  },
-
-  stressed: {
-    image: stressedEmot1,
-    badge: 'bg-rose-50/80',
-    text: 'text-rose-500',
-    glow: 'bg-rose-100/35',
-  },
-}
-
 const emotVariants: Record<Mood, typeof happyEmot1[]> = {
   happy: happyEmotVariants,
   neutral: neutralEmotVariants,
@@ -116,153 +71,224 @@ const emotVariants: Record<Mood, typeof happyEmot1[]> = {
   stressed: stressedEmotVariants,
 }
 
-function CardShell({
-  children,
+const moodLabel: Record<Mood, string> = {
+  happy: 'Happy',
+  neutral: 'Neutral',
+  sad: 'Sad',
+  tired: 'Tired',
+  stressed: 'Stressed',
+}
+
+/* -------------------------------------------------------------------------- */
+/* STUDIO BACKDROP                                                            */
+/* Sama dengan halaman check-in: dinding berwarna -> cove -> lantai putih.    */
+/* Setiap sisi kartu (kamu / partner) punya "studio" sendiri sesuai mood.     */
+/* -------------------------------------------------------------------------- */
+
+// Titik dinding menyatu dengan lantai (% tinggi kartu).
+// Naikkan/turunkan agar pas dengan "kaki" karakter.
+const HORIZON = 62
+
+type ThemeKey = Mood | 'empty'
+
+// wall  = warna kertas backdrop
+// shade = hue yang sama tapi lebih gelap, untuk falloff cahaya dan cove
+const moodTheme: Record<ThemeKey, { wall: string; shade: string }> = {
+  happy: { wall: '255, 242, 184', shade: '230, 190, 90' },
+  neutral: { wall: '236, 238, 237', shade: '170, 175, 173' },
+  sad: { wall: '190, 220, 255', shade: '90, 145, 210' },
+  tired: { wall: '220, 200, 250', shade: '150, 115, 200' },
+  stressed: { wall: '255, 195, 195', shade: '210, 100, 100' },
+  // belum check-in: studio putih kosong
+  empty: { wall: '244, 244, 243', shade: '175, 178, 176' },
+}
+
+const THEME_KEYS = Object.keys(moodTheme) as ThemeKey[]
+
+type Stop = [position: number, alpha: number]
+
+const rgba = (rgb: string, alpha: number) => `rgba(${rgb}, ${alpha})`
+
+const vertical = (rgb: string, stops: Stop[], offset = 0) =>
+  `linear-gradient(to bottom, ${stops.map(([position, alpha]) => `${rgba(rgb, alpha)} ${position + offset}%`).join(', ')})`
+
+// Warna dinding memudar pelan ke lantai putih, tanpa garis potong.
+const WALL_TO_FLOOR: Stop[] = [
+  [0, 0.94], [10, 0.92], [20, 0.88], [30, 0.8], [40, 0.68],
+  [50, 0.54], [58, 0.4], [65, 0.26], [72, 0.14], [78, 0.05], [84, 0],
+]
+
+// Cahaya meredup ke arah plafon.
+const CEILING_FALLOFF: Stop[] = [[0, 0.12], [8, 0.08], [16, 0.045], [26, 0.015], [34, 0]]
+
+// Cove: pita bayangan lembut tempat dinding melengkung ke lantai (relatif ke HORIZON).
+const COVE: Stop[] = [[-26, 0], [-18, 0.025], [-10, 0.065], [-3, 0.1], [3, 0.11], [10, 0.08], [18, 0.04], [27, 0]]
+
+// Bloom key light di dinding, tepat di atas karakter (cx = posisi horizontal %).
+const keyLight = (cx: number) =>
+  `radial-gradient(ellipse 36% 52% at ${cx}% 34%, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.34) 28%, rgba(255,255,255,0.15) 55%, rgba(255,255,255,0.04) 80%, rgba(255,255,255,0) 100%)`
+
+// Bayangan lantai berwarna di bawah karakter.
+const floorShade = (rgb: string, cx: number) =>
+  `radial-gradient(ellipse 30% 14% at ${cx}% ${HORIZON + 6}%, ${rgba(rgb, 0.2)} 0%, ${rgba(rgb, 0.1)} 40%, ${rgba(rgb, 0.03)} 75%, ${rgba(rgb, 0)} 100%)`
+
+const buildMoodBackdrop = ({ wall, shade }: { wall: string; shade: string }, cx: number) =>
+  [
+    floorShade(shade, cx),
+    vertical(shade, COVE, HORIZON),
+    vertical(shade, CEILING_FALLOFF),
+    keyLight(cx),
+    vertical(wall, WALL_TO_FLOOR),
+  ].join(', ')
+
+const buildBackdrops = (cx: number) =>
+  Object.fromEntries(
+    THEME_KEYS.map((key) => [key, buildMoodBackdrop(moodTheme[key], cx)]),
+  ) as Record<ThemeKey, string>
+
+// Dihitung sekali saja di level module.
+const BACKDROPS = {
+  left: buildBackdrops(25),
+  right: buildBackdrops(75),
+}
+
+// Sisi kanan di-crossfade ke sisi kiri supaya tidak ada garis pemisah keras.
+const RIGHT_BLEND = 'linear-gradient(to right, transparent 38%, #000 62%)'
+
+// Cahaya studio miring dari kiri atas.
+const SIDE_LIGHT = 'linear-gradient(112deg, rgba(255,255,255,0.42) 0%, rgba(255,255,255,0.2) 26%, rgba(255,255,255,0.06) 50%, rgba(255,255,255,0) 68%)'
+
+const LIGHT_CONE = 'conic-gradient(from 0deg at -10% -16%, rgba(255,255,255,0) 104deg, rgba(255,255,255,0.05) 114deg, rgba(255,255,255,0.13) 124deg, rgba(255,255,255,0.22) 134deg, rgba(255,255,255,0.26) 141deg, rgba(255,255,255,0.21) 149deg, rgba(255,255,255,0.11) 160deg, rgba(255,255,255,0.04) 171deg, rgba(255,255,255,0) 182deg)'
+
+const FADE_BEFORE_FLOOR = 'linear-gradient(to bottom, #000 0%, #000 40%, transparent 80%)'
+
+const LIGHT_FALLOFF = 'linear-gradient(292deg, rgba(24,24,32,0.05) 0%, rgba(24,24,32,0.022) 30%, rgba(24,24,32,0) 55%)'
+const VIGNETTE = 'radial-gradient(ellipse 85% 75% at 50% 44%, rgba(24,24,32,0) 50%, rgba(24,24,32,0.026) 78%, rgba(24,24,32,0.052) 100%)'
+
+const SOFT_SHADOW = 'radial-gradient(ellipse closest-side, rgba(24,24,32,0.075) 0%, rgba(24,24,32,0.04) 45%, rgba(24,24,32,0.012) 78%, rgba(24,24,32,0) 100%)'
+const CONTACT_SHADOW = 'radial-gradient(ellipse closest-side, rgba(24,24,32,0.3) 0%, rgba(24,24,32,0.14) 48%, rgba(24,24,32,0.03) 80%, rgba(24,24,32,0) 100%)'
+
+// Film grain halus: menyamarkan banding gradient dan memberi kesan matte.
+const GRAIN = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E")`
+
+const StudioWall = memo(function StudioWall({
+  mood,
+  side,
 }: {
-  children: React.ReactNode
+  mood?: Mood
+  side: 'left' | 'right'
+}) {
+  const active: ThemeKey = mood && mood in moodTheme ? mood : 'empty'
+  const mask = side === 'right' ? RIGHT_BLEND : undefined
+
+  return (
+    <div
+      className="absolute inset-0"
+      style={mask ? { maskImage: mask, WebkitMaskImage: mask } : undefined}
+    >
+      {THEME_KEYS.map((key) => (
+        <div
+          key={key}
+          className="absolute inset-0 transition-opacity duration-700 ease-out"
+          style={{ background: BACKDROPS[side][key], opacity: key === active ? 1 : 0 }}
+        />
+      ))}
+    </div>
+  )
+})
+
+const CardStudio = memo(function CardStudio({
+  userMood,
+  partnerMood,
+}: {
+  userMood?: Mood
+  partnerMood?: Mood
 }) {
   return (
-    <div className="relative overflow-hidden rounded-[2rem] border border-black/[0.045] bg-white shadow-[0_20px_60px_-35px_rgba(0,0,0,0.18)]">
-      <svg
-        className="pointer-events-none absolute -right-20 -top-28 h-[330px] w-[430px] opacity-[0.8]"
-        viewBox="0 0 430 330"
-        fill="none"
-        aria-hidden="true"
-      >
-        <path
-          d="M450 42C390 5 313 12 276 66C241 116 263 157 221 190C185 218 116 196 83 239C55 275 79 314 121 342"
-          stroke="#e9a8bd"
-          strokeOpacity=".28"
-          strokeWidth="1.2"
-        />
+    <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden bg-white">
+      {/* DINDING + COVE + LANTAI: kiri = kamu, kanan = partner */}
+      <StudioWall mood={userMood} side="left" />
+      <StudioWall mood={partnerMood} side="right" />
 
-        <path
-          d="M456 66C394 31 331 42 302 87C275 129 294 160 260 185C220 214 157 202 120 238C91 266 102 301 135 326"
-          stroke="#9eb9df"
-          strokeOpacity=".3"
-          strokeWidth="1.2"
-        />
+      {/* CAHAYA STUDIO MIRING (memudar sebelum lantai) */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background: `${LIGHT_CONE}, ${SIDE_LIGHT}`,
+          maskImage: FADE_BEFORE_FLOOR,
+          WebkitMaskImage: FADE_BEFORE_FLOOR,
+        }}
+      />
 
-        <path
-          d="M442 91C399 66 352 69 328 104C306 137 318 159 293 181C263 207 212 207 180 232C150 255 151 287 174 311"
-          stroke="#e9a8bd"
-          strokeOpacity=".18"
-          strokeWidth="1"
-          strokeDasharray="2 7"
-        />
+      {/* FALLOFF + VIGNETTE */}
+      <div className="absolute inset-0" style={{ background: `${VIGNETTE}, ${LIGHT_FALLOFF}` }} />
 
-        <circle
-          cx="335"
-          cy="102"
-          r="3"
-          fill="#9eb9df"
-          fillOpacity=".55"
-        />
+      {/* FILM GRAIN */}
+      <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: GRAIN }} />
 
-        <circle
-          cx="276"
-          cy="184"
-          r="2.5"
-          fill="#e9a8bd"
-          fillOpacity=".6"
-        />
+      {/* GARIS PEMISAH TENGAH: putih, nyambung dari tepi atas sampai tepi bawah kartu.
+          Ada outline + glow tipis supaya tetap kelihatan di area lantai yang putih. */}
+      <div className="absolute inset-y-0 left-1/2 w-1 -translate-x-1/2 bg-white" />
+    </div>
+  )
+})
 
-        <circle
-          cx="175"
-          cy="232"
-          r="2"
-          fill="#9eb9df"
-          fillOpacity=".5"
-        />
-      </svg>
+function CardShell({
+  children,
+  userMood,
+  partnerMood,
+}: {
+  children: React.ReactNode
+  userMood?: Mood
+  partnerMood?: Mood
+}) {
+  return (
+    <div className="relative isolate overflow-hidden rounded-[2rem] bg-white shadow-[0_20px_60px_-35px_rgba(0,0,0,0.18)]">
+      <CardStudio userMood={userMood} partnerMood={partnerMood} />
 
-      <svg
-        className="pointer-events-none absolute -bottom-28 -left-20 h-[220px] w-[300px] opacity-[0.65]"
-        viewBox="0 0 300 220"
-        fill="none"
-        aria-hidden="true"
-      >
-        <path
-          d="M-20 181C37 153 72 161 103 189C134 217 170 229 209 203C246 178 253 135 316 111"
-          stroke="#9eb9df"
-          strokeOpacity=".22"
-          strokeWidth="1.1"
-        />
-
-        <path
-          d="M-17 157C36 135 73 140 104 166C136 193 171 204 207 180C242 156 252 117 311 94"
-          stroke="#e9a8bd"
-          strokeOpacity=".22"
-          strokeWidth="1.1"
-        />
-
-        <circle
-          cx="103"
-          cy="166"
-          r="2.5"
-          fill="#e9a8bd"
-          fillOpacity=".55"
-        />
-
-        <circle
-          cx="207"
-          cy="180"
-          r="2"
-          fill="#9eb9df"
-          fillOpacity=".55"
-        />
-      </svg>
-
-      <svg
-        className="pointer-events-none absolute right-8 top-8 size-16 opacity-[0.45]"
-        viewBox="0 0 64 64"
-        fill="none"
-        aria-hidden="true"
-      >
-        <circle
-          cx="32"
-          cy="32"
-          r="23"
-          stroke="#171717"
-          strokeOpacity=".07"
-        />
-
-        <circle
-          cx="32"
-          cy="32"
-          r="17"
-          stroke="#e9a8bd"
-          strokeOpacity=".3"
-          strokeDasharray="2 6"
-        />
-
-        <circle
-          cx="32"
-          cy="32"
-          r="10"
-          stroke="#9eb9df"
-          strokeOpacity=".28"
-        />
-
-        <circle
-          cx="48"
-          cy="21"
-          r="2"
-          fill="#e9a8bd"
-        />
-
-        <circle
-          cx="20"
-          cy="46"
-          r="1.7"
-          fill="#9eb9df"
-        />
-      </svg>
-
-      <div className="relative p-5 sm:p-6">
+      {/* padding bawah ekstra supaya ada ruang "lantai" di bawah karakter */}
+      <div className="relative p-5 pb-7 sm:p-6 sm:pb-8">
         {children}
       </div>
     </div>
+  )
+}
+
+/* -------------------------------------------------------------------------- */
+/* BAYANGAN LANTAI                                                            */
+/* 3 lapis: halo berwarna, penumbra lembut, dan contact shadow yang rapat.    */
+/* Sedikit digeser ke kanan karena cahaya datang dari kiri atas.              */
+/* -------------------------------------------------------------------------- */
+
+function FloorShadow({ shade }: { shade: string }) {
+  const layers = [
+    {
+      width: 124,
+      height: 30,
+      dx: 9,
+      background: `radial-gradient(ellipse closest-side, ${rgba(shade, 0.26)} 0%, ${rgba(shade, 0.12)} 45%, ${rgba(shade, 0.03)} 78%, ${rgba(shade, 0)} 100%)`,
+    },
+    { width: 96, height: 20, dx: 6, background: SOFT_SHADOW },
+    { width: 50, height: 10, dx: 2, background: CONTACT_SHADOW },
+  ]
+
+  return (
+    <>
+      {layers.map(({ width, height, dx, background }) => (
+        <div
+          key={width}
+          aria-hidden
+          className="pointer-events-none absolute bottom-0 left-1/2"
+          style={{
+            width,
+            height,
+            background,
+            // pusat elips tepat di tepi bawah kotak karakter (ubah bottom untuk menyesuaikan dengan kaki)
+            transform: `translate(calc(-50% + ${dx}px), 50%)`,
+          }}
+        />
+      ))}
+    </>
   )
 }
 
@@ -361,67 +387,23 @@ function MoodItem({
     )
   }
 
-  const mood = moodInfo[checkin.mood]
   const animatedEmot = variants[emotIndex] ?? variants[0]
+  const { shade } = moodTheme[checkin.mood]
 
   return (
     <div className="relative flex min-h-[132px] flex-1 flex-col items-center justify-center overflow-hidden rounded-[1.5rem] px-4 py-4">
-      <div
-        className={`absolute left-1/2 top-1/2 size-24 -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl ${mood.glow}`}
-      />
-
       <p className="relative mb-2 text-[11px] font-medium tracking-[-0.02em] text-neutral-600">
         {role}
       </p>
 
       <div className="relative flex size-[80px] items-center justify-center">
-        <svg
-          className="pointer-events-none absolute inset-0 size-full"
-          viewBox="0 0 100 100"
-          fill="none"
-          aria-hidden="true"
-        >
-          <circle
-            cx="50"
-            cy="50"
-            r="38"
-            stroke="#171717"
-            strokeOpacity=".045"
-          />
-
-          <circle
-            cx="50"
-            cy="50"
-            r="45"
-            stroke="#e9a8bd"
-            strokeOpacity=".16"
-            strokeDasharray="2 8"
-          />
-
-          <circle
-            cx="14"
-            cy="30"
-            r="2"
-            fill="#e9a8bd"
-            fillOpacity=".55"
-          />
-
-          <circle
-            cx="83"
-            cy="68"
-            r="1.8"
-            fill="#9eb9df"
-            fillOpacity=".6"
-          />
-        </svg>
-
-        <div className="pointer-events-none absolute bottom-0 left-1/2 h-2.5 w-10 -translate-x-1/2 rounded-full bg-black/40 blur-[7px]" />
+        <FloorShadow shade={shade} />
 
         <img
           key={`${checkin.id}-${checkin.mood}-${emotIndex}`}
           src={animatedEmot.src}
-          alt={`${mood.text} mood`}
-          className={`relative z-10 size-56 object-contain drop-shadow-[0_10px_8px_rgba(0,0,0,0.10)] transition-opacity duration-350 ${isFading ? 'opacity-0' : 'opacity-100'}`}
+          alt={`${moodLabel[checkin.mood]} mood`}
+          className={`relative z-10 size-56 object-contain drop-shadow-[0_6px_6px_rgba(24,24,32,0.08)] transition-opacity duration-350 ${isFading ? 'opacity-0' : 'opacity-100'}`}
         />
       </div>
     </div>
@@ -435,7 +417,10 @@ export default function PartnerCheckinCard({
   partnerName,
 }: PartnerCheckinCardProps) {
   return (
-    <CardShell>
+    <CardShell
+      userMood={userCheckin?.mood}
+      partnerMood={partnerCheckin?.mood}
+    >
       <div className="relative">
         <div className="mt-4 flex items-start justify-between gap-4">
           <div>
@@ -443,20 +428,22 @@ export default function PartnerCheckinCard({
               How are you two?
             </h2>
 
-            <p className="mt-1 text-[11px] text-neutral-400">
+            <p className="mt-1 text-[11px] text-neutral-500">
               A little glimpse of today.
             </p>
           </div>
 
-          <Link href="/check-in" aria-label="Open check-in" className="flex size-9 shrink-0 items-center justify-center rounded-full border border-black/20 bg-white text-neutral-500 shadow-[0_8px_20px_-14px_rgba(0,0,0,0.25)] transition-all duration-300 hover:bg-neutral-900 hover:text-white">
+          <Link
+            href="/check-in"
+            aria-label="Open check-in"
+            className="flex size-9 shrink-0 items-center justify-center rounded-full border border-black/20 bg-white text-neutral-500 shadow-[0_8px_20px_-14px_rgba(0,0,0,0.25)] transition-all duration-300 hover:bg-neutral-900 hover:text-white"
+          >
             <ArrowUpRight size={14} strokeWidth={2.2} />
           </Link>
         </div>
       </div>
 
       <div className="relative mt-5 flex gap-2.5">
-        <div className="pointer-events-none absolute bottom-4 left-1/2 top-4 z-10 w-[1px] rounded-full bg-neutral-400" />
-
         <MoodItem
           role="You"
           checkin={userCheckin}

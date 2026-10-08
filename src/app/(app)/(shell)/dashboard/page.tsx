@@ -254,7 +254,7 @@ export default function DashboardPage() {
                   Your space
                 </p>
 
-                <h2 className="mt-1 text-lg font-semibold tracking-[-0.03em]">
+                <h2 className="mt-1 text-base font-semibold tracking-[-0.03em]">
                   Growing together
                 </h2>
               </div>

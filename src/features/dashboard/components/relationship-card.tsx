@@ -24,7 +24,7 @@ export default function RelationshipCard({
     : null
 
   return (
-    <section className="relative overflow-hidden rounded-b-[7rem]  shadow-lg bg-white px-5 py-7 sm:rounded-2xl sm:px-8 sm:py-9">
+    <section className="relative overflow-hidden rounded-b-[3rem] shadow-lg bg-white px-5 py-7 sm:rounded-2xl sm:px-8 sm:py-9">
       {/* DARK WAVE BACKGROUND */}
       <svg
         className="pointer-events-none absolute inset-0 h-full w-full"
@@ -409,7 +409,7 @@ export default function RelationshipCard({
 
         {daysTogether && (
           <div className="mt-5 flex justify-center">
-            <div className="relative overflow-hidden rounded-full border border-white/[0.08] bg-white/[0.055] px-4 py-2.5 shadow-[0_8px_25px_-15px_rgba(0,0,0,0.8)] backdrop-blur-md">
+            <div className="relative overflow-hidden rounded-full border border-white/[0.08] bg-linear-to-t from-pink-50 to-blue-50 px-4 py-2.5 shadow-[0_8px_25px_-15px_rgba(0,0,0,0.8)] backdrop-blur-md">
               <div className="relative flex items-center gap-2.5">
                 <span className="relative flex size-5 items-center justify-center">
                   <span className="absolute inset-0 rounded-full border border-pink-200/25" />
