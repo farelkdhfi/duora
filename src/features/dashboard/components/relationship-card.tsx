@@ -171,7 +171,7 @@ export default function RelationshipCard({
         {/* RELATIONSHIP INFO */}
 
         {daysTogether && (
-          <div className="mt-8 flex flex-col items-center">
+          <div className="mt-5 flex flex-col items-center">
             <div className="flex items-baseline gap-2">
               <span className="bg-linear-to-r from-[#ffb2ce] via-[#d5b0ed] to-[#9bc5ff] bg-clip-text text-[30px] font-semibold tracking-[-0.05em] text-transparent sm:text-[34px]">
                 {daysTogether}
