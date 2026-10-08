@@ -1,3 +1,14 @@
+'use client'
+
+import { useEffect, useId, useMemo, useState } from 'react'
+import {
+  AnimatePresence,
+  animate,
+  motion,
+  useReducedMotion,
+  type Variants,
+} from 'framer-motion'
+
 interface RelationshipCardProps {
   userName: string
   partnerName: string
@@ -6,6 +17,69 @@ interface RelationshipCardProps {
   connectedAt?: string | null
 }
 
+type SlideKey = 'together' | 'days'
+
+/** Durasi tiap slide (ms) */
+const SLIDE_DURATION = 5200
+const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1]
+
+/* ============================================================= */
+/* MOTION VARIANTS */
+/* ============================================================= */
+
+function useMotionVariants() {
+  const reduced = useReducedMotion()
+
+  return useMemo<{ slide: Variants; item: Variants }>(() => {
+    if (reduced) {
+      return {
+        slide: {
+          hidden: { opacity: 0 },
+          show: { opacity: 1, transition: { duration: 0.4 } },
+          exit: { opacity: 0, transition: { duration: 0.25 } },
+        },
+        item: {
+          hidden: { opacity: 1 },
+          show: { opacity: 1 },
+        },
+      }
+    }
+
+    return {
+      slide: {
+        hidden: { opacity: 0, y: 22, scale: 0.97, filter: 'blur(10px)' },
+        show: {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          filter: 'blur(0px)',
+          transition: {
+            duration: 0.75,
+            ease: EASE,
+            when: 'beforeChildren',
+            staggerChildren: 0.1,
+          },
+        },
+        exit: {
+          opacity: 0,
+          y: -22,
+          scale: 1.02,
+          filter: 'blur(10px)',
+          transition: { duration: 0.5, ease: [0.4, 0, 1, 1] },
+        },
+      },
+      item: {
+        hidden: { opacity: 0, y: 14 },
+        show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: EASE } },
+      },
+    }
+  }, [reduced])
+}
+
+/* ============================================================= */
+/* MAIN CARD */
+/* ============================================================= */
+
 export default function RelationshipCard({
   userName,
   partnerName,
@@ -13,37 +87,53 @@ export default function RelationshipCard({
   partnerAvatarUrl,
   connectedAt,
 }: RelationshipCardProps) {
-  const daysTogether = connectedAt
-    ? Math.max(
-        1,
-        Math.floor(
-          (Date.now() - new Date(connectedAt).getTime()) /
-            (1000 * 60 * 60 * 24),
-        ),
-      )
-    : null
+  const { slide: slideVariants } = useMotionVariants()
+  const [index, setIndex] = useState(0)
+
+  const daysTogether = useMemo(() => {
+    if (!connectedAt) return null
+    const start = new Date(connectedAt).getTime()
+    if (Number.isNaN(start)) return null
+    return Math.max(1, Math.floor((Date.now() - start) / 86_400_000))
+  }, [connectedAt])
+
+  const sinceLabel = useMemo(() => {
+    if (!connectedAt) return null
+    const date = new Date(connectedAt)
+    if (Number.isNaN(date.getTime())) return null
+    return date.toLocaleDateString('en-US', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    })
+  }, [connectedAt])
+
+  const slides = useMemo<SlideKey[]>(
+    () => (daysTogether ? ['together', 'days'] : ['together']),
+    [daysTogether],
+  )
+
+  const current = slides[index % slides.length]
+
+  // Auto rotate
+  useEffect(() => {
+    if (slides.length < 2) return
+    const timer = setTimeout(() => {
+      setIndex((i) => (i + 1) % slides.length)
+    }, SLIDE_DURATION)
+    return () => clearTimeout(timer)
+  }, [index, slides.length])
 
   return (
-    <section className="relative overflow-hidden rounded-b-[2.75rem] bg-[#000000] px-5 py-8 shadow-[0_30px_80px_-40px_rgba(20,10,30,0.8)] sm:rounded-[2rem] sm:px-8 sm:py-10">
+    <section className="relative overflow-hidden rounded-b-[2.75rem] border border-black/20 bg-linear-to-b from-white via-[#ffffff] to-[#f3f6ff] px-5 py-8 shadow-[0_30px_80px_-40px_rgba(180,110,160,0.35)] sm:rounded-[2rem] sm:px-8 sm:py-10">
       {/* BACKGROUND */}
 
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         {/* Ambient light */}
 
-        <div className="absolute -left-[20%] -top-[35%] size-[420px] rounded-full bg-[#e987ad]/20 blur-[120px]" />
-
-        <div className="absolute -right-[20%] -top-[30%] size-[400px] rounded-full bg-[#789fe5]/20 blur-[120px]" />
-
-        <div className="absolute bottom-[-45%] left-1/2 size-[500px] -translate-x-1/2 rounded-full bg-[#a879bd]/10 blur-[130px]" />
-
-        {/* Subtle vertical gradient */}
-
-        <div className="absolute inset-0 bg-linear-to-b from-white/[0.025] via-transparent to-black/10" />
-
-        {/* Elegant flowing lines */}
-
+        {/* Flowing lines */}
         <svg
-          className="absolute inset-0 h-full w-full opacity-60"
+          className="absolute inset-0 h-full w-full opacity-70"
           viewBox="0 0 900 500"
           preserveAspectRatio="none"
           fill="none"
@@ -51,138 +141,133 @@ export default function RelationshipCard({
         >
           <defs>
             <linearGradient
-              id="elegant-wave"
+              id="rc-wave"
               x1="0"
               y1="0"
               x2="900"
               y2="0"
               gradientUnits="userSpaceOnUse"
             >
-              <stop stopColor="#8ebcff" stopOpacity="0" />
-              <stop offset=".25" stopColor="#8ebcff" stopOpacity=".28" />
-              <stop offset=".5" stopColor="#ffafd0" stopOpacity=".4" />
-              <stop offset=".75" stopColor="#c49bea" stopOpacity=".28" />
-              <stop offset="1" stopColor="#ffafd0" stopOpacity="0" />
+              <stop stopColor="#7fa8f0" stopOpacity="0" />
+              <stop offset=".25" stopColor="#7fa8f0" stopOpacity=".35" />
+              <stop offset=".5" stopColor="#f08ab4" stopOpacity=".45" />
+              <stop offset=".75" stopColor="#b98be0" stopOpacity=".35" />
+              <stop offset="1" stopColor="#f08ab4" stopOpacity="0" />
             </linearGradient>
 
-            <filter
-              id="soft-wave"
-              x="-20%"
-              y="-100%"
-              width="140%"
-              height="300%"
-            >
+            <filter id="rc-blur" x="-20%" y="-100%" width="140%" height="300%">
               <feGaussianBlur stdDeviation="12" />
             </filter>
           </defs>
 
           <path
             d="M-80 145C90 65 170 90 300 150C430 210 520 220 650 145C760 82 850 95 980 145"
-            stroke="url(#elegant-wave)"
+            stroke="url(#rc-wave)"
             strokeWidth="34"
-            strokeOpacity=".1"
-            filter="url(#soft-wave)"
+            strokeOpacity=".18"
+            filter="url(#rc-blur)"
           />
-
           <path
             d="M-80 250C70 195 165 200 290 250C410 300 500 315 625 250C750 185 850 200 980 250"
-            stroke="url(#elegant-wave)"
+            stroke="url(#rc-wave)"
             strokeWidth="1.2"
             strokeLinecap="round"
           />
-
           <path
             d="M-80 385C70 325 170 340 300 395C420 445 520 450 650 385C770 325 850 335 980 390"
-            stroke="url(#elegant-wave)"
+            stroke="url(#rc-wave)"
             strokeWidth="18"
-            strokeOpacity=".06"
-            filter="url(#soft-wave)"
+            strokeOpacity=".12"
+            filter="url(#rc-blur)"
           />
         </svg>
 
         {/* Minimal grain */}
-
-        <div className="absolute inset-0 opacity-[0.025] [background-image:radial-gradient(rgba(255,255,255,0.8)_0.6px,transparent_0.6px)] [background-size:7px_7px]" />
+        <div className="absolute inset-0 opacity-[0.035] [background-image:radial-gradient(rgba(60,30,80,0.9)_0.6px,transparent_0.6px)] [background-size:7px_7px]" />
       </div>
 
       {/* CONTENT */}
 
       <div className="relative z-10">
         {/* TOP LABEL */}
-
-        <div className="mb-7 flex items-center justify-center">
-          <div className="flex items-center gap-2">
-            <span className="h-px w-8 bg-linear-to-r from-transparent to-white/20" />
-
-            <span className="text-[9px] font-medium uppercase tracking-[0.28em] text-white/35">
-              Your relationship
-            </span>
-
-            <span className="h-px w-8 bg-linear-to-l from-transparent to-white/20" />
-          </div>
+        <div className="mb-4 flex items-center justify-center gap-2">
+          <span className="h-px w-8 bg-linear-to-r from-transparent to-[#2a2233]/20" />
+          <span className="text-[9px] font-medium uppercase tracking-[0.28em] text-[#2a2233]/40">
+            Your relationship
+          </span>
+          <span className="h-px w-8 bg-linear-to-l from-transparent to-[#2a2233]/20" />
         </div>
 
-        {/* PEOPLE */}
-
-        <div className="relative flex items-center justify-center gap-5 sm:gap-14">
-          {/* CONNECTION LINE */}
-
-          <div className="pointer-events-none absolute left-1/2 top-1/2 hidden h-px w-[270px] -translate-x-1/2 -translate-y-1/2 bg-linear-to-r from-[#8ebcff]/20 via-[#ffafd0]/60 to-[#ffafd0]/20 sm:block md:w-[340px]" />
-
-          <Person
-            name={userName}
-            role="You"
-            avatarUrl={userAvatarUrl}
-            accent="blue"
-          />
-
-          {/* CENTER */}
-
-          <div className="relative z-20 flex shrink-0 items-center justify-center">
-            <div className="relative flex size-[58px] items-center justify-center sm:size-[68px]">
-              {/* Outer glow */}
-
-              <div className="absolute inset-0 rounded-full bg-[#e99aba]/10 blur-xl" />
-
-              {/* Thin ring */}
-
-              <div className="absolute inset-0 rounded-full border border-white/10" />
-
-              {/* Gradient ring */}
-
-              <div className="absolute inset-[5px] rounded-full border border-[#ffb0cd]/20" />
-
-              {/* Core */}
-
-              <div className="relative flex size-10 items-center justify-center rounded-full border border-white/10 bg-[#2b2335]/90 shadow-[0_15px_35px_-15px_rgba(0,0,0,.9)] backdrop-blur-xl sm:size-12">
-                <RelationshipHeart />
-              </div>
-            </div>
-          </div>
-
-          <Person
-            name={partnerName}
-            role="Partner"
-            avatarUrl={partnerAvatarUrl}
-            accent="pink"
-          />
+        {/* STAGE */}
+        <div className="relative h-[262px] sm:h-[284px]">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={current}
+              variants={slideVariants}
+              initial="hidden"
+              animate="show"
+              exit="exit"
+              className="absolute inset-0 flex flex-col items-center justify-center"
+            >
+              {current === 'together' ? (
+                <TogetherSlide
+                  userName={userName}
+                  partnerName={partnerName}
+                  userAvatarUrl={userAvatarUrl}
+                  partnerAvatarUrl={partnerAvatarUrl}
+                />
+              ) : (
+                <DaysSlide
+                  days={daysTogether ?? 0}
+                  userName={userName}
+                  partnerName={partnerName}
+                  userAvatarUrl={userAvatarUrl}
+                  partnerAvatarUrl={partnerAvatarUrl}
+                  sinceLabel={sinceLabel}
+                />
+              )}
+            </motion.div>
+          </AnimatePresence>
         </div>
 
-        {/* RELATIONSHIP INFO */}
+        {/* INDICATORS */}
+        {slides.length > 1 && (
+          <div className="mt-3 flex items-center justify-center gap-1.5">
+            {slides.map((s, i) => {
+              const active = i === index % slides.length
 
-        {daysTogether && (
-          <div className="mt-5 flex flex-col items-center">
-            <div className="flex items-baseline gap-2">
-              <span className="bg-linear-to-r from-[#ffb2ce] via-[#d5b0ed] to-[#9bc5ff] bg-clip-text text-[30px] font-semibold tracking-[-0.05em] text-transparent sm:text-[34px]">
-                {daysTogether}
-              </span>
-
-              <span className="text-[10px] font-medium uppercase tracking-[0.18em] text-white/35">
-                days together
-              </span>
-            </div>
-
-            <div className="mt-2 h-px w-14 bg-linear-to-r from-transparent via-white/20 to-transparent" />
+              return (
+                <button
+                  key={s}
+                  type="button"
+                  onClick={() => setIndex(i)}
+                  aria-label={
+                    s === 'together' ? 'Show couple' : 'Show days together'
+                  }
+                  aria-current={active}
+                  className="py-2"
+                >
+                  <motion.span
+                    className="relative block h-1.5 overflow-hidden rounded-full bg-[#2a2233]/10"
+                    animate={{ width: active ? 36 : 6 }}
+                    transition={{ duration: 0.5, ease: EASE }}
+                  >
+                    {active && (
+                      <motion.span
+                        key={index}
+                        className="absolute inset-0 origin-left rounded-full bg-linear-to-r from-[#f08ab4] to-[#7fa8f0]"
+                        initial={{ scaleX: 0 }}
+                        animate={{ scaleX: 1 }}
+                        transition={{
+                          duration: SLIDE_DURATION / 1000,
+                          ease: 'linear',
+                        }}
+                      />
+                    )}
+                  </motion.span>
+                </button>
+              )
+            })}
           </div>
         )}
       </div>
@@ -191,89 +276,322 @@ export default function RelationshipCard({
 }
 
 /* ============================================================= */
-/* PERSON */
+/* SLIDE 1 — TOGETHER (USER + PARTNER)                           */
 /* ============================================================= */
 
-function Person({
-  name,
-  role,
-  avatarUrl,
-  accent,
+function TogetherSlide({
+  userName,
+  partnerName,
+  userAvatarUrl,
+  partnerAvatarUrl,
 }: {
-  name: string
-  role: string
-  avatarUrl?: string | null
-  accent: 'blue' | 'pink'
+  userName: string
+  partnerName: string
+  userAvatarUrl?: string | null
+  partnerAvatarUrl?: string | null
 }) {
-  const isBlue = accent === 'blue'
+  const { item } = useMotionVariants()
+  const reduced = useReducedMotion()
+  const offset = reduced ? 0 : 56
 
   return (
-    <div className="relative z-10 min-w-0 text-center">
-      <div
-        className={`relative mx-auto size-[82px] rounded-full p-[2px] sm:size-[104px] sm:p-[3px] ${
-          isBlue
-            ? 'bg-linear-to-br from-[#9fcaff] via-[#789fda]/70 to-[#526989]/20'
-            : 'bg-linear-to-br from-[#ffb7d1] via-[#d586a9]/70 to-[#74445b]/20'
-        }`}
-      >
-        {/* Outer glow */}
+    <>
+      <div className="relative flex items-center justify-center">
+        {/* Shared halo (menyatukan dua avatar) */}
+        <motion.div
+          className="pointer-events-none absolute inset-0 flex items-center justify-center"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1.2, delay: reduced ? 0 : 0.35 }}
+        >
+          <motion.div
+            className="h-[104px] w-[250px] rounded-full bg-linear-to-r from-[#a9c8ff]/70 via-[#dcb6f2]/60 to-[#ffb3d0]/70 blur-2xl sm:h-[120px] sm:w-[290px]"
+            animate={
+              reduced
+                ? undefined
+                : { opacity: [0.55, 0.95, 0.55], scale: [1, 1.1, 1] }
+            }
+            transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
+          />
+        </motion.div>
 
-        <div
-          className={`absolute -inset-2 rounded-full opacity-30 blur-xl ${
-            isBlue ? 'bg-[#82b5f5]' : 'bg-[#ef91b5]'
-          }`}
-        />
-
-        {/* Avatar */}
-
-        <div className="relative h-full w-full overflow-hidden rounded-full bg-[#27202f] p-[3px] sm:p-1">
-          {avatarUrl ? (
-            <img
-              src={avatarUrl}
-              alt={name}
-              className="h-full w-full rounded-full object-cover"
-            />
-          ) : (
-            <div
-              className={`flex h-full w-full items-center justify-center rounded-full ${
-                isBlue
-                  ? 'bg-linear-to-br from-[#334766] to-[#1b2433]'
-                  : 'bg-linear-to-br from-[#593348] to-[#2b2028]'
-              }`}
+        {/* Avatars */}
+        <div className="relative flex items-center justify-center -space-x-5 sm:-space-x-6">
+          {/* USER — masuk dari kiri */}
+          <motion.div
+            className="relative z-10"
+            initial={{ opacity: 0, x: -offset, scale: 0.9 }}
+            animate={{ opacity: 1, x: 0, scale: 1 }}
+            transition={{ duration: 0.95, ease: EASE, delay: 0.05 }}
+          >
+            <motion.div
+              animate={reduced ? undefined : { y: [0, -4, 0] }}
+              transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
             >
-              <span
-                className={`text-[25px] font-medium tracking-[-0.06em] sm:text-[30px] ${
-                  isBlue ? 'text-[#b7d5ff]' : 'text-[#ffc1d8]'
-                }`}
-              >
-                {name.slice(0, 1).toUpperCase()}
-              </span>
-            </div>
-          )}
+              <RingAvatar name={userName} url={userAvatarUrl} tone="blue" />
+            </motion.div>
+          </motion.div>
+
+          {/* PARTNER — masuk dari kanan */}
+          <motion.div
+            className="relative z-20"
+            initial={{ opacity: 0, x: offset, scale: 0.9 }}
+            animate={{ opacity: 1, x: 0, scale: 1 }}
+            transition={{ duration: 0.95, ease: EASE, delay: 0.05 }}
+          >
+            <motion.div
+              animate={reduced ? undefined : { y: [0, -4, 0] }}
+              transition={{
+                duration: 5,
+                repeat: Infinity,
+                ease: 'easeInOut',
+                delay: 0.8,
+              }}
+            >
+              <RingAvatar
+                name={partnerName}
+                url={partnerAvatarUrl}
+                tone="pink"
+                className="ring-4 ring-white"
+              />
+            </motion.div>
+          </motion.div>
         </div>
 
-        {/* Online indicator */}
-
-        <span
-          className={`absolute bottom-1.5 right-1.5 size-3 rounded-full border-[2px] border-[#211b2b] sm:bottom-2 sm:right-2 ${
-            isBlue ? 'bg-[#9bc6ff]' : 'bg-[#ffafd0]'
-          }`}
-        />
+        {/* Heart di titik pertemuan */}
+        <div className="absolute -bottom-1 left-1/2 z-30 -translate-x-1/2">
+          <motion.div
+            initial={{ scale: 0, rotate: -20 }}
+            animate={{ scale: 1, rotate: 0 }}
+            transition={{
+              type: 'spring',
+              stiffness: 380,
+              damping: 18,
+              delay: reduced ? 0 : 0.7,
+            }}
+          >
+            <motion.div
+              className="flex size-9 items-center justify-center rounded-full bg-white shadow-[0_8px_20px_-8px_rgba(200,90,140,0.55)] ring-1 ring-black/5 sm:size-10"
+              animate={
+                reduced ? undefined : { scale: [1, 1.14, 1, 1.1, 1] }
+              }
+              transition={{
+                duration: 1.6,
+                repeat: Infinity,
+                repeatDelay: 1.2,
+                ease: 'easeInOut',
+                delay: 1.6,
+              }}
+            >
+              <RelationshipHeart className="size-5" />
+            </motion.div>
+          </motion.div>
+        </div>
       </div>
 
-      <div className="mt-3">
-        <p className="mx-auto max-w-[105px] truncate text-[12px] font-semibold tracking-[-0.02em] text-white/85 sm:max-w-[135px] sm:text-[13px]">
-          {name}
+      {/* Names */}
+      <motion.div variants={item} className="mt-6 flex flex-col items-center">
+        <p className="flex max-w-[300px] items-baseline justify-center gap-2 text-[20px] font-semibold tracking-[-0.03em] text-[#2a2233] sm:max-w-[340px] sm:text-[24px]">
+          <span className="min-w-0 max-w-[120px] truncate sm:max-w-[140px]">
+            {userName}
+          </span>
+          <span className="bg-linear-to-r from-[#f07aa6] to-[#6fa3ee] bg-clip-text text-transparent">
+            &amp;
+          </span>
+          <span className="min-w-0 max-w-[120px] truncate sm:max-w-[140px]">
+            {partnerName}
+          </span>
         </p>
 
-        <p
-          className={`mt-1 text-[8px] font-medium uppercase tracking-[0.22em] ${
-            isBlue ? 'text-[#9bc6ff]/45' : 'text-[#ffafd0]/45'
-          }`}
-        >
-          {role}
+        <div className="mt-2 flex items-center gap-2">
+          <span className="h-px w-5 bg-linear-to-r from-transparent to-[#b07ad8]/50" />
+          <span className="text-[9px] font-medium uppercase tracking-[0.26em] text-[#9a5fc0]/70">
+            Together
+          </span>
+          <span className="h-px w-5 bg-linear-to-l from-transparent to-[#b07ad8]/50" />
+        </div>
+      </motion.div>
+    </>
+  )
+}
+
+/* ============================================================= */
+/* SLIDE 2 — DAYS TOGETHER */
+/* ============================================================= */
+
+function DaysSlide({
+  days,
+  userName,
+  partnerName,
+  userAvatarUrl,
+  partnerAvatarUrl,
+  sinceLabel,
+}: {
+  days: number
+  userName: string
+  partnerName: string
+  userAvatarUrl?: string | null
+  partnerAvatarUrl?: string | null
+  sinceLabel: string | null
+}) {
+  const { item } = useMotionVariants()
+
+  return (
+    <>
+      {/* Overlapping mini avatars */}
+      <motion.div variants={item} className="flex -space-x-2.5">
+        <div className="size-9 overflow-hidden rounded-full bg-white ring-2 ring-white shadow-[0_6px_16px_-6px_rgba(90,110,170,0.5)]">
+          <Avatar
+            name={userName}
+            url={userAvatarUrl}
+            tone="blue"
+            initialClassName="text-[14px]"
+          />
+        </div>
+        <div className="size-9 overflow-hidden rounded-full bg-white ring-2 ring-white shadow-[0_6px_16px_-6px_rgba(200,90,140,0.5)]">
+          <Avatar
+            name={partnerName}
+            url={partnerAvatarUrl}
+            tone="pink"
+            initialClassName="text-[14px]"
+          />
+        </div>
+      </motion.div>
+
+      {/* Counter */}
+      <motion.div variants={item} className="mt-4 flex flex-col items-center">
+        <span className="bg-linear-to-r from-[#f07aa6] via-[#b07ad8] to-[#6fa3ee] px-4 bg-clip-text text-[68px] font-semibold leading-none tracking-[-0.06em] tabular-nums text-transparent sm:text-[80px]">
+          <CountUp value={days} />
+        </span>
+
+        <span className="mt-2 text-[11px] font-medium uppercase tracking-[0.24em] text-[#2a2233]/40">
+          days together
+        </span>
+      </motion.div>
+
+      {/* Meta */}
+      <motion.div variants={item} className="mt-5 flex flex-col items-center">
+        <div className="h-px w-14 bg-linear-to-r from-transparent via-[#b78ad0]/40 to-transparent" />
+
+        <p className="mt-3 max-w-[260px] truncate text-[13px] font-medium text-[#2a2233]/75">
+          {userName} &amp; {partnerName}
         </p>
+
+        {sinceLabel && (
+          <p className="mt-1 text-[11px] text-[#2a2233]/40">Since {sinceLabel}</p>
+        )}
+      </motion.div>
+    </>
+  )
+}
+
+/* ============================================================= */
+/* COUNT UP */
+/* ============================================================= */
+
+function CountUp({ value }: { value: number }) {
+  const reduced = useReducedMotion()
+  const [display, setDisplay] = useState(reduced ? value : 0)
+
+  useEffect(() => {
+    if (reduced) {
+      setDisplay(value)
+      return
+    }
+
+    const controls = animate(0, value, {
+      duration: 1.6,
+      delay: 0.3,
+      ease: EASE,
+      onUpdate: (v) => setDisplay(Math.round(v)),
+    })
+
+    return () => controls.stop()
+  }, [value, reduced])
+
+  return <>{display.toLocaleString('en-US')}</>
+}
+
+/* ============================================================= */
+/* RING AVATAR (besar, dengan ring gradient) */
+/* ============================================================= */
+
+function RingAvatar({
+  name,
+  url,
+  tone,
+  className = '',
+}: {
+  name: string
+  url?: string | null
+  tone: 'blue' | 'pink'
+  className?: string
+}) {
+  const isPink = tone === 'pink'
+
+  return (
+    <div className="relative size-[96px] sm:size-[116px]">
+      {/* Gradient ring */}
+      <div
+        className={`absolute inset-0 rounded-full ${className} ${
+          isPink
+            ? 'bg-linear-to-br from-[#ffc2d9] via-[#e58fb4] to-[#c9a6ee] shadow-[0_14px_30px_-12px_rgba(214,100,150,0.55)]'
+            : 'bg-linear-to-br from-[#b4d3ff] via-[#7fa8f0] to-[#b9a6ee] shadow-[0_14px_30px_-12px_rgba(90,130,210,0.55)]'
+        }`}
+      />
+
+      {/* Avatar */}
+      <div className="absolute inset-[3px] rounded-full bg-white p-[3px]">
+        <div className="h-full w-full overflow-hidden rounded-full">
+          <Avatar name={name} url={url} tone={tone} />
+        </div>
       </div>
+    </div>
+  )
+}
+
+/* ============================================================= */
+/* AVATAR */
+/* ============================================================= */
+
+function Avatar({
+  name,
+  url,
+  tone,
+  initialClassName = 'text-[38px] sm:text-[44px]',
+}: {
+  name: string
+  url?: string | null
+  tone: 'blue' | 'pink'
+  initialClassName?: string
+}) {
+  if (url) {
+    return (
+      <img
+        src={url}
+        alt={name}
+        draggable={false}
+        className="h-full w-full object-cover"
+      />
+    )
+  }
+
+  const initial = name.trim().slice(0, 1).toUpperCase() || '?'
+  const isPink = tone === 'pink'
+
+  return (
+    <div
+      className={`flex h-full w-full items-center justify-center bg-linear-to-br ${
+        isPink ? 'from-[#ffd6e5] to-[#f7b6d0]' : 'from-[#d4e5ff] to-[#a9c8f5]'
+      }`}
+    >
+      <span
+        className={`font-semibold tracking-[-0.05em] ${initialClassName} ${
+          isPink ? 'text-[#b8527d]' : 'text-[#4c78b8]'
+        }`}
+      >
+        {initial}
+      </span>
     </div>
   )
 }
@@ -282,32 +600,29 @@ function Person({
 /* RELATIONSHIP HEART */
 /* ============================================================= */
 
-function RelationshipHeart() {
+function RelationshipHeart({ className = 'size-6' }: { className?: string }) {
+  const gradientId = `relationship-heart-${useId().replace(/:/g, '')}`
+
   return (
-    <svg
-      viewBox="0 0 48 48"
-      className="size-6 sm:size-7"
-      fill="none"
-      aria-hidden="true"
-    >
+    <svg viewBox="0 0 48 48" className={className} fill="none" aria-hidden="true">
       <defs>
         <linearGradient
-          id="relationship-heart-gradient"
+          id={gradientId}
           x1="9"
           y1="10"
           x2="39"
           y2="38"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="#ff9fc3" />
-          <stop offset=".5" stopColor="#d4a8eb" />
-          <stop offset="1" stopColor="#91c4ff" />
+          <stop stopColor="#ff8db8" />
+          <stop offset=".5" stopColor="#c692e6" />
+          <stop offset="1" stopColor="#7fb2f5" />
         </linearGradient>
       </defs>
 
       <path
         d="M24 37C21.5 34.9 10 27.5 10 18.5C10 13.8 13.2 10.5 17.5 10.5C20.3 10.5 22.6 12 24 14.3C25.4 12 27.7 10.5 30.5 10.5C34.8 10.5 38 13.8 38 18.5C38 27.5 26.5 34.9 24 37Z"
-        fill="url(#relationship-heart-gradient)"
+        fill={`url(#${gradientId})`}
       />
 
       <path
