@@ -47,7 +47,7 @@ function useMotionVariants() {
 
     return {
       slide: {
-        hidden: { opacity: 0, y: 22, scale: 0.97, filter: 'blur(10px)' },
+        hidden: { opacity: 0, y: 16, scale: 0.97, filter: 'blur(10px)' },
         show: {
           opacity: 1,
           y: 0,
@@ -62,14 +62,14 @@ function useMotionVariants() {
         },
         exit: {
           opacity: 0,
-          y: -22,
+          y: -16,
           scale: 1.02,
           filter: 'blur(10px)',
           transition: { duration: 0.5, ease: [0.4, 0, 1, 1] },
         },
       },
       item: {
-        hidden: { opacity: 0, y: 14 },
+        hidden: { opacity: 0, y: 10 },
         show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: EASE } },
       },
     }
@@ -125,12 +125,9 @@ export default function RelationshipCard({
   }, [index, slides.length])
 
   return (
-    <section className="relative overflow-hidden rounded-b-[2.75rem] border border-black/20 bg-linear-to-b from-white via-[#ffffff] to-[#f3f6ff] px-5 py-8 shadow-[0_30px_80px_-40px_rgba(180,110,160,0.35)] sm:rounded-[2rem] sm:px-8 sm:py-10">
+    <section className="relative overflow-hidden rounded-b-[2rem] border border-black/20 bg-linear-to-b from-white via-[#ffffff] to-[#f3f6ff] px-4 py-5 shadow-[0_24px_60px_-36px_rgba(180,110,160,0.35)] sm:rounded-[1.5rem] sm:px-6 sm:py-6">
       {/* BACKGROUND */}
-
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        {/* Ambient light */}
-
         {/* Flowing lines */}
         <svg
           className="absolute inset-0 h-full w-full opacity-70"
@@ -187,10 +184,9 @@ export default function RelationshipCard({
       </div>
 
       {/* CONTENT */}
-
       <div className="relative z-10">
         {/* TOP LABEL */}
-        <div className="mb-4 flex items-center justify-center gap-2">
+        <div className="mb-2 flex items-center justify-center gap-2">
           <span className="h-px w-8 bg-linear-to-r from-transparent to-[#2a2233]/20" />
           <span className="text-[9px] font-medium uppercase tracking-[0.28em] text-[#2a2233]/40">
             Your relationship
@@ -199,7 +195,7 @@ export default function RelationshipCard({
         </div>
 
         {/* STAGE */}
-        <div className="relative h-[262px] sm:h-[284px]">
+        <div className="relative h-[152px] sm:h-[160px]">
           <AnimatePresence mode="wait">
             <motion.div
               key={current}
@@ -232,7 +228,7 @@ export default function RelationshipCard({
 
         {/* INDICATORS */}
         {slides.length > 1 && (
-          <div className="mt-3 flex items-center justify-center gap-1.5">
+          <div className="mt-1 flex items-center justify-center gap-1.5">
             {slides.map((s, i) => {
               const active = i === index % slides.length
 
@@ -245,11 +241,11 @@ export default function RelationshipCard({
                     s === 'together' ? 'Show couple' : 'Show days together'
                   }
                   aria-current={active}
-                  className="py-2"
+                  className="py-1.5"
                 >
                   <motion.span
                     className="relative block h-1.5 overflow-hidden rounded-full bg-[#2a2233]/10"
-                    animate={{ width: active ? 36 : 6 }}
+                    animate={{ width: active ? 32 : 6 }}
                     transition={{ duration: 0.5, ease: EASE }}
                   >
                     {active && (
@@ -292,7 +288,7 @@ function TogetherSlide({
 }) {
   const { item } = useMotionVariants()
   const reduced = useReducedMotion()
-  const offset = reduced ? 0 : 56
+  const offset = reduced ? 0 : 40
 
   return (
     <>
@@ -305,7 +301,7 @@ function TogetherSlide({
           transition={{ duration: 1.2, delay: reduced ? 0 : 0.35 }}
         >
           <motion.div
-            className="h-[104px] w-[250px] rounded-full bg-linear-to-r from-[#a9c8ff]/70 via-[#dcb6f2]/60 to-[#ffb3d0]/70 blur-2xl sm:h-[120px] sm:w-[290px]"
+            className="h-[64px] w-[170px] rounded-full bg-linear-to-r from-[#a9c8ff]/70 via-[#dcb6f2]/60 to-[#ffb3d0]/70 blur-2xl sm:h-[72px] sm:w-[190px]"
             animate={
               reduced
                 ? undefined
@@ -316,7 +312,7 @@ function TogetherSlide({
         </motion.div>
 
         {/* Avatars */}
-        <div className="relative flex items-center justify-center -space-x-5 sm:-space-x-6">
+        <div className="relative flex items-center justify-center -space-x-3.5 sm:-space-x-4">
           {/* USER — masuk dari kiri */}
           <motion.div
             className="relative z-10"
@@ -325,7 +321,7 @@ function TogetherSlide({
             transition={{ duration: 0.95, ease: EASE, delay: 0.05 }}
           >
             <motion.div
-              animate={reduced ? undefined : { y: [0, -4, 0] }}
+              animate={reduced ? undefined : { y: [0, -3, 0] }}
               transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
             >
               <RingAvatar name={userName} url={userAvatarUrl} tone="blue" />
@@ -340,7 +336,7 @@ function TogetherSlide({
             transition={{ duration: 0.95, ease: EASE, delay: 0.05 }}
           >
             <motion.div
-              animate={reduced ? undefined : { y: [0, -4, 0] }}
+              animate={reduced ? undefined : { y: [0, -3, 0] }}
               transition={{
                 duration: 5,
                 repeat: Infinity,
@@ -352,14 +348,14 @@ function TogetherSlide({
                 name={partnerName}
                 url={partnerAvatarUrl}
                 tone="pink"
-                className="ring-4 ring-white"
+                className="ring-[3px] ring-white"
               />
             </motion.div>
           </motion.div>
         </div>
 
         {/* Heart di titik pertemuan */}
-        <div className="absolute -bottom-1 left-1/2 z-30 -translate-x-1/2">
+        <div className="absolute -bottom-0.5 left-1/2 z-30 -translate-x-1/2">
           <motion.div
             initial={{ scale: 0, rotate: -20 }}
             animate={{ scale: 1, rotate: 0 }}
@@ -371,7 +367,7 @@ function TogetherSlide({
             }}
           >
             <motion.div
-              className="flex size-9 items-center justify-center rounded-full bg-white shadow-[0_8px_20px_-8px_rgba(200,90,140,0.55)] ring-1 ring-black/5 sm:size-10"
+              className="flex size-7 items-center justify-center rounded-full bg-white shadow-[0_6px_16px_-6px_rgba(200,90,140,0.55)] ring-1 ring-black/5 sm:size-8"
               animate={
                 reduced ? undefined : { scale: [1, 1.14, 1, 1.1, 1] }
               }
@@ -383,27 +379,27 @@ function TogetherSlide({
                 delay: 1.6,
               }}
             >
-              <RelationshipHeart className="size-5" />
+              <RelationshipHeart className="size-4" />
             </motion.div>
           </motion.div>
         </div>
       </div>
 
       {/* Names */}
-      <motion.div variants={item} className="mt-6 flex flex-col items-center">
-        <p className="flex max-w-[300px] items-baseline justify-center gap-2 text-[20px] font-semibold tracking-[-0.03em] text-[#2a2233] sm:max-w-[340px] sm:text-[24px]">
-          <span className="min-w-0 max-w-[120px] truncate sm:max-w-[140px]">
+      <motion.div variants={item} className="mt-4 flex flex-col items-center">
+        <p className="flex max-w-[260px] items-baseline justify-center gap-1.5 text-[16px] font-semibold tracking-[-0.03em] text-[#2a2233] sm:max-w-[300px] sm:text-[18px]">
+          <span className="min-w-0 max-w-[100px] truncate sm:max-w-[120px]">
             {userName}
           </span>
           <span className="bg-linear-to-r from-[#f07aa6] to-[#6fa3ee] bg-clip-text text-transparent">
             &amp;
           </span>
-          <span className="min-w-0 max-w-[120px] truncate sm:max-w-[140px]">
+          <span className="min-w-0 max-w-[100px] truncate sm:max-w-[120px]">
             {partnerName}
           </span>
         </p>
 
-        <div className="mt-2 flex items-center gap-2">
+        <div className="mt-1.5 flex items-center gap-2">
           <span className="h-px w-5 bg-linear-to-r from-transparent to-[#b07ad8]/50" />
           <span className="text-[9px] font-medium uppercase tracking-[0.26em] text-[#9a5fc0]/70">
             Together
@@ -439,46 +435,48 @@ function DaysSlide({
   return (
     <>
       {/* Overlapping mini avatars */}
-      <motion.div variants={item} className="flex -space-x-2.5">
-        <div className="size-9 overflow-hidden rounded-full bg-white ring-2 ring-white shadow-[0_6px_16px_-6px_rgba(90,110,170,0.5)]">
+      <motion.div variants={item} className="flex -space-x-2">
+        <div className="size-6 overflow-hidden rounded-full bg-white ring-2 ring-white shadow-[0_4px_12px_-4px_rgba(90,110,170,0.5)]">
           <Avatar
             name={userName}
             url={userAvatarUrl}
             tone="blue"
-            initialClassName="text-[14px]"
+            initialClassName="text-[11px]"
           />
         </div>
-        <div className="size-9 overflow-hidden rounded-full bg-white ring-2 ring-white shadow-[0_6px_16px_-6px_rgba(200,90,140,0.5)]">
+        <div className="size-6 overflow-hidden rounded-full bg-white ring-2 ring-white shadow-[0_4px_12px_-4px_rgba(200,90,140,0.5)]">
           <Avatar
             name={partnerName}
             url={partnerAvatarUrl}
             tone="pink"
-            initialClassName="text-[14px]"
+            initialClassName="text-[11px]"
           />
         </div>
       </motion.div>
 
       {/* Counter */}
-      <motion.div variants={item} className="mt-4 flex flex-col items-center">
-        <span className="bg-linear-to-r from-[#f07aa6] via-[#b07ad8] to-[#6fa3ee] px-4 bg-clip-text text-[68px] font-semibold leading-none tracking-[-0.06em] tabular-nums text-transparent sm:text-[80px]">
+      <motion.div variants={item} className="mt-2.5 flex flex-col items-center">
+        <span className="bg-linear-to-r from-[#f07aa6] via-[#b07ad8] to-[#6fa3ee] px-3 bg-clip-text text-[40px] font-semibold leading-none tracking-[-0.06em] tabular-nums text-transparent sm:text-[48px]">
           <CountUp value={days} />
         </span>
 
-        <span className="mt-2 text-[11px] font-medium uppercase tracking-[0.24em] text-[#2a2233]/40">
+        <span className="mt-1.5 text-[10px] font-medium uppercase tracking-[0.24em] text-[#2a2233]/40">
           days together
         </span>
       </motion.div>
 
       {/* Meta */}
-      <motion.div variants={item} className="mt-5 flex flex-col items-center">
-        <div className="h-px w-14 bg-linear-to-r from-transparent via-[#b78ad0]/40 to-transparent" />
+      <motion.div variants={item} className="mt-3 flex flex-col items-center">
+        <div className="h-px w-12 bg-linear-to-r from-transparent via-[#b78ad0]/40 to-transparent" />
 
-        <p className="mt-3 max-w-[260px] truncate text-[13px] font-medium text-[#2a2233]/75">
+        <p className="mt-2 max-w-[240px] truncate text-[12px] font-medium text-[#2a2233]/75">
           {userName} &amp; {partnerName}
         </p>
 
         {sinceLabel && (
-          <p className="mt-1 text-[11px] text-[#2a2233]/40">Since {sinceLabel}</p>
+          <p className="mt-0.5 text-[10px] text-[#2a2233]/40">
+            Since {sinceLabel}
+          </p>
         )}
       </motion.div>
     </>
@@ -513,7 +511,7 @@ function CountUp({ value }: { value: number }) {
 }
 
 /* ============================================================= */
-/* RING AVATAR (besar, dengan ring gradient) */
+/* RING AVATAR (dengan ring gradient) */
 /* ============================================================= */
 
 function RingAvatar({
@@ -530,18 +528,18 @@ function RingAvatar({
   const isPink = tone === 'pink'
 
   return (
-    <div className="relative size-[96px] sm:size-[116px]">
+    <div className="relative size-[64px] sm:size-[76px]">
       {/* Gradient ring */}
       <div
         className={`absolute inset-0 rounded-full ${className} ${
           isPink
-            ? 'bg-linear-to-br from-[#ffc2d9] via-[#e58fb4] to-[#c9a6ee] shadow-[0_14px_30px_-12px_rgba(214,100,150,0.55)]'
-            : 'bg-linear-to-br from-[#b4d3ff] via-[#7fa8f0] to-[#b9a6ee] shadow-[0_14px_30px_-12px_rgba(90,130,210,0.55)]'
+            ? 'bg-linear-to-br from-[#ffc2d9] via-[#e58fb4] to-[#c9a6ee] shadow-[0_10px_22px_-10px_rgba(214,100,150,0.55)]'
+            : 'bg-linear-to-br from-[#b4d3ff] via-[#7fa8f0] to-[#b9a6ee] shadow-[0_10px_22px_-10px_rgba(90,130,210,0.55)]'
         }`}
       />
 
       {/* Avatar */}
-      <div className="absolute inset-[3px] rounded-full bg-white p-[3px]">
+      <div className="absolute inset-[2px] rounded-full bg-white p-[2px]">
         <div className="h-full w-full overflow-hidden rounded-full">
           <Avatar name={name} url={url} tone={tone} />
         </div>
@@ -558,7 +556,7 @@ function Avatar({
   name,
   url,
   tone,
-  initialClassName = 'text-[38px] sm:text-[44px]',
+  initialClassName = 'text-[24px] sm:text-[28px]',
 }: {
   name: string
   url?: string | null
