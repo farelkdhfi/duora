@@ -379,7 +379,7 @@ function TogetherSlide({
 
       {/* Names */}
       <motion.div variants={item} className="mt-4 flex flex-col items-center">
-        <p className="flex max-w-[260px] items-baseline justify-center gap-1.5 text-[16px] font-semibold tracking-[-0.03em] text-white sm:max-w-[300px] sm:text-[18px]">
+        <p className="flex max-w-[260px] items-baseline justify-center gap-1.5 text-lg font-semibold tracking-[-0.03em] text-white sm:max-w-[300px] sm:text-[18px]">
           <span className="min-w-0 max-w-[100px] truncate sm:max-w-[120px]">
             {userName}
           </span>
