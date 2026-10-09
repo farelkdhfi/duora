@@ -32,6 +32,10 @@ const Accent = ({ children }: { children: ReactNode }) => (
   <span className="text-[#AD72C0]">{children}</span>
 )
 
+const Accent2 = ({ children }: { children: ReactNode }) => (
+  <span className="text-[#A1C9EA]">{children}</span>
+)
+
 type Slide = {
   id: string
   image: StaticImageData
@@ -60,7 +64,7 @@ const slides: Slide[] = [
     id: 'assistant',
     image: hero2,
     alt: 'Duora AI assistant helping a couple with their relationship',
-    title: ['Assistant', <>your <Accent>relationship</Accent></>],
+    title: ['Assistant', <>your <Accent2>relationship</Accent2></>],
     description: (
       <>
         Tanya apa pun tentang hubungan
