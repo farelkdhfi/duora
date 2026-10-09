@@ -22,10 +22,10 @@ const moodInfo: Record<Mood, { image: typeof happyEmot; label: string; backgroun
   happy: {
     image: happyEmot,
     label: 'Bahagia',
-    background: 'bg-amber-50/80',
-    border: 'border-amber-200/50',
-    text: 'text-amber-700',
-    glow: 'bg-amber-300/[0.10]',
+    background: 'bg-pink-50/80',
+    border: 'border-pink-200/50',
+    text: 'text-pink-700',
+    glow: 'bg-pink-300/[0.10]',
   },
   neutral: {
     image: neutralEmot,

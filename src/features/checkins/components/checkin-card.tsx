@@ -34,11 +34,11 @@ const moodInfo: Record<
   happy: {
     image: happyEmot,
     label: 'Happy',
-    background: 'bg-amber-50/80',
-    border: 'border-amber-200/50',
-    glow: 'bg-amber-300/[0.12]',
-    text: 'text-amber-700',
-    accent: 'bg-amber-400',
+    background: 'bg-pink-50/80',
+    border: 'border-pink-200/50',
+    glow: 'bg-pink-300/[0.12]',
+    text: 'text-pink-700',
+    accent: 'bg-pink-400',
   },
   neutral: {
     image: neutralEmot,
@@ -70,11 +70,11 @@ const moodInfo: Record<
   stressed: {
     image: stressedEmot,
     label: 'Stressed',
-    background: 'bg-rose-50/80',
-    border: 'border-rose-200/50',
-    glow: 'bg-rose-400/[0.10]',
-    text: 'text-rose-700',
-    accent: 'bg-rose-500',
+    background: 'bg-red-50/80',
+    border: 'border-red-200/50',
+    glow: 'bg-red-400/[0.10]',
+    text: 'text-red-700',
+    accent: 'bg-red-500',
   },
 }
 
