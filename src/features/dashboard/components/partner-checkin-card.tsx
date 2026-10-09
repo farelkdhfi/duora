@@ -94,12 +94,11 @@ type ThemeKey = Mood | 'empty'
 // wall  = warna kertas backdrop
 // shade = hue yang sama tapi lebih gelap, untuk falloff cahaya dan cove
 const moodTheme: Record<ThemeKey, { wall: string; shade: string }> = {
-  happy: { wall: '255, 242, 184', shade: '230, 190, 90' },
+  happy: { wall: '255, 220, 235', shade: '225, 130, 175' },
   neutral: { wall: '236, 238, 237', shade: '170, 175, 173' },
   sad: { wall: '190, 220, 255', shade: '90, 145, 210' },
   tired: { wall: '220, 200, 250', shade: '150, 115, 200' },
   stressed: { wall: '255, 195, 195', shade: '210, 100, 100' },
-  // belum check-in: studio putih kosong
   empty: { wall: '244, 244, 243', shade: '175, 178, 176' },
 }
 

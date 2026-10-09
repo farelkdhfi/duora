@@ -34,7 +34,7 @@ const HORIZON = 54
 // wall  = colour of the backdrop paper
 // shade = same hue but deeper, used for light falloff and the cove
 const moodTheme: Record<Mood, { wall: string; shade: string }> = {
-  happy: { wall: '255, 242, 184', shade: '230, 190, 90' },
+  happy: { wall: '255, 220, 235', shade: '225, 130, 175' },
   neutral: { wall: '236, 238, 237', shade: '170, 175, 173' },
   sad: { wall: '190, 220, 255', shade: '90, 145, 210' },
   tired: { wall: '220, 200, 250', shade: '150, 115, 200' },
