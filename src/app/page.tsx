@@ -13,7 +13,6 @@ import {
 import duoraLogo from '@/assets/logo.png'
 import hero1 from '@/assets/hero/hero1.png'
 import hero2 from '@/assets/hero/hero2.png'
-import hero3 from '@/assets/hero/hero3-4.png'
 
 /* -------------------------------------------------------------------------- */
 /*  Config                                                                    */
@@ -49,11 +48,11 @@ const slides: Slide[] = [
     title: ['Love', <>lives <Accent>here.</Accent></>],
     description: (
       <>
-        A quiet place for two people to stay
+        Tempat nyaman untuk tetap dekat 
         <br className="hidden min-[360px]:block" />
-        close, even when distance puts
+        dan saling terhubung, meski 
         <br />
-        them in different places.
+        terpisah jarak.
       </>
     ),
   },
@@ -62,16 +61,15 @@ const slides: Slide[] = [
     image: hero2,
     alt: 'Duora AI assistant helping a couple with their relationship',
     title: ['Assistant', <>your <Accent>relationship</Accent></>],
-    description:
-      'Tanya apa pun tentang hubungan kalian, Duora AI memahami konteksnya.',
-  },
-  {
-    id: 'everything',
-    image: hero3,
-    alt: 'Everything a couple needs, together in Duora',
-    title: ['Everything for', <>your <Accent>relationship</Accent></>],
-    description:
-      'Dari diskusi hingga rencana bersama, semua jadi lebih mudah dan hubungan makin dekat.',
+    description: (
+      <>
+        Tanya apa pun tentang hubungan
+        <br className="hidden min-[360px]:block" />
+        kalian, Duora AI memahami 
+        <br />
+        konteksnya.
+      </>
+    ),
   },
 ]
 
