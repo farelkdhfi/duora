@@ -11,11 +11,11 @@ export default function LandingPage() {
       {/* Main mobile layout */}
       <section className="mx-auto flex min-h-dvh w-full max-w-[480px] flex-col px-5 sm:px-8">
         {/* Logo */}
-        <header className="flex shrink-0 items-center justify-center pt-10 sm:pt-12">
+        <header className="flex shrink-0 items-center justify-center pt-5 sm:pt-12">
           <Link
             href="/"
             aria-label="Duora home"
-            className="flex items-center gap-1.5"
+            className="flex items-center"
           >
             <Image
               src={duoraLogo}
@@ -44,7 +44,7 @@ export default function LandingPage() {
         </div>
 
         {/* Headline and description */}
-        <div className="flex shrink-0 flex-col items-center text-center">
+        <div className="flex shrink-0 flex-col items-center text-center mt-5">
           <h1 className="text-[36px] font-semibold leading-[0.94] tracking-[-1.3px]">
             Love
             <br />
@@ -66,10 +66,10 @@ export default function LandingPage() {
           aria-label="Page 1 of 2"
         >
           <span
-            className="h-[15px] w-[15px] rounded-full bg-black"
+            className="h-[8px] w-[8px] rounded-full bg-black"
             aria-current="step"
           />
-          <span className="h-[15px] w-[15px] rounded-full bg-[#A6A6A6]" />
+          <span className="h-[8px] w-[8px] rounded-full bg-[#A6A6A6]" />
         </div>
 
         {/* Primary action */}
