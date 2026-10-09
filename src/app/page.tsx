@@ -13,7 +13,7 @@ import {
 import duoraLogo from '@/assets/logo.png'
 import hero1 from '@/assets/hero/hero1.png'
 import hero2 from '@/assets/hero/hero2.png'
-import hero3 from '@/assets/hero/hero3-2.png'
+import hero3 from '@/assets/hero/hero3-4.png'
 
 /* -------------------------------------------------------------------------- */
 /*  Config                                                                    */
