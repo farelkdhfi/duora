@@ -11,7 +11,7 @@ import {
   type Variants,
 } from 'framer-motion'
 import duoraLogo from '@/assets/logo.png'
-import hero1 from '@/assets/hero/hero1.png'
+import hero1 from '@/assets/hero/hero1-2.png'
 import hero2 from '@/assets/hero/hero2.png'
 
 /* -------------------------------------------------------------------------- */
