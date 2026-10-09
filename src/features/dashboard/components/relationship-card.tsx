@@ -125,7 +125,7 @@ export default function RelationshipCard({
   }, [index, slides.length])
 
   return (
-    <section className="relative overflow-hidden rounded-b-[2rem] border border-black/20 bg-linear-to-b from-white via-[#ffffff] to-[#f3f6ff] px-4 py-5 shadow-[0_24px_60px_-36px_rgba(180,110,160,0.35)] sm:rounded-[1.5rem] sm:px-6 sm:py-6">
+    <section className="relative overflow-hidden rounded-b-[2rem] border border-black/20 bg-[#9CB8D9] px-4 py-5 shadow-[0_24px_60px_-36px_rgba(180,110,160,0.35)] sm:rounded-[1.5rem] sm:px-6 sm:py-6">
       {/* BACKGROUND */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         {/* Flowing lines */}
@@ -185,14 +185,6 @@ export default function RelationshipCard({
 
       {/* CONTENT */}
       <div className="relative z-10">
-        {/* TOP LABEL */}
-        <div className="mb-2 flex items-center justify-center gap-2">
-          <span className="h-px w-8 bg-linear-to-r from-transparent to-[#2a2233]/20" />
-          <span className="text-[9px] font-medium uppercase tracking-[0.28em] text-[#2a2233]/40">
-            Your relationship
-          </span>
-          <span className="h-px w-8 bg-linear-to-l from-transparent to-[#2a2233]/20" />
-        </div>
 
         {/* STAGE */}
         <div className="relative h-[152px] sm:h-[160px]">
@@ -244,14 +236,14 @@ export default function RelationshipCard({
                   className="py-1.5"
                 >
                   <motion.span
-                    className="relative block h-1.5 overflow-hidden rounded-full bg-[#2a2233]/10"
+                    className="relative block h-1.5 overflow-hidden rounded-full bg-white"
                     animate={{ width: active ? 32 : 6 }}
                     transition={{ duration: 0.5, ease: EASE }}
                   >
                     {active && (
                       <motion.span
                         key={index}
-                        className="absolute inset-0 origin-left rounded-full bg-linear-to-r from-[#f08ab4] to-[#7fa8f0]"
+                        className="absolute inset-0 origin-left rounded-full bg-pink-200"
                         initial={{ scaleX: 0 }}
                         animate={{ scaleX: 1 }}
                         transition={{
@@ -387,25 +379,17 @@ function TogetherSlide({
 
       {/* Names */}
       <motion.div variants={item} className="mt-4 flex flex-col items-center">
-        <p className="flex max-w-[260px] items-baseline justify-center gap-1.5 text-[16px] font-semibold tracking-[-0.03em] text-[#2a2233] sm:max-w-[300px] sm:text-[18px]">
+        <p className="flex max-w-[260px] items-baseline justify-center gap-1.5 text-[16px] font-semibold tracking-[-0.03em] text-white sm:max-w-[300px] sm:text-[18px]">
           <span className="min-w-0 max-w-[100px] truncate sm:max-w-[120px]">
             {userName}
           </span>
-          <span className="bg-linear-to-r from-[#f07aa6] to-[#6fa3ee] bg-clip-text text-transparent">
+          <span className="bg-pink-200 bg-clip-text text-transparent">
             &amp;
           </span>
           <span className="min-w-0 max-w-[100px] truncate sm:max-w-[120px]">
             {partnerName}
           </span>
         </p>
-
-        <div className="mt-1.5 flex items-center gap-2">
-          <span className="h-px w-5 bg-linear-to-r from-transparent to-[#b07ad8]/50" />
-          <span className="text-[9px] font-medium uppercase tracking-[0.26em] text-[#9a5fc0]/70">
-            Together
-          </span>
-          <span className="h-px w-5 bg-linear-to-l from-transparent to-[#b07ad8]/50" />
-        </div>
       </motion.div>
     </>
   )
@@ -456,11 +440,11 @@ function DaysSlide({
 
       {/* Counter */}
       <motion.div variants={item} className="mt-2.5 flex flex-col items-center">
-        <span className="bg-linear-to-r from-[#f07aa6] via-[#b07ad8] to-[#6fa3ee] px-3 bg-clip-text text-[40px] font-semibold leading-none tracking-[-0.06em] tabular-nums text-transparent sm:text-[48px]">
+        <span className="bg-white px-3 bg-clip-text text-[40px] font-semibold leading-none tracking-[-0.06em] tabular-nums text-transparent sm:text-[48px]">
           <CountUp value={days} />
         </span>
 
-        <span className="mt-1.5 text-[10px] font-medium uppercase tracking-[0.24em] text-[#2a2233]/40">
+        <span className="mt-1.5 text-[10px] font-medium uppercase tracking-[0.24em] text-neutral-200">
           days together
         </span>
       </motion.div>
@@ -468,13 +452,8 @@ function DaysSlide({
       {/* Meta */}
       <motion.div variants={item} className="mt-3 flex flex-col items-center">
         <div className="h-px w-12 bg-linear-to-r from-transparent via-[#b78ad0]/40 to-transparent" />
-
-        <p className="mt-2 max-w-[240px] truncate text-[12px] font-medium text-[#2a2233]/75">
-          {userName} &amp; {partnerName}
-        </p>
-
         {sinceLabel && (
-          <p className="mt-0.5 text-[10px] text-[#2a2233]/40">
+          <p className="mt-0.5 text-[10px] text-neutral-100">
             Since {sinceLabel}
           </p>
         )}
