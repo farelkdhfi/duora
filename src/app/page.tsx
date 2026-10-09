@@ -3,7 +3,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import duoraLogo from '@/assets/logo.png'
-import heroImage from '@/assets/hero/hero1.png'
+import heroImage from '@/assets/hero/hero1-2.png'
 
 export default function LandingPage() {
   return (
