@@ -4,8 +4,9 @@ import {
   useEffect,
   useState,
   type ComponentProps,
+  type CSSProperties,
 } from 'react'
-import { ArrowLeft, Loader2, X } from 'lucide-react'
+import { ArrowLeft, ArrowUpRight, Loader2, X } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
 
@@ -22,11 +23,10 @@ import {
 } from '../queries'
 import { AiPersona } from '../types'
 
-import happyEmot from '@/assets/emoticon/happy-emot.png'
-import neutralEmot from '@/assets/emoticon/neutral-emot.png'
-import stressedEmot from '@/assets/emoticon/stressed-emot.png'
-import tiredEmot from '@/assets/emoticon/tired-emot.png'
-import PartnerCharacter from './partner-character'
+import lembutAi from '@/assets/ai-persona/lembut-ai.png'
+import formalAi from '@/assets/ai-persona/formal-ai.png'
+import nyeletukAi from '@/assets/ai-persona/nyeletuk-ai.png'
+import lebayAi from '@/assets/ai-persona/lebay-ai.png'
 import AiMemoryPocket from './ai-memory-pocket'
 import AiResponseOverlay from './ai-response-overlay'
 
@@ -45,6 +45,10 @@ interface DebateRoomProps {
 type DebateMessage = ComponentProps<
   typeof DebateMessageBubble
 >['message']
+
+type EmoticonImage = typeof lembutAi
+
+type Side = 'left' | 'right'
 
 const statusConfig = {
   active: {
@@ -69,25 +73,48 @@ const personaLabel: Record<
   AiPersona,
   {
     text: string
-    image: typeof happyEmot
+    image: EmoticonImage
   }
 > = {
   formal: {
     text: 'Formal',
-    image: neutralEmot,
+    image: formalAi,
   },
   lembut: {
     text: 'Lembut',
-    image: happyEmot,
+    image: lembutAi,
   },
   kasar: {
     text: 'Nyeletuk',
-    image: stressedEmot,
+    image: nyeletukAi,
   },
   lebay: {
     text: 'Lebay',
-    image: tiredEmot,
+    image: lebayAi,
   },
+}
+
+/* Aksen halus per sisi: kiri = warm clay, kanan = dusty slate */
+const sideTone: Record<
+  Side,
+  { ring: string; dot: string; label: string }
+> = {
+  left: {
+    ring: 'ring-[#b8967a]/80',
+    dot: 'bg-[#b8967a]',
+    label: 'text-[#a07d62]',
+  },
+  right: {
+    ring: 'ring-[#8fa3b5]/90',
+    dot: 'bg-[#8fa3b5]',
+    label: 'text-[#6f8396]',
+  },
+}
+
+/* Arah datangnya transisi konten bubble */
+const slideFrom: Record<Side, string> = {
+  left: '-14px',
+  right: '14px',
 }
 
 function getMemberName(
@@ -114,11 +141,21 @@ function isSameDay(dateA: string, dateB: string) {
 }
 
 function formatThoughtCount(count: number) {
-  return `${count} ${count === 1 ? 'previous thought' : 'previous thoughts'}`
+  return `${count} ${count === 1 ? 'pesan sebelumnya' : 'pesan sebelumnya'}`
+}
+
+function formatTime(dateString: string) {
+  return new Date(dateString).toLocaleTimeString(
+    'id-ID',
+    {
+      hour: '2-digit',
+      minute: '2-digit',
+    },
+  )
 }
 
 /* ===================================================== */
-/* AI MEDIATOR CENTER */
+/* AI MEDIATOR (TOP) */
 /* ===================================================== */
 
 function MediatorStage({
@@ -130,7 +167,7 @@ function MediatorStage({
 }: {
   persona: {
     text: string
-    image: typeof happyEmot
+    image: EmoticonImage
   }
   isProcessing: boolean
   hasAiComment: boolean
@@ -142,70 +179,219 @@ function MediatorStage({
     isPendingVerdict ||
     hasAiComment
 
+
   return (
-    <section className="relative flex min-w-0 w-full flex-col items-center justify-center">
-      <div
-        className={[
-          'pointer-events-none absolute left-1/2 top-1/2 size-[150px] -translate-x-1/2 -translate-y-1/2 rounded-full blur-[60px] transition-all duration-1000 sm:size-[190px] sm:blur-[70px]',
-          active
-            ? 'scale-110 bg-[#eadfd2]/70'
-            : 'scale-90 bg-[#eee9e1]/45',
-        ].join(' ')}
-      />
-
-      <div className="pointer-events-none absolute left-1/2 top-[78px] hidden h-px w-[calc(100%+150px)] -translate-x-1/2 bg-gradient-to-r from-transparent via-black/[0.06] to-transparent md:block" />
-
+    <section className="relative flex w-full flex-col items-center">
       <button
         type="button"
         onClick={onOpenHistory}
-        className="group relative z-10 flex flex-col items-center"
+        aria-label="Open Duora AI memory"
+        className="group relative z-10 flex flex-col items-center rounded-3xl focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-neutral-400"
       >
-        <div
-          className={[
-            'relative flex size-[68px] items-center justify-center rounded-full border border-black/[0.055] bg-[#f8f4ed] shadow-[0_18px_55px_rgba(0,0,0,0.09)] transition-all duration-700 sm:size-[86px]',
-            isProcessing
-              ? 'scale-110'
-              : 'group-hover:scale-105',
-          ].join(' ')}
-        >
-          <div
-            className={[
-              'absolute -inset-2 rounded-full border border-black/[0.035] transition-all duration-700',
-              isProcessing
-                ? 'scale-110 opacity-100'
-                : 'scale-95 opacity-50',
-            ].join(' ')}
-          />
+        
 
-          <div
-            className={[
-              'absolute inset-2.5 rounded-full bg-white/80 sm:inset-3',
-              isProcessing
-                ? 'animate-[debate-ai-pulse_1.8s_ease-in-out_infinite]'
-                : '',
-            ].join(' ')}
-          />
+          <span className="relative z-10 block size-23 sm:size-[40px]">
+            <Image
+              key={persona.text}
+              src={persona.image}
+              alt=""
+              fill
+              sizes="40px"
+              className="animate-[debate-content-in_0.6s_cubic-bezier(0.22,1,0.36,1)_both] object-contain motion-reduce:animate-none"
+            />
+          </span>
 
-          <p className="relative z-10 text-black text-2xl">
-            ✦
-          </p>
-        </div>
+        <span className="mt-2 text-xs font-semibold text-neutral-800">
+          {persona.text} mediator
+        </span>
 
-        <div className="mt-3 text-center sm:mt-4">
-          <p className="text-[8px] font-semibold uppercase tracking-[0.16em] text-neutral-400 sm:text-[9px] sm:tracking-[0.18em]">
-            Duora AI
-          </p>
-        </div>
-      </button>
-
-      <button
-        type="button"
-        onClick={onOpenHistory}
-        className="mt-3 text-[8px] font-medium text-neutral-300 transition hover:text-neutral-600"
-      >
-        View AI memory
+        <span className="mt-2 bg-white py-2 px-4 rounded-full shadow-md text-[10px] text-neutral-800 transition-colors duration-300 group-hover:text-neutral-700">
+          Lihat jawaban
+        </span>
       </button>
     </section>
+  )
+}
+
+/* ===================================================== */
+/* PARTNER AVATAR */
+/* ===================================================== */
+
+function PartnerAvatar({
+  name,
+  image,
+  avatarUrl,
+  side,
+  isActive,
+  isDimmed,
+  disabled,
+  onSelect,
+}: {
+  name: string
+  image: EmoticonImage
+  avatarUrl?: string | null
+  side: Side
+  isActive: boolean
+  isDimmed: boolean
+  disabled: boolean
+  onSelect: () => void
+}) {
+  const tone = sideTone[side]
+
+  return (
+    <button
+      type="button"
+      onClick={onSelect}
+      disabled={disabled}
+      aria-pressed={isActive}
+      aria-label={`Show ${name}'s latest thought`}
+      className="group relative flex flex-col items-center rounded-3xl focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-neutral-400 disabled:cursor-default"
+    >
+      <span
+        className={[
+          'relative block size-[68px] rounded-full ring-offset-[5px] ring-offset-[#faf9f6] transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] sm:size-[76px]',
+          isActive
+            ? `scale-100 ring-[1.5px] ${tone.ring}`
+            : 'ring-1 ring-black/[0.06]',
+          isDimmed
+            ? 'scale-[0.9] opacity-55 saturate-[0.6] group-hover:opacity-90 group-hover:saturate-100'
+            : '',
+        ].join(' ')}
+      >
+        <span className="relative block size-full overflow-hidden rounded-full bg-[#f3eee6]">
+          {avatarUrl ? (
+            <Image
+              src={avatarUrl}
+              alt=""
+              fill
+              unoptimized
+              className="object-cover"
+            />
+          ) : (
+            <Image
+              src={image}
+              alt=""
+              fill
+              sizes="76px"
+              className="object-contain p-3"
+            />
+          )}
+        </span>
+      </span>
+
+      <span className="mt-4 flex flex-col items-center gap-2">
+        <span
+          className={[
+            'max-w-[110px] truncate text-[12px] font-medium tracking-[-0.01em] transition-colors duration-500',
+            isActive
+              ? 'text-neutral-900'
+              : 'text-neutral-400',
+          ].join(' ')}
+        >
+          {name}
+        </span>
+
+        <span
+          className={[
+            'size-1 rounded-full transition-all duration-500',
+            tone.dot,
+            isActive
+              ? 'scale-100 opacity-100'
+              : 'scale-0 opacity-0',
+          ].join(' ')}
+        />
+      </span>
+    </button>
+  )
+}
+
+/* ===================================================== */
+/* ACTIVE BUBBLE (SINGLE) */
+/* ===================================================== */
+
+function ActiveBubble({
+  side,
+  name,
+  message,
+  previousCount,
+  emptyText,
+  onOpenPocket,
+}: {
+  side: Side
+  name: string
+  message: DebateMessage | undefined
+  previousCount: number
+  emptyText: string
+  onOpenPocket: () => void
+}) {
+  const tone = sideTone[side]
+
+  return (
+    <div className="relative" aria-live="polite">
+      {/* pointer yang meluncur ke avatar aktif */}
+      <span
+        aria-hidden
+        className="pointer-events-none absolute top-0 z-10 size-3.5 -translate-x-1/2 -translate-y-1/2 rotate-45 border-l border-t border-black/[0.06] bg-white transition-[left] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]"
+        style={{ left: side === 'left' ? '25%' : '75%' }}
+      />
+
+      <div className="relative overflow-hidden rounded-[1.75rem] border border-black/[0.06] bg-white shadow-lg">
+        <div
+          key={`${side}-${message?.id ?? 'empty'}`}
+          className="animate-[debate-content-in_0.6s_cubic-bezier(0.22,1,0.36,1)_both] p-6 motion-reduce:animate-none sm:p-8"
+          style={
+            {
+              '--from-x': slideFrom[side],
+            } as CSSProperties
+          }
+        >
+          <div className="flex items-center justify-between gap-3">
+            <p
+              className={[
+                'text-[9px] font-semibold uppercase',
+                tone.label,
+              ].join(' ')}
+            >
+              {name}
+            </p>
+
+            {message && (
+              <span className="text-[10px] tabular-nums text-neutral-600">
+                {formatTime(message.created_at)}
+              </span>
+            )}
+          </div>
+
+          {message ? (
+            <p className="mt-5 whitespace-pre-line break-words  text-sm leading-[1.7] tracking-[-0.01em] text-neutral-800 sm:text-[19px]">
+              {message.content}
+            </p>
+          ) : (
+            <p className="mt-5  text-[16px] italic leading-[1.7] text-neutral-300 sm:text-[17px]">
+              {emptyText}
+            </p>
+          )}
+
+          {previousCount > 0 && (
+            <div className="mt-7 border-t border-black/[0.05] pt-4">
+              <button
+                type="button"
+                onClick={onOpenPocket}
+                className="group/pocket inline-flex items-center gap-1.5 text-[10.5px] font-medium text-neutral-400 transition-colors hover:text-neutral-800"
+              >
+                {formatThoughtCount(previousCount)}
+
+                <ArrowUpRight
+                  size={12}
+                  strokeWidth={1.8}
+                  className="transition-transform duration-300 group-hover/pocket:-translate-y-px group-hover/pocket:translate-x-px"
+                />
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
   )
 }
 
@@ -231,15 +417,15 @@ function MemoryPocket({
 
         <header className="relative z-10 flex shrink-0 items-center justify-between gap-4 border-b border-black/[0.05] px-4 py-4 sm:px-6 sm:py-5">
           <div className="min-w-0">
-            <p className="text-[7px] font-semibold uppercase tracking-[0.16em] text-neutral-300 sm:text-[8px] sm:tracking-[0.18em]">
+            <p className="text-[8px] font-semibold uppercase tracking-[0.2em] text-neutral-300">
               Memory pocket
             </p>
 
-            <h2 className="mt-1 truncate text-[16px] font-semibold tracking-[-0.04em] text-neutral-900 sm:text-[18px]">
-              {name}'s thoughts
+            <h2 className="mt-1 truncate  text-[18px] tracking-[-0.02em] text-neutral-900 sm:text-[20px]">
+              {name}&apos;s thoughts
             </h2>
 
-            <p className="mt-1 text-[9px] text-neutral-400 sm:text-[10px]">
+            <p className="mt-1 text-[10px] text-neutral-400">
               {formatThoughtCount(messages.length)}
             </p>
           </div>
@@ -307,6 +493,10 @@ export default function DebateRoom({
     string | null
   >(null)
 
+  /* partner yang dipilih manual lewat klik avatar (null = ikuti pengirim terakhir) */
+  const [focusedPartnerId, setFocusedPartnerId] =
+    useState<string | null>(null)
+
   const [showAiMemory, setShowAiMemory] = useState(false)
   const [showAiOverlay, setShowAiOverlay] = useState(false)
   const [aiOverlayMessageId, setAiOverlayMessageId] =
@@ -337,6 +527,10 @@ export default function DebateRoom({
     ?.filter((m) => m.role === 'ai' && m.is_final_verdict)
     .at(-1)
 
+  const latestUserMessageId = messages
+    ?.filter((m) => m.role === 'user')
+    .at(-1)?.id
+
   useEffect(() => {
     if (isAiProcessing) {
       setShowAiOverlay(true)
@@ -355,6 +549,11 @@ export default function DebateRoom({
       setAiOverlayMessageId(finalVerdictMessage.id)
     }
   }, [finalVerdictMessage?.id])
+
+  /* ada pesan baru -> balon otomatis kembali mengikuti pengirim terbaru */
+  useEffect(() => {
+    setFocusedPartnerId(null)
+  }, [latestUserMessageId])
 
   if (!debate) {
     return (
@@ -509,6 +708,38 @@ export default function DebateRoom({
 
   const status = statusConfig[debate.status]
 
+  /* ---------- single active bubble ---------- */
+
+  const hasMessages = Boolean(messages?.length)
+
+  const activePartnerId =
+    focusedPartnerId ??
+    lastUserMessage?.sender_id ??
+    partnerA.user_id
+
+  const activeSide: Side =
+    activePartnerId === partnerB.user_id
+      ? 'right'
+      : 'left'
+
+  const activeMessage =
+    activeSide === 'left'
+      ? latestPartnerAMessage
+      : latestPartnerBMessage
+
+  const activePreviousCount =
+    activeSide === 'left'
+      ? previousPartnerAMessages.length
+      : previousPartnerBMessages.length
+
+  const activeDisplayName =
+    activeSide === 'left' ? 'You' : partnerBName
+
+  const activeEmptyText =
+    activeSide === 'left'
+      ? "You haven't shared a thought yet."
+      : `${partnerBName} hasn't shared a thought yet.`
+
   const handleResolve = () => {
     if (!isConfirmingResolve) {
       setIsConfirmingResolve(true)
@@ -548,21 +779,13 @@ export default function DebateRoom({
           partnerBName={partnerBName}
           partnerAAvatarUrl={partnerA.avatar_url}
           partnerBAvatarUrl={partnerB.avatar_url}
+          personaName={personaLabel[debate.ai_persona].text}
+          personaImage={personaLabel[debate.ai_persona].image}
           onComplete={() => setShowIntro(false)}
         />
       )}
 
       <style jsx global>{`
-        @keyframes debate-breathe {
-          0%,
-          100% {
-            transform: translateY(0) scale(1);
-          }
-          50% {
-            transform: translateY(-4px) scale(1.015);
-          }
-        }
-
         @keyframes debate-ai-pulse {
           0%,
           100% {
@@ -574,75 +797,41 @@ export default function DebateRoom({
             opacity: 1;
           }
         }
+
+        @keyframes debate-content-in {
+          from {
+            opacity: 0;
+            transform: translate3d(var(--from-x, 0px), 6px, 0);
+            filter: blur(5px);
+          }
+          to {
+            opacity: 1;
+            transform: translate3d(0, 0, 0);
+            filter: blur(0);
+          }
+        }
       `}</style>
 
       {/* ROOM SHELL */}
 
-      <div className="fixed inset-0 z-20 flex flex-col overflow-hidden bg-[#f7f6f2] p-2 xs:p-2.5 sm:p-4 md:p-6">
-        <div className="relative flex min-h-0 flex-1 flex-col overflow-hidden rounded-[1.6rem] border border-black/[0.055] bg-[#faf9f6] shadow-[0_28px_90px_-45px_rgba(0,0,0,0.22)] sm:rounded-[2rem] md:rounded-[2.4rem]">
-          {/* AMBIENT */}
-
-          <div className="pointer-events-none absolute -right-24 -top-24 size-56 rounded-full bg-pink-300/[0.07] blur-[80px] sm:size-72 sm:blur-[100px]" />
-
-          <div className="pointer-events-none absolute -left-24 top-1/3 size-56 rounded-full bg-blue-300/[0.055] blur-[80px] sm:size-72 sm:blur-[100px]" />
-
-          <div className="pointer-events-none absolute bottom-0 left-1/2 size-56 -translate-x-1/2 rounded-full bg-[#eadfce]/[0.08] blur-[80px] sm:size-72 sm:blur-[100px]" />
-
+      <div className="fixed inset-0 z-20 flex flex-col overflow-hidden">
+        <div className="relative flex min-h-0 flex-1 flex-col overflow-hidden rounded-[1.6rem] border border-black/[0.055] bg-white shadow-[0_28px_90px_-45px_rgba(0,0,0,0.22)] sm:rounded-[2rem] md:rounded-[2.4rem]">
+          
           {/* HEADER */}
-
-          <header className="relative z-30 flex min-h-[60px] shrink-0 items-center justify-between gap-3 border-b border-black/[0.045] px-3.5 py-3 sm:min-h-[68px] sm:px-7 sm:py-4.5">
+          <header className="relative z-30 flex min-h-[60px] shrink-0 items-center justify-between gap-3 border-b border-black/[0.045] px-3.5 py-3 sm:min-h-[68px] sm:px-7 sm:py-4">
             <div className="flex min-w-0 items-center gap-2.5 sm:gap-3">
               <Link
                 href="/debates"
                 aria-label="Back to discussions"
-                className="flex size-8 shrink-0 items-center justify-center rounded-full border border-black/[0.055] bg-white/70 text-neutral-400 transition-all hover:bg-neutral-900 hover:text-white sm:size-8"
+                className="flex size-8 shrink-0 items-center justify-center rounded-full border border-black/[0.055] bg-white/70 text-neutral-400 transition-all hover:bg-neutral-900 hover:text-white"
               >
                 <ArrowLeft size={13} strokeWidth={1.8} />
               </Link>
 
               <div className="min-w-0">
-                <p className="max-w-[calc(100vw-130px)] truncate text-[13px] font-semibold tracking-[-0.03em] text-neutral-900 sm:max-w-none sm:text-[14px]">
+                <p className="max-w-[calc(100vw-130px)] truncate  text-[15px] tracking-[-0.015em] text-neutral-900 sm:max-w-none sm:text-[16px]">
                   {debate.title}
                 </p>
-
-                <div className="mt-1 flex min-w-0 items-center gap-1.5 sm:mt-1.5 sm:gap-2">
-                  <div className="flex shrink-0 items-center gap-1.5">
-                    <span
-                      className={`size-1.5 rounded-full ${status.color}`}
-                    />
-
-                    <span className="text-[8px] font-medium text-neutral-400 sm:text-[9px]">
-                      {status.label}
-                    </span>
-                  </div>
-
-                  <span className="text-[8px] text-neutral-300 sm:text-[9px]">
-                    ·
-                  </span>
-
-                  <span className="text-[8px] whitespace-nowrap text-neutral-400 sm:text-[9px]">
-                    {userMessageCount}/
-                    {debate.max_messages >= 999999
-                      ? '∞'
-                      : debate.max_messages}
-                  </span>
-
-                  <span className="hidden text-[9px] text-neutral-300 sm:inline">
-                    ·
-                  </span>
-
-                  <span className="hidden items-center gap-1 text-[9px] text-neutral-400 sm:flex">
-                    <Image
-                      src={personaLabel[debate.ai_persona].image}
-                      alt=""
-                      width={15}
-                      height={15}
-                      className="size-3.5 object-contain"
-                    />
-
-                    {personaLabel[debate.ai_persona].text}
-                  </span>
-                </div>
               </div>
             </div>
 
@@ -658,7 +847,7 @@ export default function DebateRoom({
                       disabled={
                         resolveDebateMutation.isPending
                       }
-                      className="rounded-full bg-neutral-900 px-2.5 py-1.5 text-[9px] font-semibold text-white transition hover:bg-black disabled:opacity-50 sm:px-3.5 sm:text-[10px]"
+                      className="rounded-full bg-neutral-900 px-2.5 py-1.5 text-[10px] font-semibold text-white transition hover:bg-black disabled:opacity-50 sm:px-3.5"
                     >
                       Yes, resolve
                     </button>
@@ -668,7 +857,7 @@ export default function DebateRoom({
                       onClick={() =>
                         setIsConfirmingResolve(false)
                       }
-                      className="rounded-full px-2.5 py-1.5 text-[9px] font-medium text-neutral-500 transition hover:bg-neutral-50 sm:px-3 sm:text-[10px]"
+                      className="rounded-full px-2.5 py-1.5 text-[10px] font-medium text-neutral-500 transition hover:bg-neutral-50 sm:px-3"
                     >
                       Cancel
                     </button>
@@ -678,7 +867,7 @@ export default function DebateRoom({
                     type="button"
                     onClick={handleResolve}
                     disabled={isAiProcessing}
-                    className="rounded-full px-2 py-1.5 text-[9px] font-medium text-neutral-400 transition hover:bg-white hover:text-neutral-700 disabled:cursor-not-allowed disabled:opacity-30 sm:px-3 sm:text-[10px]"
+                    className="rounded-full px-2.5 py-1.5 text-[10px] font-medium text-neutral-400 transition hover:bg-white hover:text-neutral-700 disabled:cursor-not-allowed disabled:opacity-30 sm:px-3"
                   >
                     <span className="sm:hidden">End</span>
 
@@ -693,7 +882,7 @@ export default function DebateRoom({
 
           {/* STAGE */}
 
-          <main className="relative z-10 min-h-0 flex-1 overflow-y-auto overflow-x-hidden overscroll-contain px-3.5 py-6 sm:px-7 sm:py-8 lg:px-10">
+          <main className="relative z-10 min-h-0 flex-1 overflow-y-auto overflow-x-hidden overscroll-contain px-4 py-8 sm:px-7 sm:py-10">
             {isLoading ? (
               <div className="flex min-h-[40vh] items-center justify-center">
                 <Loader2
@@ -701,132 +890,117 @@ export default function DebateRoom({
                   className="animate-spin text-neutral-300"
                 />
               </div>
-            ) : !messages?.length ? (
-              <div className="flex min-h-full items-center justify-center px-4">
-                <div className="max-w-sm text-center">
-                  <h2 className="mt-2 text-[21px] font-semibold tracking-[-0.05em] text-neutral-900 sm:text-[24px]">
-                    Start with what you feel.
-                  </h2>
-
-                  <p className="mx-auto mt-3 max-w-[280px] text-[11px] leading-5 text-neutral-400 sm:max-w-[300px] sm:text-[11.5px]">
-                    There is no need to be right here.
-                    Just say what is on your mind.
-                  </p>
-                </div>
-              </div>
             ) : (
-              <div className="mx-auto max-w-6xl">
+              <div className="mx-auto flex min-h-full w-full max-w-[520px] flex-col justify-center">
+                {/* 1. DUORA AI */}
 
-                {/* DESKTOP */}
-                <div className="hidden items-start gap-8 md:grid md:grid-cols-[minmax(0,1fr)_minmax(260px,380px)_minmax(0,1fr)] lg:gap-12">
-                  <PartnerCharacter
-                    name="you"
-                    image={happyEmot}
-                    avatarUrl={partnerA.avatar_url}
-                    latestMessage={latestPartnerAMessage}
-                    previousCount={
-                      previousPartnerAMessages.length
-                    }
-                    side="left"
-                    onPocketClick={() =>
-                      setOpenPocket(partnerA.user_id)
-                    }
-                    isActive={
-                      lastUserMessage?.sender_id ===
-                      partnerA.user_id
-                    }
+                <MediatorStage
+                  persona={personaLabel[debate.ai_persona]}
+                  isProcessing={isAiProcessing}
+                  hasAiComment={Boolean(
+                    latestAiCommentMessage,
+                  )}
+                  isPendingVerdict={isPendingVerdict}
+                  onOpenHistory={() => setShowAiMemory(true)}
+                />
+
+                {/* 2. PARTNERS (satu baris) */}
+
+                <div
+                  role="group"
+                  aria-label="Switch between partners"
+                  className="relative mt-6"
+                >
+                  {/* konektor AI -> pasangan */}
+                  <span
+                    aria-hidden
+                    className="pointer-events-none absolute -top-6 left-1/2 h-[calc(1.5rem_+_34px)] w-px -translate-x-1/2 bg-gradient-to-b from-black/[0.03] to-black/[0.12] sm:h-[calc(1.5rem_+_38px)]"
                   />
 
-                  <MediatorStage
-                    persona={personaLabel[debate.ai_persona]}
-                    isProcessing={isAiProcessing}
-                    hasAiComment={Boolean(
-                      latestAiCommentMessage,
-                    )}
-                    isPendingVerdict={isPendingVerdict}
-                    onOpenHistory={() => setShowAiMemory(true)}
+                  <span
+                    aria-hidden
+                    className="pointer-events-none absolute left-[calc(25%_+_50px)] right-[calc(25%_+_50px)] top-[34px] h-px bg-gradient-to-r from-black/[0.12] via-black/[0.05] to-black/[0.12] sm:top-[38px]"
                   />
 
-                  <PartnerCharacter
-                    name={partnerBName}
-                    image={neutralEmot}
-                    avatarUrl={partnerB.avatar_url}
-                    latestMessage={latestPartnerBMessage}
-                    previousCount={
-                      previousPartnerBMessages.length
-                    }
-                    side="right"
-                    onPocketClick={() =>
-                      setOpenPocket(partnerB.user_id)
-                    }
-                    isActive={
-                      lastUserMessage?.sender_id ===
-                      partnerB.user_id
-                    }
-                  />
-                </div>
-
-                {/* MOBILE / TABLET */}
-
-                <div className="mx-auto flex w-full max-w-[430px] flex-col gap-10 md:hidden sm:gap-12">
-                  <PartnerCharacter
-                    name="you"
-                    image={happyEmot}
-                    avatarUrl={partnerA.avatar_url}
-                    latestMessage={latestPartnerAMessage}
-                    previousCount={
-                      previousPartnerAMessages.length
-                    }
-                    side="left"
-                    onPocketClick={() =>
-                      setOpenPocket(partnerA.user_id)
-                    }
-                    isActive={
-                      lastUserMessage?.sender_id ===
-                      partnerA.user_id
-                    }
+                  <span
+                    aria-hidden
+                    className="pointer-events-none absolute left-1/2 top-[34px] size-1 -translate-x-1/2 -translate-y-1/2 rounded-full bg-neutral-300 sm:top-[38px]"
                   />
 
-                  <div className="relative py-2 sm:py-3">
-                    <div className="absolute left-1/2 top-0 h-full w-px -translate-x-1/2 bg-gradient-to-b from-transparent via-black/[0.045] to-transparent" />
+                  <div className="relative grid grid-cols-2">
+                    <PartnerAvatar
+                      name="You"
+                      image={lembutAi}
+                      avatarUrl={partnerA.avatar_url}
+                      side="left"
+                      isActive={
+                        hasMessages && activeSide === 'left'
+                      }
+                      isDimmed={
+                        hasMessages && activeSide !== 'left'
+                      }
+                      disabled={!hasMessages}
+                      onSelect={() =>
+                        setFocusedPartnerId(partnerA.user_id)
+                      }
+                    />
 
-                    <MediatorStage
-                      persona={personaLabel[debate.ai_persona]}
-                      isProcessing={isAiProcessing}
-                      hasAiComment={Boolean(
-                        latestAiCommentMessage,
-                      )}
-                      isPendingVerdict={isPendingVerdict}
-                      onOpenHistory={() => setShowAiMemory(true)}
+                    <PartnerAvatar
+                      name={partnerBName}
+                      image={formalAi}
+                      avatarUrl={partnerB.avatar_url}
+                      side="right"
+                      isActive={
+                        hasMessages && activeSide === 'right'
+                      }
+                      isDimmed={
+                        hasMessages && activeSide !== 'right'
+                      }
+                      disabled={!hasMessages}
+                      onSelect={() =>
+                        setFocusedPartnerId(partnerB.user_id)
+                      }
                     />
                   </div>
-
-                  <PartnerCharacter
-                    name={partnerBName}
-                    image={neutralEmot}
-                    avatarUrl={partnerB.avatar_url}
-                    latestMessage={latestPartnerBMessage}
-                    previousCount={
-                      previousPartnerBMessages.length
-                    }
-                    side="right"
-                    onPocketClick={() =>
-                      setOpenPocket(partnerB.user_id)
-                    }
-                    isActive={
-                      lastUserMessage?.sender_id ===
-                      partnerB.user_id
-                    }
-                  />
                 </div>
 
-                {/* FINAL RESOLUTION */}
+                {/* 3. SINGLE ACTIVE BUBBLE */}
 
-                {/* {finalVerdictMessage && (
-                  <ResolutionScene
-                    message={finalVerdictMessage}
-                  />
-                )} */}
+                <div className="mt-8">
+                  {hasMessages ? (
+                    <>
+                      <ActiveBubble
+                        side={activeSide}
+                        name={activeDisplayName}
+                        message={activeMessage}
+                        previousCount={activePreviousCount}
+                        emptyText={activeEmptyText}
+                        onOpenPocket={() =>
+                          setOpenPocket(
+                            activeSide === 'left'
+                              ? partnerA.user_id
+                              : partnerB.user_id,
+                          )
+                        }
+                      />
+
+                      <p className="mt-5 text-center text-xs tracking-[0.02em] text-neutral-300">
+                        Tap avatar untuk melihat obrolan
+                      </p>
+                    </>
+                  ) : (
+                    <div className="px-4 text-center">
+                      <h2 className=" text-[26px] leading-tight tracking-[-0.025em] text-neutral-900 sm:text-[30px]">
+                        Start with what you feel.
+                      </h2>
+
+                      <p className="mx-auto mt-3 max-w-[300px] text-[12px] leading-6 text-neutral-400">
+                        There is no need to be right here.
+                        Just say what is on your mind.
+                      </p>
+                    </div>
+                  )}
+                </div>
               </div>
             )}
           </main>
@@ -876,6 +1050,9 @@ export default function DebateRoom({
           isPendingVerdict={isPendingVerdict}
           personaName={
             personaLabel[debate.ai_persona].text
+          }
+          personaImage={
+            personaLabel[debate.ai_persona].image
           }
           requesterName={aiRequesterName}
           onClose={() => {
