@@ -44,10 +44,10 @@ export default function DebatesPage() {
   const relationshipId = data.relationship.id
 
   return (
-    <div className="relative min-h-full overflow-hidden">
-      <div className="relative">
-<Header title="AI Debates" description="Resolve disagreements with a neutral AI mediator." />
-        <section className="mt-6 sm:mt-8">
+    <div className="relative flex min-h-full flex-col overflow-hidden p-4 sm:p-5 md:p-6">
+      <div className="relative flex flex-1 flex-col">
+        <Header title="AI Debates" description="Resolve disagreements with a neutral AI mediator." />
+        <section className="mt-6 flex flex-1 flex-col sm:mt-8">
           <DebateList relationshipId={relationshipId} />
         </section>
       </div>
