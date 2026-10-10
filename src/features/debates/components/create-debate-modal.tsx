@@ -4,13 +4,7 @@ import { memo, useCallback, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Image, { type StaticImageData } from 'next/image'
 import { AnimatePresence, motion, type Variants } from 'framer-motion'
-import {
-  ArrowLeft,
-  ArrowRight,
-  ArrowUpRight,
-  Loader2,
-  X,
-} from 'lucide-react'
+import { ArrowRight, X } from 'lucide-react'
 
 import { useCreateDebate } from '../queries'
 import { AiPersona } from '../types'
@@ -32,6 +26,15 @@ interface CreateDebateModalProps {
 
 const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1]
 const IMAGE_SIZES = '(max-width: 640px) 84vw, 480px'
+
+const STEP_TITLE: Record<1 | 2, string> = {
+  1: 'Apa topik yang ingin dibahas?',
+  2: 'Choose your mediator',
+}
+
+// Sama dengan textareaClass di check-in form, disesuaikan buat <input>
+const inputClass =
+  'h-14 w-full rounded-[1.15rem] border border-black/[0.045] bg-white/80 px-4 text-[15px] font-medium tracking-[-0.02em] text-neutral-800 outline-none backdrop-blur-sm transition-all duration-200 placeholder:text-neutral-300 hover:border-black/[0.08] focus:border-black/[0.10] focus:ring-4 focus:ring-black/[0.025]'
 
 const personaOptions: {
   value: AiPersona
@@ -147,13 +150,13 @@ const StudioBackdrop = memo(function StudioBackdrop({
   return (
     <div
       aria-hidden
-      className="pointer-events-none absolute inset-0 overflow-hidden bg-white"
+      className="pointer-events-none absolute inset-0 overflow-hidden bg-[#fafaf9]"
     >
       {/* WALL + COVE + FLOOR: satu permukaan, cross-fade antar persona */}
       {PERSONA_KEYS.map((key) => (
         <div
           key={key}
-          className="absolute inset-0 transition-opacity duration-1000 ease-out"
+          className="absolute inset-0 transition-opacity duration-700 ease-out"
           style={{
             background: buildBackdrop(personaTheme[key]),
             opacity: key === persona ? 1 : 0,
@@ -252,8 +255,8 @@ function PersonaStage({
 
   return (
     <div className="w-full">
-      {/* Stage */}
-      <div className="relative mt-2 h-[min(46vh,520px)] w-full select-none">
+      {/* Stage: tinggi tetap (bukan vh), jadi kalau layar pendek yang di-scroll adalah halamannya */}
+      <div className="relative h-[360px] w-full select-none sm:h-[410px]">
         {/* Bayangan lantai (diam, biar kerasa persona "berdiri" di studio) */}
         <div
           className="pointer-events-none absolute bottom-[3%] left-1/2 h-24 w-[min(88vw,560px)] -translate-x-1/2 translate-y-1/2"
@@ -291,6 +294,7 @@ function PersonaStage({
 
               onPaginate(offset.x < 0 ? 1 : -1)
             }}
+            // touch-pan-y: swipe vertikal = scroll layar, swipe horizontal = ganti persona
             className="absolute inset-0 flex cursor-grab touch-pan-y items-center justify-center active:cursor-grabbing"
           >
             <div className="relative size-60">
@@ -307,71 +311,50 @@ function PersonaStage({
         </AnimatePresence>
       </div>
 
-      {/* Info + kontrol */}
-      <div className="mt-3 flex items-center justify-center gap-4 sm:gap-10">
-        <motion.button
-          type="button"
-          onClick={() => onPaginate(-1)}
-          whileTap={{ scale: 0.88 }}
-          aria-label="Previous persona"
-          className="flex size-8 shrink-0 items-center justify-center rounded-full bg-white/70 text-neutral-600 shadow-sm backdrop-blur transition hover:bg-white hover:text-neutral-900"
-        >
-          <ArrowLeft size={12} strokeWidth={1.7} />
-        </motion.button>
-
-        <div className="w-[140px] text-center sm:w-[240px]">
-          <div className="min-h-[64px]">
-            <AnimatePresence mode="wait" initial={false}>
-              <motion.div
-                key={persona.value}
-                initial={{ opacity: 0, y: 10, filter: 'blur(4px)' }}
-                animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-                exit={{ opacity: 0, y: -10, filter: 'blur(4px)' }}
-                transition={{ duration: 0.25, ease: EASE }}
-              >
-                <p className="text-2xl font-semibold tracking-[-0.045em] text-neutral-900 sm:text-3xl">
-                  {persona.label}
-                </p>
-                <p className="mt-1 text-sm text-neutral-500">
-                  {persona.description}
-                </p>
-              </motion.div>
-            </AnimatePresence>
-          </div>
-
-          <div className="mt-2 flex justify-center">
-            {personaOptions.map((option, i) => (
-              <button
-                key={option.value}
-                type="button"
-                aria-label={`Select ${option.label}`}
-                onClick={() => onSelectIndex(i)}
-                className="flex h-5 items-center px-[3px]"
-              >
-                <motion.span
-                  initial={false}
-                  animate={{ width: i === index ? 22 : 6 }}
-                  transition={{ duration: 0.4, ease: EASE }}
-                  className={`block h-1.5 rounded-full transition-colors duration-300 ${
-                    i === index
-                      ? 'bg-neutral-900'
-                      : 'bg-neutral-900/20 hover:bg-neutral-900/40'
-                  }`}
-                />
-              </button>
-            ))}
-          </div>
+      {/* Info + dots */}
+      <div className="mt-2 text-center">
+        <div className="min-h-[64px]">
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.div
+              key={persona.value}
+              initial={{ opacity: 0, y: 10, filter: 'blur(4px)' }}
+              animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+              exit={{ opacity: 0, y: -10, filter: 'blur(4px)' }}
+              transition={{ duration: 0.25, ease: EASE }}
+            >
+              <p className="text-[24px] font-medium leading-tight tracking-[-0.045em] text-neutral-950 sm:text-[28px]">
+                {persona.label}
+              </p>
+              <p className="mt-1 text-[12px] text-neutral-500">
+                {persona.description}
+              </p>
+            </motion.div>
+          </AnimatePresence>
         </div>
 
-        <motion.button
-          type="button"
-          onClick={() => onPaginate(1)}
-          whileTap={{ scale: 0.88 }}
-          aria-label="Next persona"
-          className="flex size-8 shrink-0 items-center justify-center rounded-full bg-white/70 text-neutral-600 shadow-sm backdrop-blur transition hover:bg-white hover:text-neutral-900"
-        >
-          <ArrowRight size={12} strokeWidth={1.7} />
-        </motion.button>
+        {/* Dots */}
+        <div className="mt-3 flex justify-center">
+          {personaOptions.map((option, i) => (
+            <button
+              key={option.value}
+              type="button"
+              aria-label={`Select ${option.label}`}
+              onClick={() => onSelectIndex(i)}
+              className="flex h-5 items-center px-[3px]"
+            >
+              <motion.span
+                initial={false}
+                animate={{ width: i === index ? 22 : 6 }}
+                transition={{ duration: 0.4, ease: EASE }}
+                className={`block h-1.5 rounded-full transition-colors duration-300 ${
+                  i === index
+                    ? 'bg-neutral-900'
+                    : 'bg-neutral-900/20 hover:bg-neutral-900/40'
+                }`}
+              />
+            </button>
+          ))}
+        </div>
       </div>
     </div>
   )
@@ -433,13 +416,6 @@ export default function CreateDebateModal({
     setStep(2)
   }
 
-  const goBack = () => {
-    if (isPending) return
-
-    setStepDirection(-1)
-    setStep(1)
-  }
-
   const handleCreate = () => {
     if (!hasTitle || isPending) return
 
@@ -498,13 +474,14 @@ export default function CreateDebateModal({
           role="dialog"
           aria-modal="true"
           aria-label="Create debate"
-          className="fixed inset-0 z-[100] isolate flex flex-col overflow-hidden bg-white"
+          className="fixed inset-0 z-[100] isolate overflow-hidden bg-[#fafaf9]"
           initial={{ opacity: 0, scale: 1.015 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 1.01 }}
           transition={{ duration: 0.5, ease: EASE }}
         >
-          {/* Step 1: putih polos. Step 2: studio backdrop fade-in sesuai persona */}
+          {/* Step 1: polos. Step 2: studio backdrop fade-in sesuai persona.
+              Backdrop di luar area scroll, jadi tetap diam waktu layar di-scroll. */}
           <motion.div
             aria-hidden
             className="pointer-events-none absolute inset-0 z-0"
@@ -533,169 +510,156 @@ export default function CreateDebateModal({
             ))}
           </div>
 
-          {/* Header */}
-          
-{/* Header */}
-<header className="relative z-10 grid shrink-0 grid-cols-[1fr_auto_1fr] items-center px-4 py-4 sm:px-8 sm:py-6">
-  
-{/* Step indicator */}
-<div
-  className="col-start-1 row-start-1 flex flex-col items-start gap-2 justify-self-start"
-  aria-label={`Step ${step} of 2`}
->
-  <span className="text-[10px] font-semibold uppercase tracking-[0.22em] text-neutral-500">
-    Step {step} of 2
-  </span>
+          {/* Area scroll: SELURUH layar yang scroll kalau konten nggak muat */}
+          <div className="relative z-10 h-full overflow-y-auto overflow-x-hidden overscroll-contain">
+            <div className="mx-auto flex min-h-full w-full max-w-xl flex-col px-5 py-7 sm:px-8 sm:py-10">
+              {/* Header */}
+              <header className="flex items-start justify-between gap-4">
+                <div>
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-neutral-400">
+                    New debate
+                  </p>
 
-  <div className="flex items-center gap-1.5">
-    {[1, 2].map((n) => (
-      <motion.span
-        key={n}
-        initial={false}
-        animate={{
-          width: n === step ? 32 : 12,
-          opacity: n <= step ? 1 : 0.2,
-        }}
-        transition={{ duration: 0.5, ease: EASE }}
-        className="h-1 rounded-full bg-neutral-900"
-      />
-    ))}
-  </div>
-</div>
-
-
-  {/* Close button */}
-  <div className="col-start-3 justify-self-end">
-    <motion.button
-      type="button"
-      onClick={closeModal}
-      disabled={isPending}
-      whileTap={{ scale: 0.9 }}
-      aria-label="Close create debate modal"
-      className="flex size-10 items-center justify-center rounded-full bg-neutral-800 text-neutral-100 shadow-sm backdrop-blur transition hover:bg-neutral-900 hover:text-white disabled:pointer-events-none disabled:opacity-40"
-    >
-      <X size={16} strokeWidth={1.8} />
-    </motion.button>
-  </div>
-</header>
-
-
-          {/* Content */}
-          <main className="relative z-10 flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain">
-            <AnimatePresence mode="wait" custom={stepDirection} initial={false}>
-              {step === 1 ? (
-                <motion.div
-                  key="step-1"
-                  custom={stepDirection}
-                  variants={stepVariants}
-                  initial="enter"
-                  animate="center"
-                  exit="exit"
-                  transition={{ duration: 0.38, ease: EASE }}
-                  className="m-auto w-full max-w-md px-6 py-8 sm:px-8"
-                >
-                  <Reveal delay={0.05} className="text-center">
-                    <label
-                      htmlFor="debate-title"
-                      className="block text-lg font-medium tracking-[-0.03em] text-neutral-900 sm:text-xl"
+                  <AnimatePresence mode="wait" initial={false}>
+                    <motion.h1
+                      key={step}
+                      id="create-debate-heading"
+                      initial={{ opacity: 0, y: 10, filter: 'blur(4px)' }}
+                      animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                      exit={{ opacity: 0, y: -10, filter: 'blur(4px)' }}
+                      transition={{ duration: 0.25, ease: EASE }}
+                      className="mt-2 text-[25px] font-medium leading-tight tracking-[-0.045em] text-neutral-950 sm:text-[29px]"
                     >
-                      Apa topik yang ingin dibahas?
-                    </label>
-                  </Reveal>
+                      {STEP_TITLE[step]}
+                    </motion.h1>
+                  </AnimatePresence>
+                </div>
 
-                  <Reveal delay={0.15} className="mt-6">
-                    <div className="group relative">
-                      <input
-                        id="debate-title"
-                        value={title}
-                        onChange={(event) => setTitle(event.target.value)}
-                        onKeyDown={(event) => {
-                          if (event.key === 'Enter' && !event.shiftKey) {
-                            event.preventDefault()
-                            goNext()
-                          }
-                        }}
-                        placeholder="Contoh: Tahun baruan enaknya ke mana?"
-                        autoFocus
-                        autoComplete="off"
-                        className="w-full bg-transparent pb-3 text-center text-base font-medium tracking-[-0.02em] text-neutral-900 outline-none placeholder:text-neutral-300 sm:text-lg"
-                      />
-
-                      <div className="h-px w-full bg-black/15" />
-
-                      {/* Garis fokus yang "menggambar" dari tengah ke samping */}
-                      <div className="absolute bottom-0 left-0 h-px w-full origin-center scale-x-0 bg-neutral-900 transition-transform duration-700 ease-out group-focus-within:scale-x-100" />
-                    </div>
-                  </Reveal>
-                </motion.div>
-              ) : (
-                <motion.div
-                  key="step-2"
-                  custom={stepDirection}
-                  variants={stepVariants}
-                  initial="enter"
-                  animate="center"
-                  exit="exit"
-                  transition={{ duration: 0.38, ease: EASE }}
-                  className="m-auto flex w-full max-w-3xl flex-col items-center px-5 py-4 sm:px-8"
+                <button
+                  type="button"
+                  onClick={closeModal}
+                  disabled={isPending}
+                  aria-label="Close create debate modal"
+                  className="flex size-9 shrink-0 items-center justify-center rounded-full border border-black/[0.05] bg-neutral-800 text-white shadow-sm transition-all duration-200 hover:bg-white hover:text-neutral-900 active:scale-95 disabled:pointer-events-none disabled:opacity-40"
                 >
-                  <Reveal delay={0.05} className="text-center">
-                    <h2 className="text-xl font-semibold tracking-[-0.05em] text-neutral-900 sm:text-5xl">
-                      Choose your mediator
-                    </h2>
-                    <p className="mt-2 text-sm text-neutral-500">
-                      Geser untuk mengubah persona..
-                    </p>
-                  </Reveal>
+                  <X className="size-4" strokeWidth={1.8} />
+                </button>
+              </header>
 
-                  <Reveal delay={0.15} className="w-full">
-                    <PersonaStage
-                      index={personaIndex}
-                      direction={personaDirection}
-                      onPaginate={paginate}
-                      onSelectIndex={selectIndex}
-                    />
-                  </Reveal>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </main>
+              {/* Caption (gaya "Unlimited mood changes today" di check-in) */}
+              <div className="mt-5 min-h-[15px] px-1">
+                <AnimatePresence mode="wait" initial={false}>
+                  {step === 2 && (
+                    <motion.p
+                      key="persona-hint"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.25 }}
+                      className="text-[10px] font-medium text-neutral-400"
+                    >
+                      Geser untuk mengubah persona
+                    </motion.p>
+                  )}
+                </AnimatePresence>
+              </div>
 
-          {/* Footer */}
-          <footer className="relative z-10 shrink-0 px-5 pb-6 pt-3 sm:px-8 sm:pb-8">
-            <motion.button
-              type="button"
-              onClick={step === 1 ? goNext : handleCreate}
-              disabled={step === 1 ? !hasTitle : isPending}
-              whileTap={{ scale: 0.97 }}
-              className="mx-auto flex h-12 w-full max-w-sm items-center justify-center rounded-full bg-neutral-800 px-6 text-sm font-semibold text-white shadow-[0_18px_40px_-18px_rgba(0,0,0,0.5)] transition-colors hover:bg-black disabled:pointer-events-none disabled:opacity-40"
-            >
-              <AnimatePresence mode="wait" initial={false}>
-                <motion.span
-                  key={step}
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -8 }}
-                  transition={{ duration: 0.18 }}
-                  className="flex items-center gap-2"
+              {/* Content */}
+              <main className="flex flex-1 flex-col justify-center py-5 sm:py-7">
+                <AnimatePresence
+                  mode="wait"
+                  custom={stepDirection}
+                  initial={false}
                 >
                   {step === 1 ? (
-                    <>
-                      Continue
-                      <ArrowRight size={15} strokeWidth={1.8} />
-                    </>
+                    <motion.div
+                      key="step-1"
+                      custom={stepDirection}
+                      variants={stepVariants}
+                      initial="enter"
+                      animate="center"
+                      exit="exit"
+                      transition={{ duration: 0.38, ease: EASE }}
+                      className="w-full"
+                    >
+                      <Reveal delay={0.1}>
+                        <input
+                          id="debate-title"
+                          aria-labelledby="create-debate-heading"
+                          value={title}
+                          onChange={(event) => setTitle(event.target.value)}
+                          onKeyDown={(event) => {
+                            if (event.key === 'Enter' && !event.shiftKey) {
+                              event.preventDefault()
+                              goNext()
+                            }
+                          }}
+                          placeholder="Contoh: Tahun baruan enaknya ke mana?"
+                          autoFocus
+                          autoComplete="off"
+                          className={inputClass}
+                        />
+                      </Reveal>
+                    </motion.div>
                   ) : (
-                    <>
-                      {isPending && (
-                        <Loader2 size={14} className="animate-spin" />
-                      )}
-                      Start debate
-                    </>
+                    <motion.div
+                      key="step-2"
+                      custom={stepDirection}
+                      variants={stepVariants}
+                      initial="enter"
+                      animate="center"
+                      exit="exit"
+                      transition={{ duration: 0.38, ease: EASE }}
+                      className="w-full"
+                    >
+                      <Reveal delay={0.1}>
+                        <PersonaStage
+                          index={personaIndex}
+                          direction={personaDirection}
+                          onPaginate={paginate}
+                          onSelectIndex={selectIndex}
+                        />
+                      </Reveal>
+                    </motion.div>
                   )}
-                </motion.span>
-              </AnimatePresence>
-            </motion.button>
-          </footer>
+                </AnimatePresence>
+              </main>
+
+              {/* Footer */}
+              <footer className="mt-auto">
+                <button
+                  type="button"
+                  onClick={step === 1 ? goNext : handleCreate}
+                  disabled={step === 1 ? !hasTitle : isPending}
+                  className="flex h-13 w-full items-center justify-center rounded-full bg-neutral-800 px-5 text-sm font-semibold tracking-[-0.01em] text-white shadow-[0_16px_35px_-18px_rgba(0,0,0,0.45)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-neutral-800 active:translate-y-0 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  <AnimatePresence mode="wait" initial={false}>
+                    <motion.span
+                      key={step}
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -8 }}
+                      transition={{ duration: 0.18 }}
+                      className="flex items-center gap-2"
+                    >
+                      {step === 1 ? (
+                        <>
+                          Continue
+                        </>
+                      ) : isPending ? (
+                        <>
+                          <span className="size-3.5 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                          Creating...
+                        </>
+                      ) : (
+                        'Start debate'
+                      )}
+                    </motion.span>
+                  </AnimatePresence>
+                </button>
+              </footer>
+            </div>
+          </div>
         </motion.div>
       )}
     </AnimatePresence>
