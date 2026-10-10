@@ -6,7 +6,14 @@ import {
   type ComponentProps,
   type CSSProperties,
 } from 'react'
-import { ArrowLeft, ArrowUpRight, Loader2, X } from 'lucide-react'
+import {
+  ArrowLeft,
+  ArrowUpRight,
+  Loader2,
+  RefreshCw,
+  Sparkles,
+  X,
+} from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
 
@@ -19,6 +26,7 @@ import {
   useAutoFinalVerdict,
   useDebate,
   useDebateMessages,
+  useRequestAiAnalysis,
   useResolveDebate,
 } from '../queries'
 import { AiPersona } from '../types'
@@ -50,6 +58,8 @@ type EmoticonImage = typeof lembutAi
 
 type Side = 'left' | 'right'
 
+type Provider = 'auto' | 'openrouter' | 'groq'
+
 const statusConfig = {
   active: {
     label: 'Active',
@@ -74,23 +84,28 @@ const personaLabel: Record<
   {
     text: string
     image: EmoticonImage
+    button: string
   }
 > = {
   formal: {
     text: 'Formal',
     image: formalAi,
+    button: 'bg-white text-neutral-800 hover:bg-neutral-50',
   },
   lembut: {
     text: 'Lembut',
     image: lembutAi,
+    button: 'bg-[#D68F9E] text-white hover:bg-pink-500',
   },
   kasar: {
     text: 'Nyeletuk',
     image: nyeletukAi,
+    button: 'bg-[#C13131] text-white hover:bg-red-600',
   },
   lebay: {
     text: 'Lebay',
     image: lebayAi,
+    button: 'bg-[#9CB8D9] text-white hover:bg-blue-600',
   },
 }
 
@@ -164,33 +179,84 @@ function MediatorStage({
   hasAiComment,
   isPendingVerdict,
   onOpenHistory,
+  canUseAi,
+  canRequestAi,
+  isRequestingAi,
+  aiButtonTitle,
+  provider,
+  onProviderChange,
+  onRequestAi,
+  canResolve,
+  isConfirmingResolve,
+  isResolving,
+  isResolveDisabled,
+  onResolve,
+  onCancelResolve,
 }: {
   persona: {
     text: string
     image: EmoticonImage
+    button: string
   }
   isProcessing: boolean
   hasAiComment: boolean
   isPendingVerdict: boolean
   onOpenHistory: () => void
+  canUseAi: boolean
+  canRequestAi: boolean
+  isRequestingAi: boolean
+  aiButtonTitle?: string
+  provider: Provider
+  onProviderChange: (provider: Provider) => void
+  onRequestAi: () => void
+  canResolve: boolean
+  isConfirmingResolve: boolean
+  isResolving: boolean
+  isResolveDisabled: boolean
+  onResolve: () => void
+  onCancelResolve: () => void
 }) {
   const active =
     isProcessing ||
     isPendingVerdict ||
     hasAiComment
 
+  /* style dasar semua tombol, warna ikut persona */
+  const pill = [
+    'inline-flex h-8 items-center whitespace-nowrap rounded-full text-[10px] font-medium shadow-md transition-colors duration-300',
+    'disabled:cursor-not-allowed disabled:opacity-40',
+    'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-400',
+    persona.button,
+  ].join(' ')
 
   return (
     <section className="relative flex w-full flex-col items-center">
-      <button
-        type="button"
-        onClick={onOpenHistory}
-        aria-label="Open Duora AI memory"
-        className="group relative z-10 flex flex-col items-center rounded-3xl focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-neutral-400"
-      >
-        
+      {/* ATAS: label persona */}
+      <span className="text-xs font-semibold text-neutral-800">
+        {persona.text} mediator
+      </span>
 
-          <span className="relative z-10 block size-23 sm:size-[40px]">
+      {/* TENGAH: Lihat jawaban | gambar | End */}
+      <div className="relative z-10 mt-3 grid w-full grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-3">
+        {/* kiri */}
+        <div className="flex justify-end mt-10">
+          <button
+            type="button"
+            onClick={onOpenHistory}
+            className={`${pill} px-3 sm:px-4`}
+          >
+            Lihat jawaban
+          </button>
+        </div>
+
+        {/* gambar (tengah) */}
+        <button
+          type="button"
+          onClick={onOpenHistory}
+          aria-label="Open Duora AI memory"
+          className="group relative shrink-0 rounded-full focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-neutral-400"
+        >
+          <span className="relative block size-23 sm:size-[40px]">
             <Image
               key={persona.text}
               src={persona.image}
@@ -200,15 +266,91 @@ function MediatorStage({
               className="animate-[debate-content-in_0.6s_cubic-bezier(0.22,1,0.36,1)_both] object-contain motion-reduce:animate-none"
             />
           </span>
+        </button>
 
-        <span className="mt-2 text-xs font-semibold text-neutral-800">
-          {persona.text} mediator
-        </span>
+        {/* kanan */}
+        <div className="flex flex-col items-start gap-1.5 mt-10">
+          {canResolve &&
+            (isConfirmingResolve ? (
+              <>
+                <button
+                  type="button"
+                  onClick={onResolve}
+                  disabled={isResolving}
+                  className="inline-flex h-8 items-center whitespace-nowrap rounded-full bg-neutral-900 px-3 text-[10px] font-semibold text-white shadow-md transition hover:bg-black disabled:opacity-50 sm:px-3.5"
+                >
+                  Yes, resolve
+                </button>
 
-        <span className="mt-2 bg-white py-2 px-4 rounded-full shadow-md text-[10px] text-neutral-800 transition-colors duration-300 group-hover:text-neutral-700">
-          Lihat jawaban
-        </span>
-      </button>
+                <button
+                  type="button"
+                  onClick={onCancelResolve}
+                  className={`${pill} px-3 sm:px-3.5`}
+                >
+                  Cancel
+                </button>
+              </>
+            ) : (
+              <button
+                type="button"
+                onClick={onResolve}
+                disabled={isResolveDisabled}
+                className={`${pill} px-3 sm:px-4`}
+              >
+                <span className="sm:hidden">Tutup diskusi</span>
+
+                <span className="hidden sm:inline">
+                  End discussion
+                </span>
+              </button>
+            ))}
+        </div>
+      </div>
+
+      {/* BAWAH: Ask AI + provider */}
+      {canUseAi && (
+        <div
+          className={[
+            'relative z-10 mt-3 flex items-center justify-center gap-2',
+            isConfirmingResolve ? 'invisible' : '',
+          ].join(' ')}
+        >
+          <button
+            type="button"
+            onClick={onRequestAi}
+            disabled={isRequestingAi || !canRequestAi}
+            title={aiButtonTitle}
+            className={`${pill} gap-1.5 px-3.5`}
+          >
+            {isRequestingAi || isProcessing && (
+              <Loader2
+                size={11}
+                className="animate-spin"
+              />
+            )}
+
+            <span className="hidden xs:inline">
+              Ask Duora AI
+            </span>
+
+            <span className="xs:hidden">Tanya AI</span>
+          </button>
+
+          <select
+            value={provider}
+            onChange={(e) =>
+              onProviderChange(e.target.value as Provider)
+            }
+            disabled={isProcessing}
+            aria-label="AI provider"
+            className={`${pill} cursor-pointer appearance-none px-3 outline-none [&>option]:text-neutral-900`}
+          >
+            <option value="auto">Auto</option>
+            <option value="openrouter">OpenRouter</option>
+            <option value="groq">Groq</option>
+          </select>
+        </div>
+      )}
     </section>
   )
 }
@@ -502,6 +644,15 @@ export default function DebateRoom({
   const [aiOverlayMessageId, setAiOverlayMessageId] =
     useState<string | null>(null)
 
+  /* AI request (dipindah dari composer) */
+  const [selectedProvider, setSelectedProvider] =
+    useState<Provider>('auto')
+
+  const [lastAiError, setLastAiError] = useState<{
+    mode: 'comment' | 'final_verdict'
+    provider?: 'openrouter' | 'groq'
+  } | null>(null)
+
   const { data: debate } = useDebate(debateId)
 
   const { data: messages, isLoading } =
@@ -509,6 +660,9 @@ export default function DebateRoom({
 
   const resolveDebateMutation =
     useResolveDebate(relationshipId)
+
+  const requestAiMutation =
+    useRequestAiAnalysis(debateId)
 
   useAutoFinalVerdict(debateId)
 
@@ -758,6 +912,70 @@ export default function DebateRoom({
     })
   }
 
+  /* ---------- AI request handlers ---------- */
+
+  const handleRequestAiComment = () => {
+    const providerParam =
+      selectedProvider === 'auto'
+        ? undefined
+        : selectedProvider
+
+    setLastAiError(null)
+
+    requestAiMutation.mutate(
+      {
+        debateId,
+        mode: 'comment',
+        provider: providerParam,
+      },
+      {
+        onError: () => {
+          setLastAiError({
+            mode: 'comment',
+            provider: providerParam,
+          })
+        },
+      },
+    )
+  }
+
+  const handleRetryAiComment = () => {
+    if (!lastAiError) return
+
+    setLastAiError(null)
+
+    requestAiMutation.mutate(
+      {
+        debateId,
+        mode: lastAiError.mode,
+        provider: lastAiError.provider,
+      },
+      {
+        onError: () => {
+          setLastAiError(lastAiError)
+        },
+      },
+    )
+  }
+
+  const getAiButtonTooltip = () => {
+    if (isAiProcessing) {
+      return isAiRequestedByMe
+        ? 'Waiting for AI response...'
+        : `${aiRequesterName ?? 'Your babe'} is requesting AI assistance`
+    }
+
+    if (!hasUserMessage) {
+      return 'Send a message before requesting AI'
+    }
+
+    if (!hasNewMessageSinceLastAiComment) {
+      return 'Send a new message before requesting another AI comment'
+    }
+
+    return undefined
+  }
+
   const pocketMessages =
     openPocket === partnerA.user_id
       ? previousPartnerAMessages
@@ -816,7 +1034,7 @@ export default function DebateRoom({
 
       <div className="fixed inset-0 z-20 flex flex-col overflow-hidden">
         <div className="relative flex min-h-0 flex-1 flex-col overflow-hidden rounded-[1.6rem] border border-black/[0.055] bg-white shadow-[0_28px_90px_-45px_rgba(0,0,0,0.22)] sm:rounded-[2rem] md:rounded-[2.4rem]">
-          
+
           {/* HEADER */}
           <header className="relative z-30 flex min-h-[60px] shrink-0 items-center justify-between gap-3 border-b border-black/[0.045] px-3.5 py-3 sm:min-h-[68px] sm:px-7 sm:py-4">
             <div className="flex min-w-0 items-center gap-2.5 sm:gap-3">
@@ -834,50 +1052,6 @@ export default function DebateRoom({
                 </p>
               </div>
             </div>
-
-            {/* RESOLVE */}
-
-            {isRoomActive && hasUserMessage && (
-              <div className="shrink-0">
-                {isConfirmingResolve ? (
-                  <div className="flex items-center gap-1 rounded-full border border-black/[0.055] bg-white p-1 shadow-[0_6px_20px_rgba(0,0,0,0.05)]">
-                    <button
-                      type="button"
-                      onClick={handleResolve}
-                      disabled={
-                        resolveDebateMutation.isPending
-                      }
-                      className="rounded-full bg-neutral-900 px-2.5 py-1.5 text-[10px] font-semibold text-white transition hover:bg-black disabled:opacity-50 sm:px-3.5"
-                    >
-                      Yes, resolve
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setIsConfirmingResolve(false)
-                      }
-                      className="rounded-full px-2.5 py-1.5 text-[10px] font-medium text-neutral-500 transition hover:bg-neutral-50 sm:px-3"
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={handleResolve}
-                    disabled={isAiProcessing}
-                    className="rounded-full px-2.5 py-1.5 text-[10px] font-medium text-neutral-400 transition hover:bg-white hover:text-neutral-700 disabled:cursor-not-allowed disabled:opacity-30 sm:px-3"
-                  >
-                    <span className="sm:hidden">End</span>
-
-                    <span className="hidden sm:inline">
-                      End discussion
-                    </span>
-                  </button>
-                )}
-              </div>
-            )}
           </header>
 
           {/* STAGE */}
@@ -902,6 +1076,21 @@ export default function DebateRoom({
                   )}
                   isPendingVerdict={isPendingVerdict}
                   onOpenHistory={() => setShowAiMemory(true)}
+                  canUseAi={isRoomActive}
+                  canRequestAi={canRequestAiComment}
+                  isRequestingAi={requestAiMutation.isPending}
+                  aiButtonTitle={getAiButtonTooltip()}
+                  provider={selectedProvider}
+                  onProviderChange={setSelectedProvider}
+                  onRequestAi={handleRequestAiComment}
+                  canResolve={isRoomActive && hasUserMessage}
+                  isConfirmingResolve={isConfirmingResolve}
+                  isResolving={resolveDebateMutation.isPending}
+                  isResolveDisabled={isAiProcessing}
+                  onResolve={handleResolve}
+                  onCancelResolve={() =>
+                    setIsConfirmingResolve(false)
+                  }
                 />
 
                 {/* 2. PARTNERS (satu baris) */}
@@ -1005,7 +1194,34 @@ export default function DebateRoom({
             )}
           </main>
 
-          {/* AI ERROR + COMPOSER */}
+          {/* AI ERROR */}
+
+          {lastAiError && (
+            <div className="relative z-30 shrink-0 border-t border-red-500/[0.08] bg-red-50/70 px-3.5 py-2.5 sm:px-7 sm:py-3">
+              <div className="flex items-center justify-between gap-2 sm:gap-4">
+                <p className="min-w-0 flex-1 truncate text-[9px] leading-5 text-red-500/80 sm:text-[10.5px]">
+                  {requestAiMutation.error?.message ??
+                    'AI failed to respond.'}
+                </p>
+
+                <button
+                  type="button"
+                  onClick={handleRetryAiComment}
+                  className="flex shrink-0 items-center gap-1.5 rounded-full px-2 py-1.5 text-[9px] font-semibold text-red-500 transition hover:bg-red-100/70 sm:px-2.5 sm:text-[10px]"
+                >
+                  <RefreshCw size={10} strokeWidth={1.8} />
+
+                  <span className="hidden xs:inline">
+                    Try again
+                  </span>
+
+                  <span className="xs:hidden">Retry</span>
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* COMPOSER */}
 
           <DebateComposer
             debateId={debateId}
@@ -1020,7 +1236,7 @@ export default function DebateRoom({
             hasNewMessageSinceLastAiComment={
               hasNewMessageSinceLastAiComment
             }
-            canRequestAiComment={canRequestAiComment}
+            onMessageSent={() => setLastAiError(null)}
           />
         </div>
       </div>
