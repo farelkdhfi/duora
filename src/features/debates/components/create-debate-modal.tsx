@@ -147,7 +147,7 @@ const StudioBackdrop = memo(function StudioBackdrop({
   return (
     <div
       aria-hidden
-      className="pointer-events-none absolute inset-0 z-0 overflow-hidden bg-[#fafaf9]"
+      className="pointer-events-none absolute inset-0 overflow-hidden bg-white"
     >
       {/* WALL + COVE + FLOOR: satu permukaan, cross-fade antar persona */}
       {PERSONA_KEYS.map((key) => (
@@ -293,7 +293,7 @@ function PersonaStage({
             }}
             className="absolute inset-0 flex cursor-grab touch-pan-y items-center justify-center active:cursor-grabbing"
           >
-            <div className="relative size-[min(84vw,42vh,480px)]">
+            <div className="relative size-60">
               <Image
                 src={persona.image}
                 alt={persona.label}
@@ -314,12 +314,12 @@ function PersonaStage({
           onClick={() => onPaginate(-1)}
           whileTap={{ scale: 0.88 }}
           aria-label="Previous persona"
-          className="flex size-11 shrink-0 items-center justify-center rounded-full bg-white/70 text-neutral-600 shadow-sm backdrop-blur transition hover:bg-white hover:text-neutral-900"
+          className="flex size-8 shrink-0 items-center justify-center rounded-full bg-white/70 text-neutral-600 shadow-sm backdrop-blur transition hover:bg-white hover:text-neutral-900"
         >
-          <ArrowLeft size={16} strokeWidth={1.7} />
+          <ArrowLeft size={12} strokeWidth={1.7} />
         </motion.button>
 
-        <div className="w-[190px] text-center sm:w-[240px]">
+        <div className="w-[140px] text-center sm:w-[240px]">
           <div className="min-h-[64px]">
             <AnimatePresence mode="wait" initial={false}>
               <motion.div
@@ -368,9 +368,9 @@ function PersonaStage({
           onClick={() => onPaginate(1)}
           whileTap={{ scale: 0.88 }}
           aria-label="Next persona"
-          className="flex size-11 shrink-0 items-center justify-center rounded-full bg-white/70 text-neutral-600 shadow-sm backdrop-blur transition hover:bg-white hover:text-neutral-900"
+          className="flex size-8 shrink-0 items-center justify-center rounded-full bg-white/70 text-neutral-600 shadow-sm backdrop-blur transition hover:bg-white hover:text-neutral-900"
         >
-          <ArrowRight size={16} strokeWidth={1.7} />
+          <ArrowRight size={12} strokeWidth={1.7} />
         </motion.button>
       </div>
     </div>
@@ -498,14 +498,22 @@ export default function CreateDebateModal({
           role="dialog"
           aria-modal="true"
           aria-label="Create debate"
-          className="fixed inset-0 z-[100] isolate flex flex-col overflow-hidden bg-[#fafaf9]"
+          className="fixed inset-0 z-[100] isolate flex flex-col overflow-hidden bg-white"
           initial={{ opacity: 0, scale: 1.015 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 1.01 }}
           transition={{ duration: 0.5, ease: EASE }}
         >
-          {/* Studio background, warna ikut persona terpilih */}
-          <StudioBackdrop persona={activePersona.value} />
+          {/* Step 1: putih polos. Step 2: studio backdrop fade-in sesuai persona */}
+          <motion.div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 z-0"
+            initial={false}
+            animate={{ opacity: step === 2 ? 1 : 0 }}
+            transition={{ duration: 0.9, ease: EASE }}
+          >
+            <StudioBackdrop persona={activePersona.value} />
+          </motion.div>
 
           {/* Preload semua gambar persona biar pas swipe nggak pop-in */}
           <div
@@ -526,67 +534,51 @@ export default function CreateDebateModal({
           </div>
 
           {/* Header */}
-          <header className="relative z-10 grid shrink-0 grid-cols-[1fr_auto_1fr] items-center px-4 py-4 sm:px-8 sm:py-6">
-            <div className="justify-self-start">
-              <AnimatePresence>
-                {step === 2 && (
-                  <motion.button
-                    key="back"
-                    type="button"
-                    onClick={goBack}
-                    disabled={isPending}
-                    aria-label="Back to topic"
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -10 }}
-                    transition={{ duration: 0.3, ease: EASE }}
-                    className="flex h-10 items-center gap-1.5 rounded-full bg-white/70 pl-3.5 pr-4 text-sm font-medium text-neutral-600 shadow-sm backdrop-blur transition hover:bg-white hover:text-neutral-900 disabled:pointer-events-none disabled:opacity-40"
-                  >
-                    <ArrowLeft size={14} strokeWidth={1.8} />
-                    Back
-                  </motion.button>
-                )}
-              </AnimatePresence>
-            </div>
+          
+{/* Header */}
+<header className="relative z-10 grid shrink-0 grid-cols-[1fr_auto_1fr] items-center px-4 py-4 sm:px-8 sm:py-6">
+  
+{/* Step indicator */}
+<div
+  className="col-start-1 row-start-1 flex flex-col items-start gap-2 justify-self-start"
+  aria-label={`Step ${step} of 2`}
+>
+  <span className="text-[10px] font-semibold uppercase tracking-[0.22em] text-neutral-500">
+    Step {step} of 2
+  </span>
 
-            {/* Step indicator */}
-            <div
-              className="flex flex-col items-center gap-2"
-              aria-label={`Step ${step} of 2`}
-            >
-              <span className="text-[10px] font-semibold uppercase tracking-[0.22em] text-neutral-500">
-                Step {step} of 2
-              </span>
+  <div className="flex items-center gap-1.5">
+    {[1, 2].map((n) => (
+      <motion.span
+        key={n}
+        initial={false}
+        animate={{
+          width: n === step ? 32 : 12,
+          opacity: n <= step ? 1 : 0.2,
+        }}
+        transition={{ duration: 0.5, ease: EASE }}
+        className="h-1 rounded-full bg-neutral-900"
+      />
+    ))}
+  </div>
+</div>
 
-              <div className="flex items-center gap-1.5">
-                {[1, 2].map((n) => (
-                  <motion.span
-                    key={n}
-                    initial={false}
-                    animate={{
-                      width: n === step ? 32 : 12,
-                      opacity: n <= step ? 1 : 0.2,
-                    }}
-                    transition={{ duration: 0.5, ease: EASE }}
-                    className="h-1 rounded-full bg-neutral-900"
-                  />
-                ))}
-              </div>
-            </div>
 
-            <div className="justify-self-end">
-              <motion.button
-                type="button"
-                onClick={closeModal}
-                disabled={isPending}
-                whileTap={{ scale: 0.9 }}
-                aria-label="Close create debate modal"
-                className="flex size-10 items-center justify-center rounded-full bg-white/70 text-neutral-500 shadow-sm backdrop-blur transition hover:bg-neutral-900 hover:text-white disabled:pointer-events-none disabled:opacity-40"
-              >
-                <X size={16} strokeWidth={1.8} />
-              </motion.button>
-            </div>
-          </header>
+  {/* Close button */}
+  <div className="col-start-3 justify-self-end">
+    <motion.button
+      type="button"
+      onClick={closeModal}
+      disabled={isPending}
+      whileTap={{ scale: 0.9 }}
+      aria-label="Close create debate modal"
+      className="flex size-10 items-center justify-center rounded-full bg-neutral-800 text-neutral-100 shadow-sm backdrop-blur transition hover:bg-neutral-900 hover:text-white disabled:pointer-events-none disabled:opacity-40"
+    >
+      <X size={16} strokeWidth={1.8} />
+    </motion.button>
+  </div>
+</header>
+
 
           {/* Content */}
           <main className="relative z-10 flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain">
@@ -600,27 +592,18 @@ export default function CreateDebateModal({
                   animate="center"
                   exit="exit"
                   transition={{ duration: 0.38, ease: EASE }}
-                  className="m-auto w-full max-w-3xl px-6 py-8 sm:px-8"
+                  className="m-auto w-full max-w-md px-6 py-8 sm:px-8"
                 >
-                  <Reveal delay={0.05}>
-                    <h2 className="text-4xl font-semibold leading-[1.05] tracking-[-0.055em] text-neutral-900 sm:text-6xl">
-                      What are you
-                      <br />
-                      disagreeing about?
-                    </h2>
-                  </Reveal>
-
-                  <Reveal delay={0.15}>
-                    <p className="mt-4 text-base text-neutral-500">
-                      Describe it in a few words. Your mediator takes it from there.
-                    </p>
-                  </Reveal>
-
-                  <Reveal delay={0.25} className="mt-10 sm:mt-14">
-                    <label htmlFor="debate-title" className="sr-only">
-                      Topic
+                  <Reveal delay={0.05} className="text-center">
+                    <label
+                      htmlFor="debate-title"
+                      className="block text-lg font-medium tracking-[-0.03em] text-neutral-900 sm:text-xl"
+                    >
+                      Apa topik yang ingin dibahas?
                     </label>
+                  </Reveal>
 
+                  <Reveal delay={0.15} className="mt-6">
                     <div className="group relative">
                       <input
                         id="debate-title"
@@ -632,25 +615,17 @@ export default function CreateDebateModal({
                             goNext()
                           }
                         }}
-                        placeholder="Where should we spend New Year's?"
+                        placeholder="Contoh: Tahun baruan enaknya ke mana?"
                         autoFocus
                         autoComplete="off"
-                        className="w-full bg-transparent pb-4 text-2xl font-semibold tracking-[-0.04em] text-neutral-900 outline-none placeholder:text-neutral-400/70 sm:text-4xl"
+                        className="w-full bg-transparent pb-3 text-center text-base font-medium tracking-[-0.02em] text-neutral-900 outline-none placeholder:text-neutral-300 sm:text-lg"
                       />
 
                       <div className="h-px w-full bg-black/15" />
 
-                      {/* Garis fokus yang "menggambar" dari kiri ke kanan */}
-                      <div className="absolute bottom-0 left-0 h-px w-full origin-left scale-x-0 bg-neutral-900 transition-transform duration-700 ease-out group-focus-within:scale-x-100" />
+                      {/* Garis fokus yang "menggambar" dari tengah ke samping */}
+                      <div className="absolute bottom-0 left-0 h-px w-full origin-center scale-x-0 bg-neutral-900 transition-transform duration-700 ease-out group-focus-within:scale-x-100" />
                     </div>
-
-                    <p className="mt-4 text-xs text-neutral-400">
-                      Press{' '}
-                      <kbd className="rounded-md bg-white/70 px-1.5 py-0.5 font-sans text-[11px] font-medium text-neutral-500 shadow-sm">
-                        Enter
-                      </kbd>{' '}
-                      to continue
-                    </p>
                   </Reveal>
                 </motion.div>
               ) : (
@@ -665,11 +640,11 @@ export default function CreateDebateModal({
                   className="m-auto flex w-full max-w-3xl flex-col items-center px-5 py-4 sm:px-8"
                 >
                   <Reveal delay={0.05} className="text-center">
-                    <h2 className="text-3xl font-semibold tracking-[-0.05em] text-neutral-900 sm:text-5xl">
+                    <h2 className="text-xl font-semibold tracking-[-0.05em] text-neutral-900 sm:text-5xl">
                       Choose your mediator
                     </h2>
                     <p className="mt-2 text-sm text-neutral-500">
-                      Swipe to change their personality.
+                      Geser untuk mengubah persona..
                     </p>
                   </Reveal>
 
@@ -693,7 +668,7 @@ export default function CreateDebateModal({
               onClick={step === 1 ? goNext : handleCreate}
               disabled={step === 1 ? !hasTitle : isPending}
               whileTap={{ scale: 0.97 }}
-              className="mx-auto flex h-12 w-full max-w-sm items-center justify-center rounded-full bg-neutral-900 px-6 text-sm font-semibold text-white shadow-[0_18px_40px_-18px_rgba(0,0,0,0.5)] transition-colors hover:bg-black disabled:pointer-events-none disabled:opacity-40"
+              className="mx-auto flex h-12 w-full max-w-sm items-center justify-center rounded-full bg-neutral-800 px-6 text-sm font-semibold text-white shadow-[0_18px_40px_-18px_rgba(0,0,0,0.5)] transition-colors hover:bg-black disabled:pointer-events-none disabled:opacity-40"
             >
               <AnimatePresence mode="wait" initial={false}>
                 <motion.span
@@ -715,9 +690,6 @@ export default function CreateDebateModal({
                         <Loader2 size={14} className="animate-spin" />
                       )}
                       Start debate
-                      {!isPending && (
-                        <ArrowUpRight size={15} strokeWidth={1.8} />
-                      )}
                     </>
                   )}
                 </motion.span>
