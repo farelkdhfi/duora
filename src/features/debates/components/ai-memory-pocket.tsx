@@ -2,12 +2,13 @@
 
 import { X } from 'lucide-react'
 
-import type { DebateMessage } from '../types'
+import type { AiPersona, DebateMessage } from '../types'
 import DebateMessageBubble from './debate-message-bubble'
 import DateSeparator from './date-separator'
 
 interface AiMemoryPocketProps {
   messages: DebateMessage[]
+  persona?: AiPersona
   onClose: () => void
 }
 
@@ -20,6 +21,7 @@ function isSameDay(dateA: string, dateB: string) {
 
 export default function AiMemoryPocket({
   messages,
+  persona,
   onClose,
 }: AiMemoryPocketProps) {
   return (
@@ -84,6 +86,7 @@ export default function AiMemoryPocket({
                     <DebateMessageBubble
                       message={message}
                       currentUserId=""
+                      persona={persona}
                       variant={
                         message.is_final_verdict
                           ? 'resolution'

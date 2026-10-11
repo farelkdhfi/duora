@@ -1,11 +1,39 @@
 'use client'
 
-import type { DebateMessage } from '../types'
+import type { AiPersona, DebateMessage } from '../types'
 
 interface DebateMessageBubbleProps {
   message: DebateMessage
   currentUserId: string
+  persona?: AiPersona
   variant?: 'stage' | 'mediator' | 'resolution' | 'history'
+}
+
+/* Warna kartu resolution per persona (AI response biasa tetap putih) */
+const resolutionTone: Record<
+  AiPersona,
+  { card: string; glow: string; accent: string }
+> = {
+  formal: {
+    card: 'bg-neutral-800 shadow-[0_24px_70px_rgba(0,0,0,0.14)]',
+    glow: 'bg-white/[0.05]',
+    accent: 'text-amber-300/70',
+  },
+  lembut: {
+    card: 'bg-[#C8808E] shadow-lg',
+    glow: 'bg-white/[0.18]',
+    accent: 'text-white/85',
+  },
+  kasar: {
+    card: 'bg-[#C13131] shadow-lg',
+    glow: 'bg-white/[0.18]',
+    accent: 'text-white/85',
+  },
+  lebay: {
+    card: 'bg-[#9CB8D9] shadow-lg',
+    glow: 'bg-white/[0.18]',
+    accent: 'text-white/85',
+  },
 }
 
 function formatTime(dateString: string) {
@@ -43,18 +71,24 @@ function renderListItem(item: unknown): string {
 function MediatorCard({
   message,
   resolution = false,
+  persona,
 }: {
   message: DebateMessage
   resolution?: boolean
+  persona?: AiPersona
 }) {
   const analysis = message.ai_analysis
+
+  const tone =
+    resolutionTone[persona ?? 'formal'] ??
+    resolutionTone.formal
 
   return (
     <article
       className={[
         'relative overflow-hidden rounded-[1.9rem] border',
         resolution
-          ? 'border-neutral-900/[0.08] bg-neutral-950 text-white shadow-[0_24px_70px_rgba(0,0,0,0.14)]'
+          ? `${tone.card} text-white`
           : 'border-black/[0.055] bg-white text-neutral-900 shadow-[0_15px_50px_rgba(0,0,0,0.055)]',
       ].join(' ')}
     >
@@ -69,7 +103,9 @@ function MediatorCard({
       )}
 
       {resolution && (
-        <div className="pointer-events-none absolute left-1/2 top-0 size-64 -translate-x-1/2 rounded-full bg-white/[0.035] blur-[80px]" />
+        <div
+          className={`pointer-events-none absolute left-1/2 top-0 size-64 -translate-x-1/2 rounded-full blur-[80px] ${tone.glow}`}
+        />
       )}
 
       <div className="relative p-5 sm:p-6">
@@ -81,45 +117,19 @@ function MediatorCard({
               className={[
                 'flex size-8 items-center justify-center rounded-full',
                 resolution
-                  ? 'bg-white/[0.07]'
+                  ? 'bg-white/[0.16]'
                   : 'bg-[#f7f2eb]',
               ].join(' ')}
             >
               <span
                 className={
                   resolution
-                    ? 'text-sm text-white/70'
+                    ? 'text-sm text-white/90'
                     : 'text-sm text-neutral-500'
                 }
               >
                 {resolution ? '♡' : '✦'}
               </span>
-            </div>
-
-            <div>
-              <p
-                className={[
-                  'text-[8px] font-semibold uppercase tracking-[0.17em]',
-                  resolution
-                    ? 'text-white/30'
-                    : 'text-neutral-300',
-                ].join(' ')}
-              >
-                {resolution
-                  ? 'Resolution'
-                  : 'Duora AI'}
-              </p>
-
-              <p
-                className={[
-                  'mt-0.5 text-[9px]',
-                  resolution
-                    ? 'text-white/40'
-                    : 'text-neutral-400',
-                ].join(' ')}
-              >
-                Neutral mediator
-              </p>
             </div>
           </div>
 
@@ -127,7 +137,7 @@ function MediatorCard({
             className={[
               'text-[8.5px]',
               resolution
-                ? 'text-white/25'
+                ? 'text-white/60'
                 : 'text-neutral-300',
             ].join(' ')}
           >
@@ -141,7 +151,7 @@ function MediatorCard({
           className={[
             'tracking-[-0.012em]',
             resolution
-              ? 'mt-7 text-[14px] leading-[1.9] text-white/[0.8]'
+              ? 'mt-7 text-[14px] leading-[1.9] text-white/95'
               : 'mt-6 text-[13px] leading-[1.8] text-neutral-600',
           ].join(' ')}
         >
@@ -153,12 +163,14 @@ function MediatorCard({
 
         {resolution &&
           analysis?.stronger_argument && (
-            <div className="mt-7 border-t border-white/[0.08] pt-6">
-              <p className="text-[8px] font-semibold uppercase tracking-[0.17em] text-amber-300/60">
+            <div className="mt-7 border-t border-white/20 pt-6">
+              <p
+                className={`text-[8px] font-semibold uppercase tracking-[0.17em] ${tone.accent}`}
+              >
                 Stronger argument
               </p>
 
-              <p className="mt-2.5 text-[11.5px] leading-6 text-white/[0.64]">
+              <p className="mt-2.5 text-[11.5px] leading-6 text-white/85">
                 {analysis.stronger_argument}
               </p>
             </div>
@@ -171,7 +183,7 @@ function MediatorCard({
             className={[
               'mt-7',
               resolution
-                ? 'border-t border-white/[0.06] pt-6'
+                ? 'border-t border-white/15 pt-6'
                 : 'border-t border-black/[0.045] pt-6',
             ].join(' ')}
           >
@@ -179,7 +191,7 @@ function MediatorCard({
               className={[
                 'text-[8px] font-semibold uppercase tracking-[0.17em]',
                 resolution
-                  ? 'text-white/30'
+                  ? 'text-white/70'
                   : 'text-neutral-300',
               ].join(' ')}
             >
@@ -194,7 +206,7 @@ function MediatorCard({
                     className={[
                       'pl-3 text-[11px] leading-5',
                       resolution
-                        ? 'border-l border-white/[0.08] text-white/[0.56]'
+                        ? 'border-l border-white/30 text-white/85'
                         : 'border-l border-neutral-200 text-neutral-500',
                     ].join(' ')}
                   >
@@ -214,7 +226,7 @@ function MediatorCard({
               'mt-6',
               analysis?.facts?.length
                 ? resolution
-                  ? 'border-t border-white/[0.06] pt-6'
+                  ? 'border-t border-white/15 pt-6'
                   : 'border-t border-black/[0.045] pt-6'
                 : '',
             ].join(' ')}
@@ -223,7 +235,7 @@ function MediatorCard({
               className={[
                 'text-[8px] font-semibold uppercase tracking-[0.17em]',
                 resolution
-                  ? 'text-white/30'
+                  ? 'text-white/70'
                   : 'text-neutral-300',
               ].join(' ')}
             >
@@ -238,7 +250,7 @@ function MediatorCard({
                     className={[
                       'pl-3 text-[11px] leading-5',
                       resolution
-                        ? 'border-l border-pink-300/20 text-white/[0.56]'
+                        ? 'border-l border-white/30 text-white/85'
                         : 'border-l border-pink-300/30 text-neutral-500',
                     ].join(' ')}
                   >
@@ -257,7 +269,7 @@ function MediatorCard({
             className={[
               'mt-7 rounded-[1.35rem] border p-4.5',
               resolution
-                ? 'border-white/[0.06] bg-white/[0.035]'
+                ? 'border-white/20 bg-white/[0.12]'
                 : 'border-black/[0.045] bg-[#f8f7f3]',
             ].join(' ')}
           >
@@ -266,7 +278,7 @@ function MediatorCard({
                 className={[
                   'text-sm',
                   resolution
-                    ? 'text-white/60'
+                    ? 'text-white/80'
                     : 'text-neutral-400',
                 ].join(' ')}
               >
@@ -277,7 +289,7 @@ function MediatorCard({
                 className={[
                   'text-[8px] font-semibold uppercase tracking-[0.17em]',
                   resolution
-                    ? 'text-white/35'
+                    ? 'text-white/75'
                     : 'text-neutral-300',
                 ].join(' ')}
               >
@@ -289,7 +301,7 @@ function MediatorCard({
               className={[
                 'mt-2.5 text-[11.5px] leading-5',
                 resolution
-                  ? 'text-white/[0.64]'
+                  ? 'text-white/90'
                   : 'text-neutral-500',
               ].join(' ')}
             >
@@ -386,12 +398,14 @@ function HistoryThought({
 export default function DebateMessageBubble({
   message,
   currentUserId,
+  persona,
   variant = 'stage',
 }: DebateMessageBubbleProps) {
   if (message.role === 'ai') {
     return (
       <MediatorCard
         message={message}
+        persona={persona}
         resolution={
           variant === 'resolution' ||
           Boolean(message.is_final_verdict)
