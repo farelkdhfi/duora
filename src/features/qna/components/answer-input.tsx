@@ -112,7 +112,7 @@ export function AnswerInput({ session, disabled = false }: AnswerInputProps) {
       <button
         type="submit"
         disabled={isPending || disabled || !answer.trim()}
-        className="group mt-4 flex h-12 w-full items-center justify-center gap-2 rounded-full bg-[#1e1318] px-6 text-sm font-semibold tracking-[-0.01em] text-white shadow-[0_18px_40px_-18px_rgba(30,19,24,0.5)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#281a21] active:translate-y-0 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:translate-y-0"
+        className="group mt-4 flex h-12 w-full items-center justify-center gap-2 rounded-full bg-neutral-800 px-6 text-sm font-semibold tracking-[-0.01em] text-white shadow-[0_18px_40px_-18px_rgba(30,19,24,0.5)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#281a21] active:translate-y-0 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:translate-y-0"
       >
         {isPending ? (
           <Loader2 className="size-4 animate-spin" />

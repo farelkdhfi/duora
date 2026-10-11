@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { Shuffle } from "lucide-react";
+import { RefreshCw } from "lucide-react";
 import { getCategoryInfo } from "../category-info";
 import { useRerollQuestion } from "../queries";
 import type { ActiveQnaSession } from "../types";
@@ -276,21 +276,16 @@ export function QuestionCard({ session, onShufflingChange }: QuestionCardProps) 
           </>
         )}
 
-        {/* Tombol ganti (selalu di atas semua kartu) */}
-        {canReroll && (
+        {/* Tombol ganti: hanya muncul saat tidak shuffle */}
+        {canReroll && !shuffling && (
           <button
             type="button"
             onClick={handleReroll}
-            disabled={shuffling}
-            className="group absolute right-6 top-5 z-30 flex h-7 items-center gap-1.5 rounded-full border border-black/[0.08] bg-white/80 px-3 text-[10px] font-semibold uppercase tracking-[0.14em] text-black backdrop-blur transition-colors hover:bg-white disabled:cursor-not-allowed disabled:opacity-60 sm:right-9"
+            className="group absolute right-6 top-5 z-30 flex h-7 items-center gap-1.5 rounded-full border border-black/[0.08] bg-white/80 px-3 text-[10px] font-semibold uppercase tracking-[0.14em] text-black backdrop-blur transition-colors hover:bg-white sm:right-9"
           >
-            <Shuffle
-              className={`size-3 transition-transform duration-300 ${
-                shuffling ? "animate-pulse" : "group-hover:rotate-45"
-              }`}
-            />
+            <RefreshCw className="size-3 transition-transform duration-300 group-hover:rotate-180" />
 
-            <span>{shuffling ? "Mengacak..." : "Ganti"}</span>
+            <span>Ganti</span>
           </button>
         )}
       </div>

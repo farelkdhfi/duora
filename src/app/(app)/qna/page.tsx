@@ -4,11 +4,15 @@ import { useRouter } from "next/navigation";
 import { X } from "lucide-react";
 import { useState } from "react";
 import { useMyRelationshipDetails } from "@/features/relationship/queries";
-import { useActiveSession } from "@/features/qna/queries";
+import {
+  useActiveSession,
+  useStartedQnaThisVisit,
+} from "@/features/qna/queries";
 import { useQnaRealtime } from "@/features/qna/use-qna-realtime";
 import { CategoryPicker } from "@/features/qna/components/category-picker";
 import { QnaHistoryList } from "@/features/qna/components/qna-history";
 import { useGetMyProfile } from "@/features/profiles/queries";
+import HeaderWithoutShell from "@/components/layout/header-without-shell";
 
 export default function QnaMenuPage() {
   const router = useRouter();
@@ -26,6 +30,11 @@ export default function QnaMenuPage() {
 
   const { data: activeSession, isLoading: isLoadingSession } =
     useActiveSession();
+
+  // True kalau user baru saja membuat sesi dari halaman ini. Selama itu,
+  // "Sesi berlanjut" tidak ditampilkan karena user sedang diarahkan otomatis
+  // ke /qna/session.
+  const startedHere = useStartedQnaThisVisit();
 
   const isLoading =
     isLoadingRelationship || isLoadingProfile || isLoadingSession;
@@ -75,45 +84,12 @@ export default function QnaMenuPage() {
   }
 
   return (
-    <main className="relative min-h-dvh w-full overflow-hidden bg-[#ffffff]">
-      {/* Ambient background */}
-      <div
-        aria-hidden
-        className="pointer-events-none fixed inset-0 z-0"
-      >
-        <div className="absolute left-1/2 top-[35%] size-[420px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-rose-200/[0.12] blur-[130px]" />
-
-        <div className="absolute left-[20%] top-[20%] size-[260px] rounded-full bg-pink-200/[0.08] blur-[110px]" />
-
-        <div className="absolute bottom-[-100px] right-[10%] size-[300px] rounded-full bg-purple-200/[0.06] blur-[120px]" />
-
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.45)_0%,rgba(255,255,255,0)_68%)]" />
-      </div>
-
+    <main className="relative min-h-dvh w-full overflow-hidden bg-[#ffffff]">      
       <div className="relative z-10 flex min-h-dvh w-full flex-col px-5 py-7 sm:px-8 sm:py-10">
         {/* Header */}
-        <header className="flex shrink-0 items-start justify-between gap-5">
-          <div>
-            <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-neutral-400">
-              Q&A for two
-            </p>
+        <HeaderWithoutShell title="Q&A" text="A little closer" />
 
-            <h1 className="mt-2 text-[28px] font-medium leading-tight tracking-[-0.045em] text-neutral-950 sm:text-[32px]">
-              A little closer.
-            </h1>
-          </div>
-
-          <button
-            type="button"
-            onClick={() => router.push("/dashboard")}
-            aria-label="Back to dashboard"
-            className="flex size-9 shrink-0 items-center justify-center rounded-full border border-black/[0.05] bg-neutral-800 text-white shadow-sm transition-all duration-200 hover:bg-white hover:text-neutral-900 active:scale-95"
-          >
-            <X className="size-4" strokeWidth={1.8} />
-          </button>
-        </header>
-
-        {activeSession ? (
+        {activeSession && !startedHere ? (
           /* ---------------------------------------------------------------- */
           /* ACTIVE SESSION                                                    */
           /* ---------------------------------------------------------------- */
@@ -140,18 +116,18 @@ export default function QnaMenuPage() {
 
               {/* Main message */}
               <div className="mt-7 sm:mt-9">
-                <h2 className="mx-auto max-w-2xl text-[36px] font-medium leading-[1.05] tracking-[-0.055em] text-[#171717] sm:text-[52px] md:text-[62px]">
+                <h2 className="mx-auto max-w-2xl text-[24px] font-medium leading-[1.05] tracking-[-0.055em] text-[#171717] sm:text-[52px] md:text-[62px]">
                   {activeSession.partner_has_answered &&
                   !activeSession.my_answer
-                    ? "Pasanganmu menunggu jawabanmu."
+                    ? "Pasanganmu menunggu :)"
                     : "Mari lanjutkan percakapan ini."}
                 </h2>
 
-                <p className="mx-auto mt-5 max-w-md text-[13px] leading-6 text-black/40 sm:mt-6 sm:text-[15px]">
+                <p className="mx-auto mt-5 max-w-md text-[13px] leading-6 text-neutral-600 sm:mt-6 sm:text-[15px]">
                   {activeSession.partner_has_answered &&
                   !activeSession.my_answer
-                    ? "Satu jawaban kecil darimu bisa membuat kalian saling memahami sedikit lebih dalam."
-                    : "Kembali ke pertanyaan yang kalian tinggalkan dan lanjutkan cerita kalian."}
+                    ? "Sekarang giliranmu untuk menjawab."
+                    : "Salah satu dari kalian sudah membuat sesi Q&A ayo lanjutkan."}
                 </p>
               </div>
             </div>
@@ -161,7 +137,7 @@ export default function QnaMenuPage() {
               <button
                 type="button"
                 onClick={() => router.push("/qna/session")}
-                className="group flex h-13 w-full items-center justify-center rounded-full bg-[#1e1318] px-6 text-sm font-semibold tracking-[-0.01em] text-white shadow-[0_18px_40px_-18px_rgba(30,19,24,0.5)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#281a21] active:translate-y-0"
+                className="group flex h-12 w-full items-center justify-center rounded-full bg-neutral-800 px-6 text-sm font-semibold tracking-[-0.01em] text-white shadow-[0_18px_40px_-18px_rgba(30,19,24,0.5)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#281a21] active:translate-y-0"
               >
                 Lanjutkan sesi
               </button>

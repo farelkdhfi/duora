@@ -146,10 +146,10 @@ export default function QnaSessionPage() {
         <header className="flex shrink-0 items-start justify-between gap-5 px-5 pt-7 sm:px-8 sm:pt-10">
           <div>
             <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-neutral-400">
-              Q&A for two
+              Q&A
             </p>
 
-            <h1 className="mt-2 text-[28px] font-medium leading-tight tracking-[-0.045em] text-neutral-950 sm:text-[32px]">
+            <h1 className="mt-1 text-[25px] font-medium leading-tight tracking-[-0.045em] text-neutral-950 sm:text-[32px]">
               Answer anything.
             </h1>
           </div>

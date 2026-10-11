@@ -2,7 +2,7 @@
 
 "use client";
 
-import { Heart, Plus, X, Loader2, ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, Loader2, X } from "lucide-react";
 import { getCategoryInfo } from "../category-info";
 import { useSessionDetail, useStartNewQna } from "../queries";
 
@@ -12,6 +12,29 @@ interface QnaRevealProps {
   onClose?: () => void;
   showNewQuestionButton?: boolean;
 }
+
+/**
+ * Animasi masuk kartu, sama dengan di QuestionCard. Didefinisikan lagi di sini
+ * karena QuestionCard tidak ter-mount saat reveal tampil, jadi style-nya belum
+ * ada di halaman.
+ */
+const revealStyles = `
+  @keyframes qna-card-in {
+    0%   { opacity: 0; transform: translateY(18px) scale(0.96) rotate(-1.5deg); }
+    100% { opacity: 1; transform: none; }
+  }
+
+  .qna-card-in {
+    transform-origin: 50% 100%;
+    animation: qna-card-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .qna-card-in {
+      animation: none !important;
+    }
+  }
+`;
 
 export function QnaReveal({
   sessionId,
@@ -68,97 +91,87 @@ export function QnaReveal({
 
   return (
     <div className="relative w-full">
-      {/* Ambient background */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute left-1/2 top-[30%] size-[420px] -translate-x-1/2 rounded-full bg-[#d9a9c0]/[0.07] blur-[120px]"
-      />
+      <style>{revealStyles}</style>
 
-      <div className="relative z-10 mx-auto w-full max-w-2xl">
-        {/* ============================================================ */}
-        {/* QUESTION                                                     */}
-        {/* ============================================================ */}
+      {/* flow-root menjaga margin deck tetap di dalam container */}
+      <div className="relative z-10 mx-auto flow-root w-full max-w-2xl">
+        {/* ------------------------------------------------------------ */}
+        {/* QUESTION CARD (deck), sama dengan QuestionCard               */}
+        {/* ------------------------------------------------------------ */}
+        <div className="relative my-8">
+          {/* Kartu-kartu di belakang (efek tumpukan) */}
+          <div
+            aria-hidden
+            className="absolute inset-0 origin-bottom translate-y-[13px] scale-[0.94] rounded-[2rem] border border-black/[0.05] bg-pink-200"
+          />
+          <div
+            aria-hidden
+            className="absolute inset-0 origin-bottom translate-y-[26px] scale-[0.88] rounded-[2rem] border border-black/[0.04] bg-blue-200/50"
+          />
 
-        <div className="relative overflow-hidden rounded-[2rem] border border-black/[0.055] bg-white/75 shadow-[0_30px_80px_-45px_rgba(30,19,24,0.28)] backdrop-blur-xl">
-          <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#c995b5]/40 to-transparent" />
-
-          <div className="px-6 py-8 sm:px-10 sm:py-10">
-            <div className="flex items-center justify-between">
-              <span className="text-[8px] font-semibold uppercase tracking-[0.22em] text-black/25">
-                Pertanyaan
-              </span>
-
-              <div className="flex items-center gap-1.5">
-                <span className="h-px w-5 bg-black/[0.07]" />
-                <span className="size-1 rounded-full bg-[#c995b5]/70" />
-              </div>
-            </div>
-
-            <div className="flex min-h-[150px] items-center justify-center py-8 text-center sm:min-h-[190px]">
-              <p className="max-w-xl text-[24px] font-medium leading-[1.2] tracking-[-0.035em] text-[#171717] sm:text-[32px] md:text-[38px]">
+          {/* Kartu utama */}
+          <div className="qna-card-in relative z-10 flex min-h-[100px] flex-col rounded-[2rem] border border-black/[0.06] bg-gradient-to-b from-white to-[#fcf7fa] px-6 py-5 shadow-[0_30px_80px_-45px_rgba(30,19,24,0.35)] sm:min-h-[340px] sm:px-9">
+            <div className="flex flex-1 flex-col items-center justify-center py-6 text-center">
+              <p className="mt-6 max-w-xl text-sm font-medium leading-snug tracking-[-0.02em] text-[#171717] sm:text-[32px] md:text-[38px]">
                 {session.question_text}
               </p>
             </div>
 
-            <div className="flex items-center justify-center gap-2">
-              <span className="h-px w-8 bg-black/[0.06]" />
-              <span className="size-1 rounded-full bg-[#c995b5]/60" />
-              <span className="h-px w-8 bg-black/[0.06]" />
+            <div className="mx-auto flex items-center gap-2.5 pt-7">
+              <span className="h-[1px] w-7 bg-black/30" />
+              <span className="text-[9px] font-semibold uppercase tracking-[0.2em] text-black/35">
+                {categoryInfo.name}
+              </span>
+              <span className="h-[1px] w-7 bg-black/30" />
             </div>
           </div>
         </div>
 
-        {/* ============================================================ */}
-        {/* ANSWERS                                                      */}
-        {/* ============================================================ */}
-
-        <div className="mt-4 space-y-3">
+        {/* ------------------------------------------------------------ */}
+        {/* ANSWERS, gaya sama dengan AnswerInput                        */}
+        {/* ------------------------------------------------------------ */}
+        <div className="space-y-3">
           {/* My Answer */}
-          <div className="overflow-hidden rounded-[1.75rem] border border-black/[0.055] bg-white/60 shadow-[0_20px_55px_-40px_rgba(30,19,24,0.2)] backdrop-blur-xl">
-            <div className="px-5 py-5 sm:px-7 sm:py-6">
-              <div className="flex items-center justify-between">
-                <span className="text-[8px] font-semibold uppercase tracking-[0.22em] text-black/25">
-                  Jawaban kamu
-                </span>
+          <div className="rounded-[2rem] border border-black/[0.06] bg-white/65 p-6 shadow-[0_20px_60px_-40px_rgba(30,19,24,0.25)] backdrop-blur-xl sm:p-7">
+            <div className="flex items-center justify-between">
+              <span className="text-[9px] font-semibold uppercase tracking-[0.2em] text-black/30">
+                Jawaban kamu
+              </span>
 
-                <span className="rounded-full bg-[#c995b5]/10 px-2.5 py-1 text-[8px] font-semibold uppercase tracking-[0.14em] text-[#9b6683]">
-                  Kamu
-                </span>
-              </div>
-
-              <p className="mt-4 text-[14px] leading-7 tracking-[-0.01em] text-black/65 sm:text-[15px]">
-                {myAnswer}
-              </p>
+              <span className="rounded-full bg-[#c995b5]/10 px-2.5 py-1 text-[8px] font-semibold uppercase tracking-[0.14em] text-[#9b6683]">
+                Kamu
+              </span>
             </div>
+
+            <p className="mt-4 whitespace-pre-wrap text-[15px] leading-7 tracking-[-0.01em] text-black/65 sm:text-[16px]">
+              {myAnswer}
+            </p>
           </div>
 
           {/* Partner Answer */}
-          <div className="overflow-hidden rounded-[1.75rem] border border-black/[0.055] bg-white/60 shadow-[0_20px_55px_-40px_rgba(30,19,24,0.2)] backdrop-blur-xl">
-            <div className="px-5 py-5 sm:px-7 sm:py-6">
-              <div className="flex items-center justify-between">
-                <span className="text-[8px] font-semibold uppercase tracking-[0.22em] text-black/25">
-                  Jawaban pasangan
-                </span>
+          <div className="rounded-[2rem] border border-black/[0.06] bg-white/65 p-6 shadow-[0_20px_60px_-40px_rgba(30,19,24,0.25)] backdrop-blur-xl sm:p-7">
+            <div className="flex items-center justify-between">
+              <span className="text-[9px] font-semibold uppercase tracking-[0.2em] text-black/30">
+                Jawaban pasangan
+              </span>
 
-                <span className="rounded-full bg-black/[0.035] px-2.5 py-1 text-[8px] font-semibold uppercase tracking-[0.14em] text-black/40">
-                  Pasangan
-                </span>
-              </div>
-
-              <p className="mt-4 text-[14px] leading-7 tracking-[-0.01em] text-black/65 sm:text-[15px]">
-                {partnerAnswer}
-              </p>
+              <span className="rounded-full bg-black/[0.035] px-2.5 py-1 text-[8px] font-semibold uppercase tracking-[0.14em] text-black/40">
+                Pasangan
+              </span>
             </div>
+
+            <p className="mt-4 whitespace-pre-wrap text-[15px] leading-7 tracking-[-0.01em] text-black/65 sm:text-[16px]">
+              {partnerAnswer}
+            </p>
           </div>
         </div>
 
-        {/* ============================================================ */}
+        {/* ------------------------------------------------------------ */}
         {/* ERROR                                                        */}
-        {/* ============================================================ */}
-
+        {/* ------------------------------------------------------------ */}
         {startError && (
-          <div className="mt-4 px-1">
-            <p className="text-center text-[10px] leading-5 text-amber-600/75">
+          <div className="mx-auto mt-4 max-w-md text-center">
+            <p role="alert" className="text-xs leading-5 text-amber-600/80">
               {startError.message.includes("QNA_EXHAUSTED")
                 ? "Pertanyaan di kategori ini sudah habis. Coba kategori lain."
                 : startError.message}
@@ -166,17 +179,16 @@ export function QnaReveal({
           </div>
         )}
 
-        {/* ============================================================ */}
+        {/* ------------------------------------------------------------ */}
         {/* ACTIONS                                                      */}
-        {/* ============================================================ */}
-
+        {/* ------------------------------------------------------------ */}
         {showNewQuestionButton ? (
           <div className="mt-4 flex gap-2">
             <button
               type="button"
               onClick={handleNewQuestion}
               disabled={isStartingNew}
-              className="group flex h-13 flex-1 items-center justify-center gap-2 rounded-full bg-[#1e1318] px-5 text-sm font-semibold tracking-[-0.01em] text-white shadow-[0_18px_40px_-18px_rgba(30,19,24,0.5)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#281a21] active:translate-y-0 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:translate-y-0 sm:h-13"
+              className="group flex h-12 flex-1 items-center justify-center gap-2 rounded-full bg-neutral-800 px-6 text-sm font-semibold tracking-[-0.01em] text-white shadow-[0_18px_40px_-18px_rgba(30,19,24,0.5)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#281a21] active:translate-y-0 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:translate-y-0"
             >
               {isStartingNew ? (
                 <Loader2 className="size-4 animate-spin" />
@@ -185,7 +197,7 @@ export function QnaReveal({
                   <span>Pertanyaan baru</span>
 
                   <ArrowUpRight
-                    className="size-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                    className="size-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
                     strokeWidth={1.8}
                   />
                 </>
@@ -196,8 +208,8 @@ export function QnaReveal({
               <button
                 type="button"
                 onClick={onClose}
-                className="flex size-12 shrink-0 items-center justify-center rounded-full border border-black/20 bg-white/60 text-black backdrop-blur-xl transition-all duration-300 hover:bg-black/[0.035] hover:text-black/60 sm:size-13"
                 aria-label="Tutup"
+                className="flex size-12 shrink-0 items-center justify-center rounded-full border border-black/[0.08] bg-white/65 text-black/60 backdrop-blur-xl transition-all duration-300 hover:bg-white hover:text-black"
               >
                 <X className="size-4" strokeWidth={1.7} />
               </button>
@@ -208,7 +220,7 @@ export function QnaReveal({
             <button
               type="button"
               onClick={onClose}
-              className="mt-4 flex h-12 w-full items-center justify-center gap-2 rounded-[1.25rem] border border-black/20 bg-white/60 text-[11px] font-semibold tracking-[-0.01em] text-black/40 backdrop-blur-xl transition-all duration-300 hover:bg-black/[0.035] hover:text-black/65 sm:h-13"
+              className="mt-4 flex h-12 w-full items-center justify-center gap-2 rounded-full border border-black/[0.08] bg-white/65 text-sm font-semibold tracking-[-0.01em] text-black/60 backdrop-blur-xl transition-all duration-300 hover:bg-white hover:text-black"
             >
               <X className="size-3.5" strokeWidth={1.7} />
               <span>Tutup</span>

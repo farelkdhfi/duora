@@ -1,6 +1,13 @@
 // qna/queries.ts
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
+import {
+  useMutation,
+  useMutationState,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import {
   getRandomQuestion,
   startSession,
@@ -20,6 +27,7 @@ export const qnaKeys = {
   sessionDetail: (id: string) => [...qnaKeys.all, "session-detail", id] as const,
   history: () => [...qnaKeys.all, "history"] as const,
   sessionsToday: () => [...qnaKeys.all, "sessions-today"] as const,
+  startNew: () => [...qnaKeys.all, "start-new"] as const,
 };
 
 export function useActiveSession() {
@@ -52,21 +60,64 @@ export function useSessionsCreatedToday() {
   });
 }
 
-// Gabungan: ambil pertanyaan random LALU langsung mulai sesi
+// Gabungan: ambil pertanyaan random LALU langsung mulai sesi,
+// lalu pembuat sesi langsung diarahkan ke halaman session.
 export function useStartNewQna() {
+  const router = useRouter();
   const queryClient = useQueryClient();
 
-  return useMutation({
+  // isNavigating tetap true sampai perpindahan halaman benar-benar selesai
+  const [isNavigating, startNavigation] = useTransition();
+
+  const mutation = useMutation({
+    // Key ini dipakai useStartedQnaThisVisit untuk mendeteksi sesi yang baru dibuat
+    mutationKey: qnaKeys.startNew(),
     mutationFn: async (category: QnaCategory) => {
       const question = await getRandomQuestion(category);
       const session = await startSession(question.id);
       return session;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: qnaKeys.activeSession() });
+    onSuccess: async () => {
       queryClient.invalidateQueries({ queryKey: qnaKeys.sessionsToday() });
+
+      // Isi cache sesi aktif dulu, supaya halaman session langsung punya data
+      // dan tidak sempat menampilkan "Menyiapkan sesi" atau "Sesi ini sudah berakhir".
+      await queryClient.invalidateQueries({ queryKey: qnaKeys.activeSession() });
+
+      startNavigation(() => {
+        router.push("/qna/session");
+      });
     },
   });
+
+  // Loading baru berhenti setelah halaman berpindah, bukan saat request selesai
+  return { ...mutation, isPending: mutation.isPending || isNavigating };
+}
+
+/**
+ * True kalau user sudah memulai sesi baru sejak halaman ini dibuka.
+ *
+ * Dipakai halaman menu untuk menahan tampilan "Sesi berlanjut" selama user
+ * sedang diarahkan otomatis ke /qna/session. Mutation dari kunjungan
+ * sebelumnya tidak dihitung, jadi kalau user kembali ke menu nanti,
+ * "Sesi berlanjut" tampil normal.
+ */
+export function useStartedQnaThisVisit() {
+  const [visitStartedAt] = useState(() => Date.now());
+
+  const attempts = useMutationState({
+    filters: { mutationKey: qnaKeys.startNew() },
+    select: (mutation) => ({
+      status: mutation.state.status,
+      submittedAt: mutation.state.submittedAt,
+    }),
+  });
+
+  return attempts.some(
+    (attempt) =>
+      attempt.submittedAt >= visitStartedAt &&
+      (attempt.status === "pending" || attempt.status === "success")
+  );
 }
 
 export function useSubmitAnswer() {
