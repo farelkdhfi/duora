@@ -72,7 +72,7 @@ export default function GoalsPage() {
     <div className="relative">
       <Header
         title="Shared Goals"
-        description="Build something meaningful together, one goal at a time."
+        description="Bangun sesuatu dengan bersama."
       />
 
       <section className="mt-6 sm:mt-8">
