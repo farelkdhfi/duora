@@ -101,7 +101,7 @@ export default function DebateComposer({
                   isAiProcessing
                 }
                 aria-label="Share thought"
-                className="flex size-10 shrink-0 items-center justify-center rounded-[1rem] bg-neutral-900 text-white shadow-[0_7px_20px_rgba(0,0,0,0.12)] transition-all hover:-translate-y-0.5 hover:bg-black hover:shadow-[0_10px_25px_rgba(0,0,0,0.16)] disabled:pointer-events-none disabled:opacity-20 sm:rounded-[1.15rem]"
+                className="flex size-10 shrink-0 items-center justify-center rounded-full bg-neutral-800 text-white shadow-[0_7px_20px_rgba(0,0,0,0.12)] transition-all hover:-translate-y-0.5 hover:bg-black hover:shadow-[0_10px_25px_rgba(0,0,0,0.16)] disabled:pointer-events-none disabled:opacity-20 sm:rounded-[1.15rem]"
               >
                 {sendMessageMutation.isPending ? (
                   <Loader2

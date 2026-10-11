@@ -2,7 +2,12 @@
 
 import { memo, useEffect } from 'react'
 import Image, { type StaticImageData } from 'next/image'
-import { AnimatePresence, MotionConfig, motion } from 'framer-motion'
+import {
+  AnimatePresence,
+  MotionConfig,
+  motion,
+  useReducedMotion,
+} from 'framer-motion'
 import { X } from 'lucide-react'
 
 import type { AiPersona, DebateMessage } from '../types'
@@ -162,6 +167,82 @@ const StudioBackdrop = memo(function StudioBackdrop({
 })
 
 /* ===================================================== */
+/* RING RADAR (di belakang gambar persona saat loading)  */
+/* ===================================================== */
+
+const RADAR_DURATION = 2.8 /* detik per siklus */
+
+const RadarRings = memo(function RadarRings({
+  active,
+  rgb,
+}: {
+  active: boolean
+  rgb: string
+}) {
+  const reduceMotion = useReducedMotion()
+
+  /* tanpa animasi, ring cuma jadi lingkaran diam, jadi dilewati */
+  if (reduceMotion) return null
+
+  return (
+    <>
+      <style jsx global>{`
+        @keyframes debate-radar {
+          0% {
+            transform: scale(1);
+            opacity: 0;
+          }
+          18% {
+            opacity: 0.8;
+          }
+          100% {
+            transform: scale(1.5);
+            opacity: 0;
+          }
+        }
+
+        .debate-radar-ring {
+          opacity: 0;
+          will-change: transform, opacity;
+          animation-name: debate-radar;
+          animation-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+          animation-iteration-count: infinite;
+        }
+      `}</style>
+
+      <AnimatePresence>
+        {active && (
+          <motion.div
+            key="radar"
+            aria-hidden
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0, transition: { duration: 0.35 } }}
+            transition={{ duration: 0.5, ease: 'easeOut' }}
+            className="pointer-events-none absolute inset-0"
+          >
+            {[0, 1].map((index) => (
+              <span
+                key={index}
+                className="debate-radar-ring absolute inset-0 rounded-full"
+                style={{
+                  backgroundColor: rgba(rgb, 0.3),
+                  border: `1px solid ${rgba(rgb, 0.4)}`,
+                  animationDuration: `${RADAR_DURATION}s`,
+                  /* delay negatif: ring kedua langsung mulai di tengah siklus,
+                     jadi jarak antar ring rata sejak detik pertama */
+                  animationDelay: `${-(RADAR_DURATION / 2) * index}s`,
+                }}
+              />
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
+  )
+})
+
+/* ===================================================== */
 /* MAIN */
 /* ===================================================== */
 
@@ -198,13 +279,11 @@ export default function AiResponseOverlay({
 
   const subtitle = isProcessing
     ? isPendingVerdict
-      ? 'Duora is carefully preparing your resolution.'
+      ? 'Duora AI sedang menyusun putusan akhir.'
       : requesterName
-        ? `${requesterName} invited Duora into the discussion.`
+        ? `${requesterName} mengundang Duora AI kedalam diskusi.`
         : 'Duora is reading both perspectives.'
-    : isResolution
-      ? 'Here is what Duora found after hearing both sides.'
-      : 'A thought from your mediator.'
+    : null
 
   const title = isProcessing
     ? processingTitle
@@ -285,9 +364,12 @@ export default function AiResponseOverlay({
                 'relative shrink-0 transition-[width,height] duration-[900ms] ease-[cubic-bezier(0.22,1,0.36,1)]',
                 canClose
                   ? 'size-[min(22dvh,170px)]'
-                  : 'size-[min(40dvh,320px)]',
+                  : 'size-[min(32dvh,260px)]',
               ].join(' ')}
             >
+              {/* ring radar: tampil selama loading, memudar saat respons siap */}
+              <RadarRings active={!canClose} rgb={theme.shade} />
+
               {/* bayangan lantai (ukuran ikut gambar) */}
               <motion.div
                 aria-hidden
@@ -369,9 +451,11 @@ export default function AiResponseOverlay({
                   {title}
                 </h1>
 
-                <p className="mt-3 max-w-[300px] text-[11px] leading-5 text-neutral-500 sm:max-w-md sm:text-[12px]">
-                  {subtitle}
-                </p>
+                {subtitle && (
+                  <p className="mt-3 max-w-[300px] text-[11px] leading-5 text-neutral-500 sm:max-w-md sm:text-[12px]">
+                    {subtitle}
+                  </p>
+                )}
 
                 {isProcessing && (
                   <div
@@ -432,14 +516,8 @@ export default function AiResponseOverlay({
             transition={{ duration: 0.6, ease: EASE, delay: 0.35 }}
             className="relative z-20 shrink-0 bg-[#fafaf9]/70 px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-3 backdrop-blur-xl sm:bg-transparent sm:px-8 sm:pb-8 sm:pt-3 sm:backdrop-blur-none"
           >
-            <div className="flex justify-center">
-              <button
-                type="button"
-                onClick={onClose}
-                className="rounded-full border border-black/[0.055] bg-white/80 px-5 py-2.5 text-[10px] font-semibold text-neutral-600 shadow-[0_8px_25px_rgba(0,0,0,0.06)] backdrop-blur-xl transition-colors hover:bg-neutral-900 hover:text-white sm:px-6 sm:py-3"
-              >
-                Back to discussion
-              </button>
+            <div className="flex justify-center text-xs text-neutral-400">
+              <p>● Respons AI bisa membuat kesalahan</p>
             </div>
           </motion.footer>
         )}

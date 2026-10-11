@@ -344,9 +344,9 @@ function HistoryThought({
     >
       <div
         className={[
-          'rounded-[1.35rem] border px-4 py-3.5 transition-all duration-200',
+          'rounded-[1.35rem] border px-4 py-3.5 transition-all duration-200 shadow-md',
           isOwnMessage
-            ? 'border-black/[0.055] bg-neutral-900 text-white'
+            ? 'border-black/[0.055] bg-neutral-100 text-black'
             : 'border-black/[0.045] bg-white text-neutral-800',
         ].join(' ')}
       >
@@ -355,7 +355,7 @@ function HistoryThought({
             className={[
               'text-[8px] font-semibold uppercase tracking-[0.13em]',
               isOwnMessage
-                ? 'text-white/35'
+                ? 'text-black'
                 : 'text-neutral-300',
             ].join(' ')}
           >
@@ -366,7 +366,7 @@ function HistoryThought({
             className={[
               'text-[8px]',
               isOwnMessage
-                ? 'text-white/25'
+                ? 'text-black/25'
                 : 'text-neutral-300',
             ].join(' ')}
           >
@@ -380,7 +380,7 @@ function HistoryThought({
           className={[
             'mt-2.5 whitespace-pre-line break-words text-[11.5px] leading-[1.7]',
             isOwnMessage
-              ? 'text-white/[0.72]'
+              ? 'text-black'
               : 'text-neutral-600',
           ].join(' ')}
         >

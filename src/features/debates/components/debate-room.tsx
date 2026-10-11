@@ -11,12 +11,8 @@ import {
 import {
   ArrowLeft,
   ArrowUpRight,
-  ChevronDown,
-  Gavel,
-  History,
   Loader2,
   RefreshCw,
-  Sparkles,
   X,
 } from 'lucide-react'
 import Link from 'next/link'
@@ -190,10 +186,10 @@ const providerOptions: Array<{
   value: Provider
   label: string
 }> = [
-  { value: 'auto', label: 'Auto' },
-  { value: 'openrouter', label: 'OpenRouter' },
-  { value: 'groq', label: 'Groq' },
-]
+    { value: 'auto', label: 'Auto' },
+    { value: 'openrouter', label: 'OpenRouter' },
+    { value: 'groq', label: 'Groq' },
+  ]
 
 type OrbitPlacement = 'top' | 'left' | 'right' | 'bottom'
 
@@ -312,6 +308,19 @@ function MediatorStage({
   /* saat konfirmasi, menu harus tetap terbuka */
   const expanded = open || confirming
 
+  /* ---------- warna ring radar (ikut persona) ---------- */
+
+  /* ambil class bg-* dari persona (hover:bg-* tidak ikut) */
+  const personaBg = persona.button
+    .split(' ')
+    .find((c) => c.startsWith('bg-'))
+
+  /* Formal = bg-white, tidak kelihatan di latar putih, jadi pakai abu */
+  const ringColor =
+    !personaBg || personaBg === 'bg-white'
+      ? 'bg-neutral-300'
+      : personaBg
+
   /* ---------- state tombol ---------- */
 
   const askBusy = isProcessing || isRequestingAi
@@ -320,6 +329,9 @@ function MediatorStage({
 
   /* slot atas & bawah (Tanya AI + provider) */
   const showVertical = expanded && canUseAi && !confirming
+
+  /* slot kiri & kanan (hilang saat konfirmasi, tombolnya pindah ke bawah teks) */
+  const showSides = expanded && !confirming
 
   /* alasan sebuah tombol nonaktif, tampil sebagai teks (bukan tooltip) */
   const hint =
@@ -381,12 +393,38 @@ function MediatorStage({
         ].join(' ')}
       >
         <div className="relative size-20 sm:size-24">
+          {/* RING RADAR: tanda "bisa diklik", memudar & hilang saat menu terbuka */}
+          <div
+            aria-hidden
+            className={[
+              'pointer-events-none absolute inset-0 transition-[opacity,visibility] duration-300 motion-reduce:hidden',
+              expanded ? 'invisible opacity-0' : 'visible opacity-100',
+            ].join(' ')}
+          >
+            {/* delay negatif: ring kedua langsung mulai di tengah siklus,
+                jadi tidak ada lingkaran statis di awal */}
+            {['0s', '-1.3s'].map((delay) => (
+              <span
+                key={delay}
+                className={`absolute inset-0 animate-ping rounded-full opacity-50 ${ringColor}`}
+                style={{
+                  animationDuration: '2.6s',
+                  animationDelay: delay,
+                }}
+              />
+            ))}
+          </div>
+
+          {/* avatar = satu-satunya tombol buka / tutup menu */}
           <button
             type="button"
             onClick={handleToggle}
-            tabIndex={-1}
-            aria-hidden
-            className=""
+            aria-expanded={expanded}
+            aria-controls={trayId}
+            aria-label={
+              expanded ? 'Tutup menu mediator' : 'Buka menu mediator'
+            }
+            className="relative block size-full cursor-pointer rounded-full transition-transform duration-300 active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-neutral-400"
           >
             <Image
               key={persona.text}
@@ -409,58 +447,43 @@ function MediatorStage({
                 <Loader2 size={12} className="animate-spin" />
               )}
 
-              {askBusy ? 'Duora AI menjawab' : 'Tanya Duora AI'}
+              {askBusy ? 'AI menjawab' : 'Tanya AI'}
             </button>
           </OrbitSlot>
 
-          {/* KIRI: Lihat jawaban (saat konfirmasi jadi "Batal") */}
-          <OrbitSlot placement="left" visible={expanded} delay={60}>
-            {confirming ? (
+          {/* KIRI: Lihat jawaban */}
+          <OrbitSlot placement="left" visible={showSides} delay={60}>
+            <div className="relative">
               <button
                 type="button"
-                onClick={onCancelResolve}
-                disabled={isResolving}
-                className={`${quietPill} px-4`}
+                onClick={handleHistory}
+                disabled={historyEmpty}
+                className={`${pill} px-3.5`}
               >
-                Batal
+                Lihat jawaban
               </button>
-            ) : (
-              <div className="relative">
-                <button
-                  type="button"
-                  onClick={handleHistory}
-                  disabled={historyEmpty}
-                  className={`${pill} px-3.5`}
-                >
-                  Lihat jawaban
-                </button>
 
-                {aiMessageCount ? (
-                  <span className="pointer-events-none absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-neutral-900 px-1 text-[9px] font-semibold tabular-nums text-white">
-                    {aiMessageCount}
-                  </span>
-                ) : null}
-              </div>
-            )}
+              {aiMessageCount ? (
+                <span className="pointer-events-none absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-neutral-900 px-1 text-[9px] font-semibold tabular-nums text-white">
+                  {aiMessageCount}
+                </span>
+              ) : null}
+            </div>
           </OrbitSlot>
 
-          {/* KANAN: Akhiri diskusi (saat konfirmasi jadi "Ya, akhiri") */}
+          {/* KANAN: Akhiri diskusi */}
           <OrbitSlot
             placement="right"
-            visible={expanded && canResolve}
+            visible={showSides && canResolve}
             delay={120}
           >
             <button
               type="button"
               onClick={onResolve}
-              disabled={confirming ? isResolving : isResolveDisabled}
-              className={`${pill} px-3.5 ${confirming ? 'font-semibold' : ''}`}
+              disabled={isResolveDisabled}
+              className={`${pill} px-3.5`}
             >
-              {confirming && isResolving && (
-                <Loader2 size={12} className="animate-spin" />
-              )}
-
-              {confirming ? 'Ya, akhiri' : 'Akhiri diskusi'}
+              Akhiri diskusi
             </button>
           </OrbitSlot>
 
@@ -504,27 +527,68 @@ function MediatorStage({
         </div>
       </div>
 
-      {/* 2. NAMA */}
-      <p className="mt-2 text-xs font-semibold text-neutral-800">
-        {persona.text} mediator
-      </p>
+      {/* 2. LABEL PERSONA + HINT (mengecil & hilang saat menu terbuka) */}
+      <div
+        className={[
+          'grid w-full mt-10 transition-[grid-template-rows,opacity,visibility] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none',
+          expanded
+            ? 'invisible grid-rows-[0fr] opacity-0'
+            : 'visible grid-rows-[1fr] opacity-100',
+        ].join(' ')}
+      >
+        <div className="min-h-0 overflow-hidden">
+          <div className="flex flex-col items-center pt-2">
+            <p className="text-xs font-semibold text-neutral-800">
+              {persona.text} mediator
+            </p>
 
-      {/* 3. TEKS BANTUAN / PERTANYAAN KONFIRMASI */}
+            <p className="mt-1 text-[10.5px] text-neutral-400">
+              Tap avatar AI untuk buka menu
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* 3. KONFIRMASI AKHIRI DISKUSI: teks, lalu tombolnya di bawahnya */}
       {confirming ? (
-        <div
-          role="status"
-          className="mt-2 max-w-[260px] animate-[debate-content-in_0.5s_cubic-bezier(0.22,1,0.36,1)_both] text-center motion-reduce:animate-none"
-        >
-          <p className="text-[12px] font-semibold text-neutral-800">
-            Akhiri diskusi ini?
-          </p>
+        <div className="mt-2 flex max-w-[260px] animate-[debate-content-in_0.5s_cubic-bezier(0.22,1,0.36,1)_both] flex-col items-center motion-reduce:animate-none">
+          <div role="status" className="text-center">
+            <p className="text-[12px] font-semibold text-neutral-800">
+              Akhiri diskusi ini?
+            </p>
 
-          <p className="mt-1 text-[10.5px] leading-4 text-neutral-500">
-            Diskusi akan ditutup dan Duora AI akan menyiapkan putusan
-            akhir untuk kalian berdua.
-          </p>
+            <p className="mt-1 text-[10.5px] leading-4 text-neutral-500">
+              Diskusi akan ditutup dan Duora AI akan menyiapkan
+              putusan akhir untuk kalian berdua.
+            </p>
+          </div>
+
+          <div className="mt-3.5 flex items-center justify-center gap-2">
+            <button
+              type="button"
+              onClick={onCancelResolve}
+              disabled={isResolving}
+              className={`${quietPill} px-5`}
+            >
+              Batal
+            </button>
+
+            <button
+              type="button"
+              onClick={onResolve}
+              disabled={isResolving}
+              className={`${pill} px-4 font-semibold`}
+            >
+              {isResolving && (
+                <Loader2 size={12} className="animate-spin" />
+              )}
+
+              Ya, akhiri
+            </button>
+          </div>
         </div>
       ) : expanded && hint ? (
+        /* 4. ALASAN TOMBOL NONAKTIF */
         <p
           key={hint}
           role="status"
@@ -533,17 +597,6 @@ function MediatorStage({
           {hint}
         </p>
       ) : null}
-
-      {/* 4. TOMBOL BUKA / TUTUP MENU */}
-      <button
-        type="button"
-        onClick={handleToggle}
-        aria-expanded={expanded}
-        aria-controls={trayId}
-        className={`${pill} mt-4 px-4`}
-      >
-        {expanded ? 'Sembunyikan menu' : 'Lihat menu'}
-      </button>
     </section>
   )
 }
@@ -702,7 +755,7 @@ function ActiveBubble({
               {message.content}
             </p>
           ) : (
-            <p className="mt-5  text-[16px] italic leading-[1.7] text-neutral-300 sm:text-[17px]">
+            <p className="mt-5  text-sm leading-[1.7] text-neutral-300 sm:text-[17px]">
               {emptyText}
             </p>
           )}
@@ -836,6 +889,7 @@ export default function DebateRoom({
   const [showAiOverlay, setShowAiOverlay] = useState(false)
   const [aiOverlayMessageId, setAiOverlayMessageId] =
     useState<string | null>(null)
+  const [isAwaitingVerdict, setIsAwaitingVerdict] = useState(false)
 
   /* AI request (dipindah dari composer) */
   const [selectedProvider, setSelectedProvider] =
@@ -917,6 +971,11 @@ export default function DebateRoom({
 
   const isPendingVerdict =
     debate.status === 'pending_verdict'
+
+  const isWaitingForVerdict = isAwaitingVerdict && !finalVerdictMessage
+
+  const isOverlayProcessing = isAiProcessing || isWaitingForVerdict
+  const isOverlayPendingVerdict = isPendingVerdict || isWaitingForVerdict
 
   const aiRequester = isAiProcessing
     ? members.find(
@@ -1034,11 +1093,9 @@ export default function DebateRoom({
 
   const aiMemoryMessages = [...aiMessages].reverse()
 
-  const overlayMessage =
-    messages?.find(
-      (message) =>
-        message.id === aiOverlayMessageId,
-    ) ?? latestAiMessage
+  const overlayMessage = messages?.find(
+    (message) => message.id === aiOverlayMessageId,
+  )
 
   const hasNewMessageSinceLastAiComment =
     !latestAiCommentMessage ||
@@ -1084,26 +1141,28 @@ export default function DebateRoom({
 
   const activeEmptyText =
     activeSide === 'left'
-      ? "You haven't shared a thought yet."
-      : `${partnerBName} hasn't shared a thought yet.`
+      ? "Kamu belum mengirim pesan."
+      : `${partnerBName} belum mengirim pesan.`
 
   const handleResolve = () => {
-    if (!isConfirmingResolve) {
-      setIsConfirmingResolve(true)
-      return
-    }
-
-    setShowAiOverlay(true)
-    setAiOverlayMessageId(null)
-
-    resolveDebateMutation.mutate(debateId, {
-      onError: (error) => {
-        alert(error.message)
-        setIsConfirmingResolve(false)
-        setShowAiOverlay(false)
-      },
-    })
+  if (!isConfirmingResolve) {
+    setIsConfirmingResolve(true)
+    return
   }
+
+  setIsAwaitingVerdict(true)
+  setShowAiOverlay(true)
+  setAiOverlayMessageId(null)
+
+  resolveDebateMutation.mutate(debateId, {
+    onError: (error) => {
+      alert(error.message)
+      setIsConfirmingResolve(false)
+      setIsAwaitingVerdict(false)
+      setShowAiOverlay(false)
+    },
+  })
+}
 
   /* ---------- AI request handlers ---------- */
 
@@ -1159,11 +1218,11 @@ export default function DebateRoom({
     }
 
     if (!hasUserMessage) {
-      return 'Send a message before requesting AI'
+      return 'kirim pesan sebelum tanya AI'
     }
 
     if (!hasNewMessageSinceLastAiComment) {
-      return 'Send a new message before requesting another AI comment'
+      return 'kirim pesan sebelum tanya AI lagi'
     }
 
     return undefined
@@ -1373,7 +1432,7 @@ export default function DebateRoom({
                     </>
                   ) : (
                     <div className="px-4 text-center">
-                      <h2 className=" text-[26px] leading-tight tracking-[-0.025em] text-neutral-900 sm:text-[30px]">
+                      <h2 className=" text-[26px] text-neutral-900 sm:text-[30px]">
                         Start with what you feel.
                       </h2>
 
@@ -1457,8 +1516,8 @@ export default function DebateRoom({
       {showAiOverlay && (
         <AiResponseOverlay
           message={overlayMessage}
-          isProcessing={isAiProcessing}
-          isPendingVerdict={isPendingVerdict}
+          isProcessing={isOverlayProcessing}
+          isPendingVerdict={isOverlayPendingVerdict}
           persona={debate.ai_persona}
           personaName={
             personaLabel[debate.ai_persona].text
