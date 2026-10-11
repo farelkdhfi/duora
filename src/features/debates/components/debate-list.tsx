@@ -52,6 +52,8 @@ type Debate = NonNullable<
   ReturnType<typeof useDebates>['data']
 >[number]
 
+const LIST_PAGE_SIZE = 10
+
 const statusConfig = {
   active: {
     label: 'Active',
@@ -863,11 +865,13 @@ function CreateDebateButton({
   disabled,
   used,
   max,
+  floating = false,
 }: {
   onClick: () => void
   disabled: boolean
   used: number
   max: number | null
+  floating?: boolean
 }) {
   return (
     <button
@@ -879,7 +883,10 @@ function CreateDebateButton({
           ? `Monthly limit reached (${used}/${max})`
           : 'Start a new debate'
       }
-      className={`mx-auto mt-4 flex h-12 w-40 shrink-0 items-center justify-center gap-1.5 rounded-full text-sm font-semibold transition-all duration-200 sm:w-[340px] ${disabled
+      className={`mx-auto flex h-12 w-40 shrink-0 items-center justify-center gap-1.5 rounded-full text-sm font-semibold transition-all duration-200 sm:w-[340px] ${floating
+        ? 'fixed bottom-6 left-1/2 -translate-x-1/2 z-20 mt-6 shadow-[0_12px_30px_-10px_rgba(0,0,0,0.35)]'
+        : 'mt-4'
+        } ${disabled
           ? 'cursor-not-allowed bg-neutral-200 text-neutral-400'
           : 'bg-neutral-800 text-white hover:bg-black active:scale-[0.98]'
         }`}
@@ -890,6 +897,58 @@ function CreateDebateButton({
       />
       {disabled ? 'Limit reached' : 'Create debate'}
     </button>
+  )
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Pagination untuk list mode                                                */
+/* -------------------------------------------------------------------------- */
+
+function ListPagination({
+  page,
+  totalPages,
+  onChange,
+}: {
+  page: number
+  totalPages: number
+  onChange: (page: number) => void
+}) {
+  if (totalPages <= 1) {
+    return null
+  }
+
+  return (
+    <div className="mt-5 flex items-center justify-center gap-3 pb-20">
+      <button
+        type="button"
+        onClick={() => onChange(page - 1)}
+        disabled={page <= 1}
+        aria-label="Previous page"
+        className="flex size-8 items-center justify-center rounded-full border border-black/[0.06] bg-white text-neutral-500 transition hover:bg-neutral-50 hover:text-neutral-800 disabled:cursor-not-allowed disabled:opacity-40"
+      >
+        <ChevronLeft
+          size={14}
+          strokeWidth={1.8}
+        />
+      </button>
+
+      <span className="text-xs font-medium text-neutral-400">
+        {page} / {totalPages}
+      </span>
+
+      <button
+        type="button"
+        onClick={() => onChange(page + 1)}
+        disabled={page >= totalPages}
+        aria-label="Next page"
+        className="flex size-8 items-center justify-center rounded-full border border-black/[0.06] bg-white text-neutral-500 transition hover:bg-neutral-50 hover:text-neutral-800 disabled:cursor-not-allowed disabled:opacity-40"
+      >
+        <ChevronRight
+          size={14}
+          strokeWidth={1.8}
+        />
+      </button>
+    </div>
   )
 }
 
@@ -919,6 +978,8 @@ export default function DebateList({
   const [viewMode, setViewMode] =
     useState<ViewMode>('cards')
 
+  const [listPage, setListPage] = useState(1)
+
   const [contentEl, setContentEl] =
     useState<HTMLDivElement | null>(null)
 
@@ -938,6 +999,16 @@ export default function DebateList({
     }
 
     setShowCreate(true)
+  }
+
+  const handleListPageChange = (nextPage: number) => {
+    setListPage(nextPage)
+
+    // balik ke atas list setiap ganti halaman (hapus kalau tidak mau)
+    contentEl?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
+    })
   }
 
   if (isLoading) {
@@ -991,6 +1062,19 @@ export default function DebateList({
       )
     }) ?? []
 
+  const totalPages = Math.max(
+    1,
+    Math.ceil(filteredDebates.length / LIST_PAGE_SIZE),
+  )
+
+  // di-clamp supaya aman kalau debat dihapus dan halaman terakhir jadi kosong
+  const currentPage = Math.min(listPage, totalPages)
+
+  const pagedDebates = filteredDebates.slice(
+    (currentPage - 1) * LIST_PAGE_SIZE,
+    currentPage * LIST_PAGE_SIZE,
+  )
+
   const filterOptions: {
     value: DebateFilter
     label: string
@@ -1026,9 +1110,10 @@ export default function DebateList({
               <button
                 key={filter.value}
                 type="button"
-                onClick={() =>
+                onClick={() => {
                   setActiveFilter(filter.value)
-                }
+                  setListPage(1)
+                }}
                 className={`whitespace-nowrap rounded-full px-3 py-1.5 text-sm font-semibold transition-all duration-200 sm:px-3.5 sm:text-xs ${isActive
                   ? 'bg-white text-neutral-800 shadow-[0_2px_8px_-4px_rgba(0,0,0,0.2)]'
                   : 'text-neutral-400 hover:text-neutral-600'
@@ -1129,25 +1214,46 @@ export default function DebateList({
               relationshipId={relationshipId}
             />
           ) : (
-            <div className="space-y-2.5">
-              {filteredDebates.map((debate) => (
-                <DebateListItem
-                  key={debate.id}
-                  debate={debate}
-                  relationshipId={relationshipId}
-                />
-              ))}
-            </div>
+            <>
+              <div className="space-y-2.5">
+                {pagedDebates.map((debate) => (
+                  <DebateListItem
+                    key={debate.id}
+                    debate={debate}
+                    relationshipId={relationshipId}
+                  />
+                ))}
+              </div>
+
+              <ListPagination
+                page={currentPage}
+                totalPages={totalPages}
+                onChange={handleListPageChange}
+              />
+            </>
           ))}
 
-        {/* CREATE DEBATE (selalu tampil di card mode, list mode, & empty state) */}
+        {/* CREATE DEBATE (card mode: inline di bawah carousel) */}
+        {viewMode === 'cards' && (
+          <CreateDebateButton
+            onClick={handleCreateClick}
+            disabled={isRoomLimitReached}
+            used={roomsThisMonth ?? 0}
+            max={maxRoomsPerMonth}
+          />
+        )}
+      </div>
+
+      {/* CREATE DEBATE (list mode: sticky, selalu terlihat saat scroll) */}
+      {viewMode === 'list' && (
         <CreateDebateButton
+          floating
           onClick={handleCreateClick}
           disabled={isRoomLimitReached}
           used={roomsThisMonth ?? 0}
           max={maxRoomsPerMonth}
         />
-      </div>
+      )}
     </div>
   )
 }
