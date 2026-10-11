@@ -9,7 +9,8 @@ import { useMyRelationshipDetails } from "@/features/relationship/queries";
 import { useGetMyProfile } from "@/features/profiles/queries";
 import { useActiveSession } from "@/features/qna/queries";
 import { useQnaRealtime } from "@/features/qna/use-qna-realtime";
-import { AnswerForm } from "@/features/qna/components/answer-form";
+import { QuestionCard } from "@/features/qna/components/question-card";
+import { AnswerInput } from "@/features/qna/components/answer-input";
 import { QnaReveal } from "@/features/qna/components/qna-reveal";
 
 const GRACE_PERIOD_MS = 2000;
@@ -32,6 +33,9 @@ export default function QnaSessionPage() {
   >(null);
 
   const [showEmptyState, setShowEmptyState] = useState(false);
+
+  // Status shuffle kartu pertanyaan, dipakai untuk mengunci input jawaban
+  const [isShuffling, setIsShuffling] = useState(false);
 
   const graceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -92,7 +96,7 @@ export default function QnaSessionPage() {
 
   if (isLoading) {
     return (
-      <main className="min-h-dvh w-full bg-[#fafaf9] px-5 py-7 sm:px-8 sm:py-10">
+      <main className="min-h-dvh w-full bg-[#ffffff] px-5 py-7 sm:px-8 sm:py-10">
         <div className="mx-auto flex min-h-[calc(100dvh-3.5rem)] w-full max-w-3xl flex-col">
           <header className="flex shrink-0 items-start justify-between">
             <div>
@@ -115,7 +119,7 @@ export default function QnaSessionPage() {
 
   if (!relationshipDetails || !profile) {
     return (
-      <main className="flex min-h-dvh items-center justify-center bg-[#fafaf9] px-6">
+      <main className="flex min-h-dvh items-center justify-center bg-[#fff] px-6">
         <div className="max-w-sm text-center">
           <div className="mx-auto flex size-12 items-center justify-center rounded-2xl bg-[#1e1318]">
             <span className="text-sm text-white">♡</span>
@@ -136,23 +140,10 @@ export default function QnaSessionPage() {
 
   return (
     <main className="relative min-h-dvh w-full overflow-hidden bg-[#ffffff]">
-      {/* Ambient background */}
-      <div
-        aria-hidden
-        className="pointer-events-none fixed inset-0 z-0"
-      >
-        <div className="absolute left-1/2 top-[38%] size-[440px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-rose-200/[0.12] blur-[130px]" />
-
-        <div className="absolute left-[12%] top-[18%] size-[260px] rounded-full bg-pink-200/[0.07] blur-[110px]" />
-
-        <div className="absolute bottom-[-120px] right-[8%] size-[320px] rounded-full bg-purple-200/[0.06] blur-[120px]" />
-
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.45)_0%,rgba(255,255,255,0)_68%)]" />
-      </div>
-
-      <div className="relative z-10 flex min-h-dvh w-full flex-col px-5 py-7 sm:px-8 sm:py-10">
+      {/* Tanpa padding di wrapper. Tiap section mengatur jaraknya sendiri. */}
+      <div className="relative z-10 flex min-h-dvh w-full flex-col">
         {/* Header */}
-        <header className="flex shrink-0 items-start justify-between gap-5">
+        <header className="flex shrink-0 items-start justify-between gap-5 px-5 pt-7 sm:px-8 sm:pt-10">
           <div>
             <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-neutral-400">
               Q&A for two
@@ -183,7 +174,7 @@ export default function QnaSessionPage() {
 
           <div className="relative z-10 flex w-full max-w-3xl items-center justify-center">
             {pendingRevealSessionId ? (
-              <div className="w-full max-w-2xl">
+              <div className="w-full max-w-[46rem] px-5 pb-7 sm:px-8 sm:pb-10">
                 <QnaReveal
                   sessionId={pendingRevealSessionId}
                   currentUserId={profile.id}
@@ -192,11 +183,22 @@ export default function QnaSessionPage() {
                 />
               </div>
             ) : activeSession ? (
-              <div className="w-full max-w-2xl">
-                <AnswerForm session={activeSession} />
+              // 46rem = 672px (max-w-2xl) + 2 x 32px inset, jadi kartu di desktop
+              // tetap selebar 672px seperti sebelumnya.
+              <div className="w-full max-w-[46rem]">
+                {/* Section kartu: tanpa padding */}
+                <QuestionCard
+                  session={activeSession}
+                  onShufflingChange={setIsShuffling}
+                />
+
+                {/* Section input: punya padding sendiri */}
+                <div className="px-5 pb-7 sm:px-8 sm:pb-10">
+                  <AnswerInput session={activeSession} disabled={isShuffling} />
+                </div>
               </div>
             ) : showEmptyState ? (
-              <div className="flex w-full max-w-md flex-col items-center px-5 text-center">
+              <div className="flex w-full max-w-md flex-col items-center px-5 pb-7 text-center sm:pb-10">
                 <div className="flex items-center justify-center gap-3">
                   <span className="h-px w-8 bg-black/10" />
 
@@ -227,7 +229,7 @@ export default function QnaSessionPage() {
                 </button>
               </div>
             ) : (
-              <div className="flex flex-col items-center text-center">
+              <div className="flex flex-col items-center px-5 pb-7 text-center sm:pb-10">
                 <div className="flex items-center gap-3">
                   <span className="h-px w-8 bg-black/10" />
 
