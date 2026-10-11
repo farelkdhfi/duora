@@ -205,11 +205,10 @@ export function CountdownList({
                                     scrollToIndex(index)
                                 }
                                 aria-label={`Countdown ${index + 1}`}
-                                className={`h-1.5 rounded-full transition-all duration-300 ${
-                                    index === activeIndex
+                                className={`h-1.5 rounded-full transition-all duration-300 ${index === activeIndex
                                         ? "w-5 bg-neutral-800"
                                         : "w-1.5 bg-neutral-200"
-                                }`}
+                                    }`}
                             />
                         ))}
                     </div>
@@ -229,24 +228,16 @@ export function CountdownList({
                             strokeWidth={1.8}
                         />
                     </button>
-
-                    {/* Create */}
-                    <button
-                        type="button"
-                        onClick={onCreate}
-                        disabled={isLimitReached}
-                        className="flex h-11 shrink-0 items-center gap-2 rounded-full bg-neutral-900 px-4 text-[11px] font-semibold text-white shadow-[0_12px_30px_-12px_rgba(0,0,0,0.35)] transition hover:bg-neutral-800 active:scale-[0.97] disabled:cursor-not-allowed disabled:bg-neutral-300"
-                    >
-                        <Plus
-                            size={14}
-                            strokeWidth={2.2}
-                        />
-
-                        <span className="hidden sm:inline">
-                            Buat
-                        </span>
-                    </button>
                 </div>
+
+                <button
+                    type="button"
+                    onClick={onCreate}
+                    disabled={isLimitReached}
+                    className="flex h-11 mt-2 w-full text-center justify-center mx-auto shrink-0 items-center gap-2 rounded-full bg-neutral-800 px-4 text-sm font-semibold text-white shadow-[0_12px_30px_-12px_rgba(0,0,0,0.35)] transition hover:bg-neutral-800 active:scale-[0.97] disabled:cursor-not-allowed disabled:bg-neutral-300"
+                >
+                    Buat countdown
+                </button>
             </div>
         </div>
     );

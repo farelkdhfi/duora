@@ -5,6 +5,7 @@ import { Sparkles } from "lucide-react";
 import Header from "@/components/layout/header";
 import { useMyRelationshipDetails } from "@/features/relationship/queries";
 import { WrappedGenerator } from "@/features/wrapped/components/wrapped-generator";
+import HeaderWithoutShell from "@/components/layout/header-without-shell";
 
 export default function WrappedPage() {
   const { data: relationshipDetails, isLoading } =
@@ -93,15 +94,12 @@ export default function WrappedPage() {
   }
 
   return (
-    <div className="relative overflow-x-hidden">
+    <div className="relative overflow-x-hidden p-4">
       <div className="pointer-events-none absolute -left-40 top-20 size-96 rounded-full bg-pink-200/15 blur-[140px]" />
 
       <div className="pointer-events-none absolute -right-40 bottom-20 size-96 rounded-full bg-blue-200/15 blur-[140px]" />
 
-      <Header
-        title="wrapped"
-        description="Turn your shared moments into something worth keeping."
-      />
+      <HeaderWithoutShell title="Wrapped" text="Share the moment!" />
 
       <div className="relative mt-6 sm:mt-8">
         <WrappedGenerator

@@ -5,6 +5,7 @@ import { ChartBarDecreasing } from 'lucide-react'
 import DebateList from '@/features/debates/components/debate-list'
 import { useMyRelationshipDetails } from '@/features/relationship/queries'
 import Header from '@/components/layout/header'
+import HeaderWithoutShell from '@/components/layout/header-without-shell'
 
 export default function DebatesPage() {
   const { data, isLoading } = useMyRelationshipDetails()
@@ -46,7 +47,7 @@ export default function DebatesPage() {
   return (
     <div className="relative flex min-h-full flex-col overflow-hidden p-4 sm:p-5 md:p-6">
       <div className="relative flex flex-1 flex-col">
-        <Header title="AI Debates" description="Resolve disagreements with a neutral AI mediator." />
+        <HeaderWithoutShell title='AI Debates' text='Resolve disagreements' />
         <section className="mt-6 flex flex-1 flex-col sm:mt-8">
           <DebateList relationshipId={relationshipId} />
         </section>

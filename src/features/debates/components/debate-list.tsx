@@ -284,8 +284,8 @@ function DebateListItem({
             >
               <span
                 className={`size-1.5 rounded-full ${status.dot} ${debate.status === 'active'
-                    ? 'animate-pulse'
-                    : ''
+                  ? 'animate-pulse'
+                  : ''
                   }`}
               />
 
@@ -514,9 +514,8 @@ function DebateCard({
             role="img"
             aria-label={status.label}
             title={status.label}
-            className={`size-2 rounded-full ${status.dot} ${
-              debate.status === 'active' ? 'animate-pulse' : ''
-            }`}
+            className={`size-2 rounded-full ${status.dot} ${debate.status === 'active' ? 'animate-pulse' : ''
+              }`}
           />
 
           <span className="text-xs text-neutral-400">
@@ -554,7 +553,6 @@ function DebateCarousel({
 
   const total = debates.length
   const currentIndex = Math.min(activeIndex, total - 1)
-  const activeDebate = debates[currentIndex]
 
   const updateScrollState = useCallback(() => {
     const scroller = scrollerRef.current
@@ -668,8 +666,8 @@ function DebateCarousel({
                   onClick={() => scrollToIndex(index)}
                   aria-label={`Go to debate ${index + 1}`}
                   className={`h-1.5 rounded-full transition-all duration-300 ${index === currentIndex
-                      ? 'w-5 bg-neutral-800'
-                      : 'w-1.5 bg-neutral-200 hover:bg-neutral-300'
+                    ? 'w-5 bg-neutral-800'
+                    : 'w-1.5 bg-neutral-200 hover:bg-neutral-300'
                     }`}
                 />
               ))}
@@ -720,14 +718,7 @@ function DebateCarousel({
         </div>
       )}
 
-      {/* OPEN DEBATE (membuka debat yang sedang aktif di carousel) */}
-      <Link
-        href={`/debates/${activeDebate.id}`}
-        className={`mx-auto w-40 flex h-12 items-center justify-center gap-1.5 rounded-full bg-neutral-800 text-sm font-semibold text-white transition-all duration-200 hover:bg-black active:scale-[0.98] sm:w-[340px] ${total > 1 ? 'mt-4' : ''
-          }`}
-      >
-        Open debate
-      </Link>
+
     </div>
   )
 }
@@ -774,8 +765,8 @@ function ViewModeToggle({
             aria-pressed={isActive}
             title={label}
             className={`flex size-7 items-center justify-center rounded-full transition-all duration-200 ${isActive
-                ? 'bg-white text-neutral-800 shadow-[0_2px_8px_-4px_rgba(0,0,0,0.2)]'
-                : 'text-neutral-400 hover:text-neutral-600'
+              ? 'bg-white text-neutral-800 shadow-[0_2px_8px_-4px_rgba(0,0,0,0.2)]'
+              : 'text-neutral-400 hover:text-neutral-600'
               }`}
           >
             <Icon
@@ -863,6 +854,44 @@ function useFillViewportHeight(
   return height
 }
 
+/* -------------------------------------------------------------------------- */
+/*  Create debate button (tampil di card mode & list mode)                    */
+/* -------------------------------------------------------------------------- */
+
+function CreateDebateButton({
+  onClick,
+  disabled,
+  used,
+  max,
+}: {
+  onClick: () => void
+  disabled: boolean
+  used: number
+  max: number | null
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={disabled}
+      title={
+        disabled
+          ? `Monthly limit reached (${used}/${max})`
+          : 'Start a new debate'
+      }
+      className={`mx-auto mt-4 flex h-12 w-40 shrink-0 items-center justify-center gap-1.5 rounded-full text-sm font-semibold transition-all duration-200 sm:w-[340px] ${disabled
+          ? 'cursor-not-allowed bg-neutral-200 text-neutral-400'
+          : 'bg-neutral-800 text-white hover:bg-black active:scale-[0.98]'
+        }`}
+    >
+      <Plus
+        size={15}
+        strokeWidth={1.8}
+      />
+      {disabled ? 'Limit reached' : 'Create debate'}
+    </button>
+  )
+}
 
 /* -------------------------------------------------------------------------- */
 /*  Main                                                                      */
@@ -986,8 +1015,8 @@ export default function DebateList({
 
   return (
     <div className="flex flex-1 flex-col">
-      {/* TOOLBAR */}
-      <div className="mb-5 flex items-center justify-between gap-2">
+      {/* TOOLBAR (filter saja) */}
+      <div className="mb-5 flex items-center">
         <div className="flex min-w-0 items-center gap-1 overflow-x-auto rounded-full bg-neutral-100/80 p-1 scrollbar-none">
           {filterOptions.map((filter) => {
             const isActive =
@@ -1001,8 +1030,8 @@ export default function DebateList({
                   setActiveFilter(filter.value)
                 }
                 className={`whitespace-nowrap rounded-full px-3 py-1.5 text-sm font-semibold transition-all duration-200 sm:px-3.5 sm:text-xs ${isActive
-                    ? 'bg-white text-neutral-800 shadow-[0_2px_8px_-4px_rgba(0,0,0,0.2)]'
-                    : 'text-neutral-400 hover:text-neutral-600'
+                  ? 'bg-white text-neutral-800 shadow-[0_2px_8px_-4px_rgba(0,0,0,0.2)]'
+                  : 'text-neutral-400 hover:text-neutral-600'
                   }`}
               >
                 {filter.label}
@@ -1010,31 +1039,6 @@ export default function DebateList({
             )
           })}
         </div>
-
-        <button
-          type="button"
-          onClick={handleCreateClick}
-          disabled={isRoomLimitReached}
-          aria-label={
-            isRoomLimitReached
-              ? 'Monthly debate room limit reached'
-              : 'Start a new debate'
-          }
-          title={
-            isRoomLimitReached
-              ? `Monthly limit reached (${roomsThisMonth ?? 0}/${maxRoomsPerMonth})`
-              : 'Start a new debate'
-          }
-          className={`flex size-9 shrink-0 items-center justify-center rounded-full text-white transition-all duration-200 ${isRoomLimitReached
-              ? 'cursor-not-allowed bg-neutral-200 text-neutral-400'
-              : 'bg-neutral-800 hover:scale-105 hover:bg-black active:scale-95'
-            }`}
-        >
-          <Plus
-            size={15}
-            strokeWidth={1.8}
-          />
-        </button>
       </div>
 
       <CreateDebateModal
@@ -1043,9 +1047,7 @@ export default function DebateList({
         onClose={() => setShowCreate(false)}
       />
 
-      {/* CONTENT (di mode card: berada di tengah layar) */}
-      {/* CONTENT (di mode card: penuh sampai bawah layar, isi di tengah) */}
-            {/* INFO + VIEW TOGGLE (tetap di atas, tidak ikut ditengahkan) */}
+      {/* INFO + VIEW TOGGLE (tetap di atas, tidak ikut ditengahkan) */}
       <div className="mb-3 flex items-center justify-between px-1">
         <p className="text-xs text-neutral-400">
           {filteredDebates.length}{' '}
@@ -1074,9 +1076,8 @@ export default function DebateList({
             ? { minHeight: fillHeight }
             : undefined
         }
-        className={`flex flex-col ${
-          viewMode === 'cards' ? 'justify-center' : ''
-        }`}
+        className={`flex flex-col ${viewMode === 'cards' ? 'justify-center' : ''
+          }`}
       >
         {/* EMPTY STATE */}
         {!filteredDebates.length && (
@@ -1138,6 +1139,14 @@ export default function DebateList({
               ))}
             </div>
           ))}
+
+        {/* CREATE DEBATE (selalu tampil di card mode, list mode, & empty state) */}
+        <CreateDebateButton
+          onClick={handleCreateClick}
+          disabled={isRoomLimitReached}
+          used={roomsThisMonth ?? 0}
+          max={maxRoomsPerMonth}
+        />
       </div>
     </div>
   )

@@ -8,6 +8,7 @@ import { useMySubscription } from "@/features/subscription/queries";
 import { CreateCountdownForm } from "@/features/countdown/components/create-countdown-form";
 import { CountdownList } from "@/features/countdown/components/countdown-list";
 import { useCountdowns } from "@/features/countdown/queries";
+import HeaderWithoutShell from "@/components/layout/header-without-shell";
 
 export default function CountdownPage() {
     const [isFormOpen, setIsFormOpen] = useState(false);
@@ -104,22 +105,11 @@ export default function CountdownPage() {
     };
 
     return (
-        <main className="relative min-h-[100svh] overflow-hidden">
+        <main className="relative min-h-[100svh] overflow-hidden p-4">
             {/* Top minimal navigation */}
-            <div className="relative z-10 flex items-center justify-between px-5 py-5 sm:px-8 sm:py-7">
-                <div>
-                    <h1 className="mt-1 text-sm font-semibold tracking-[-0.025em] text-neutral-700 sm:text-base">
-                        Countdown
-                    </h1>
-                </div>
-
-                {activeCountdownsCount > 0 && (
-                    <div className="rounded-full border border-neutral-200/80 bg-white/70 px-3 py-1.5 text-[10px] font-medium text-neutral-400 shadow-sm backdrop-blur">
-                        {activeCountdownsCount} aktif
-                    </div>
-                )}
+            <div className="mb-5">
+                <HeaderWithoutShell title="countdown" text="Remember your meet!" />
             </div>
-
             <div className="relative z-10 flex min-h-[calc(100svh-84px)] flex-col">
                 <CountdownList
                     relationshipId={relationship.id}
