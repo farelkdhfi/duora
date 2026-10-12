@@ -16,15 +16,16 @@ import type {
   ScreenTimeWrappedSummary,
 } from "../../types";
 
-import happyEmot from "@/assets/emoticon/happy-emot.png";
-import neutralEmot from "@/assets/emoticon/neutral-emot.png";
-import sadEmot from "@/assets/emoticon/sad-emot.png";
-import stressedEmot from "@/assets/emoticon/stressed-emot.png";
-import tiredEmot from "@/assets/emoticon/tired-emot.png";
-import logoImg from "@/assets/duora-logo3.png";
+import happyEmot from "@/assets/emoticon/happy-fluffy.webp";
+import neutralEmot from "@/assets/emoticon/neutral-fluffy.webp";
+import sadEmot from "@/assets/emoticon/sad-fluffy.png";
+import stressedEmot from "@/assets/emoticon/stressed-fluffy-2.webp";
+import tiredEmot from "@/assets/emoticon/tired-fluffy-2.webp";
+import logoImg from "@/assets/logo.png";
 
 import { TierIcon } from "@/features/screen-time/components/tier-icon";
 import { formatHours } from "@/features/screen-time/tiers";
+import { useIconStyle } from "@/features/screen-time/use-icon-style";
 
 import { WrappedCard } from "../wrapped-card";
 
@@ -86,6 +87,8 @@ export const WrappedCardSoft = forwardRef<
     const moodImage = topMood
       ? moodImages[topMood.mood] ?? happyEmot
       : happyEmot;
+
+    const { style: iconStyle } = useIconStyle();
 
     return (
       <WrappedCard ref={ref}>
@@ -188,8 +191,9 @@ export const WrappedCardSoft = forwardRef<
 
                     <TierIcon
                       level={screenTimeSummary.tierLevel}
-                      theme={screenTimeSummary.iconTheme}
-                      size={46}
+                      theme={iconStyle.theme ?? screenTimeSummary.iconTheme}
+                      size={80}
+                      color={iconStyle.color}
                     />
                   </div>
                 )}

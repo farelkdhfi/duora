@@ -1,12 +1,8 @@
 "use client";
 
 import { forwardRef } from "react";
-import {
-  ArrowRight,
-  CalendarDays,
-  MapPin,
-  Plane,
-} from "lucide-react";
+import Image from "next/image";
+import { ArrowRight, CalendarDays, MapPin } from "lucide-react";
 
 import type { MeetupCountdown } from "../types";
 import { useTemplatePreference } from "@/features/share-template/queries";
@@ -14,8 +10,7 @@ import {
   resolveTemplateColors,
   getCustomGradientStyle,
 } from "@/features/share-template/utils";
-import logoImg from '@/assets/duora-logo3.png'
-import Image from "next/image";
+import logoImg from "@/assets/duora-logo3.png";
 
 interface CountdownShareCardProps {
   countdown: MeetupCountdown;
@@ -30,6 +25,13 @@ interface CountdownShareCardProps {
   partnerBName?: string;
 }
 
+/**
+ * Kartu share fixed 360 × 640 (9:16).
+ * Export 3x → 1080 × 1920 px.
+ *
+ * Semua ukuran memakai px tetap, tanpa breakpoint, vw/vh, atau aspect-ratio,
+ * jadi tampilannya identik di semua device.
+ */
 export const CountdownShareCard = forwardRef<
   HTMLDivElement,
   CountdownShareCardProps
@@ -44,81 +46,69 @@ export const CountdownShareCard = forwardRef<
     },
     ref
   ) => {
-    const { data: preference } =
-      useTemplatePreference(relationshipId);
+    const { data: preference } = useTemplatePreference(relationshipId);
 
-    const { gradientClass } =
-      resolveTemplateColors(preference ?? null);
+    const { gradientClass } = resolveTemplateColors(preference ?? null);
 
-    const customStyle =
-      getCustomGradientStyle(preference ?? null);
+    const customStyle = getCustomGradientStyle(preference ?? null);
 
-    const meetupDate = new Date(
-      countdown.meetup_date
-    );
+    const meetupDate = new Date(countdown.meetup_date);
 
-    const formattedDate =
-      meetupDate.toLocaleDateString("id-ID", {
-        day: "numeric",
-        month: "long",
-        year: "numeric",
-      });
+    const formattedDate = meetupDate.toLocaleDateString("id-ID", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    });
 
-    const formattedTime =
-      meetupDate.toLocaleTimeString("id-ID", {
-        hour: "2-digit",
-        minute: "2-digit",
-      });
+    const formattedTime = meetupDate.toLocaleTimeString("id-ID", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
 
-    const formattedDay =
-      meetupDate.toLocaleDateString("id-ID", {
-        weekday: "long",
-      });
+    const formattedDay = meetupDate.toLocaleDateString("id-ID", {
+      weekday: "long",
+    });
 
     const distance =
       countdown.distance_km !== null
-        ? Math.round(
-          countdown.distance_km
-        ).toLocaleString("id-ID")
+        ? Math.round(countdown.distance_km).toLocaleString("id-ID")
         : null;
 
-    const locationA =
-      countdown.location_user_a_text || "-";
+    const locationA = countdown.location_user_a_text || "-";
 
-    const locationB =
-      countdown.location_user_b_text || "-";
+    const locationB = countdown.location_user_b_text || "-";
 
     const hasRoute =
       Boolean(countdown.location_user_a_text) ||
       Boolean(countdown.location_user_b_text);
 
     const timeItems = [
-      {
-        label: "Hari",
-        value: timeLeft.days,
-      },
-      {
-        label: "Jam",
-        value: timeLeft.hours,
-      },
-      {
-        label: "Menit",
-        value: timeLeft.minutes,
-      },
-      {
-        label: "Detik",
-        value: timeLeft.seconds,
-      },
+      { label: "Hari", value: timeLeft.days },
+      { label: "Jam", value: timeLeft.hours },
+      { label: "Menit", value: timeLeft.minutes },
+      { label: "Detik", value: timeLeft.seconds },
     ];
+
+    // Ukuran angka disamakan untuk semua kolom dan mengecil otomatis
+    // kalau jumlah hari 3-4 digit, supaya tidak saling menimpa.
+    const longestValue = Math.max(
+      ...timeItems.map((item) => item.value.toString().padStart(2, "0").length)
+    );
+
+    const digitFontSize =
+      longestValue <= 2 ? 47 : longestValue === 3 ? 42 : 32;
 
     return (
       <div
         ref={ref}
-        style={customStyle}
-        className={`relative flex h-[640px] w-[360px] shrink-0 flex-col overflow-hidden rounded-[32px] p-6 text-neutral-900 ${customStyle
-          ? ""
-          : `bg-gradient-to-br ${gradientClass}`
-          }`}
+        style={{
+          ...customStyle,
+          // Cegah browser mobile membesarkan/mengecilkan teks sendiri.
+          WebkitTextSizeAdjust: "100%",
+        }}
+        className={`relative flex h-[640px] w-[360px] shrink-0 flex-col overflow-hidden p-6 text-neutral-900 ${
+          customStyle ? "" : `bg-gradient-to-br ${gradientClass}`
+        }`}
       >
         {/* Ambient atmosphere */}
         <div className="pointer-events-none absolute inset-0 overflow-hidden">
@@ -137,30 +127,27 @@ export const CountdownShareCard = forwardRef<
                 Your next moment
               </p>
 
-              <h1 className="mt-2 line-clamp-2 text-[22px] font-semibold leading-[1.08] tracking-[-0.055em] text-neutral-900">
+              <h1 className="mt-2 line-clamp-2 break-words text-[22px] font-semibold leading-[1.08] tracking-[-0.055em] text-neutral-900">
                 {countdown.title}
               </h1>
 
               {countdown.location && (
                 <div className="mt-2.5 flex items-center gap-1.5 text-[9px] text-neutral-400">
-                  <MapPin
-                    size={10}
-                    strokeWidth={1.8}
-                  />
+                  <MapPin size={10} strokeWidth={1.8} className="shrink-0" />
 
-                  <span className="truncate">
-                    {countdown.location}
-                  </span>
+                  <span className="truncate">{countdown.location}</span>
                 </div>
               )}
             </div>
 
-            <div className="flex size-9 shrink-0 items-center justify-center rounded-full border border-white/70 bg-white/55 text-neutral-500 shadow-sm backdrop-blur">
+            <div className="flex size-9 shrink-0 items-center justify-center rounded-full border border-white/70 bg-white/55 text-neutral-500 shadow-sm">
               <Image
                 src={logoImg}
                 width={20}
                 height={20}
-                alt="logo"
+                alt="Duora"
+                loading="eager"
+                unoptimized
               />
             </div>
           </header>
@@ -179,10 +166,11 @@ export const CountdownShareCard = forwardRef<
                     key={item.label}
                     className="flex min-w-0 flex-col items-center"
                   >
-                    <p className="font-mono text-[47px] font-medium leading-none tracking-[-0.09em] text-neutral-900">
-                      {item.value
-                        .toString()
-                        .padStart(2, "0")}
+                    <p
+                      className="whitespace-nowrap font-medium leading-none tracking-[-0.06em] text-neutral-900 tabular-nums"
+                      style={{ fontSize: digitFontSize }}
+                    >
+                      {item.value.toString().padStart(2, "0")}
                     </p>
 
                     <p className="mt-3 text-[7px] font-semibold uppercase tracking-[0.16em] text-neutral-400">
@@ -194,28 +182,24 @@ export const CountdownShareCard = forwardRef<
             </section>
 
             {/* Date */}
-            <div className="mx-auto mt-9 flex w-fit items-center gap-2 rounded-full border border-white/70 bg-white/55 px-4 py-2.5 shadow-sm backdrop-blur">
+            <div className="mx-auto mt-9 flex w-fit items-center gap-2 whitespace-nowrap rounded-full border border-white/70 bg-white/55 px-4 py-2.5 shadow-sm">
               <CalendarDays
                 size={12}
                 strokeWidth={1.8}
-                className="text-neutral-400"
+                className="shrink-0 text-neutral-400"
               />
 
               <span className="text-[9px] font-medium text-neutral-500">
                 {formattedDay}
               </span>
 
-              <span className="text-neutral-300">
-                ·
-              </span>
+              <span className="text-neutral-300">·</span>
 
               <span className="text-[9px] font-medium text-neutral-500">
                 {formattedDate}
               </span>
 
-              <span className="text-neutral-300">
-                ·
-              </span>
+              <span className="text-neutral-300">·</span>
 
               <span className="text-[9px] font-medium text-neutral-500">
                 {formattedTime}
@@ -225,7 +209,7 @@ export const CountdownShareCard = forwardRef<
             {/* Description */}
             {countdown.description && (
               <div className="mx-auto mt-7 max-w-[270px]">
-                <p className="line-clamp-2 text-center text-[9px] leading-4 text-neutral-400">
+                <p className="line-clamp-2 break-words text-center text-[9px] leading-4 text-neutral-400">
                   {countdown.description}
                 </p>
               </div>
@@ -236,10 +220,10 @@ export const CountdownShareCard = forwardRef<
           <div className="shrink-0">
             {/* Route */}
             {hasRoute && (
-              <section className="rounded-[18px] border border-white/65 bg-white/45 px-4 py-3.5 shadow-sm backdrop-blur">
+              <section className="rounded-[18px] border border-white/65 bg-white/45 px-4 py-3.5 shadow-sm">
                 <div className="flex items-center gap-3">
                   <div className="min-w-0 flex-1">
-                    <p className="text-[7px] font-semibold uppercase tracking-[0.16em] text-neutral-400">
+                    <p className="truncate text-[7px] font-semibold uppercase tracking-[0.16em] text-neutral-400">
                       {partnerAName}
                     </p>
 
@@ -257,7 +241,7 @@ export const CountdownShareCard = forwardRef<
                   </div>
 
                   <div className="min-w-0 flex-1 text-right">
-                    <p className="text-[7px] font-semibold uppercase tracking-[0.16em] text-neutral-400">
+                    <p className="truncate text-[7px] font-semibold uppercase tracking-[0.16em] text-neutral-400">
                       {partnerBName}
                     </p>
 
@@ -283,24 +267,23 @@ export const CountdownShareCard = forwardRef<
 
             {/* Footer */}
             <footer
-              className={`flex items-center justify-between ${hasRoute ? "mt-3" : "mt-0"
-                }`}
+              className={`flex items-center justify-between ${
+                hasRoute ? "mt-3" : "mt-0"
+              }`}
             >
-              <div>
+              <div className="min-w-0">
                 <p className="text-[7px] font-semibold uppercase tracking-[0.2em] text-neutral-400">
                   Together
                 </p>
 
-                <p className="mt-1 text-[9px] font-medium text-neutral-500">
+                <p className="mt-1 truncate text-[9px] font-medium text-neutral-500">
                   {partnerAName}
-                  <span className="mx-1 text-neutral-300">
-                    ×
-                  </span>
+                  <span className="mx-1 text-neutral-300">×</span>
                   {partnerBName}
                 </p>
               </div>
 
-              <div className="flex items-center gap-2">
+              <div className="flex shrink-0 items-center gap-2">
                 <span className="text-[7px] font-semibold uppercase tracking-[0.2em] text-neutral-300">
                   made with duora
                 </span>
@@ -315,5 +298,4 @@ export const CountdownShareCard = forwardRef<
   }
 );
 
-CountdownShareCard.displayName =
-  "CountdownShareCard";
+CountdownShareCard.displayName = "CountdownShareCard";

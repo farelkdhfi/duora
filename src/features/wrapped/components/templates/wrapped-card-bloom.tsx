@@ -16,12 +16,12 @@ import type {
   ScreenTimeWrappedSummary,
 } from "../../types";
 
-import happyEmot from "@/assets/emoticon/happy-emot.png";
-import neutralEmot from "@/assets/emoticon/neutral-emot.png";
-import sadEmot from "@/assets/emoticon/sad-emot.png";
-import stressedEmot from "@/assets/emoticon/stressed-emot.png";
-import tiredEmot from "@/assets/emoticon/tired-emot.png";
-import logoImg from "@/assets/duora-logo3.png";
+import happyEmot from "@/assets/emoticon/happy-fluffy.webp";
+import neutralEmot from "@/assets/emoticon/neutral-fluffy.webp";
+import sadEmot from "@/assets/emoticon/sad-fluffy.png";
+import stressedEmot from "@/assets/emoticon/stressed-fluffy-2.webp";
+import tiredEmot from "@/assets/emoticon/tired-fluffy-2.webp";
+import logoImg from "@/assets/logo.png";
 
 import { WrappedCard } from "../wrapped-card";
 import { formatHours } from "@/features/screen-time/tiers";

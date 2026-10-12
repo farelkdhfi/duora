@@ -22,13 +22,16 @@ import {
 import { useMySubscription } from "@/features/subscription/queries";
 
 import type {
+  ScreenTimeWrappedSummary,
   WrappedPlanAccess,
   WrappedTemplateId,
 } from "../types";
+import { IconCustomizerSection } from "@/features/screen-time/components/icon-customizer-section";
 
 interface WrappedPreferencePickerProps {
   relationshipId: string;
   onTemplateSelect?: () => void;
+  screenTimeSummary?: ScreenTimeWrappedSummary | null;
 }
 
 const TEMPLATES_PER_PAGE = 3;
@@ -36,6 +39,7 @@ const TEMPLATES_PER_PAGE = 3;
 export function WrappedPreferencePicker({
   relationshipId,
   onTemplateSelect,
+  screenTimeSummary,
 }: WrappedPreferencePickerProps) {
   const { data: subscription } = useMySubscription();
 
@@ -503,6 +507,31 @@ export function WrappedPreferencePicker({
             remain visible as the main story.
           </p>
         </section>
+
+                {/* ================================================= */}
+        {/* SCREEN TIME ICON */}
+        {/* ================================================= */}
+
+        {showScreenTime && screenTimeSummary && (
+          <section className="mt-7 border-t border-black/[0.05] pt-6">
+            <div>
+              <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-neutral-300">
+                Screen time
+              </p>
+
+              <h3 className="mt-1 text-sm font-semibold tracking-[-0.025em] text-neutral-900">
+                Customize your icon
+              </h3>
+            </div>
+
+            <div className="mt-4">
+              <IconCustomizerSection
+                totalSeconds={screenTimeSummary.totalSeconds}
+                theme={screenTimeSummary.iconTheme}
+              />
+            </div>
+          </section>
+        )}
 
         {/* ================================================= */}
         {/* CUSTOM COLOR */}

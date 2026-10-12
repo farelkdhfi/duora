@@ -309,6 +309,7 @@ export function WrappedGenerator({
             <WrappedPreferencePicker
               relationshipId={relationshipId}
               onTemplateSelect={scrollToPreview}
+              screenTimeSummary={screenTimeSummary}
             />
           </div>
 
