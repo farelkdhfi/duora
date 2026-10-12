@@ -6,9 +6,66 @@ const PUBLIC_PATHS = ['/', '/login', '/register']
 
 const PUBLIC_PREFIXES = ['/auth']
 
+const ONBOARDING_PATH = '/onboarding'
+const DASHBOARD_PATH = '/dashboard'
+
 function isPublicPath(pathname: string) {
   if (PUBLIC_PATHS.includes(pathname)) return true
   return PUBLIC_PREFIXES.some((prefix) => pathname.startsWith(prefix))
+}
+
+function isOnboardingPath(pathname: string) {
+  return (
+    pathname === ONBOARDING_PATH ||
+    pathname.startsWith(`${ONBOARDING_PATH}/`)
+  )
+}
+
+type SupabaseServerClient = ReturnType<typeof createServerClient>
+
+/**
+ * true  -> user sudah punya relationship
+ * false -> user belum punya relationship
+ * null  -> gagal mengecek (error DB), jangan redirect apa-apa
+ *
+ * SESUAIKAN nama tabel & kolom dengan schema kamu.
+ */
+async function hasRelationship(
+  supabase: SupabaseServerClient,
+  userId: string,
+): Promise<boolean | null> {
+  const { data, error } = await supabase
+    .from('relationship_members')
+    .select('relationship_id')
+    .eq('user_id', userId)
+    .limit(1)
+    .maybeSingle()
+
+  if (error) {
+    console.error('Failed to check relationship:', error)
+    return null
+  }
+
+  return !!data
+}
+
+// Redirect sambil membawa cookie session yang baru di-refresh
+function redirectTo(
+  request: NextRequest,
+  response: NextResponse,
+  pathname: string,
+) {
+  const url = request.nextUrl.clone()
+  url.pathname = pathname
+  url.search = ''
+
+  const redirect = NextResponse.redirect(url)
+
+  response.cookies.getAll().forEach((cookie) => {
+    redirect.cookies.set(cookie)
+  })
+
+  return redirect
 }
 
 export async function proxy(request: NextRequest) {
@@ -62,10 +119,23 @@ export async function proxy(request: NextRequest) {
 
   // Sudah login tapi mengakses /login atau /register -> redirect ke /dashboard
   if (user && (pathname === '/login' || pathname === '/register')) {
-    const redirectUrl = request.nextUrl.clone()
-    redirectUrl.pathname = '/dashboard'
-    redirectUrl.search = ''
-    return NextResponse.redirect(redirectUrl)
+    return redirectTo(request, response, DASHBOARD_PATH)
+  }
+
+  // Sudah login & mengakses route yang dilindungi -> cek relationship
+  if (user && !isPublicPath(pathname)) {
+    const hasRel = await hasRelationship(supabase, user.id)
+    const onOnboarding = isOnboardingPath(pathname)
+
+    // Belum punya relationship -> paksa ke /onboarding
+    if (hasRel === false && !onOnboarding) {
+      return redirectTo(request, response, ONBOARDING_PATH)
+    }
+
+    // Sudah punya relationship -> tidak perlu onboarding lagi
+    if (hasRel === true && onOnboarding) {
+      return redirectTo(request, response, DASHBOARD_PATH)
+    }
   }
 
   return response

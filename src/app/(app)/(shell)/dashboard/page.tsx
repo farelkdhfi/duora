@@ -1,5 +1,7 @@
 'use client'
 
+import { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import {
   CalendarDays,
   CheckCircle2,
@@ -12,7 +14,6 @@ import {
   useMyRelationshipDetails,
 } from '@/features/relationship/queries'
 
-import RelationshipOnboarding from '@/features/relationship/components/relationship-onboarding'
 import RelationshipCard from '@/features/dashboard/components/relationship-card'
 import PlannerSummaryCard from '@/features/dashboard/components/planner-summary-card'
 import PartnerCheckinCard from '@/features/dashboard/components/partner-checkin-card'
@@ -25,10 +26,10 @@ import {
 import { useGetMyProfile } from '@/features/profiles/queries'
 import WaitingForPartner from '@/features/dashboard/components/waiting-for-partner'
 import DashboardSkeleton from '@/features/dashboard/components/dashboard-skeleton'
-import DashboardGreeting from '@/features/dashboard/components/dashboard-greeting'
 import EmptyPlannerCard from '@/features/dashboard/components/empty-planner-card'
 
 export default function DashboardPage() {
+  const router = useRouter()
 
   const {
     data,
@@ -66,6 +67,20 @@ export default function DashboardPage() {
   } = useCheckinHistory(
     relationshipId ?? '',
   )
+
+  // Pengaman di sisi client: proxy sudah menangani redirect di server,
+  // ini untuk kasus relationship hilang saat dashboard sedang terbuka.
+  const hasNoRelationship =
+    !isLoading &&
+    !relationshipLoading &&
+    !relationshipError &&
+    !relationshipId
+
+  useEffect(() => {
+    if (hasNoRelationship) {
+      router.replace('/onboarding')
+    }
+  }, [hasNoRelationship, router])
 
   const partnerCheckin =
     checkins?.find(
@@ -114,108 +129,9 @@ export default function DashboardPage() {
     )
   }
 
+  // Sedang diarahkan ke /onboarding oleh useEffect di atas
   if (!relationshipId) {
-    return (
-      <main className="relative min-h-screen overflow-hidden">
-        <div className="relative mx-auto">
-          <DashboardGreeting
-            name={
-              user?.display_name ??
-              'there'
-            }
-          />
-
-
-          <div className="mt-10 overflow-hidden rounded-[2rem] border border-black/[0.05] bg-white/80 shadow-md shadow-black/10 backdrop-blur-xl">
-
-            <div className="grid md:grid-cols-[1fr_0.8fr]">
-
-              {/* Left */}
-
-              <div className="p-8 sm:p-10">
-
-                <div className="mb-6 flex size-12 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-50 to-pink-50">
-
-                  <Heart
-                    size={21}
-                    className="text-pink-500"
-                    fill="currentColor"
-                  />
-
-                </div>
-
-
-                <h2 className="text-2xl font-semibold tracking-[-0.04em]">
-
-                  Connect with
-                  your partner.
-
-                </h2>
-
-
-                <p className="mt-3 max-w-md text-sm leading-6 text-neutral-500">
-
-                  Duora works best when the two
-                  of you are connected. Create or
-                  join a relationship to start
-                  building your space together.
-
-                </p>
-
-
-                <div className="mt-7">
-
-                  <RelationshipOnboarding />
-
-                </div>
-
-              </div>
-
-
-              {/* Right */}
-
-              <div className="relative hidden overflow-hidden bg-neutral-900 md:block">
-
-                <div className="absolute -right-20 -top-20 size-60 rounded-full bg-blue-500/20 blur-3xl" />
-
-                <div className="absolute -bottom-20 -left-20 size-60 rounded-full bg-pink-500/20 blur-3xl" />
-
-                {/* Big background heart icon */}
-                <Heart
-                  size={220}
-                  className="pointer-events-none absolute -right-10 -bottom-10 text-neutral-400/10"
-                  fill="currentColor"
-                />
-
-
-                <div className="relative flex h-full items-center justify-center p-10">
-
-                  <div className="text-center">
-
-                    <p className="text-2xl font-semibold tracking-[-0.03em] text-white">
-                      A space made
-                      for two.
-                    </p>
-
-                    <p className="mt-3 max-w-[240px] text-sm leading-6 text-neutral-400">
-                      Save, plan, and understand
-                      each other a little better.
-                    </p>
-
-                  </div>
-
-                </div>
-
-              </div>
-
-            </div>
-
-          </div>
-
-        </div>
-
-      </main>
-    )
+    return <DashboardSkeleton />
   }
 
   if (isWaitingForPartner) {
@@ -292,7 +208,7 @@ export default function DashboardPage() {
             </div>
           </section>
 
-          
+
         </div>
       </div>
     </main>
