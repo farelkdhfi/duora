@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Check, Copy, Lock, Sparkles } from 'lucide-react'
+import { Check, Copy, Lock } from 'lucide-react'
 
 export default function WaitingForPartner({
   relationshipName,
@@ -35,13 +35,11 @@ export default function WaitingForPartner({
             {relationshipName}
           </h2>
 
-          <p className="mt-3 max-w-md mx-auto text-sm leading-6 text-neutral-500">
-            You&apos;re all set, {userName}. Share
-            this code with your partner so they
-            can join and your space comes to life.
+          <p className="mx-auto mt-3 max-w-md text-sm leading-6 text-neutral-500">
+            Bagikan kode undangan ini kepada pasanganmu untuk mulai membangun ruang bersama di Duora.
           </p>
 
-          <div className="mt-7 flex items-center justify-center gap-2 rounded-xl border border-black/[0.05] bg-white px-4 py-3 mx-auto max-w-xs">
+          <div className="mx-auto mt-7 flex max-w-xs items-center justify-center gap-2 rounded-xl border border-black/[0.05] bg-white px-4 py-3">
             <span className="text-lg font-semibold tracking-[0.2em] text-neutral-900">
               {inviteCode}
             </span>
@@ -49,6 +47,7 @@ export default function WaitingForPartner({
             <button
               type="button"
               onClick={handleCopy}
+              aria-label={copied ? 'Kode berhasil disalin' : 'Salin kode undangan'}
               className="ml-2 flex size-8 items-center justify-center rounded-lg text-neutral-400 transition-colors hover:bg-neutral-50 hover:text-neutral-700"
             >
               {copied ? (
@@ -60,7 +59,9 @@ export default function WaitingForPartner({
           </div>
 
           <p className="mt-5 text-xs text-neutral-400">
-            Waiting for your partner to join...
+            {copied
+              ? 'Kode undangan berhasil disalin!'
+              : 'Menunggu pasanganmu bergabung...'}
           </p>
         </div>
       </div>

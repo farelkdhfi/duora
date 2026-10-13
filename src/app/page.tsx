@@ -11,8 +11,10 @@ import {
   type Variants,
 } from 'framer-motion'
 import duoraLogo from '@/assets/logo.png'
-import hero1 from '@/assets/hero/hero1-6.png'
-import hero2 from '@/assets/hero/hero2.png'
+import hero1 from '@/assets/hero/hero1-7.png'
+import hero2 from '@/assets/hero/hero2-2.png'
+import heroBg from '@/assets/hero/bg1.png'
+import heroBg2 from '@/assets/hero/bg2.png'
 
 /* -------------------------------------------------------------------------- */
 /*  Config                                                                    */
@@ -33,7 +35,7 @@ const Accent = ({ children }: { children: ReactNode }) => (
 )
 
 const Accent2 = ({ children }: { children: ReactNode }) => (
-  <span className="text-[#A1C9EA]">{children}</span>
+  <span className="text-[#6b9bc2]">{children}</span>
 )
 
 type Slide = {
@@ -52,9 +54,9 @@ const slides: Slide[] = [
     title: ['Love', <>lives <Accent>here.</Accent></>],
     description: (
       <>
-        Tempat nyaman untuk tetap dekat 
+        Tempat nyaman untuk tetap dekat
         <br className="hidden min-[360px]:block" />
-        dan saling terhubung, meski 
+        dan saling terhubung, meski
         <br />
         terpisah jarak.
       </>
@@ -69,7 +71,7 @@ const slides: Slide[] = [
       <>
         Tanya apa pun tentang hubungan
         <br className="hidden min-[360px]:block" />
-        kalian, Duora AI memahami 
+        kalian, Duora AI memahami
         <br />
         konteksnya.
       </>
@@ -180,8 +182,30 @@ export default function LandingPage() {
           ))}
         </div>
 
+        {index === 0 && (
+          <Image
+            src={heroBg}
+            alt=""
+            aria-hidden="true"
+            priority
+            sizes="100vw"
+            className="pointer-events-none absolute left-0 top-0 z-0 h-auto w-full object-contain"
+          />
+        )}
+        
+        {index === 1 && (
+          <Image
+            src={heroBg2}
+            alt=""
+            aria-hidden="true"
+            priority
+            sizes="100vw"
+            className="pointer-events-none absolute left-0 top-0 z-0 h-auto w-full object-contain"
+          />
+        )}
+
         {/* Main mobile layout */}
-        <section className="mx-auto flex min-h-dvh w-full max-w-[480px] flex-col px-5 sm:px-8">
+        <section className="mx-auto z-10 flex min-h-dvh w-full max-w-[480px] flex-col px-5 sm:px-8">
           {/* Logo */}
           <header className="flex shrink-0 items-center justify-center pt-5 sm:pt-12">
             <Link href="/" aria-label="Duora home" className="flex items-center">
@@ -191,16 +215,16 @@ export default function LandingPage() {
                 width={28}
                 height={28}
                 priority
-                className="h-7 w-7 object-contain"
+                className="h-5 w-5 object-contain"
               />
 
-              <span className="text-[20px] font-bold tracking-tight text-[#999999]">
+              <span className="text-[15px] font-bold text-[#000000]">
                 DUORA
               </span>
             </Link>
           </header>
 
-          {/* Onboarding carousel (ilustrasi + headline + deskripsi) */}
+          {/* Onboarding carousel */}
           <div
             className="relative -mx-5 grid flex-1 overflow-hidden sm:-mx-8"
             aria-roledescription="carousel"
@@ -221,9 +245,9 @@ export default function LandingPage() {
                 role="group"
                 aria-roledescription="slide"
                 aria-label={`${index + 1} of ${slides.length}`}
-                className="col-start-1 row-start-1 flex cursor-grab select-none flex-col active:cursor-grabbing"
+                className="relative z-10 col-start-1 row-start-1 flex cursor-grab select-none flex-col active:cursor-grabbing"
               >
-                {/* Hero illustration — full bleed */}
+                {/* Hero illustration */}
                 <motion.div
                   variants={imageVariants}
                   className="relative flex min-h-[330px] flex-1 items-center justify-center pt-5 sm:min-h-[380px]"

@@ -6,6 +6,7 @@ import { usePathname, useRouter } from 'next/navigation'
 
 import {
   Loader2,
+  Lock,
   LogOut,
   X,
 } from 'lucide-react'
@@ -175,11 +176,32 @@ export default function MobileMoreSheet({
             </p>
 
             <span className="text-[9px] text-black/25">
-              Manage plan
+              {locked ? 'Locked' : 'Manage plan'}
             </span>
           </div>
 
-          <PlanBadge onNavigate={onClose} />
+          {/*
+            Saat terkunci: tidak bisa diklik (pointer-events-none),
+            dan klik via keyboard (Enter/Space) juga diblok lewat onClickCapture.
+          */}
+          <div
+            aria-disabled={locked}
+            onClickCapture={
+              locked
+                ? (event) => {
+                    event.preventDefault()
+                    event.stopPropagation()
+                  }
+                : undefined
+            }
+            className={
+              locked
+                ? 'pointer-events-none select-none opacity-40 grayscale'
+                : undefined
+            }
+          >
+            <PlanBadge onNavigate={onClose} />
+          </div>
         </div>
 
         <div className="px-5">
@@ -266,8 +288,9 @@ export default function MobileMoreSheet({
         {locked && (
           <div className="px-5 pt-4">
             <div className="rounded-[1.25rem] border border-black/[0.05] bg-white/60 px-4 py-3.5 shadow-sm">
-              <p className="text-[10px] leading-5 text-black/35">
-                Your workspace will unlock once your partner joins with the invite code.
+              <p className="text-xs flex items-center gap-3 leading-5 text-black/50">
+              <Lock width={20} height={20} />
+                Ruang kalian akan terbuka setelah pasangan bergabung menggunakan kode undangan.
               </p>
             </div>
           </div>
