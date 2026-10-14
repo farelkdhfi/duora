@@ -24,6 +24,19 @@ const SLIDE_DURATION = 5200
 const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1]
 
 /* ============================================================= */
+/* DARK BACKDROP                                                 */
+/* Glow biru (kiri atas) + pink (kanan bawah) + ungu tipis di    */
+/* tengah, di atas dasar gelap yang sama dengan card lain.       */
+/* ============================================================= */
+
+const CARD_BG = [
+  'radial-gradient(ellipse 70% 95% at 10% 0%, rgba(90,130,210,0.40) 0%, rgba(90,130,210,0.14) 45%, rgba(90,130,210,0) 100%)',
+  'radial-gradient(ellipse 70% 95% at 92% 100%, rgba(214,100,150,0.32) 0%, rgba(214,100,150,0.11) 45%, rgba(214,100,150,0) 100%)',
+  'radial-gradient(ellipse 50% 60% at 50% 55%, rgba(150,110,220,0.16) 0%, rgba(150,110,220,0) 100%)',
+  'linear-gradient(to bottom, #15151b 0%, #0a0a0c 100%)',
+].join(', ')
+
+/* ============================================================= */
 /* MOTION VARIANTS */
 /* ============================================================= */
 
@@ -125,63 +138,12 @@ export default function RelationshipCard({
   }, [index, slides.length])
 
   return (
-    <section className="relative overflow-hidden rounded-b-[2rem] border border-black/20 bg-[#9CB8D9] px-4 py-5 shadow-[0_24px_60px_-36px_rgba(180,110,160,0.35)] sm:rounded-[1.5rem] sm:px-6 sm:py-6">
+    <section
+      className="relative overflow-hidden rounded-b-[2rem] border border-white/[0.08] bg-[#0a0a0c] px-4 py-5 shadow-[0_24px_60px_-36px_rgba(0,0,0,0.7)] sm:rounded-[1.5rem] sm:px-6 sm:py-6"
+      style={{ backgroundImage: CARD_BG }}
+    >
       {/* BACKGROUND */}
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        {/* Flowing lines */}
-        <svg
-          className="absolute inset-0 h-full w-full opacity-70"
-          viewBox="0 0 900 500"
-          preserveAspectRatio="none"
-          fill="none"
-          aria-hidden="true"
-        >
-          <defs>
-            <linearGradient
-              id="rc-wave"
-              x1="0"
-              y1="0"
-              x2="900"
-              y2="0"
-              gradientUnits="userSpaceOnUse"
-            >
-              <stop stopColor="#7fa8f0" stopOpacity="0" />
-              <stop offset=".25" stopColor="#7fa8f0" stopOpacity=".35" />
-              <stop offset=".5" stopColor="#f08ab4" stopOpacity=".45" />
-              <stop offset=".75" stopColor="#b98be0" stopOpacity=".35" />
-              <stop offset="1" stopColor="#f08ab4" stopOpacity="0" />
-            </linearGradient>
-
-            <filter id="rc-blur" x="-20%" y="-100%" width="140%" height="300%">
-              <feGaussianBlur stdDeviation="12" />
-            </filter>
-          </defs>
-
-          <path
-            d="M-80 145C90 65 170 90 300 150C430 210 520 220 650 145C760 82 850 95 980 145"
-            stroke="url(#rc-wave)"
-            strokeWidth="34"
-            strokeOpacity=".18"
-            filter="url(#rc-blur)"
-          />
-          <path
-            d="M-80 250C70 195 165 200 290 250C410 300 500 315 625 250C750 185 850 200 980 250"
-            stroke="url(#rc-wave)"
-            strokeWidth="1.2"
-            strokeLinecap="round"
-          />
-          <path
-            d="M-80 385C70 325 170 340 300 395C420 445 520 450 650 385C770 325 850 335 980 390"
-            stroke="url(#rc-wave)"
-            strokeWidth="18"
-            strokeOpacity=".12"
-            filter="url(#rc-blur)"
-          />
-        </svg>
-
-        {/* Minimal grain */}
-        <div className="absolute inset-0 opacity-[0.035] [background-image:radial-gradient(rgba(60,30,80,0.9)_0.6px,transparent_0.6px)] [background-size:7px_7px]" />
-      </div>
+      
 
       {/* CONTENT */}
       <div className="relative z-10">
@@ -236,7 +198,7 @@ export default function RelationshipCard({
                   className="py-1.5"
                 >
                   <motion.span
-                    className="relative block h-1.5 overflow-hidden rounded-full bg-white"
+                    className="relative block h-1.5 overflow-hidden rounded-full bg-white/20"
                     animate={{ width: active ? 32 : 6 }}
                     transition={{ duration: 0.5, ease: EASE }}
                   >
@@ -293,7 +255,7 @@ function TogetherSlide({
           transition={{ duration: 1.2, delay: reduced ? 0 : 0.35 }}
         >
           <motion.div
-            className="h-[64px] w-[170px] rounded-full bg-linear-to-r from-[#a9c8ff]/70 via-[#dcb6f2]/60 to-[#ffb3d0]/70 blur-2xl sm:h-[72px] sm:w-[190px]"
+            className="h-[64px] w-[170px] rounded-full bg-linear-to-r from-[#7fa8f0]/45 via-[#b98be0]/40 to-[#f08ab4]/45 blur-2xl sm:h-[72px] sm:w-[190px]"
             animate={
               reduced
                 ? undefined
@@ -340,7 +302,7 @@ function TogetherSlide({
                 name={partnerName}
                 url={partnerAvatarUrl}
                 tone="pink"
-                className="ring-[3px] ring-white"
+                className="ring-[3px] ring-[#0d0d11]"
               />
             </motion.div>
           </motion.div>
@@ -359,7 +321,7 @@ function TogetherSlide({
             }}
           >
             <motion.div
-              className="flex size-7 items-center justify-center rounded-full bg-white shadow-[0_6px_16px_-6px_rgba(200,90,140,0.55)] ring-1 ring-black/5 sm:size-8"
+              className="flex size-7 items-center justify-center rounded-full bg-black shadow-[0_6px_16px_-6px_rgba(200,90,140,0.6)] ring-2 ring-[#0d0d11] sm:size-8"
               animate={
                 reduced ? undefined : { scale: [1, 1.14, 1, 1.1, 1] }
               }
@@ -379,7 +341,7 @@ function TogetherSlide({
 
       {/* Names */}
       <motion.div variants={item} className="mt-4 flex flex-col items-center">
-        <p className="flex max-w-[260px] items-baseline justify-center gap-1.5 text-lg capitalize font-semibold tracking-[-0.03em] text-white sm:max-w-[300px] sm:text-[18px]">
+        <p className="flex max-w-[260px] items-baseline justify-center gap-1.5 text-lg capitalize font-semibold tracking-[-0.03em] text-neutral-50 sm:max-w-[300px] sm:text-[18px]">
           <span className="min-w-0 max-w-[100px] truncate sm:max-w-[120px]">
             {userName}
           </span>
@@ -420,7 +382,7 @@ function DaysSlide({
     <>
       {/* Overlapping mini avatars */}
       <motion.div variants={item} className="flex -space-x-2">
-        <div className="size-6 overflow-hidden rounded-full bg-white ring-2 ring-white shadow-[0_4px_12px_-4px_rgba(90,110,170,0.5)]">
+        <div className="size-6 overflow-hidden rounded-full bg-[#0d0d11] ring-2 ring-[#0d0d11] shadow-[0_4px_12px_-4px_rgba(90,130,210,0.6)]">
           <Avatar
             name={userName}
             url={userAvatarUrl}
@@ -428,7 +390,7 @@ function DaysSlide({
             initialClassName="text-[11px]"
           />
         </div>
-        <div className="size-6 overflow-hidden rounded-full bg-white ring-2 ring-white shadow-[0_4px_12px_-4px_rgba(200,90,140,0.5)]">
+        <div className="size-6 overflow-hidden rounded-full bg-[#0d0d11] ring-2 ring-[#0d0d11] shadow-[0_4px_12px_-4px_rgba(200,90,140,0.6)]">
           <Avatar
             name={partnerName}
             url={partnerAvatarUrl}
@@ -444,16 +406,16 @@ function DaysSlide({
           <CountUp value={days} />
         </span>
 
-        <span className="mt-1.5 text-[10px] font-medium uppercase tracking-[0.24em] text-neutral-200">
+        <span className="mt-1.5 text-[10px] font-medium uppercase tracking-[0.24em] text-neutral-400">
           days together
         </span>
       </motion.div>
 
       {/* Meta */}
       <motion.div variants={item} className="mt-3 flex flex-col items-center">
-        <div className="h-px w-12 bg-linear-to-r from-transparent via-[#b78ad0]/40 to-transparent" />
+        <div className="h-px w-12 bg-linear-to-r from-transparent via-[#b78ad0]/50 to-transparent" />
         {sinceLabel && (
-          <p className="mt-0.5 text-[10px] text-neutral-100">
+          <p className="mt-0.5 text-[10px] text-neutral-500">
             Since {sinceLabel}
           </p>
         )}
@@ -512,13 +474,13 @@ function RingAvatar({
       <div
         className={`absolute inset-0 rounded-full ${className} ${
           isPink
-            ? 'bg-linear-to-br from-[#ffc2d9] via-[#e58fb4] to-[#c9a6ee] shadow-[0_10px_22px_-10px_rgba(214,100,150,0.55)]'
-            : 'bg-linear-to-br from-[#b4d3ff] via-[#7fa8f0] to-[#b9a6ee] shadow-[0_10px_22px_-10px_rgba(90,130,210,0.55)]'
+            ? 'bg-linear-to-br from-[#ffc2d9] via-[#e58fb4] to-[#c9a6ee] shadow-[0_10px_22px_-10px_rgba(214,100,150,0.65)]'
+            : 'bg-linear-to-br from-[#b4d3ff] via-[#7fa8f0] to-[#b9a6ee] shadow-[0_10px_22px_-10px_rgba(90,130,210,0.65)]'
         }`}
       />
 
       {/* Avatar */}
-      <div className="absolute inset-[2px] rounded-full bg-white p-[2px]">
+      <div className="absolute inset-[2px] rounded-full bg-[#0d0d11] p-[2px]">
         <div className="h-full w-full overflow-hidden rounded-full">
           <Avatar name={name} url={url} tone={tone} />
         </div>

@@ -2,11 +2,11 @@ import Link from 'next/link'
 import Image from 'next/image'
 
 import LoginForm from '@/features/auth/components/login-form'
-import duoraLogo from '@/assets/logo.png'
+import duoraLogo from '@/assets/logo-white.png'
 
 export default function LoginPage() {
   return (
-    <main className="relative min-h-screen overflow-hidden bg-[#faf9f7] text-[#171717]">
+    <main className="relative min-h-screen overflow-hidden bg-primary text-white">
 
       {/* BACKGROUND ATMOSPHERE */}
       <div className="pointer-events-none fixed inset-0 overflow-hidden">
@@ -341,25 +341,25 @@ export default function LoginPage() {
                 <LoginForm />
               </div>
 
-              <p className="mt-4 text-center text-[12px] leading-5 text-[#8f8588]">
+              <p className="mt-4 text-center text-[12px] leading-5 text-description">
                 By continuing, you agree to Duora{' '}
                 <Link
                   href="/terms"
-                  className="text-blue-500 underline decoration-pink-200 underline-offset-2 transition hover:text-pink-500 hover:decoration-pink-400"
+                  className="text-neutral-300 "
                 >
                   Terms of Service
                 </Link>{' '}
                 and{' '}
                 <Link
                   href="/policy"
-                  className="text-blue-500 underline decoration-pink-200 underline-offset-2 transition hover:text-pink-500 hover:decoration-pink-400"
+                  className="text-neutral-300 "
                 >
                   Privacy Policy
                 </Link>
                 . Don't have an account?{' '}
                 <Link
                   href="/register"
-                  className="font-medium text-pink-500 underline decoration-blue-200 underline-offset-2 transition hover:text-blue-500 hover:decoration-blue-400"
+                  className="font-medium text-neutral-300  hover:text-blue-500 hover:decoration-blue-400"
                 >
                   Sign up
                 </Link>

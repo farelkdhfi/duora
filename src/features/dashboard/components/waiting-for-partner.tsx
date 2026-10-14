@@ -35,22 +35,22 @@ export default function WaitingForPartner({
   }
 
   return (
-    <main className="relative min-h-screen overflow-hidden px-6 py-10">
+    <main className="relative min-h-screen overflow-hidden px-6 py-10 bg-primary">
       <div className="relative mx-auto max-w-2xl">
-        <div className="overflow-hidden rounded-[2rem] border border-black/[0.05] bg-white/80 p-8 text-center shadow-[0_25px_70px_rgba(0,0,0,0.05)] backdrop-blur-xl sm:p-10">
+        <div className="overflow-hidden rounded-[2rem] bg-primary p-8 text-center  sm:p-10">
           <div className="mx-auto mb-6 flex w-[80%] items-center justify-center">
             <Image src={waitingImg} alt='waiting-image' />
           </div>
 
-          <h2 className="text-xl font-semibold tracking-[-0.04em]">
+          <h2 className="text-xl font-semibold tracking-[-0.04em] text-white">
             {relationshipName}
           </h2>
 
-          <p className="mx-auto mt-3 max-w-md text-xs text-neutral-500">
+          <p className="mx-auto mt-3 max-w-md text-xs text-description">
             Bagikan kode undangan ini kepada pasanganmu untuk mulai membangun ruang bersama di Duora.
           </p>
 
-          <div className="mx-auto mt-7 flex max-w-xs items-center justify-center gap-2 rounded-full border border-blue-400 bg-linear-to-tr from-pink-300 to-blue-300 px-4 py-3">
+          <div className="mx-auto mt-7 flex max-w-xs items-center justify-center gap-2 rounded-full bg-black px-4 py-3">
             <span className="text-lg font-semibold tracking-[0.2em] text-white">
               {inviteCode}
             </span>
@@ -70,10 +70,10 @@ export default function WaitingForPartner({
           </div>
 
           {/* CANCEL / SALAH PILIH */}
-          <div className="mt-8 border-t border-black/[0.05] pt-6">
+          <div className="mt-8 border-t border-white/30 pt-6">
             {!isConfirming ? (
               <>
-                <p className="text-xs text-neutral-400">
+                <p className="text-xs text-description">
                   Salah pilih? Hapus relationship ini untuk bergabung dengan kode pasanganmu.
                 </p>
 
@@ -87,7 +87,7 @@ export default function WaitingForPartner({
               </>
             ) : (
               <div>
-                <p className="text-xs font-medium text-neutral-600">
+                <p className="text-xs text-white">
                   Hapus &quot;{relationshipName}&quot; dan kode undangannya?
                   Kamu bisa membuat baru atau bergabung dengan kode pasanganmu
                   setelah ini.
@@ -106,7 +106,7 @@ export default function WaitingForPartner({
                     type="button"
                     onClick={handleCancel}
                     disabled={cancelRelationship.isPending}
-                    className="flex min-h-10 items-center justify-center gap-2 rounded-full border-pink-300 border px-4 text-xs font-semibold text-black transition hover:bg-red-600 disabled:opacity-50"
+                    className="flex min-h-10 items-center justify-center gap-2 rounded-full border-pink-300 border px-4 text-xs font-semibold text-white  disabled:opacity-50"
                   >
                     {cancelRelationship.isPending ? (
                       <>

@@ -3,7 +3,8 @@
 /* color template */
 
 @theme {
-  --color-primary: #1e1318;
+  --color-primary: #0F0F0F;
+  --color-description: #666666;
 }
 
 

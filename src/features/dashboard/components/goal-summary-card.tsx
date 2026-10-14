@@ -42,30 +42,30 @@ export default function GoalSummaryCard({
       className="group block py-4 first:pt-0 last:pb-0"
     >
       <div className="flex items-center justify-between gap-3">
-        <h3 className="min-w-0 truncate text-sm font-medium tracking-[-0.035em] text-neutral-800">
+        <h3 className="min-w-0 truncate text-sm font-medium tracking-[-0.035em] text-neutral-50">
           {goal.title}
         </h3>
 
         <ArrowUpRight
           size={14}
           strokeWidth={1.7}
-          className="shrink-0 text-neutral-300 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-neutral-700"
+          className="shrink-0 text-neutral-500 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-neutral-200"
         />
       </div>
 
       <div className="mt-2.5 flex items-baseline justify-between gap-3">
-        <p className="text-sm font-semibold tracking-[-0.035em] text-neutral-900">
+        <p className="text-sm font-semibold tracking-[-0.035em] text-neutral-50">
           {formatRupiah(totalSaved)}
         </p>
 
-        <p className="text-[10px] text-neutral-400">
+        <p className="text-[10px] text-neutral-500">
           of {formatRupiah(target)}
         </p>
       </div>
 
-      <div className="relative mt-3 h-5 overflow-hidden rounded-full bg-neutral-100">
+      <div className="relative mt-3 h-5 overflow-hidden rounded-full bg-white/[0.08]">
         <div
-          className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-blue-200 to-pink-200 transition-all duration-700 ease-out"
+          className="absolute inset-y-0 left-0 rounded-full bg-linear-to-r from-blue-300 to-pink-300 transition-all duration-700 ease-out"
           style={{ width: `${progress}%` }}
         />
       </div>

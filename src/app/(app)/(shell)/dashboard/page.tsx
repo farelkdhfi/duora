@@ -26,7 +26,6 @@ import {
 import { useGetMyProfile } from '@/features/profiles/queries'
 import WaitingForPartner from '@/features/dashboard/components/waiting-for-partner'
 import DashboardSkeleton from '@/features/dashboard/components/dashboard-skeleton'
-import EmptyPlannerCard from '@/features/dashboard/components/empty-planner-card'
 
 export default function DashboardPage() {
   const router = useRouter()
@@ -187,24 +186,14 @@ export default function DashboardPage() {
                 partnerName={partner?.display_name ?? 'Partner'}
               />
 
-              <GoalListSummary
-                relationshipId={
-                  relationshipId
-                }
-              />
+              <GoalListSummary relationshipId={relationshipId} />
 
-              {upcomingEvent ? (
-                <PlannerSummaryCard
-                  title={upcomingEvent.title}
-                  date={upcomingEvent.event_date}
-                  startTime={upcomingEvent.start_time}
-                  description={
-                    upcomingEvent.description
-                  }
-                />
-              ) : (
-                <EmptyPlannerCard />
-              )}
+              <PlannerSummaryCard
+                title={upcomingEvent?.title}
+                date={upcomingEvent?.event_date}
+                startTime={upcomingEvent?.start_time}
+                description={upcomingEvent?.description}
+              />
             </div>
           </section>
 

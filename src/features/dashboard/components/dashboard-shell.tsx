@@ -14,13 +14,13 @@ export default function DashboardShell({ children }: DashboardShellProps) {
   const [mobileMoreOpen, setMobileMoreOpen] = useState(false)
 
   return (
-    <div className="min-h-screen bg-[#fafafa] text-[#111111]">
+    <div className="min-h-screen bg-primary text-white">
       <div className="flex min-h-screen flex-col md:flex-row">
         {/* DESKTOP SIDEBAR */}
         <SidebarDesktop />
 
         {/* MAIN CONTENT */}
-        <main className="relative min-w-0 flex-1 bg-neutral-50 pb-24 md:pb-0">
+        <main className="relative min-w-0 bg-primary flex-1 bg-neutral-50 pb-24 md:pb-0">
           {children}
         </main>
 

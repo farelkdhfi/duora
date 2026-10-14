@@ -21,14 +21,14 @@ const categoryLabels: Record<PlannerEvent['category'], string> = {
 }
 
 const categoryAccent: Record<PlannerEvent['category'], string> = {
-  relationship: 'bg-neutral-400',
-  finance: 'bg-neutral-400',
-  birthday: 'bg-neutral-400',
-  anniversary: 'bg-neutral-400',
-  travel: 'bg-neutral-400',
-  health: 'bg-neutral-400',
-  work: 'bg-neutral-400',
-  other: 'bg-neutral-400',
+  relationship: 'bg-neutral-500',
+  finance: 'bg-neutral-500',
+  birthday: 'bg-neutral-500',
+  anniversary: 'bg-neutral-500',
+  travel: 'bg-neutral-500',
+  health: 'bg-neutral-500',
+  work: 'bg-neutral-500',
+  other: 'bg-neutral-500',
 }
 
 function formatTime(time: string) {
@@ -59,21 +59,21 @@ export default function EventCard({ event }: EventCardProps) {
   }
 
   return (
-    <div className="group w-full overflow-hidden rounded-[1.25rem] border border-black/[0.05] bg-white shadow-[0_8px_25px_-20px_rgba(0,0,0,0.18)] transition-all duration-300 hover:shadow-[0_15px_35px_-20px_rgba(0,0,0,0.16)] sm:rounded-[1.35rem]">
+    <div className="group w-full overflow-hidden rounded-[1.25rem] border border-white/[0.08] bg-linear-to-br from-[#17171d] to-[#0c0c0f] shadow-[0_8px_25px_-20px_rgba(0,0,0,0.6)] transition-all duration-300 hover:border-white/[0.14] hover:shadow-[0_15px_35px_-20px_rgba(0,0,0,0.7)] sm:rounded-[1.35rem]">
       {isConfirmingDelete ? (
         <div className="flex min-h-[116px] w-full flex-col items-center justify-center px-4 py-5 text-center sm:min-h-[104px] sm:flex-row sm:justify-between sm:px-5 sm:text-left lg:px-6">
           <div className="min-w-0">
             <div className="flex items-center justify-center gap-2 sm:justify-start">
-              <div className="flex size-7 shrink-0 items-center justify-center rounded-full bg-red-50 text-neutral-500">
+              <div className="flex size-7 shrink-0 items-center justify-center rounded-full bg-red-500/15 text-red-400">
                 <Trash2 size={12} strokeWidth={2} />
               </div>
 
-              <p className="text-[12px] font-semibold tracking-[-0.02em] text-neutral-900 sm:text-[13px]">
+              <p className="text-[12px] font-semibold tracking-[-0.02em] text-neutral-50 sm:text-[13px]">
                 Delete this event?
               </p>
             </div>
 
-            <p className="mt-1 text-[9px] leading-5 text-neutral-400 sm:ml-9 sm:text-[10px]">
+            <p className="mt-1 text-[9px] leading-5 text-neutral-500 sm:ml-9 sm:text-[10px]">
               This action cannot be undone.
             </p>
           </div>
@@ -83,7 +83,7 @@ export default function EventCard({ event }: EventCardProps) {
               type="button"
               onClick={handleCancelDelete}
               disabled={deleteMutation.isPending}
-              className="inline-flex min-h-8.5 items-center justify-center rounded-full border border-black/[0.06] bg-neutral-50 px-4 text-[10px] font-semibold text-neutral-500 transition-all duration-200 hover:bg-neutral-100 hover:text-neutral-700 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 sm:px-4.5"
+              className="inline-flex min-h-8.5 items-center justify-center rounded-full border border-white/[0.08] bg-white/[0.06] px-4 text-[10px] font-semibold text-neutral-300 transition-all duration-200 hover:bg-white/[0.12] hover:text-white active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 sm:px-4.5"
             >
               Cancel
             </button>
@@ -92,7 +92,7 @@ export default function EventCard({ event }: EventCardProps) {
               type="button"
               onClick={handleDelete}
               disabled={deleteMutation.isPending}
-              className="inline-flex min-h-8.5 items-center justify-center gap-1.5 rounded-full bg-neutral-800 px-4 text-[10px] font-semibold text-white transition-all duration-200 hover:bg-neutral-600 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 sm:px-4.5"
+              className="inline-flex min-h-8.5 items-center justify-center gap-1.5 rounded-full bg-white px-4 text-[10px] font-semibold text-neutral-900 transition-all duration-200 hover:bg-neutral-200 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 sm:px-4.5"
             >
               <Trash2 size={11} strokeWidth={2} />
 
@@ -102,8 +102,8 @@ export default function EventCard({ event }: EventCardProps) {
         </div>
       ) : (
         <div className="flex w-full items-start gap-3 p-3 sm:items-center sm:gap-4 sm:p-4 lg:gap-5 lg:p-4.5">
-          <div className="flex size-13 shrink-0 flex-col items-center justify-center rounded-[0.9rem] bg-[#f8f8f7] sm:size-12 sm:rounded-[1rem] lg:size-13">
-            <span className="text-[8px] font-semibold uppercase tracking-[0.12em] text-neutral-600 sm:text-[9px]">
+          <div className="flex size-13 shrink-0 flex-col items-center justify-center rounded-[0.9rem] border border-white/[0.08] bg-white/[0.06] sm:size-12 sm:rounded-[1rem] lg:size-13">
+            <span className="text-[8px] font-semibold uppercase tracking-[0.12em] text-neutral-400 sm:text-[9px]">
               {new Date(`${event.event_date}T00:00:00`).toLocaleDateString(
                 'en-US',
                 {
@@ -112,7 +112,7 @@ export default function EventCard({ event }: EventCardProps) {
               )}
             </span>
 
-            <span className="mt-1 text-[17px] font-semibold leading-none tracking-[-0.04em] text-neutral-900 sm:text-lg">
+            <span className="mt-1 text-[17px] font-semibold leading-none tracking-[-0.04em] text-neutral-50 sm:text-lg">
               {new Date(`${event.event_date}T00:00:00`).getDate()}
             </span>
           </div>
@@ -121,12 +121,12 @@ export default function EventCard({ event }: EventCardProps) {
             <div className="flex min-w-0 items-center gap-2">
               <span className={`size-1.5 shrink-0 rounded-full ${accent}`} />
 
-              <p className="truncate text-[8px] font-semibold uppercase tracking-[0.14em] text-neutral-400 sm:text-[9px] lg:text-[10px]">
+              <p className="truncate text-[8px] font-semibold uppercase tracking-[0.14em] text-neutral-500 sm:text-[9px] lg:text-[10px]">
                 {categoryLabels[event.category]}
               </p>
             </div>
 
-            <h4 className="mt-1.5 truncate text-[13px] font-semibold tracking-[-0.025em] text-neutral-900 sm:text-[14px] lg:text-[15px]">
+            <h4 className="mt-1.5 truncate text-[13px] font-semibold tracking-[-0.025em] text-neutral-50 sm:text-[14px] lg:text-[15px]">
               {event.title}
             </h4>
 
@@ -143,7 +143,7 @@ export default function EventCard({ event }: EventCardProps) {
               )}
 
               {event.is_all_day && (
-                <span className="shrink-0 rounded-full bg-[#f8f8f7] px-2 py-0.5 text-[8.5px] font-medium text-neutral-500 sm:text-[9.5px]">
+                <span className="shrink-0 rounded-full bg-white/[0.08] px-2 py-0.5 text-[8.5px] font-medium text-neutral-300 sm:text-[9.5px]">
                   All day
                 </span>
               )}
@@ -155,7 +155,7 @@ export default function EventCard({ event }: EventCardProps) {
             onClick={handleDelete}
             disabled={deleteMutation.isPending}
             aria-label="Delete event"
-            className="group/delete flex size-8 shrink-0 items-center justify-center rounded-full border border-neutral-200/80 bg-white text-neutral-300 shadow-[0_2px_8px_rgba(0,0,0,0.035)] transition-all duration-200 hover:border-red-100 hover:bg-red-50 hover:text-red-500 active:scale-95 sm:size-7.5 sm:border-transparent sm:bg-neutral-50/70 sm:opacity-70 sm:group-hover:opacity-100 sm:focus:opacity-100"
+            className="group/delete flex size-8 shrink-0 items-center justify-center rounded-full border border-white/[0.08] bg-white/[0.06] text-neutral-400 transition-all duration-200 hover:border-red-500/30 hover:bg-red-500/15 hover:text-red-400 active:scale-95 sm:size-7.5 sm:border-transparent sm:bg-white/[0.04] sm:opacity-70 sm:group-hover:opacity-100 sm:focus:opacity-100"
           >
             <Trash2 size={12} strokeWidth={2} className="transition-transform duration-200 group-hover/delete:scale-105" />
           </button>

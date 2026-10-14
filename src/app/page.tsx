@@ -10,11 +10,11 @@ import {
   type PanInfo,
   type Variants,
 } from 'framer-motion'
-import duoraLogo from '@/assets/logo.png'
-import hero1 from '@/assets/hero/hero1-7.png'
-import hero2 from '@/assets/hero/hero2-2.png'
-import heroBg from '@/assets/hero/bg1.png'
-import heroBg2 from '@/assets/hero/bg2.png'
+import logo from '@/assets/logo-white.png'
+import hero1 from '@/assets/landingpage/hero-mobile.png'
+import hero2 from '@/assets/landingpage/hero-mobile-2.png'
+import heroBg from '@/assets/landingpage/hero-bg-mobile.png'
+import heroBg2 from '@/assets/landingpage/hero-bg-mobile-2.png'
 import { useRouter } from 'next/navigation'
 import { Loader2 } from 'lucide-react'
 
@@ -190,7 +190,7 @@ export default function LandingPage() {
 
   return (
     <MotionConfig reducedMotion="user">
-      <main className="relative flex min-h-dvh w-full flex-col overflow-hidden bg-white text-black">
+      <main className="relative flex min-h-dvh w-full flex-col overflow-hidden bg-primary text-white">
         {/* Preload gambar slide berikutnya supaya transisi tidak kedip */}
         <div aria-hidden className="hidden">
           {slides.slice(1).map((s) => (
@@ -223,10 +223,10 @@ export default function LandingPage() {
         {/* Main mobile layout */}
         <section className="mx-auto z-10 flex min-h-dvh w-full max-w-[480px] flex-col px-5 sm:px-8">
           {/* Logo */}
-          <header className="flex shrink-0 items-center justify-center pt-5 sm:pt-12">
+          <header className="flex shrink-0 items-center justify-center mt-8">
             <Link href="/" aria-label="Duora home" className="flex items-center">
               <Image
-                src={duoraLogo}
+                src={logo}
                 alt=""
                 width={28}
                 height={28}
@@ -234,7 +234,7 @@ export default function LandingPage() {
                 className="h-5 w-5 object-contain"
               />
 
-              <span className="text-[15px] font-bold text-[#000000]">
+              <span className="text-[15px] font-semibold text-white">
                 DUORA
               </span>
             </Link>
@@ -294,7 +294,7 @@ export default function LandingPage() {
 
                   <motion.p
                     variants={textVariants}
-                    className="mt-4 min-h-[45px] max-w-[320px] text-balance text-[14px] font-normal leading-[15px] text-[#666666]"
+                    className="mt-4 min-h-[45px] max-w-[320px] text-balance text-[14px] font-normal leading-[15px] text-description"
                   >
                     {slide.description}
                   </motion.p>
@@ -319,14 +319,14 @@ export default function LandingPage() {
                   onClick={() => goTo(i)}
                   aria-label={`Go to page ${i + 1}`}
                   aria-current={active ? 'step' : undefined}
-                  className="rounded-full p-[3px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black"
+                  className="rounded-full p-[3px]"
                 >
                   <motion.span
-                    className="block h-2 rounded-full"
+                    className="block h-1 rounded-full"
                     initial={false}
                     animate={{
                       width: active ? 24 : 8,
-                      backgroundColor: active ? '#000000' : '#A6A6A6',
+                      backgroundColor: active ? '#fff' : '#444444',
                     }}
                     transition={{
                       width: { type: 'spring', stiffness: 380, damping: 32 },
@@ -345,7 +345,7 @@ export default function LandingPage() {
               onClick={handleStart}
               disabled={isNavigating}
               aria-busy={isNavigating}
-              className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-neutral-800 px-6 text-[14px] font-semibold text-white shadow-[0_3px_4px_rgba(0,0,0,0.28)] transition-transform duration-200 hover:scale-[1.01] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-4 disabled:cursor-not-allowed disabled:opacity-80 disabled:hover:scale-100"
+              className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-black px-6 text-[14px] font-semibold text-white shadow-[0_3px_4px_rgba(0,0,0,0.28)] transition-transform duration-200 hover:scale-[1.01] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-4 disabled:cursor-not-allowed disabled:opacity-80 disabled:hover:scale-100"
             >
               {isNavigating ? (
                 <>

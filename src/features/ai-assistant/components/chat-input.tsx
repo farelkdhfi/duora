@@ -75,7 +75,7 @@ useEffect(() => {
   return (
   <form
     onSubmit={handleSubmit}
-    className={`flex gap-2 rounded-[22px] border border-neutral-200 bg-white p-2 shadow-[0_10px_40px_rgba(0,0,0,0.07)] transition focus-within:border-neutral-300 focus-within:shadow-[0_14px_45px_rgba(0,0,0,0.09)] ${
+    className={`flex gap-2 rounded-[22px] bg-black p-2 shadow-[0_10px_40px_rgba(0,0,0,0.07)] transition focus-within:border-neutral-300 focus-within:shadow-[0_14px_45px_rgba(0,0,0,0.09)] ${
       isExpanded ? "flex-col" : "flex-row items-end"
     }`}
   >
@@ -91,7 +91,7 @@ useEffect(() => {
       }}
       placeholder="Tanya sesuatu..."
       rows={1}
-      className={`min-h-[44px] max-h-[180px] min-w-0 resize-none overflow-y-auto bg-transparent px-3 py-2.5 text-sm leading-6 text-neutral-900 outline-none placeholder:text-neutral-400 ${
+      className={`min-h-[44px] max-h-[180px] min-w-0 resize-none overflow-y-auto bg-transparent px-3 py-2.5 text-sm leading-6 text-white outline-none placeholder:text-neutral-400 ${
         isExpanded ? "w-full" : "flex-1"
       }`}
     />
@@ -108,7 +108,7 @@ useEffect(() => {
         type="submit"
         disabled={!canSend}
         aria-label="Kirim pesan"
-        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-neutral-800 text-white transition hover:bg-neutral-800 disabled:cursor-not-allowed disabled:bg-neutral-100 disabled:text-neutral-300"
+        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-neutral-100 text-black transition disabled:cursor-not-allowed disabled:opacity-50"
       >
         {isSending ? (
           <Loader2 size={16} className="animate-spin" />

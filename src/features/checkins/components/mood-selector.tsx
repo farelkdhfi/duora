@@ -256,7 +256,7 @@ export default function MoodSelector({
             </div>
           </div>
 
-          <span className="mt-0 text-[30px] font-medium tracking-[-0.055em] text-neutral-900 sm:text-[34px]">
+          <span className="mt-0 text-[30px] font-medium tracking-[-0.055em] text-white sm:text-[34px]">
             {currentMood.label}
           </span>
 

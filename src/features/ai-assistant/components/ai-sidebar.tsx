@@ -144,13 +144,13 @@ export function AiSidebar({
           type="button"
           aria-label="Buka sidebar"
           onClick={() => setIsMobileOpen(true)}
-          className="pointer-events-auto flex h-9 w-9 items-center justify-center rounded-xl border border-neutral-200/80 bg-white/85 text-neutral-600 shadow-sm backdrop-blur-xl transition hover:bg-white active:scale-95"
+          className="pointer-events-auto flex h-9 w-9 items-center justify-center rounded-full bg-black text-white shadow-sm backdrop-blur-xl transition hover:bg-white active:scale-95"
         >
           <Menu size={17} />
         </button>
 
-        <div className="pointer-events-auto flex items-center rounded-full border border-neutral-200/80 bg-white/80 px-3 py-1.5 shadow-sm backdrop-blur-xl">
-          <span className="text-[11px] font-medium text-neutral-700">
+        <div className="pointer-events-auto flex items-center rounded-full bg-black px-3 py-1.5 shadow-sm backdrop-blur-xl">
+          <span className="text-[11px] font-medium text-white">
             Duora AI
           </span>
         </div>
@@ -172,7 +172,7 @@ export function AiSidebar({
           />
 
           {/* DRAWER */}
-          <aside className="relative z-10 flex h-full w-[300px] flex-col bg-[#f7f7f5] shadow-2xl">
+          <aside className="relative z-10 flex h-full w-[300px] flex-col bg-black shadow-2xl">
             {/* DRAWER HEADER */}
             <div className="flex shrink-0 items-center justify-between border-b border-neutral-200/80 px-4 py-4">
               <div>

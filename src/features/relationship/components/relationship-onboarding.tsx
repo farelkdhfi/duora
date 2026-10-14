@@ -9,7 +9,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { motion, useReducedMotion } from 'framer-motion'
 import { ArrowLeft, ArrowRight, Check, Heart } from 'lucide-react'
 
-import logo from '@/assets/logo.png'
+import logo from '@/assets/logo-white.png'
 
 import {
   createRelationshipSchema,
@@ -56,7 +56,7 @@ const CHOICES: {
   ]
 
 const inputBase =
-  'w-full border-0 border-b-2 border-neutral-200 bg-transparent px-0 py-3 text-lg font-medium tracking-[-0.01em] text-neutral-900 outline-none transition-colors placeholder:text-neutral-300 focus:border-neutral-900'
+  'w-full border-0 border-b border-neutral-500 bg-transparent px-0 py-3 text-lg font-medium tracking-[-0.01em] text-white outline-none transition-colors placeholder:text-neutral-600'
 
 /* -------------------------------------------------------------------------- */
 /* Welcome intro: logo + teks + bubble & love                                 */
@@ -81,21 +81,112 @@ type Particle = {
   duration: number // detik
   rise: number // jarak naik (px)
   sway: number // geser kiri/kanan (px)
+  tilt?: number // rotasi heart (deg)
+  filled?: boolean // heart diisi tipis atau outline saja
 }
 
 // Posisi dibuat tetap (bukan random) supaya aman dari hydration mismatch
+// Palet disesuaikan untuk background gelap: rose lembut + putih transparan
 const PARTICLES: Particle[] = [
-  { kind: 'bubble', left: 55, top: 80, size: 40, color: 'bg-blue-100/70 border-blue-200', delay: 0.8, duration: 7, rise: 180, sway: -14 },
-  { kind: 'heart', left: 12, top: 14, size: 20, color: 'text-blue-400/80', delay: 2.2, duration: 5.8, rise: 120, sway: 8 },
-  { kind: 'bubble', left: 24, top: 62, size: 14, color: 'bg-pink-100 border-pink-200', delay: 1.3, duration: 5.2, rise: 150, sway: -6 },
-  { kind: 'heart', left: 48, top: 90, size: 24, color: 'text-pink-300', delay: 0.9, duration: 6.2, rise: 200, sway: 12 },
-  { kind: 'bubble', left: 70, top: 10, size: 18, color: 'bg-pink-200/60 border-pink-300/70', delay: 2.5, duration: 5.6, rise: 100, sway: 8 },
-  { kind: 'heart', left: 82, top: 48, size: 14, color: 'text-pink-300', delay: 0.1, duration: 5.4, rise: 140, sway: -8 },
-  { kind: 'bubble', left: 5, top: 50, size: 26, color: 'bg-blue-200/60 border-blue-300/70', delay: 1.7, duration: 6.8, rise: 150, sway: 10 },
+  {
+    kind: 'bubble',
+    left: 55,
+    top: 80,
+    size: 36,
+    color: 'border-white/15 bg-white/[0.03] shadow-[inset_0_0_10px_rgba(255,255,255,0.08)]',
+    delay: 0.8,
+    duration: 9,
+    rise: 180,
+    sway: -14,
+  },
+  {
+    kind: 'heart',
+    left: 12,
+    top: 22,
+    size: 18,
+    color: 'text-rose-300/60',
+    delay: 2.2,
+    duration: 8,
+    rise: 120,
+    sway: 8,
+    tilt: -12,
+  },
+  {
+    kind: 'bubble',
+    left: 24,
+    top: 62,
+    size: 12,
+    color: 'border-rose-200/20 bg-rose-200/[0.04] shadow-[inset_0_0_6px_rgba(251,207,232,0.12)]',
+    delay: 1.3,
+    duration: 7.5,
+    rise: 150,
+    sway: -6,
+  },
+  {
+    kind: 'heart',
+    left: 48,
+    top: 90,
+    size: 22,
+    color: 'text-rose-200/50',
+    delay: 0.9,
+    duration: 9,
+    rise: 200,
+    sway: 12,
+    tilt: 10,
+    filled: true,
+  },
+  {
+    kind: 'bubble',
+    left: 70,
+    top: 14,
+    size: 16,
+    color: 'border-white/10 bg-white/[0.02]',
+    delay: 2.5,
+    duration: 8,
+    rise: 100,
+    sway: 8,
+  },
+  {
+    kind: 'heart',
+    left: 82,
+    top: 52,
+    size: 14,
+    color: 'text-pink-300/55',
+    delay: 0.1,
+    duration: 7.8,
+    rise: 140,
+    sway: -8,
+    tilt: 14,
+  },
+  {
+    kind: 'bubble',
+    left: 5,
+    top: 50,
+    size: 24,
+    color: 'border-rose-200/15 bg-rose-200/[0.03] shadow-[inset_0_0_8px_rgba(251,207,232,0.1)]',
+    delay: 1.7,
+    duration: 9.5,
+    rise: 150,
+    sway: 10,
+  },
+  {
+    kind: 'heart',
+    left: 90,
+    top: 78,
+    size: 12,
+    color: 'text-white/35',
+    delay: 3.1,
+    duration: 8.6,
+    rise: 130,
+    sway: -10,
+    tilt: -8,
+  },
 ]
 
 // Hanya animasi opacity + transform supaya ringan (tanpa blur / filter)
 function FloatingParticle({ particle: p }: { particle: Particle }) {
+  const tilt = p.tilt ?? 0
+
   return (
     <motion.span
       aria-hidden
@@ -106,16 +197,17 @@ function FloatingParticle({ particle: p }: { particle: Particle }) {
         width: p.size,
         height: p.size,
       }}
-      initial={{ opacity: 0, x: 0, y: 0 }}
+      initial={{ opacity: 0, x: 0, y: 0, rotate: 0 }}
       animate={{
-        opacity: [0, 0.9, 0.9, 0],
+        opacity: [0, 0.85, 0.85, 0],
         x: [0, p.sway, 0],
         y: [0, -p.rise],
+        rotate: p.kind === 'heart' ? [0, tilt, 0] : 0,
       }}
       transition={{
         opacity: {
           duration: p.duration,
-          times: [0, 0.2, 0.75, 1],
+          times: [0, 0.25, 0.7, 1],
           repeat: Infinity,
           delay: p.delay,
           ease: 'linear',
@@ -133,13 +225,21 @@ function FloatingParticle({ particle: p }: { particle: Particle }) {
           delay: p.delay,
           ease: 'easeInOut',
         },
+        rotate: {
+          duration: p.duration,
+          times: [0, 0.5, 1],
+          repeat: Infinity,
+          delay: p.delay,
+          ease: 'easeInOut',
+        },
       }}
     >
       {p.kind === 'heart' ? (
         <Heart
           size={p.size}
-          fill="currentColor"
-          strokeWidth={0}
+          strokeWidth={1.25}
+          fill={p.filled ? 'currentColor' : 'none'}
+          fillOpacity={p.filled ? 0.18 : 0}
           className={p.color}
         />
       ) : (
@@ -183,7 +283,7 @@ function WelcomeIntro({ onDone }: { onDone: () => void }) {
 
   return (
     <motion.div
-      className="fixed inset-0 z-10 flex items-center justify-center overflow-hidden bg-neutral-50 px-6"
+      className="fixed inset-0 z-10 flex items-center justify-center overflow-hidden bg-primary px-6"
       initial={{ opacity: 1 }}
       animate={{ opacity: leaving ? 0 : 1 }}
       transition={{ duration: WELCOME_EXIT / 1000, ease: 'easeIn' }}
@@ -196,7 +296,7 @@ function WelcomeIntro({ onDone }: { onDone: () => void }) {
 
       <div className="relative flex flex-col items-center text-center">
         <motion.div {...logoMotion}>
-          <Image src={logo} alt="Duora" priority className="h-30 w-auto" />
+          <Image src={logo} alt="Duora" priority className="h-30 w-auto grayscale brightness-200" />
         </motion.div>
       </div>
     </motion.div>
@@ -307,7 +407,7 @@ export default function RelationshipOnboarding() {
   /* --------------------------------- Render --------------------------------- */
 
   return (
-    <main className="relative min-h-dvh overflow-hidden bg-neutral-50">
+    <main className="relative min-h-dvh overflow-hidden bg-primary">
       <style>{`
         @keyframes onboarding-step-in {
           from { opacity: 0; transform: translateX(16px); }
@@ -338,11 +438,11 @@ export default function RelationshipOnboarding() {
 
             {step === 'choose' && (
               <div>
-                <h1 className="text-lg font-semibold tracking-[-0.02em] text-neutral-900">
+                <h1 className="text-lg font-semibold tracking-[-0.02em] text-white">
                   Mau mulai dari mana?
                 </h1>
 
-                <p className="mt-2 text-sm leading-6 text-neutral-500">
+                <p className="mt-2 text-sm leading-6 text-description">
                   Duora hanya bisa digunakan jika kamu dan pasanganmu sudah
                   terhubung.
                 </p>
@@ -366,25 +466,25 @@ export default function RelationshipOnboarding() {
                           createMutation.reset()
                           joinMutation.reset()
                         }}
-                        className={`flex w-full items-center gap-4 rounded-full p-3 text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 ${selected
-                            ? 'border-none shadow-lg shadow-[#6374be4b] bg-white'
-                            : 'border-neutral-200 bg-white/60 hover:border-neutral-300'
+                        className={`flex w-full items-center gap-4 rounded-full p-3 text-left  ${selected
+                            ? 'border-none bg-black'
+                            : 'border-neutral-200 bg-black hover:border-neutral-300'
                           }`}
                       >
                         <span
                           className={`flex size-8 shrink-0 items-center justify-center rounded-full ${selected
-                              ? 'bg-linear-to-tl from-pink-400/40 to-blue-400 text-white'
-                              : 'bg-neutral-100 text-neutral-500'
+                              ? 'border border-pink-200 text-white'
+                              : 'bg-black text-neutral-500'
                             }`}
                         >
                           <Icon size={15} />
                         </span>
 
                         <span>
-                          <span className="block text-sm font-semibold text-neutral-900">
+                          <span className="block text-sm font-semibold text-white">
                             {title}
                           </span>
-                          <span className="mt-1 block text-xs leading-6 text-neutral-500">
+                          <span className="mt-1 block text-xs leading-6 text-description">
                             {description}
                           </span>
                         </span>
@@ -397,11 +497,11 @@ export default function RelationshipOnboarding() {
 
             {step === 'name' && (
               <div>
-                <h1 className="text-lg font-semibold tracking-[-0.02em] text-neutral-900">
+                <h1 className="text-lg font-semibold tracking-[-0.02em] text-white">
                   Apa nama hubungan kalian?
                 </h1>
 
-                <p className="mt-2 text-sm leading-6 text-neutral-500">
+                <p className="mt-2 text-sm leading-6 text-description">
                   Pilih nama yang kalian berdua suka. Bisa diubah nanti.
                 </p>
 
@@ -421,16 +521,16 @@ export default function RelationshipOnboarding() {
                   />
 
                   <div className="mt-2 flex items-start justify-between gap-4">
-                    <p className="text-sm text-rose-500">
+                    <p className="text-sm text-red-800">
                       {createForm.formState.errors.relationshipName?.message}
                     </p>
 
-                    <p className="shrink-0 text-sm text-neutral-400">
+                    <p className="shrink-0 text-sm text-description">
                       {nameLength}/{NAME_MAX_LENGTH}
                     </p>
                   </div>
 
-                  <p className="mt-1 text-sm text-neutral-400">
+                  <p className="mt-1 text-sm text-description">
                     Minimal {NAME_MIN_LENGTH} karakter, maksimal{' '}
                     {NAME_MAX_LENGTH} karakter.
                   </p>
@@ -440,11 +540,11 @@ export default function RelationshipOnboarding() {
 
             {step === 'date' && (
               <div>
-                <h1 className="text-lg font-semibold tracking-[-0.02em] text-neutral-900">
-                  Kapan kalian mulai berpacaran?
+                <h1 className="text-lg font-semibold tracking-[-0.02em] text-white">
+                  Kapan kalian mulai hubungan?
                 </h1>
 
-                <p className="mt-2 text-sm leading-6 text-neutral-500">
+                <p className="mt-2 text-sm leading-6 text-description">
                   Tanggal ini dipakai untuk menghitung hari kalian bersama.
                 </p>
 
@@ -458,11 +558,11 @@ export default function RelationshipOnboarding() {
                     {...createForm.register('startedAt')}
                     type="date"
                     min={getMinStartedAt()}
-                    className={inputBase}
+                    className={`${inputBase} [color-scheme:dark]`}
                   />
 
                   {createForm.formState.errors.startedAt && (
-                    <p className="mt-2 text-sm text-rose-500">
+                    <p className="mt-2 text-sm text-red-800">
                       {createForm.formState.errors.startedAt.message}
                     </p>
                   )}
@@ -472,11 +572,11 @@ export default function RelationshipOnboarding() {
 
             {step === 'join' && (
               <div>
-                <h1 className="text-lg font-semibold tracking-[-0.02em] text-neutral-900">
+                <h1 className="text-lg font-semibold tracking-[-0.02em] text-white">
                   Masukkan kode undangan
                 </h1>
 
-                <p className="mt-2 text-sm leading-6 text-neutral-500">
+                <p className="mt-2 text-sm leading-6 text-description">
                   Minta pasanganmu kode 8 karakter dari akun Duora miliknya.
                 </p>
 
@@ -496,7 +596,7 @@ export default function RelationshipOnboarding() {
                   />
 
                   {joinForm.formState.errors.inviteCode && (
-                    <p className="mt-2 text-sm text-rose-500">
+                    <p className="mt-2 text-sm text-red-800">
                       {joinForm.formState.errors.inviteCode.message}
                     </p>
                   )}
@@ -507,7 +607,7 @@ export default function RelationshipOnboarding() {
             {errorMessage && (
               <p
                 role="alert"
-                className="mt-6 rounded-xl bg-rose-50 px-4 py-3 text-sm text-rose-600"
+                className="mt-6 rounded-xl bg-rose-50 px-4 py-3 text-sm text-red-800"
               >
                 {errorMessage}
               </p>
@@ -525,7 +625,7 @@ export default function RelationshipOnboarding() {
                   onClick={back}
                   disabled={isPending}
                   aria-label="Kembali"
-                  className="flex size-12 shrink-0 items-center justify-center rounded-full border border-neutral-200 bg-white text-neutral-600 transition-colors hover:bg-neutral-100 hover:text-neutral-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 disabled:cursor-not-allowed disabled:opacity-40"
+                  className="flex size-12 shrink-0 items-center justify-center rounded-full border border-neutral-600 text-neutral-600 transition-colors  disabled:cursor-not-allowed disabled:opacity-40"
                 >
                   <ArrowLeft size={18} />
                 </button>
@@ -534,7 +634,7 @@ export default function RelationshipOnboarding() {
               <button
                 type="submit"
                 disabled={buttonDisabled}
-                className="flex size-12 shrink-0 items-center justify-center rounded-full border border-neutral-200 bg-neutral-800 text-neutral-100 transition-colors hover:bg-neutral-100 hover:text-neutral-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 disabled:cursor-not-allowed disabled:opacity-40"
+                className="flex size-12 shrink-0 items-center justify-center rounded-full bg-black text-white transition-colors  disabled:cursor-not-allowed disabled:opacity-40"
               >
                 <ArrowRight size={18} />
               </button>

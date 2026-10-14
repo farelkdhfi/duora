@@ -83,7 +83,7 @@ export default function AiAssistantLandingPage() {
 
   if (isLoadingRelationship || isLoadingSubscription) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#fafaf9]">
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-primary">
         <div className="flex items-center gap-3 text-sm text-neutral-400">
           <div className="h-4 w-4 animate-spin rounded-full border-2 border-neutral-200 border-t-neutral-500" />
           Memuat Duora AI...
@@ -94,7 +94,7 @@ export default function AiAssistantLandingPage() {
 
   if (!relationshipDetails) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#fafaf9] px-6">
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-primary px-6">
         <div className="max-w-sm text-center">
           <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-neutral-900">
             <Sparkles size={22} className="text-white" />
@@ -115,7 +115,7 @@ export default function AiAssistantLandingPage() {
 
   if (!hasAccess) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#fafaf9] px-6">
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-primary px-6">
         <div className="w-full max-w-md text-center">
           <div className="relative mx-auto flex h-20 w-20 items-center justify-center">
             <div className="absolute inset-0 rounded-[26px] bg-gradient-to-br from-fuchsia-500 via-pink-500 to-orange-400 opacity-15 blur-xl" />
@@ -164,7 +164,7 @@ export default function AiAssistantLandingPage() {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex min-h-0 overflow-hidden bg-white">
+    <div className="fixed inset-0 z-50 flex min-h-0 overflow-hidden bg-primary">
       <AiSidebar
         relationshipId={relationshipId!}
         activeConversationId={undefined}
@@ -211,7 +211,7 @@ export default function AiAssistantLandingPage() {
                 />
 
                 <div className="mt-2 flex items-center justify-center">
-                  <span className="text-[10px] text-neutral-400">
+                  <span className="text-[10px] text-description">
                     Duora AI dapat membuat kesalahan
                   </span>
                 </div>
@@ -230,11 +230,11 @@ export default function AiAssistantLandingPage() {
                     <LoveWave />
 
                     <div className="-mt-1">
-                      <h1 className="text-2xl font-semibold tracking-[-0.04em] text-neutral-950 sm:text-[36px]">
+                      <h1 className="text-2xl font-semibold tracking-[-0.04em] text-white sm:text-[36px]">
                         Ceritakan tentang kalian.
                       </h1>
 
-                      <p className="mx-auto mt-3 max-w-xl text-[13px] leading-6 text-neutral-500 sm:text-sm">
+                      <p className="mx-auto mt-3 max-w-xl text-[13px] leading-6 text-description sm:text-sm">
                         Tanyakan apa pun tentang hubungan kalian.
                         Duora AI dapat memahami konteks dari mood,
                         goals, planner, Q&A, dan percakapan sebelumnya.

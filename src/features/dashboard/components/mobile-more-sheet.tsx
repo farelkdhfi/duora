@@ -15,7 +15,7 @@ import Image from 'next/image'
 import { createClient } from '@/lib/supabase/client'
 import { useMyRelationshipDetails } from '@/features/relationship/queries'
 import { PlanBadge } from '@/features/subscription/components/plan-badge'
-import logoImg from '@/assets/logo.png'
+import logo from '@/assets/logo-white.png'
 
 interface MobileMoreSheetProps {
   open: boolean
@@ -137,23 +137,23 @@ export default function MobileMoreSheet({
         type="button"
         aria-label="Close menu"
         onClick={onClose}
-        className="absolute inset-0 bg-black/15 backdrop-blur-[6px]"
+        className="absolute inset-0 bg-black/40 backdrop-blur-[6px]"
       />
 
-      <div className="absolute inset-x-3 bottom-3 max-h-[88dvh] overflow-y-auto rounded-[2rem] border border-black/[0.07] bg-white shadow-[0_-25px_70px_-25px_rgba(0,0,0,0.18)] backdrop-blur-2xl backdrop-saturate-150 animate-in slide-in-from-bottom duration-300">
-        <div className="sticky top-0 z-20 bg-white px-5 pb-3 pt-3 backdrop-blur-xl">
-          <div className="mx-auto h-1 w-9 rounded-full bg-black/10" />
+      <div className="absolute inset-x-3 bottom-3 max-h-[88dvh] overflow-y-auto rounded-[2rem] border border-white/10 bg-black/80 shadow-[0_-25px_70px_-25px_rgba(0,0,0,0.9)] backdrop-blur-2xl backdrop-saturate-150 animate-in slide-in-from-bottom duration-300">
+        <div className="sticky top-0 z-20 bg-black/80 px-5 pb-3 pt-3 backdrop-blur-xl">
+          <div className="mx-auto h-1 w-9 rounded-full bg-white/15" />
 
           <div className="mt-5 flex items-center justify-between">
             <div className="flex items-center gap-x-1">
               <Image
-                src={logoImg}
+                src={logo}
                 height={20}
                 width={20}
                 alt="logo"
               />
 
-              <p className="text-[16px] font-bold uppercase text-[#111111]">
+              <p className="text-[16px] font-bold uppercase text-white">
                 DUORA
               </p>
             </div>
@@ -162,7 +162,7 @@ export default function MobileMoreSheet({
               type="button"
               onClick={onClose}
               aria-label="Close menu"
-              className="flex size-9 items-center justify-center rounded-full border border-black/[0.07] bg-black/[0.025] text-black/40 transition hover:bg-black/[0.06] hover:text-black/80 active:scale-95"
+              className="flex size-9 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-white/40 transition hover:bg-white/10 hover:text-white/80 active:scale-95"
             >
               <X size={16} strokeWidth={1.7} />
             </button>
@@ -171,11 +171,11 @@ export default function MobileMoreSheet({
 
         <div className="px-5 pb-5">
           <div className="mb-3 flex items-center justify-between">
-            <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-black/30">
+            <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-white/30">
               Subscription
             </p>
 
-            <span className="text-[9px] text-black/25">
+            <span className="text-[9px] text-white/25">
               {locked ? 'Locked' : 'Manage plan'}
             </span>
           </div>
@@ -206,18 +206,18 @@ export default function MobileMoreSheet({
 
         <div className="px-5">
           <div className="mb-3 flex items-center justify-between">
-            <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-black/30">
+            <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-white/30">
               Workspace
             </p>
 
             {locked && (
-              <span className="text-[9px] text-black/30">
+              <span className="text-[9px] text-white/30">
                 Waiting for partner
               </span>
             )}
           </div>
 
-          <div className="overflow-hidden rounded-[1.5rem] border border-black/[0.06] bg-white/65 shadow-sm">
+          <div className="overflow-hidden rounded-[1.5rem] border border-white/[0.08] bg-white/[0.04]">
             {moreNavigation.map((item, index) => {
               const active = isActive(item.href)
               const disabled = locked
@@ -228,17 +228,17 @@ export default function MobileMoreSheet({
                     key={item.href}
                     className={`flex items-center px-3.5 py-3.5 opacity-40 ${
                       index !== moreNavigation.length - 1
-                        ? 'border-b border-black/[0.05]'
+                        ? 'border-b border-white/[0.06]'
                         : ''
                     }`}
                   >
                     <div className="min-w-0 flex-1">
-                      <p className="text-[12px] font-medium text-black/65">
+                      <p className="text-[12px] font-medium text-white/65">
                         {item.label}
                       </p>
                     </div>
 
-                    <div className="size-1.5 shrink-0 rounded-full bg-black/15" />
+                    <div className="size-1.5 shrink-0 rounded-full bg-white/15" />
                   </div>
                 )
               }
@@ -248,14 +248,14 @@ export default function MobileMoreSheet({
                   key={item.href}
                   href={item.href}
                   onClick={onClose}
-                  className={`group flex items-center px-3.5 py-3.5 transition-all duration-200 active:bg-black/[0.04] ${
+                  className={`group flex items-center px-3.5 py-3.5 transition-all duration-200 active:bg-white/[0.06] ${
                     index !== moreNavigation.length - 1
-                      ? 'border-b border-black/[0.05]'
+                      ? 'border-b border-white/[0.06]'
                       : ''
                   } ${
                     active
-                      ? 'bg-black/[0.035]'
-                      : 'hover:bg-black/[0.02]'
+                      ? 'bg-white/[0.07]'
+                      : 'hover:bg-white/[0.04]'
                   }`}
                 >
                   <div className="min-w-0 flex-1">
@@ -263,8 +263,8 @@ export default function MobileMoreSheet({
                       <p
                         className={`text-[12px] font-medium ${
                           active
-                            ? 'text-neutral-800'
-                            : 'text-neutral-500'
+                            ? 'text-white'
+                            : 'text-neutral-400'
                         }`}
                       >
                         {item.label}
@@ -275,8 +275,8 @@ export default function MobileMoreSheet({
                   <div
                     className={`size-1.5 shrink-0 rounded-full transition ${
                       active
-                        ? 'bg-neutral-800'
-                        : 'bg-black/10 group-hover:bg-black/20'
+                        ? 'bg-white'
+                        : 'bg-white/15 group-hover:bg-white/30'
                     }`}
                   />
                 </Link>
@@ -287,8 +287,8 @@ export default function MobileMoreSheet({
 
         {locked && (
           <div className="px-5 pt-4">
-            <div className="rounded-[1.25rem] border border-black/[0.05] bg-white/60 px-4 py-3.5 shadow-sm">
-              <p className="text-xs flex items-center gap-3 leading-5 text-black/50">
+            <div className="rounded-[1.25rem] border border-white/[0.06] bg-white/[0.04] px-4 py-3.5">
+              <p className="text-xs flex items-center gap-3 leading-5 text-white/50">
               <Lock width={20} height={20} />
                 Ruang kalian akan terbuka setelah pasangan bergabung menggunakan kode undangan.
               </p>
@@ -301,7 +301,7 @@ export default function MobileMoreSheet({
             type="button"
             onClick={handleLogout}
             disabled={isLoggingOut}
-            className="flex w-full items-center justify-center gap-2 rounded-[1.2rem] border border-black/[0.06] bg-white/60 px-4 py-3 text-[11px] font-medium text-black/40 shadow-sm transition hover:border-red-400/20 hover:bg-red-50 hover:text-red-500 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:border-black/[0.06] disabled:hover:bg-white/60 disabled:hover:text-black/40"
+            className="flex w-full items-center justify-center gap-2 rounded-[1.2rem] border border-white/[0.08] bg-white/[0.04] px-4 py-3 text-[11px] font-medium text-white/40 transition hover:border-red-400/20 hover:bg-red-500/10 hover:text-red-400 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:border-white/[0.08] disabled:hover:bg-white/[0.04] disabled:hover:text-white/40"
           >
             {isLoggingOut ? (
               <>
@@ -320,7 +320,7 @@ export default function MobileMoreSheet({
             )}
           </button>
 
-          <p className="mt-4 text-center text-[9px] tracking-[0.12em] text-black/20">
+          <p className="mt-4 text-center text-[9px] tracking-[0.12em] text-white/20">
             GROW TOGETHER WITH DUORA
           </p>
         </div>

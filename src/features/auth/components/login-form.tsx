@@ -16,7 +16,7 @@ import { login } from '../api'
 
 
 const inputClass =
-  'mt-2 h-12 w-full rounded-2xl border border-neutral-200/80 bg-white/80 px-4 pl-11 text-[14px] text-neutral-800 placeholder:text-neutral-400 outline-none transition focus:border-blue-300 focus:bg-white focus:ring-4 focus:ring-blue-500/5'
+  'mt-2 h-12 w-full rounded-full bg-neutral-800 px-4 pl-11 text-[14px] border border-white/10 text-white placeholder:text-neutral-400 outline-none'
 
 
 export default function LoginForm() {
@@ -95,7 +95,7 @@ export default function LoginForm() {
 
           <label
             htmlFor="email"
-            className="block text-[13px] font-medium text-neutral-600"
+            className="block text-[13px] font-medium text-description"
           >
             Email
           </label>
@@ -138,7 +138,7 @@ export default function LoginForm() {
 
             <label
               htmlFor="password"
-              className="block text-[13px] font-medium text-neutral-600"
+              className="block text-[13px] font-medium text-description"
             >
               Password
             </label>
@@ -224,7 +224,7 @@ export default function LoginForm() {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="flex justify-center items-center gap-x-2 w-full overflow-hidden rounded-full bg-white border border-black/5 shadow-lg h-12 text-sm font-semibold text-black disabled:cursor-not-allowed disabled:opacity-70"
+          className="flex justify-center items-center gap-x-2 w-full overflow-hidden rounded-full bg-black border border-white/5 shadow-lg h-12 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
         >
           {isSubmitting ? (
             <>
@@ -234,7 +234,7 @@ export default function LoginForm() {
           ) : (
             <>
               <span>Sign in</span>
-              <span className="flex size-4.5 items-center justify-center text-black sm:size-5">
+              <span className="flex size-4.5 items-center justify-center text-white sm:size-5">
                 <ArrowRight size={10} />
               </span>
             </>
@@ -249,11 +249,11 @@ export default function LoginForm() {
       {/* ======================================================= */}
 
       <div className="flex items-center gap-3">
-        <div className="h-px flex-1 bg-neutral-200" />
+        <div className="h-px flex-1 bg-neutral-600" />
         <span className="text-[12px] font-medium text-neutral-400">
           or
         </span>
-        <div className="h-px flex-1 bg-neutral-200" />
+        <div className="h-px flex-1 bg-neutral-600" />
       </div>
 
 
@@ -265,7 +265,7 @@ export default function LoginForm() {
         type="button"
         onClick={handleGoogleSignIn}
         disabled={isGoogleLoading || isSubmitting}
-        className="flex h-12 w-full items-center justify-center gap-3 rounded-full border border-neutral-200/80 bg-neutral-800 text-sm font-medium text-white shadow-lg disabled:cursor-not-allowed disabled:opacity-50"
+        className="flex h-12 w-full items-center justify-center gap-3 rounded-full bg-black text-sm font-medium text-white shadow-lg disabled:cursor-not-allowed disabled:opacity-50"
       >
         <svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true">
           <path

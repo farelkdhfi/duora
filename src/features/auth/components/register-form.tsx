@@ -26,7 +26,7 @@ import {
 import { register as registerUser } from '../api'
 
 const inputClass =
-  'mt-2 h-12 w-full rounded-2xl border border-neutral-200/80 bg-white/80 px-4 pl-11 text-[14px] text-neutral-800 placeholder:text-neutral-400 outline-none transition focus:border-blue-300 focus:bg-white focus:ring-4 focus:ring-blue-500/5'
+  'mt-2 h-12 w-full rounded-full bg-neutral-800 px-4 pl-11 text-[14px] border border-white/10 text-white placeholder:text-neutral-400 outline-none'
 
 type Step = 1 | 2 | 3 | 4 | 5 | 6
 
@@ -200,7 +200,7 @@ export default function RegisterForm() {
                 key={current}
                 className={`h-1 flex-1 rounded-full transition-all duration-300 ${step >= current
                   ? 'bg-gradient-to-r from-pink-300 to-blue-300'
-                  : 'bg-neutral-200'
+                  : 'bg-neutral-700'
                   }`}
               />
             )
@@ -214,7 +214,7 @@ export default function RegisterForm() {
       {/* ===================================================== */}
 
       <div className='mt-30'>
-        <h3 className="mt-2 text-sm font-semibold leading-[1] tracking-[-0.055em] text-neutral-900 md:text-[28px]">
+        <h3 className="mt-2 text-sm font-semibold leading-[1] tracking-[-0.055em] text-white md:text-[28px]">
           {currentTitle.title}
         </h3>
 
@@ -237,7 +237,7 @@ export default function RegisterForm() {
             type="button"
             onClick={handleGoogleSignUp}
             disabled={isGoogleLoading}
-            className="flex h-12 w-full items-center justify-center gap-3 rounded-full border border-neutral-200/80 bg-neutral-800 text-sm font-medium text-white shadow-lg transition hover:border-neutral-300 hover:bg-neutral-50 disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex h-12 w-full items-center justify-center gap-3 rounded-full bg-black text-sm font-medium text-white shadow-lg disabled:cursor-not-allowed disabled:opacity-50"
           >
 
             <svg
@@ -281,13 +281,13 @@ export default function RegisterForm() {
 
           <div className="flex items-center gap-3 py-1">
 
-            <div className="h-px flex-1 bg-neutral-200" />
+            <div className="h-px flex-1 bg-neutral-600" />
 
             <span className="text-[12px] font-medium text-neutral-400">
               or
             </span>
 
-            <div className="h-px flex-1 bg-neutral-200" />
+            <div className="h-px flex-1 bg-neutral-600" />
 
           </div>
 
@@ -297,7 +297,7 @@ export default function RegisterForm() {
             type="button"
             onClick={handleNext}
             disabled={isGoogleLoading}
-            className="flex h-12 w-full items-center justify-center gap-2 overflow-hidden rounded-full border border-black/5 bg-white py-3.5 text-sm font-semibold text-black shadow-lg transition hover:bg-neutral-50 disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex h-12 w-full items-center justify-center gap-x-2 overflow-hidden rounded-full border border-white/5 bg-black text-sm font-semibold text-white shadow-lg disabled:cursor-not-allowed disabled:opacity-50"
           >
             <span>
               Sign up with email
@@ -450,7 +450,7 @@ export default function RegisterForm() {
                   onClick={() =>
                     setShowPassword((value) => !value)
                   }
-                  className="absolute right-3 top-1/2 mt-[4px] flex size-8 -translate-y-1/2 items-center justify-center rounded-xl text-neutral-400 transition hover:bg-neutral-100 hover:text-neutral-700"
+                  className="absolute right-3 top-1/2 mt-[4px] flex size-8 -translate-y-1/2 items-center justify-center rounded-xl text-neutral-400 transition hover:bg-white/10 hover:text-white"
                   aria-label={
                     showPassword
                       ? 'Hide password'
@@ -511,7 +511,7 @@ export default function RegisterForm() {
                       (value) => !value,
                     )
                   }
-                  className="absolute right-3 top-1/2 mt-[4px] flex size-8 -translate-y-1/2 items-center justify-center rounded-xl text-neutral-400 transition hover:bg-neutral-100 hover:text-neutral-700"
+                  className="absolute right-3 top-1/2 mt-[4px] flex size-8 -translate-y-1/2 items-center justify-center rounded-xl text-neutral-400 transition hover:bg-white/10 hover:text-white"
                   aria-label={
                     showConfirmPassword
                       ? 'Hide confirm password'
@@ -543,9 +543,9 @@ export default function RegisterForm() {
           {/* ================================================= */}
 
           {registerMutation.error && (
-            <div className="rounded-2xl border border-rose-100 bg-rose-50/70 px-4 py-3">
+            <div className="rounded-2xl border border-rose-500/20 bg-rose-500/10 px-4 py-3">
 
-              <p className="text-[13px] font-medium leading-5 text-rose-600">
+              <p className="text-[13px] font-medium leading-5 text-rose-400">
                 {registerMutation.error.message}
               </p>
 
@@ -553,8 +553,8 @@ export default function RegisterForm() {
           )}
 
           {needsEmailConfirmation && (
-            <div className="rounded-2xl border border-blue-100 bg-blue-50/70 px-4 py-3">
-              <p className="text-[13px] font-medium leading-5 text-blue-600">
+            <div className="rounded-2xl border border-blue-400/20 bg-blue-400/10 px-4 py-3">
+              <p className="text-[13px] font-medium leading-5 text-blue-300">
                 Akun berhasil dibuat. Cek email kamu untuk konfirmasi, lalu login.
               </p>
             </div>
@@ -572,7 +572,7 @@ export default function RegisterForm() {
               type="button"
               onClick={handleBack}
               disabled={registerMutation.isPending}
-              className="flex size-12 shrink-0 items-center justify-center rounded-full border border-black/5 bg-white text-neutral-500 shadow-lg transition hover:bg-neutral-50 hover:text-black disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex size-12 shrink-0 items-center justify-center rounded-full border border-white/10 bg-neutral-800 text-neutral-400 shadow-lg transition hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
               aria-label="Go back"
             >
 
@@ -587,7 +587,7 @@ export default function RegisterForm() {
                 type="button"
                 onClick={handleNext}
                 disabled={registerMutation.isPending}
-                className="flex h-12 flex-1 items-center justify-center gap-2 overflow-hidden rounded-full border border-black/5 bg-white text-sm font-semibold text-black shadow-lg transition hover:bg-neutral-50 disabled:cursor-not-allowed disabled:opacity-50"
+                className="flex h-12 flex-1 items-center justify-center gap-x-2 overflow-hidden rounded-full border border-white/5 bg-black text-sm font-semibold text-white shadow-lg disabled:cursor-not-allowed disabled:opacity-50"
               >
 
                 <span>
@@ -604,7 +604,7 @@ export default function RegisterForm() {
               <button
                 type="submit"
                 disabled={isSubmitting || needsEmailConfirmation}
-                className="flex h-12 flex-1 items-center justify-center gap-2 overflow-hidden rounded-full border border-black/5 bg-white text-sm font-semibold text-black shadow-lg transition hover:bg-neutral-50 disabled:cursor-not-allowed disabled:opacity-70"
+                className="flex h-12 flex-1 items-center justify-center gap-x-2 overflow-hidden rounded-full border border-white/5 bg-black text-sm font-semibold text-white shadow-lg disabled:cursor-not-allowed disabled:opacity-70"
               >
                 {isSubmitting ? (
                   <>
