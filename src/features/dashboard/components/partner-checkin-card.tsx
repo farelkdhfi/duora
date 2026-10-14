@@ -51,29 +51,19 @@ const moodLabel: Record<Mood, string> = {
   stressed: 'Stressed',
 }
 
-function CardShell({
-  children,
-  userMood,
-  partnerMood,
-}: {
-  children: React.ReactNode
-  userMood?: Mood
-  partnerMood?: Mood
-}) {
-  return (
-    <div className="relative isolate overflow-hidden rounded-[2rem] bg-black border border-white/20 shadow-[0_20px_60px_-35px_rgba(0,0,0,0.6)]">
-      {/* split: kiri = kamu, kanan = partner. horizon 62 supaya pas dengan kaki karakter */}
-      <StudioBackdrop mood={[userMood, partnerMood]} horizon={62} />
+/**
+ * Pengaturan tinggi container & lantai.
+ * - CARD_HEIGHT : tinggi total tiap container (px)
+ * - HORIZON     : posisi garis horizon dalam % dari atas.
+ *                 Makin kecil = lantai hitam makin tinggi.
+ * - FLOOR_PX    : tinggi lantai hasil perhitungan, dipakai buat
+ *                 menaruh karakter tepat di garis horizon.
+ */
+const CARD_HEIGHT = 200
+const HORIZON = 58
+const FLOOR_PX = Math.round(CARD_HEIGHT * (1 - HORIZON / 100))
 
-      {/* padding bawah ekstra supaya ada ruang "lantai" di bawah karakter */}
-      <div className="relative p-5 ">
-        {children}
-      </div>
-    </div>
-  )
-}
-
-function MoodItem({
+function MoodCard({
   role,
   checkin,
   isUser,
@@ -85,17 +75,18 @@ function MoodItem({
   const [emotIndex, setEmotIndex] = useState(0)
   const [isFading, setIsFading] = useState(false)
 
-  const variants = checkin
-    ? emotVariants[checkin.mood]
-    : []
+  const mood = checkin?.mood
+  const variants = checkin ? emotVariants[checkin.mood] : []
 
   useEffect(() => {
     if (!checkin || variants.length <= 1) return
 
+    let swapTimeout: number | undefined
+
     const interval = window.setInterval(() => {
       setIsFading(true)
 
-      window.setTimeout(() => {
+      swapTimeout = window.setTimeout(() => {
         setEmotIndex((current) => (current + 1) % variants.length)
         setIsFading(false)
       }, 100)
@@ -103,6 +94,7 @@ function MoodItem({
 
     return () => {
       window.clearInterval(interval)
+      if (swapTimeout) window.clearTimeout(swapTimeout)
     }
   }, [checkin, variants.length])
 
@@ -111,80 +103,73 @@ function MoodItem({
     setIsFading(false)
   }, [checkin?.mood])
 
-  if (!checkin) {
-    return (
-      <Link
-        href={isUser ? '/check-in' : '#'}
-        className="group relative flex min-h-[132px] flex-1 flex-col items-center justify-center overflow-hidden rounded-[1.5rem]"
-      >
-        <svg
-          className="pointer-events-none absolute -right-6 -top-6 size-20 opacity-50"
-          viewBox="0 0 80 80"
-          fill="none"
-          aria-hidden="true"
-        >
-          <circle
-            cx="40"
-            cy="40"
-            r="27"
-            stroke="#e9a8bd"
-            strokeOpacity=".2"
-          />
-
-          <circle
-            cx="40"
-            cy="40"
-            r="20"
-            stroke="#9eb9df"
-            strokeOpacity=".18"
-            strokeDasharray="2 6"
-          />
-        </svg>
-
-        <div className="relative flex size-12 items-center justify-center rounded-full border border-white/[0.08] bg-white/[0.06] backdrop-blur-sm">
-          <Heart
-            size={16}
-            strokeWidth={1.6}
-            className="text-pink-300"
-          />
-        </div>
-
-        <p className="relative mt-3 text-[11px] font-medium tracking-[-0.02em] text-neutral-300">
-          {role}
-        </p>
-
-        <div className="relative mt-1 flex items-center gap-1 text-[9px] text-neutral-500">
-          <span>{isUser ? 'Check in' : 'Not yet'}</span>
-
-          {isUser && (
-            <ArrowUpRight
-              size={10}
-              strokeWidth={1.8}
-              className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-            />
-          )}
-        </div>
-      </Link>
-    )
-  }
-
   const animatedEmot = variants[emotIndex] ?? variants[0]
 
   return (
-    <div className="relative flex min-h-[132px] flex-1 flex-col items-center justify-center overflow-hidden rounded-[1.5rem] px-4 py-4">
-      <p className="relative mb-2 text-[11px] font-medium tracking-[-0.02em] text-neutral-300">
-        {role}
-      </p>
+    <div
+      className="relative isolate flex-1 overflow-hidden rounded-[2rem] bg-black shadow-[0_20px_60px_-35px_rgba(0,0,0,0.6)]"
+      style={{ height: CARD_HEIGHT }}
+    >
+      {/* backdrop sendiri per container: gradient di atas, lantai hitam di bawah horizon */}
+      <StudioBackdrop mood={[mood, mood]} horizon={HORIZON} />
 
-      <div className="relative flex size-[80px] items-center justify-center">
-        <StudioFloorShadow mood={checkin.mood} />
+      {/* konten di area gradient (di atas lantai) */}
+      <div
+        className="absolute inset-x-0 top-0 flex items-end justify-center"
+        style={{ bottom: FLOOR_PX }}
+      >
+        {!checkin ? (
+          <Link
+            href={isUser ? '/check-in' : '#'}
+            className="group relative mb-6 flex flex-col items-center justify-center"
+          >
+            <div className="relative flex size-12 items-center justify-center rounded-full border border-white/[0.08] bg-white/[0.06] backdrop-blur-sm">
+              <Heart size={16} strokeWidth={1.6} className="text-pink-300" />
+            </div>
 
-        <img
-          key={`${checkin.id}-${checkin.mood}-${emotIndex}`}
-          src={animatedEmot.src}
-          alt={`${moodLabel[checkin.mood]} mood`}
-          className={`relative z-10 size-56 object-contain drop-shadow-[0_6px_6px_rgba(0,0,0,0.35)] transition-opacity duration-350 ${isFading ? 'opacity-0' : 'opacity-100'}`}
-        />
+            <div className="relative mt-2 flex items-center gap-1 text-[10px] text-neutral-400">
+              <span>{isUser ? 'Check in' : 'Not yet'}</span>
+
+              {isUser && (
+                <ArrowUpRight
+                  size={10}
+                  strokeWidth={1.8}
+                  className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                />
+              )}
+            </div>
+          </Link>
+        ) : (
+          // kaki karakter sedikit masuk ke lantai supaya terlihat berdiri di atasnya
+          <div className="relative -mb-3 flex size-40 items-end justify-center">
+            <StudioFloorShadow mood={checkin.mood} />
+
+            <img
+              key={`${checkin.id}-${checkin.mood}-${emotIndex}`}
+              src={animatedEmot.src}
+              alt={`${moodLabel[checkin.mood]} mood`}
+              className={`relative z-10 size-25 object-contain drop-shadow-[0_6px_6px_rgba(0,0,0,0.35)] transition-opacity duration-300 ${
+                isFading ? 'opacity-0' : 'opacity-100'
+              }`}
+            />
+          </div>
+        )}
+      </div>
+
+      {/* label ditaruh di lantai hitam */}
+      <div
+        className="absolute inset-x-0 bottom-0 flex flex-col items-center justify-center gap-0.5"
+        style={{ height: FLOOR_PX }}
+      >
+        <p className="text-[11px] font-medium tracking-[-0.02em] text-neutral-200">
+          {role}
+        </p>
+
+        {checkin && (
+          <p className="text-[9px] text-neutral-500">
+            {moodLabel[checkin.mood]}
+          </p>
+        )}
       </div>
     </div>
   )
@@ -193,44 +178,11 @@ function MoodItem({
 export default function PartnerCheckinCard({
   userCheckin,
   partnerCheckin,
-  userName,
-  partnerName,
 }: PartnerCheckinCardProps) {
   return (
-    <CardShell
-      userMood={userCheckin?.mood}
-      partnerMood={partnerCheckin?.mood}
-    >
-      <div className="relative">
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <h2 className="text-sm font-medium tracking-[-0.055em] text-neutral-50">
-              How are you two?
-            </h2>
-          </div>
-
-          <Link
-            href="/check-in"
-            aria-label="Open check-in"
-            className="flex size-9 shrink-0 items-center justify-center rounded-full border border-white/[0.08] bg-white/10 text-neutral-300 backdrop-blur-sm transition-all duration-300 hover:bg-white hover:text-neutral-900"
-          >
-            <ArrowUpRight size={14} strokeWidth={2.2} />
-          </Link>
-        </div>
-      </div>
-
-      <div className="relative mt-0 flex gap-2.5">
-        <MoodItem
-          role="You"
-          checkin={userCheckin}
-          isUser
-        />
-
-        <MoodItem
-          role="Partner"
-          checkin={partnerCheckin}
-        />
-      </div>
-    </CardShell>
+    <div className="flex gap-3">
+      <MoodCard role="You" checkin={userCheckin} isUser />
+      <MoodCard role="Partner" checkin={partnerCheckin} />
+    </div>
   )
 }

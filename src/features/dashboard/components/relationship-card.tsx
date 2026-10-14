@@ -1,6 +1,8 @@
 'use client'
 
 import { useEffect, useId, useMemo, useState } from 'react'
+import Image from 'next/image'
+import { Bell } from 'lucide-react'
 import {
   AnimatePresence,
   animate,
@@ -8,6 +10,7 @@ import {
   useReducedMotion,
   type Variants,
 } from 'framer-motion'
+import logoWhite from '@/assets/logo-white.png'
 
 interface RelationshipCardProps {
   userName: string
@@ -15,6 +18,10 @@ interface RelationshipCardProps {
   userAvatarUrl?: string | null
   partnerAvatarUrl?: string | null
   connectedAt?: string | null
+  /** Dipanggil saat tombol notifikasi diklik */
+  onNotificationClick?: () => void
+  /** Jumlah notifikasi belum dibaca (menampilkan titik penanda jika > 0) */
+  unreadCount?: number
 }
 
 type SlideKey = 'together' | 'days'
@@ -86,6 +93,8 @@ export default function RelationshipCard({
   userAvatarUrl,
   partnerAvatarUrl,
   connectedAt,
+  onNotificationClick,
+  unreadCount = 0,
 }: RelationshipCardProps) {
   const { slide: slideVariants } = useMotionVariants()
   const [index, setIndex] = useState(0)
@@ -130,6 +139,37 @@ export default function RelationshipCard({
     >
       {/* BACKGROUND */}
       <BackgroundOrnaments />
+
+      {/* TOP BAR (LOGO + NOTIFIKASI) — pojok kanan atas */}
+      <div className="absolute left-5 top-5 z-20 flex items-center  sm:right-4 sm:top-4">
+        <Image
+          src={logoWhite}
+          alt="Logo"
+          priority
+          draggable={false}
+          className="h-4 w-auto select-none sm:h-6"
+        />
+        <p className='text-sm font-semibold'>Duora</p>
+      </div>
+
+      <div className="absolute right-5 top-5 z-20 flex items-center gap-2.5 sm:right-4 sm:top-4">
+        <button
+          type="button"
+          onClick={onNotificationClick}
+          aria-label={
+            unreadCount > 0
+              ? `Notifikasi, ${unreadCount} belum dibaca`
+              : 'Notifikasi'
+          }
+          className="relative flex size-8 items-center justify-center rounded-full border border-white/10 bg-white/5 text-neutral-200 transition-colors hover:bg-white/10 active:scale-95 sm:size-9"
+        >
+          <Bell className="size-4 sm:size-[18px]" strokeWidth={1.75} />
+
+          {unreadCount > 0 && (
+            <span className="absolute right-1.5 top-1.5 block size-2 rounded-full bg-pink-400 ring-2 ring-[#0a0a0c]" />
+          )}
+        </button>
+      </div>
 
       {/* CONTENT */}
       <div className="relative z-10">
@@ -276,11 +316,6 @@ function BackgroundOrnaments() {
       aria-hidden="true"
       className="pointer-events-none absolute inset-0 z-0 overflow-hidden"
     >
-     
-      <div className='absolute -bottom-10 -left-10 w-30 h-30 bg-blue-400/20 blur-[60px] rounded-full'></div>
-      <div className='absolute -bottom-10 -right-10 w-30 h-30 bg-pink-400/20 blur-[60px] rounded-full'></div>
-
-
       {/* Floating hearts & bubbles */}
       {ORNAMENTS.map((o) => (
         <FloatingOrnament key={o.id} o={o} reduced={!!reduced} />
@@ -434,24 +469,6 @@ function TogetherSlide({
   return (
     <>
       <div className="relative flex items-center justify-center">
-        {/* Shared halo (menyatukan dua avatar) */}
-        <motion.div
-          className="pointer-events-none absolute inset-0 flex items-center justify-center"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1.2, delay: reduced ? 0 : 0.35 }}
-        >
-          <motion.div
-            className="h-[64px] w-[170px] rounded-full bg-linear-to-r from-[#7fa8f0]/45 via-[#b98be0]/40 to-[#f08ab4]/45 blur-2xl sm:h-[72px] sm:w-[190px]"
-            animate={
-              reduced
-                ? undefined
-                : { opacity: [0.55, 0.95, 0.55], scale: [1, 1.1, 1] }
-            }
-            transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
-          />
-        </motion.div>
-
         {/* Avatars */}
         <div className="relative flex items-center justify-center -space-x-3.5 sm:-space-x-4">
           {/* USER — masuk dari kiri */}
@@ -528,7 +545,7 @@ function TogetherSlide({
 
       {/* Names */}
       <motion.div variants={item} className="mt-4 flex flex-col items-center">
-        <p className="flex max-w-[260px] items-baseline justify-center gap-1.5 text-lg capitalize font-semibold tracking-[-0.03em] text-neutral-50 sm:max-w-[300px] sm:text-[18px]">
+        <p className="flex max-w-[260px] items-baseline justify-center gap-1.5 text-base capitalize font-semibold tracking-[-0.03em] text-neutral-50 sm:max-w-[300px] sm:text-[18px]">
           <span className="min-w-0 max-w-[100px] truncate sm:max-w-[120px]">
             {userName}
           </span>

@@ -145,7 +145,7 @@ export default function MobileMoreSheet({
           <div className="mx-auto h-1 w-9 rounded-full bg-white/15" />
 
           <div className="mt-5 flex items-center justify-between">
-            <div className="flex items-center gap-x-1">
+            <div className="flex items-center">
               <Image
                 src={logo}
                 height={20}
@@ -153,7 +153,7 @@ export default function MobileMoreSheet({
                 alt="logo"
               />
 
-              <p className="text-[16px] font-bold uppercase text-white">
+              <p className="text-[16px] font-semibold uppercase text-white">
                 DUORA
               </p>
             </div>

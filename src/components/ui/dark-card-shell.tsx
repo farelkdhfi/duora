@@ -2,74 +2,187 @@ import type { ReactNode } from 'react'
 
 export type DarkCardVariant = 'default' | 'sky' | 'rose' | 'violet' | 'white'
 
+type Stop = [position: number, alpha: number]
+type Palette = { wall: string; shade: string }
+
 interface VariantStyle {
-  background: string
+  /** wall = warna dinding studio, shade = hue sama tapi lebih gelap (falloff & lantai) */
+  palette: Palette
   border: string
   accentA: string
   accentB: string
 }
 
-/* Gradient kecil & lembut di pojok, sisanya hitam */
+/* ============================================================= */
+/* WARNA PER VARIANT                                             */
+/* Format palette: string RGB tanpa "rgb()"                      */
+/* ============================================================= */
+
 const VARIANTS: Record<DarkCardVariant, VariantStyle> = {
-  /* Biru kanan atas + pink kiri bawah (PartnerCheckinCard) */
+  /* Periwinkle netral (PartnerCheckinCard) */
   default: {
-    background: [
-      'radial-gradient(ellipse 45% 40% at 100% 0%, rgba(90,130,210,0.10) 0%, rgba(90,130,210,0) 100%)',
-      'radial-gradient(ellipse 45% 40% at 0% 100%, rgba(214,100,150,0.08) 0%, rgba(214,100,150,0) 100%)',
-      'linear-gradient(to bottom, #0c0c10 0%, #000000 100%)',
-    ].join(', '),
-    border: 'border-white/[0.07]',
-    accentA: '#e9a8bd',
-    accentB: '#9eb9df',
+    palette: { wall: '60, 58, 88', shade: '10, 10, 18' },
+    border: 'border-white/[0.08]',
+    accentA: '#F4B6CF',
+    accentB: '#A9C7F5',
   },
 
-  /* Sky / biru lembut (Goals) */
+  /* Sky / biru (Goals) */
   sky: {
-    background: [
-      'radial-gradient(ellipse 50% 42% at 100% 0%, rgba(110,160,235,0.11) 0%, rgba(110,160,235,0) 100%)',
-      'radial-gradient(ellipse 40% 34% at 0% 100%, rgba(125,211,230,0.05) 0%, rgba(125,211,230,0) 100%)',
-      'linear-gradient(to bottom, #090b10 0%, #000000 100%)',
-    ].join(', '),
-    border: 'border-sky-200/[0.09]',
-    accentA: '#9cc4f5',
-    accentB: '#8adbe8',
+    palette: { wall: '40, 84, 124', shade: '6, 16, 30' },
+    border: 'border-sky-200/[0.12]',
+    accentA: '#A8D1FF',
+    accentB: '#A6E8F0',
   },
 
-  /* Rose / pink lembut (Planner) */
+  /* Rose / pink (Planner) */
   rose: {
-    background: [
-      'radial-gradient(ellipse 50% 42% at 100% 0%, rgba(236,140,180,0.10) 0%, rgba(236,140,180,0) 100%)',
-      'radial-gradient(ellipse 40% 34% at 0% 100%, rgba(190,150,235,0.06) 0%, rgba(190,150,235,0) 100%)',
-      'linear-gradient(to bottom, #100a0d 0%, #000000 100%)',
-    ].join(', '),
-    border: 'border-rose-200/[0.09]',
-    accentA: '#f3b6cd',
-    accentB: '#cfb4f0',
+    palette: { wall: '118, 50, 84', shade: '28, 8, 16' },
+    border: 'border-rose-200/[0.12]',
+    accentA: '#FFB8D2',
+    accentB: '#D8C2F5',
   },
 
-  /* Violet / ungu lembut (Q&A) */
+  /* Violet / ungu (Q&A) */
   violet: {
-    background: [
-      'radial-gradient(ellipse 50% 42% at 100% 0%, rgba(167,139,250,0.12) 0%, rgba(167,139,250,0) 100%)',
-      'radial-gradient(ellipse 40% 34% at 0% 100%, rgba(232,121,249,0.05) 0%, rgba(232,121,249,0) 100%)',
-      'linear-gradient(to bottom, #0b0914 0%, #000000 100%)',
-    ].join(', '),
-    border: 'border-violet-200/[0.09]',
-    accentA: '#c4b5fd',
-    accentB: '#e9a8f5',
+    palette: { wall: '84, 58, 128', shade: '16, 9, 32' },
+    border: 'border-violet-200/[0.12]',
+    accentA: '#CDBDFF',
+    accentB: '#F2B8F5',
   },
 
-  /* White / putih lembut (Debates) */
+  /* White / abu terang (Debates) */
   white: {
-    background: [
-      'radial-gradient(ellipse 50% 42% at 100% 0%, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0) 100%)',
-      'radial-gradient(ellipse 40% 34% at 0% 100%, rgba(220,220,220,0.05) 0%, rgba(220,220,220,0) 100%)',
-      'linear-gradient(to bottom, #0d0d0d 0%, #000000 100%)',
-    ].join(', '),
-    border: 'border-white/[0.09]',
-    accentA: '#f5f5f5',
-    accentB: '#cfcfcf',
+    palette: { wall: '88, 90, 100', shade: '10, 10, 12' },
+    border: 'border-white/[0.12]',
+    accentA: '#F5F5FA',
+    accentB: '#DADCE6',
   },
+}
+
+/* ============================================================= */
+/* GRADIENT STUDIO                                               */
+/* ============================================================= */
+
+const rgba = (rgb: string, alpha: number) => `rgba(${rgb}, ${alpha})`
+
+const vertical = (rgb: string, stops: Stop[], offset = 0) =>
+  `linear-gradient(to bottom, ${stops
+    .map(([position, alpha]) => `${rgba(rgb, alpha)} ${position + offset}%`)
+    .join(', ')})`
+
+// Warna dinding memudar pelan ke lantai hampir netral, tanpa garis potong.
+const WALL_TO_FLOOR: Stop[] = [
+  [0, 0.92], [12, 0.9], [24, 0.84], [36, 0.7], [47, 0.5],
+  [57, 0.32], [67, 0.18], [78, 0.08], [90, 0.02], [100, 0],
+]
+
+// Bayangan meredup ke arah plafon.
+const CEILING_FALLOFF: Stop[] = [
+  [0, 0.12], [8, 0.08], [16, 0.045], [26, 0.015], [34, 0],
+]
+
+// Cove: pita bayangan lembut tempat dinding melengkung ke lantai (relatif ke horizon).
+const COVE: Stop[] = [
+  [-26, 0], [-18, 0.025], [-10, 0.065], [-3, 0.1], [3, 0.11], [10, 0.08], [18, 0.04], [27, 0],
+]
+
+// Key shade hitam di area atas-tengah.
+const KEY_SHADE =
+  'radial-gradient(ellipse 72% 42% at 50% 30%, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.19) 28%, rgba(0,0,0,0.09) 55%, rgba(0,0,0,0.02) 80%, rgba(0,0,0,0) 100%)'
+
+// Bayangan lantai. Pakai persen (bukan px) supaya pas di card kecil maupun besar.
+const floorShade = (rgb: string, horizon: number) =>
+  `radial-gradient(ellipse 70% 16% at 50% ${horizon + 3}%, ${rgba(rgb, 0.2)} 0%, ${rgba(rgb, 0.1)} 40%, ${rgba(rgb, 0.03)} 75%, ${rgba(rgb, 0)} 100%)`
+
+const buildWall = ({ wall, shade }: Palette, horizon: number) =>
+  [
+    floorShade(shade, horizon),
+    vertical(shade, COVE, horizon),
+    vertical(shade, CEILING_FALLOFF),
+    KEY_SHADE,
+    vertical(wall, WALL_TO_FLOOR),
+  ].join(', ')
+
+// Cache per variant + horizon, supaya string gradient tidak dibuat ulang tiap render.
+const wallCache = new Map<string, string>()
+
+const getWall = (variant: DarkCardVariant, horizon: number) => {
+  const key = `${variant}-${horizon}`
+  let hit = wallCache.get(key)
+
+  if (!hit) {
+    hit = buildWall(VARIANTS[variant].palette, horizon)
+    wallCache.set(key, hit)
+  }
+
+  return hit
+}
+
+/* ---------------- Overlay statis ---------------- */
+
+// Bayangan studio miring dari kiri atas: side-shade lebar + cone tipis.
+const SIDE_SHADE =
+  'linear-gradient(112deg, rgba(0,0,0,0.26) 0%, rgba(0,0,0,0.13) 26%, rgba(0,0,0,0.045) 50%, rgba(0,0,0,0) 68%)'
+
+const SHADE_CONE =
+  'conic-gradient(from 0deg at -10% -16%, rgba(0,0,0,0) 104deg, rgba(0,0,0,0.03) 114deg, rgba(0,0,0,0.08) 124deg, rgba(0,0,0,0.14) 134deg, rgba(0,0,0,0.16) 141deg, rgba(0,0,0,0.13) 149deg, rgba(0,0,0,0.07) 160deg, rgba(0,0,0,0.024) 171deg, rgba(0,0,0,0) 182deg)'
+
+// Bayangan miring memudar sendiri sebelum sampai lantai.
+const FADE_BEFORE_FLOOR =
+  'linear-gradient(to bottom, #000 0%, #000 40%, transparent 80%)'
+
+// Sisi seberang sedikit lebih gelap, plus vignette halus.
+const LIGHT_FALLOFF =
+  'linear-gradient(292deg, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.1) 30%, rgba(0,0,0,0) 55%)'
+
+const VIGNETTE =
+  'radial-gradient(ellipse 85% 75% at 50% 44%, rgba(0,0,0,0) 50%, rgba(0,0,0,0.15) 78%, rgba(0,0,0,0.3) 100%)'
+
+// Film grain halus: menyamarkan banding gradient dan memberi kesan matte.
+const GRAIN = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E")`
+
+function StudioGradient({
+  variant,
+  horizon,
+}: {
+  variant: DarkCardVariant
+  horizon: number
+}) {
+  return (
+    <div
+      aria-hidden
+      className="pointer-events-none absolute inset-0 overflow-hidden bg-[#0a0a0c]"
+    >
+      {/* DINDING + COVE + LANTAI */}
+      <div
+        className="absolute inset-0"
+        style={{ background: getWall(variant, horizon) }}
+      />
+
+      {/* BAYANGAN STUDIO MIRING (memudar sebelum lantai) */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background: `${SHADE_CONE}, ${SIDE_SHADE}`,
+          maskImage: FADE_BEFORE_FLOOR,
+          WebkitMaskImage: FADE_BEFORE_FLOOR,
+        }}
+      />
+
+      {/* FALLOFF + VIGNETTE */}
+      <div
+        className="absolute inset-0"
+        style={{ background: `${VIGNETTE}, ${LIGHT_FALLOFF}` }}
+      />
+
+      {/* FILM GRAIN */}
+      <div
+        className="absolute inset-0 opacity-[0.07]"
+        style={{ backgroundImage: GRAIN }}
+      />
+    </div>
+  )
 }
 
 /* ============================================================= */
@@ -404,22 +517,30 @@ interface DarkCardShellProps {
   variant?: DarkCardVariant
   /** Untuk card setengah lebar (2 kolom) */
   compact?: boolean
+  /**
+   * Titik dinding menyatu dengan lantai (% tinggi card).
+   * Makin besar = dinding berwarna makin tinggi, lantai gelap makin pendek.
+   */
+  horizon?: number
 }
 
 export default function DarkCardShell({
   children,
   variant = 'default',
   compact = false,
+  horizon = 68,
 }: DarkCardShellProps) {
   const v = VARIANTS[variant]
 
   return (
     <div
-      className={`relative overflow-hidden border bg-black shadow-[0_20px_60px_-35px_rgba(0,0,0,0.6)] ${v.border} ${
+      className={`relative isolate overflow-hidden border bg-black shadow-[0_20px_60px_-35px_rgba(0,0,0,0.6)] ${v.border} ${
         compact ? 'flex flex-col rounded-[1.5rem]' : 'rounded-[2rem]'
       }`}
-      style={{ backgroundImage: v.background }}
     >
+      {/* gradient studio (dinding -> lantai) */}
+      <StudioGradient variant={variant} horizon={horizon} />
+
       <svg
         className={`pointer-events-none absolute ${
           compact

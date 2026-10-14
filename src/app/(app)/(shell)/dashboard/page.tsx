@@ -1,7 +1,9 @@
 'use client'
 
 import { useEffect } from 'react'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { ArrowUpRight } from 'lucide-react'
 
 import {
   useMyRelationship,
@@ -22,6 +24,48 @@ import {
 import { useGetMyProfile } from '@/features/profiles/queries'
 import WaitingForPartner from '@/features/dashboard/components/waiting-for-partner'
 import DashboardSkeleton from '@/features/dashboard/components/dashboard-skeleton'
+
+/**
+ * Header section yang dipakai ulang.
+ * - href    : kalau diisi, tombol panah muncul di kanan
+ * - divider : kalau true, garis horizontal full width muncul di bawah teks
+ *
+ * Semua warna header ada di sini, jadi kalau tema halamanmu gelap
+ * cukup ubah satu tempat ini.
+ */
+function SectionHeader({
+  title,
+  href,
+  linkLabel,
+  divider,
+}: {
+  title: string
+  href?: string
+  linkLabel?: string
+  divider?: boolean
+}) {
+  return (
+    <div className="mb-3 flex">
+      <div className="flex items-center justify-between gap-4 px-1 w-full">
+        <h2 className="text-sm font-medium text-white">
+          {title}
+        </h2>
+
+        {href && (
+          <Link
+            href={href}
+            aria-label={linkLabel ?? title}
+            className="flex size-9 shrink-0 items-center justify-center rounded-full border border-neutral-200/5 bg-neutral-800 text-neutral-white transition-all duration-300 hover:bg-neutral-900 hover:text-white"
+          >
+            <ArrowUpRight size={14} strokeWidth={2.2} />
+          </Link>
+        )}
+      </div>
+
+      {divider && <div className="mt-2 h-px w-full bg-neutral-200/15" />}
+    </div>
+  )
+}
 
 export default function DashboardPage() {
   const router = useRouter()
@@ -119,18 +163,27 @@ export default function DashboardPage() {
         </section>
 
         <div className="p-2 sm:p-0">
-          <section className="mt-3">
-            <div className="grid grid-cols-2 gap-2 sm:gap-5">
-              {/* Check-in: full width di baris atas */}
-              <div className="col-span-2">
-                <PartnerCheckinCard
-                  userCheckin={yourCheckin ?? null}
-                  partnerCheckin={partnerCheckin}
-                  userName={user?.display_name ?? 'You'}
-                  partnerName={partner?.display_name ?? 'Partner'}
-                />
-              </div>
+          {/* Check-in: header + tombol panah ada di sini (parent) */}
+          <section className="mt-5">
+            <SectionHeader
+              title="How are you two?"
+              href="/check-in"
+              linkLabel="Open check-in"
+            />
 
+            <PartnerCheckinCard
+              userCheckin={yourCheckin ?? null}
+              partnerCheckin={partnerCheckin}
+              userName={user?.display_name ?? 'You'}
+              partnerName={partner?.display_name ?? 'Partner'}
+            />
+          </section>
+
+          {/* Workspaces: header + garis full width, tanpa tombol panah */}
+          <section className="mt-6">
+            <SectionHeader title="Your workspaces" divider />
+
+            <div className="grid grid-cols-2 gap-2 sm:gap-5">
               {/* Goals & Planner: sejajar horizontal */}
               <GoalListSummary relationshipId={relationshipId} />
 
