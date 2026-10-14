@@ -10,12 +10,13 @@ import {
   ArrowRight,
   Eye,
   EyeOff,
+  Loader2,
   LockKeyhole,
   Mail,
   User,
   UserRound,
 } from 'lucide-react'
-import { useState } from 'react'
+import { useState, useTransition } from 'react'
 
 import {
   registerSchema,
@@ -34,6 +35,9 @@ const totalSteps = 6
 export default function RegisterForm() {
   const router = useRouter()
   const supabase = createClient()
+
+  const [isNavigating, startTransition] = useTransition()
+  const [needsEmailConfirmation, setNeedsEmailConfirmation] = useState(false)
 
   const [step, setStep] = useState<Step>(1)
 
@@ -61,11 +65,17 @@ export default function RegisterForm() {
 
     onSuccess: (data) => {
       if (data.session) {
-        router.replace('/dashboard')
-        router.refresh()
+        startTransition(() => {
+          router.replace('/dashboard')
+        })
+      } else {
+        // tidak ada session: kemungkinan email confirmation aktif
+        setNeedsEmailConfirmation(true)
       }
     },
   })
+
+  const isSubmitting = registerMutation.isPending || isNavigating
 
   async function handleNext() {
     if (step === 1) {
@@ -188,11 +198,10 @@ export default function RegisterForm() {
             return (
               <div
                 key={current}
-                className={`h-1 flex-1 rounded-full transition-all duration-300 ${
-                  step >= current
-                    ? 'bg-gradient-to-r from-pink-300 to-blue-300'
-                    : 'bg-neutral-200'
-                }`}
+                className={`h-1 flex-1 rounded-full transition-all duration-300 ${step >= current
+                  ? 'bg-gradient-to-r from-pink-300 to-blue-300'
+                  : 'bg-neutral-200'
+                  }`}
               />
             )
           })}
@@ -228,7 +237,7 @@ export default function RegisterForm() {
             type="button"
             onClick={handleGoogleSignUp}
             disabled={isGoogleLoading}
-            className="flex h-12 w-full items-center justify-center gap-3 rounded-full border border-neutral-200/80 bg-white text-sm font-medium text-neutral-700 shadow-lg transition hover:border-neutral-300 hover:bg-neutral-50 disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex h-12 w-full items-center justify-center gap-3 rounded-full border border-neutral-200/80 bg-neutral-800 text-sm font-medium text-white shadow-lg transition hover:border-neutral-300 hover:bg-neutral-50 disabled:cursor-not-allowed disabled:opacity-50"
           >
 
             <svg
@@ -543,6 +552,14 @@ export default function RegisterForm() {
             </div>
           )}
 
+          {needsEmailConfirmation && (
+            <div className="rounded-2xl border border-blue-100 bg-blue-50/70 px-4 py-3">
+              <p className="text-[13px] font-medium leading-5 text-blue-600">
+                Akun berhasil dibuat. Cek email kamu untuk konfirmasi, lalu login.
+              </p>
+            </div>
+          )}
+
           {/* ================================================= */}
           {/* ACTIONS */}
           {/* ================================================= */}
@@ -586,24 +603,20 @@ export default function RegisterForm() {
 
               <button
                 type="submit"
-                disabled={registerMutation.isPending}
-                className="flex h-12 flex-1 items-center justify-center gap-2 overflow-hidden rounded-full border border-black/5 bg-white text-sm font-semibold text-black shadow-lg transition hover:bg-neutral-50 disabled:cursor-not-allowed disabled:opacity-50"
+                disabled={isSubmitting || needsEmailConfirmation}
+                className="flex h-12 flex-1 items-center justify-center gap-2 overflow-hidden rounded-full border border-black/5 bg-white text-sm font-semibold text-black shadow-lg transition hover:bg-neutral-50 disabled:cursor-not-allowed disabled:opacity-70"
               >
-
-                {registerMutation.isPending ? (
-                  <span>
-                    Creating account…
-                  </span>
+                {isSubmitting ? (
+                  <>
+                    <Loader2 size={15} className="animate-spin" />
+                    <span>Creating account</span>
+                  </>
                 ) : (
                   <>
-                    <span>
-                      Create account
-                    </span>
-
+                    <span>Create account</span>
                     <ArrowRight size={14} />
                   </>
                 )}
-
               </button>
 
             )}

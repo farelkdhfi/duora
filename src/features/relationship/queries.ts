@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
-import { getMyRelationship, getMyRelationshipDetails, getPartnerName, updateRelationship } from './api'
+import { cancelPendingRelationship, deleteMyRelationship, getMyRelationship, getMyRelationshipDetails, getPartnerName, updateRelationship } from './api'
+import { useRouter } from 'next/navigation'
 
 export const relationshipKeys = {
   all: ['relationship'] as const,
@@ -38,6 +39,37 @@ export function useUpdateRelationship() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: relationshipKeys.mine() })
       queryClient.invalidateQueries({ queryKey: relationshipKeys.details() })
+    },
+  })
+}
+
+export function useDeleteMyRelationship() {
+  const queryClient = useQueryClient()
+  const router = useRouter()
+
+  return useMutation({
+    mutationFn: deleteMyRelationship,
+    onSuccess: () => {
+      // buang semua cache: data relationship lama tidak boleh tersisa
+      queryClient.clear()
+      router.replace('/dashboard')
+      router.refresh()
+    },
+  })
+}
+
+export function useCancelPendingRelationship() {
+  const queryClient = useQueryClient()
+  const router = useRouter()
+
+  return useMutation({
+    mutationFn: cancelPendingRelationship,
+    onSuccess: async () => {
+      // tandai semua cache lama basi dan paksa refetch yang sedang aktif
+      await queryClient.invalidateQueries()
+
+      // minta server component render ulang dengan data terbaru
+      router.refresh()
     },
   })
 }

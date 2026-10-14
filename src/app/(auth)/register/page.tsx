@@ -352,20 +352,7 @@ export default function RegisterPage() {
               </div>
 
               <h2 className="mt-4 text-center text-3xl font-semibold leading-[0.95] tracking-[-0.065em] md:text-4xl">
-
-                <span>create</span>
-
-                <span className="ml-2 bg-gradient-to-t from-pink-400 via-[#c9bdd1] to-blue-400 bg-clip-text text-transparent">
-                  yo
-                </span>
-                <span className="bg-gradient-to-b from-pink-400 via-[#c9bdd1] to-blue-400 bg-clip-text text-transparent">
-                  ur
-                </span>
-
-                <br />
-
-                <span>space.</span>
-
+                <span>create your space.</span>
               </h2>
 
             </div>

@@ -5,8 +5,8 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
-import { ArrowRight, Eye, EyeOff, LockKeyhole, Mail } from 'lucide-react'
-import { useState } from 'react'
+import { ArrowRight, Eye, EyeOff, Loader2, LockKeyhole, Mail } from 'lucide-react'
+import { useState, useTransition } from 'react'
 import {
   loginSchema,
   type LoginFormValues,
@@ -23,6 +23,7 @@ export default function LoginForm() {
 
   const router = useRouter()
   const supabase = createClient()
+  const [isNavigating, startTransition] = useTransition()
 
   const [showPassword, setShowPassword] =
     useState(false)
@@ -44,10 +45,13 @@ export default function LoginForm() {
     mutationFn: login,
 
     onSuccess: () => {
-      router.replace('/dashboard')
-      router.refresh()
+      startTransition(() => {
+        router.replace('/dashboard')
+      })
     },
   })
+
+  const isSubmitting = loginMutation.isPending || isNavigating
 
 
   function onSubmit(
@@ -219,20 +223,22 @@ export default function LoginForm() {
 
         <button
           type="submit"
-          disabled={loginMutation.isPending}
-          className="flex justify-center items-center gap-x-2 w-full overflow-hidden rounded-full bg-white border border-black/5 shadow-lg py-3.5 text-sm font-semibold text-black disabled:cursor-not-allowed disabled:opacity-50"
+          disabled={isSubmitting}
+          className="flex justify-center items-center gap-x-2 w-full overflow-hidden rounded-full bg-white border border-black/5 shadow-lg h-12 text-sm font-semibold text-black disabled:cursor-not-allowed disabled:opacity-70"
         >
-
-          <span className="relative">
-            {loginMutation.isPending
-              ? 'Signing in…'
-              : 'Sign in'}
-          </span>
-
-          <span className="flex size-4.5 items-center justify-center text-black sm:size-5">
-                    <ArrowRight size={10} />
-                  </span>
-
+          {isSubmitting ? (
+            <>
+              <Loader2 size={15} className="animate-spin" />
+              <span>Signing in</span>
+            </>
+          ) : (
+            <>
+              <span>Sign in</span>
+              <span className="flex size-4.5 items-center justify-center text-black sm:size-5">
+                <ArrowRight size={10} />
+              </span>
+            </>
+          )}
         </button>
 
       </form>
@@ -258,8 +264,8 @@ export default function LoginForm() {
       <button
         type="button"
         onClick={handleGoogleSignIn}
-        disabled={isGoogleLoading || loginMutation.isPending}
-        className="flex h-12 w-full items-center justify-center gap-3 rounded-full border border-neutral-200/80 bg-white text-sm font-medium text-neutral-700 shadow-lg disabled:cursor-not-allowed disabled:opacity-50"
+        disabled={isGoogleLoading || isSubmitting}
+        className="flex h-12 w-full items-center justify-center gap-3 rounded-full border border-neutral-200/80 bg-neutral-800 text-sm font-medium text-white shadow-lg disabled:cursor-not-allowed disabled:opacity-50"
       >
         <svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true">
           <path

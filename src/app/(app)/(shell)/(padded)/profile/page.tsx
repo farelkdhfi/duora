@@ -2,6 +2,7 @@
 
 import Header from '@/components/layout/header'
 import ProfileForm from '@/features/profiles/components/profile-form'
+import DeleteRelationshipSection from '@/features/relationship/components/delete-relationship-section'
 import RelationshipForm from '@/features/relationship/components/relationship-form'
 
 export default function ProfilePage() {
@@ -23,6 +24,7 @@ export default function ProfilePage() {
             <div className="my-8 h-px bg-black/[0.06] sm:my-9" />
 
             <RelationshipForm />
+            <DeleteRelationshipSection />
           </div>
         </section>
       </div>

@@ -123,3 +123,25 @@ export async function updateRelationship({
 
   return data as Relationship
 }
+
+export async function deleteMyRelationship(confirmationName: string): Promise<void> {
+  const supabase = createClient()
+
+  const { error } = await supabase.rpc('delete_my_relationship', {
+    p_confirmation_name: confirmationName,
+  })
+
+  if (error) {
+    throw new Error(error.message)
+  }
+}
+
+export async function cancelPendingRelationship(): Promise<void> {
+  const supabase = createClient()
+
+  const { error } = await supabase.rpc('cancel_pending_relationship')
+
+  if (error) {
+    throw new Error(error.message)
+  }
+}

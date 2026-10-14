@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useState, type ReactNode } from 'react'
+import { useCallback, useEffect, useState, useTransition, type ReactNode } from 'react'
 import Image, { type StaticImageData } from 'next/image'
 import Link from 'next/link'
 import {
@@ -15,6 +15,8 @@ import hero1 from '@/assets/hero/hero1-7.png'
 import hero2 from '@/assets/hero/hero2-2.png'
 import heroBg from '@/assets/hero/bg1.png'
 import heroBg2 from '@/assets/hero/bg2.png'
+import { useRouter } from 'next/navigation'
+import { Loader2 } from 'lucide-react'
 
 /* -------------------------------------------------------------------------- */
 /*  Config                                                                    */
@@ -136,6 +138,20 @@ export default function LandingPage() {
   const [[index, direction], setPage] = useState<[number, number]>([0, 0])
   const [paused, setPaused] = useState(false)
 
+  const router = useRouter()
+  const [isNavigating, startTransition] = useTransition()
+
+  const handleStart = () => {
+    startTransition(() => {
+      router.push('/login')
+    })
+  }
+
+  // prefetch supaya navigasi terasa lebih cepat
+  useEffect(() => {
+    router.prefetch('/login')
+  }, [router])
+
   const slide = slides[index]
   const lastIndex = slides.length - 1
 
@@ -192,7 +208,7 @@ export default function LandingPage() {
             className="pointer-events-none absolute left-0 top-0 z-0 h-auto w-full object-contain"
           />
         )}
-        
+
         {index === 1 && (
           <Image
             src={heroBg2}
@@ -324,12 +340,22 @@ export default function LandingPage() {
 
           {/* Primary action */}
           <footer className="mt-5 shrink-0 pb-[max(28px,env(safe-area-inset-bottom))]">
-            <Link
-              href="/login"
-              className="flex h-12 w-full items-center justify-center rounded-full bg-neutral-800 px-6 text-[14px] font-semibold text-white shadow-[0_3px_4px_rgba(0,0,0,0.28)] transition-transform duration-200 hover:scale-[1.01] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-4"
+            <button
+              type="button"
+              onClick={handleStart}
+              disabled={isNavigating}
+              aria-busy={isNavigating}
+              className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-neutral-800 px-6 text-[14px] font-semibold text-white shadow-[0_3px_4px_rgba(0,0,0,0.28)] transition-transform duration-200 hover:scale-[1.01] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-4 disabled:cursor-not-allowed disabled:opacity-80 disabled:hover:scale-100"
             >
-              Start your LDR
-            </Link>
+              {isNavigating ? (
+                <>
+                  <Loader2 size={16} className="animate-spin" />
+                  Loading...
+                </>
+              ) : (
+                'Start your LDR'
+              )}
+            </button>
           </footer>
         </section>
       </main>

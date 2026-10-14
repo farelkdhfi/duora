@@ -327,10 +327,8 @@ export default function LoginPage() {
               </div>
 
               <h2 className="mt-4 text-center text-3xl font-semibold leading-[0.95] tracking-[-0.065em] md:text-4xl">
-                <span>welcome</span>
+                <span>welcome back</span>
                 
-                <span className='text-transparent bg-clip-text bg-linear-to-t from-pink-400 via-[#c9bdd1] to-blue-400 ml-2'>ba</span>
-                <span className='text-transparent bg-clip-text bg-linear-to-b from-pink-400 via-[#c9bdd1] to-blue-400'>ck</span>
               </h2>
 
             </div>
