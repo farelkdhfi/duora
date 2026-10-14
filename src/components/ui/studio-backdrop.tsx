@@ -36,10 +36,10 @@ const THEME_KEYS = Object.keys(THEMES) as ThemeKey[]
 /* center = satu dinding penuh. left/right = mode split (dua dinding).        */
 /* -------------------------------------------------------------------------- */
 
-const SLOTS: Record<Slot, { cx: number; keyLightSize: string; floorShadeSize: string }> = {
-  center: { cx: 50, keyLightSize: '72% 42%', floorShadeSize: '340px 86px' },
-  left: { cx: 25, keyLightSize: '40% 46%', floorShadeSize: '30% 14%' },
-  right: { cx: 75, keyLightSize: '40% 46%', floorShadeSize: '30% 14%' },
+const SLOTS: Record<Slot, { cx: number; keyShadeSize: string; floorShadeSize: string }> = {
+  center: { cx: 50, keyShadeSize: '72% 42%', floorShadeSize: '340px 86px' },
+  left: { cx: 25, keyShadeSize: '40% 46%', floorShadeSize: '30% 14%' },
+  right: { cx: 75, keyShadeSize: '40% 46%', floorShadeSize: '30% 14%' },
 }
 
 const SLOT_KEYS = Object.keys(SLOTS) as Slot[]
@@ -59,26 +59,28 @@ const WALL_TO_FLOOR: Stop[] = [
   [57, 0.32], [67, 0.18], [78, 0.08], [90, 0.02], [100, 0],
 ]
 
-// Cahaya meredup ke arah plafon.
+// Bayangan meredup ke arah plafon.
 const CEILING_FALLOFF: Stop[] = [[0, 0.12], [8, 0.08], [16, 0.045], [26, 0.015], [34, 0]]
 
 // Cove: pita bayangan lembut tempat dinding melengkung ke lantai (relatif ke horizon).
 const COVE: Stop[] = [[-26, 0], [-18, 0.025], [-10, 0.065], [-3, 0.1], [3, 0.11], [10, 0.08], [18, 0.04], [27, 0]]
 
-const keyLight = (size: string, cx: number) =>
-  `radial-gradient(ellipse ${size} at ${cx}% 30%, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0.09) 28%, rgba(255,255,255,0.04) 55%, rgba(255,255,255,0.01) 80%, rgba(255,255,255,0) 100%)`
+// Dulu key light putih, sekarang key shade hitam. Alpha dinaikkan karena
+// hitam di atas warna dinding yang sudah gelap kurang terlihat dibanding putih.
+const keyShade = (size: string, cx: number) =>
+  `radial-gradient(ellipse ${size} at ${cx}% 30%, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.19) 28%, rgba(0,0,0,0.09) 55%, rgba(0,0,0,0.02) 80%, rgba(0,0,0,0) 100%)`
 
 const floorShade = (rgb: string, size: string, cx: number, horizon: number) =>
   `radial-gradient(ellipse ${size} at ${cx}% ${horizon + 3}%, ${rgba(rgb, 0.2)} 0%, ${rgba(rgb, 0.1)} 40%, ${rgba(rgb, 0.03)} 75%, ${rgba(rgb, 0)} 100%)`
 
 const buildWall = ({ wall, shade }: Palette, slot: Slot, horizon: number) => {
-  const { cx, keyLightSize, floorShadeSize } = SLOTS[slot]
+  const { cx, keyShadeSize, floorShadeSize } = SLOTS[slot]
 
   return [
     floorShade(shade, floorShadeSize, cx, horizon),
     vertical(shade, COVE, horizon),
     vertical(shade, CEILING_FALLOFF),
-    keyLight(keyLightSize, cx),
+    keyShade(keyShadeSize, cx),
     vertical(wall, WALL_TO_FLOOR),
   ].join(', ')
 }
@@ -107,15 +109,15 @@ const getBackdrops = (horizon: number) => {
 /* OVERLAY STATIS                                                             */
 /* -------------------------------------------------------------------------- */
 
-// Cahaya studio miring dari kiri atas: side-light lebar + cone tipis.
-const SIDE_LIGHT = 'linear-gradient(112deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.06) 26%, rgba(255,255,255,0.02) 50%, rgba(255,255,255,0) 68%)'
+// Bayangan studio miring dari kiri atas: side-shade lebar + cone tipis (hitam).
+const SIDE_SHADE = 'linear-gradient(112deg, rgba(0,0,0,0.26) 0%, rgba(0,0,0,0.13) 26%, rgba(0,0,0,0.045) 50%, rgba(0,0,0,0) 68%)'
 
-const LIGHT_CONE = 'conic-gradient(from 0deg at -10% -16%, rgba(255,255,255,0) 104deg, rgba(255,255,255,0.015) 114deg, rgba(255,255,255,0.04) 124deg, rgba(255,255,255,0.07) 134deg, rgba(255,255,255,0.08) 141deg, rgba(255,255,255,0.065) 149deg, rgba(255,255,255,0.035) 160deg, rgba(255,255,255,0.012) 171deg, rgba(255,255,255,0) 182deg)'
+const SHADE_CONE = 'conic-gradient(from 0deg at -10% -16%, rgba(0,0,0,0) 104deg, rgba(0,0,0,0.03) 114deg, rgba(0,0,0,0.08) 124deg, rgba(0,0,0,0.14) 134deg, rgba(0,0,0,0.16) 141deg, rgba(0,0,0,0.13) 149deg, rgba(0,0,0,0.07) 160deg, rgba(0,0,0,0.024) 171deg, rgba(0,0,0,0) 182deg)'
 
-// Cahaya miring memudar sendiri sebelum sampai lantai.
+// Bayangan miring memudar sendiri sebelum sampai lantai.
 const FADE_BEFORE_FLOOR = 'linear-gradient(to bottom, #000 0%, #000 40%, transparent 80%)'
 
-// Sisi yang tidak kena cahaya sedikit lebih gelap, plus vignette halus.
+// Sisi seberang sedikit lebih gelap, plus vignette halus.
 const LIGHT_FALLOFF = 'linear-gradient(292deg, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.1) 30%, rgba(0,0,0,0) 55%)'
 const VIGNETTE = 'radial-gradient(ellipse 85% 75% at 50% 44%, rgba(0,0,0,0) 50%, rgba(0,0,0,0.15) 78%, rgba(0,0,0,0.3) 100%)'
 
@@ -125,8 +127,8 @@ const RIGHT_BLEND = 'linear-gradient(to right, transparent 38%, #000 62%)'
 const SOFT_SHADOW = 'radial-gradient(ellipse closest-side, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.18) 45%, rgba(0,0,0,0.06) 78%, rgba(0,0,0,0) 100%)'
 const CONTACT_SHADOW = 'radial-gradient(ellipse closest-side, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.28) 48%, rgba(0,0,0,0.06) 80%, rgba(0,0,0,0) 100%)'
 
-// Film grain halus: menyamarkan banding gradient dan memberi kesan matte.
-const GRAIN = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E")`
+// Film grain halus (sekarang hitam): menyamarkan banding gradient dan memberi kesan matte.
+const GRAIN = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E")`
 
 /* -------------------------------------------------------------------------- */
 /* WALL (satu permukaan yang cross-fade antar mood)                           */
@@ -205,11 +207,11 @@ export const StudioBackdrop = memo(function StudioBackdrop({
         <StudioWall slot="center" mood={first} horizon={horizon} />
       )}
 
-      {/* CAHAYA STUDIO MIRING (memudar sebelum lantai) */}
+      {/* BAYANGAN STUDIO MIRING (memudar sebelum lantai) */}
       <div
         className="absolute inset-0"
         style={{
-          background: `${LIGHT_CONE}, ${SIDE_LIGHT}`,
+          background: `${SHADE_CONE}, ${SIDE_SHADE}`,
           maskImage: FADE_BEFORE_FLOOR,
           WebkitMaskImage: FADE_BEFORE_FLOOR,
         }}
@@ -233,10 +235,10 @@ export const StudioBackdrop = memo(function StudioBackdrop({
       )}
 
       {/* FILM GRAIN */}
-      <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: GRAIN }} />
+      <div className="absolute inset-0 opacity-[0.07]" style={{ backgroundImage: GRAIN }} />
 
       {/* GARIS PEMISAH TENGAH (hanya mode split) */}
-      {split && <div className="absolute inset-y-0 left-1/2 w-px -translate-x-1/2 bg-white/10" />}
+      {split && <div className="absolute inset-y-0 left-1/2 w-px -translate-x-1/2 bg-black/40" />}
     </div>
   )
 })

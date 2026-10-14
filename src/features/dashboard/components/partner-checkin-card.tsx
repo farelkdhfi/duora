@@ -61,12 +61,12 @@ function CardShell({
   partnerMood?: Mood
 }) {
   return (
-    <div className="relative isolate overflow-hidden rounded-[2rem] bg-[#0a0a0c] shadow-[0_20px_60px_-35px_rgba(0,0,0,0.6)]">
+    <div className="relative isolate overflow-hidden rounded-[2rem] bg-black border border-white/20 shadow-[0_20px_60px_-35px_rgba(0,0,0,0.6)]">
       {/* split: kiri = kamu, kanan = partner. horizon 62 supaya pas dengan kaki karakter */}
       <StudioBackdrop mood={[userMood, partnerMood]} horizon={62} />
 
       {/* padding bawah ekstra supaya ada ruang "lantai" di bawah karakter */}
-      <div className="relative p-5 pb-7 sm:p-6 sm:pb-8">
+      <div className="relative p-5 ">
         {children}
       </div>
     </div>
@@ -202,15 +202,11 @@ export default function PartnerCheckinCard({
       partnerMood={partnerCheckin?.mood}
     >
       <div className="relative">
-        <div className="mt-4 flex items-start justify-between gap-4">
+        <div className="flex items-start justify-between gap-4">
           <div>
             <h2 className="text-sm font-medium tracking-[-0.055em] text-neutral-50">
               How are you two?
             </h2>
-
-            <p className="mt-1 text-[11px] text-neutral-400">
-              A little glimpse of today.
-            </p>
           </div>
 
           <Link
@@ -223,7 +219,7 @@ export default function PartnerCheckinCard({
         </div>
       </div>
 
-      <div className="relative mt-5 flex gap-2.5">
+      <div className="relative mt-0 flex gap-2.5">
         <MoodItem
           role="You"
           checkin={userCheckin}

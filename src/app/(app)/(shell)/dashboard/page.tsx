@@ -2,12 +2,6 @@
 
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import {
-  CalendarDays,
-  CheckCircle2,
-  Heart,
-  Sparkles,
-} from 'lucide-react'
 
 import {
   useMyRelationship,
@@ -18,6 +12,8 @@ import RelationshipCard from '@/features/dashboard/components/relationship-card'
 import PlannerSummaryCard from '@/features/dashboard/components/planner-summary-card'
 import PartnerCheckinCard from '@/features/dashboard/components/partner-checkin-card'
 import GoalListSummary from '@/features/dashboard/components/goal-list-summary'
+import LatestDebateCard from '@/features/dashboard/components/latest-debate-card'
+import LatestQnaCard from '@/features/dashboard/components/latest-qna-card'
 import { usePlannerEvents } from '@/features/planner/queries'
 import {
   useCheckinHistory,
@@ -30,18 +26,11 @@ import DashboardSkeleton from '@/features/dashboard/components/dashboard-skeleto
 export default function DashboardPage() {
   const router = useRouter()
 
-  const {
-    data,
-    isLoading,
-  } = useMyRelationshipDetails()
+  const { data, isLoading } = useMyRelationshipDetails()
 
-  const {
-    data: user,
-  } = useGetMyProfile()
+  const { data: user } = useGetMyProfile()
 
-  const {
-    data: partner,
-  } = useGetPartnerName()
+  const { data: partner } = useGetPartnerName()
 
   const {
     data: relationship,
@@ -49,23 +38,14 @@ export default function DashboardPage() {
     isLoading: relationshipLoading,
   } = useMyRelationship()
 
-  const relationshipId =
-    data?.relationship?.id
+  const relationshipId = data?.relationship?.id
 
   const memberCount = data?.members?.length ?? 0
   const isWaitingForPartner = !!relationshipId && memberCount < 2
 
-  const {
-    data: events,
-  } = usePlannerEvents(
-    relationshipId ?? '',
-  )
+  const { data: events } = usePlannerEvents(relationshipId ?? '')
 
-  const {
-    data: checkins,
-  } = useCheckinHistory(
-    relationshipId ?? '',
-  )
+  const { data: checkins } = useCheckinHistory(relationshipId ?? '')
 
   // Pengaman di sisi client: proxy sudah menangani redirect di server,
   // ini untuk kasus relationship hilang saat dashboard sedang terbuka.
@@ -82,48 +62,26 @@ export default function DashboardPage() {
   }, [hasNoRelationship, router])
 
   const partnerCheckin =
-    checkins?.find(
-      (checkin) =>
-        checkin.user_id !== user?.id,
-    ) ?? null
+    checkins?.find((checkin) => checkin.user_id !== user?.id) ?? null
 
+  const upcomingEvent = events?.find(
+    (event) => event.event_date >= new Date().toISOString().slice(0, 10),
+  )
 
-  const upcomingEvent =
-    events?.find(
-      (event) =>
-        event.event_date >=
-        new Date()
-          .toISOString()
-          .slice(0, 10),
-    )
+  const yourCheckin = checkins?.find((checkin) => checkin.user_id === user?.id)
 
-  const yourCheckin =
-    checkins?.find(
-      (checkin) =>
-        checkin.user_id === user?.id,
-    )
-
-  if (
-    isLoading ||
-    relationshipLoading
-  ) {
-    return (
-      <DashboardSkeleton />
-    )
+  if (isLoading || relationshipLoading) {
+    return <DashboardSkeleton />
   }
 
   if (relationshipError) {
     return (
       <main className="flex min-h-screen items-center justify-center p-6">
-
         <div className="max-w-md rounded-3xl border border-rose-100 bg-rose-50/60 p-6 text-center">
-
           <p className="text-sm font-medium text-rose-600">
             {relationshipError.message}
           </p>
-
         </div>
-
       </main>
     )
   }
@@ -143,7 +101,6 @@ export default function DashboardPage() {
     )
   }
 
-
   /* ========================================================= */
   /* DASHBOARD */
   /* ========================================================= */
@@ -151,7 +108,7 @@ export default function DashboardPage() {
   return (
     <main className="relative min-h-screen overflow-hidden">
       <div className="relative mx-auto">
-        <section className="">
+        <section>
           <RelationshipCard
             userName={user?.display_name ?? 'You'}
             partnerName={partner?.display_name ?? 'Partner'}
@@ -161,31 +118,20 @@ export default function DashboardPage() {
           />
         </section>
 
-        <div className='p-4 sm:p-0'>
+        <div className="p-2 sm:p-0">
           <section className="mt-3">
-            <div className="mb-4 flex items-center gap-4">
-              <div className="shrink-0">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-neutral-500">
-                  Your space
-                </p>
-
-                <h2 className="mt-1 text-base font-semibold tracking-[-0.03em]">
-                  Growing together
-                </h2>
+            <div className="grid grid-cols-2 gap-2 sm:gap-5">
+              {/* Check-in: full width di baris atas */}
+              <div className="col-span-2">
+                <PartnerCheckinCard
+                  userCheckin={yourCheckin ?? null}
+                  partnerCheckin={partnerCheckin}
+                  userName={user?.display_name ?? 'You'}
+                  partnerName={partner?.display_name ?? 'Partner'}
+                />
               </div>
 
-              <div className="h-px flex-1 bg-neutral-300 rounded-full" />
-            </div>
-
-            <div className="grid gap-5 md:grid-cols-2">
-
-              <PartnerCheckinCard
-                userCheckin={yourCheckin ?? null}
-                partnerCheckin={partnerCheckin}
-                userName={user?.display_name ?? 'You'}
-                partnerName={partner?.display_name ?? 'Partner'}
-              />
-
+              {/* Goals & Planner: sejajar horizontal */}
               <GoalListSummary relationshipId={relationshipId} />
 
               <PlannerSummaryCard
@@ -194,10 +140,13 @@ export default function DashboardPage() {
                 startTime={upcomingEvent?.start_time}
                 description={upcomingEvent?.description}
               />
+
+              {/* AI Debates & Q&A: sejajar horizontal */}
+              <LatestDebateCard relationshipId={relationshipId} />
+
+              <LatestQnaCard />
             </div>
           </section>
-
-
         </div>
       </div>
     </main>

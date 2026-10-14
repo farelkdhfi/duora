@@ -24,19 +24,6 @@ const SLIDE_DURATION = 5200
 const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1]
 
 /* ============================================================= */
-/* DARK BACKDROP                                                 */
-/* Glow biru (kiri atas) + pink (kanan bawah) + ungu tipis di    */
-/* tengah, di atas dasar gelap yang sama dengan card lain.       */
-/* ============================================================= */
-
-const CARD_BG = [
-  'radial-gradient(ellipse 70% 95% at 10% 0%, rgba(90,130,210,0.40) 0%, rgba(90,130,210,0.14) 45%, rgba(90,130,210,0) 100%)',
-  'radial-gradient(ellipse 70% 95% at 92% 100%, rgba(214,100,150,0.32) 0%, rgba(214,100,150,0.11) 45%, rgba(214,100,150,0) 100%)',
-  'radial-gradient(ellipse 50% 60% at 50% 55%, rgba(150,110,220,0.16) 0%, rgba(150,110,220,0) 100%)',
-  'linear-gradient(to bottom, #15151b 0%, #0a0a0c 100%)',
-].join(', ')
-
-/* ============================================================= */
 /* MOTION VARIANTS */
 /* ============================================================= */
 
@@ -140,10 +127,9 @@ export default function RelationshipCard({
   return (
     <section
       className="relative overflow-hidden rounded-b-[2rem] border border-white/[0.08] bg-[#0a0a0c] px-4 py-5 shadow-[0_24px_60px_-36px_rgba(0,0,0,0.7)] sm:rounded-[1.5rem] sm:px-6 sm:py-6"
-      style={{ backgroundImage: CARD_BG }}
     >
       {/* BACKGROUND */}
-      
+      <BackgroundOrnaments />
 
       {/* CONTENT */}
       <div className="relative z-10">
@@ -205,7 +191,7 @@ export default function RelationshipCard({
                     {active && (
                       <motion.span
                         key={index}
-                        className="absolute inset-0 origin-left rounded-full bg-pink-200"
+                        className="absolute inset-0 origin-left rounded-full bg-white"
                         initial={{ scaleX: 0 }}
                         animate={{ scaleX: 1 }}
                         transition={{
@@ -222,6 +208,207 @@ export default function RelationshipCard({
         )}
       </div>
     </section>
+  )
+}
+
+/* ============================================================= */
+/* BACKGROUND ORNAMENTS (LOVE + BUBBLE)                          */
+/* ============================================================= */
+
+interface OrnamentConfig {
+  id: string
+  type: 'heart' | 'bubble'
+  /** posisi horizontal (%) */
+  left: number
+  /** posisi vertikal (%) — dipakai saat reduced motion (statis) */
+  top: number
+  /** ukuran (px) */
+  size: number
+  /** durasi 1x naik (detik) */
+  duration: number
+  /** delay awal (detik) */
+  delay: number
+  /** jarak goyang kiri-kanan (px) */
+  drift: number
+  /** opacity maksimum */
+  opacity: number
+  color: string
+  /** blur untuk efek depth (px) */
+  blur?: number
+}
+
+/** Jarak naik ornamen (px) — sedikit lebih tinggi dari tinggi card */
+const RISE = 290
+
+const PINK = '#f9a8d4'
+const LILAC = '#c4a1ee'
+const BLUE = '#9dc1f7'
+
+/**
+ * Data statis (tanpa Math.random) supaya aman dari hydration mismatch.
+ * Posisi lebih banyak di sisi kiri/kanan agar area avatar tetap bersih.
+ */
+const ORNAMENTS: OrnamentConfig[] = [
+  // ---- Hearts ----
+  { id: 'h1', type: 'heart', left: 6, top: 62, size: 11, duration: 12, delay: 0, drift: 7, opacity: 0.4, color: PINK },
+  { id: 'h2', type: 'heart', left: 18, top: 28, size: 8, duration: 15, delay: 4.5, drift: 9, opacity: 0.28, color: LILAC, blur: 0.6 },
+  { id: 'h3', type: 'heart', left: 31, top: 78, size: 7, duration: 14, delay: 8, drift: 6, opacity: 0.22, color: PINK, blur: 1 },
+  { id: 'h4', type: 'heart', left: 70, top: 70, size: 9, duration: 13, delay: 2, drift: 8, opacity: 0.3, color: LILAC, blur: 0.6 },
+  { id: 'h5', type: 'heart', left: 84, top: 34, size: 12, duration: 11, delay: 6, drift: 7, opacity: 0.4, color: PINK },
+  { id: 'h6', type: 'heart', left: 93, top: 80, size: 8, duration: 16, delay: 9.5, drift: 6, opacity: 0.26, color: BLUE, blur: 0.8 },
+  { id: 'h7', type: 'heart', left: 50, top: 88, size: 6, duration: 17, delay: 11, drift: 10, opacity: 0.16, color: PINK, blur: 1.2 },
+
+  // ---- Bubbles ----
+  { id: 'b1', type: 'bubble', left: 12, top: 74, size: 14, duration: 13, delay: 1.5, drift: 8, opacity: 0.55, color: BLUE },
+  { id: 'b2', type: 'bubble', left: 24, top: 46, size: 7, duration: 16, delay: 5.5, drift: 6, opacity: 0.4, color: LILAC, blur: 0.5 },
+  { id: 'b3', type: 'bubble', left: 40, top: 84, size: 10, duration: 15, delay: 9, drift: 9, opacity: 0.28, color: PINK, blur: 0.8 },
+  { id: 'b4', type: 'bubble', left: 62, top: 60, size: 6, duration: 14, delay: 3, drift: 7, opacity: 0.32, color: BLUE, blur: 0.6 },
+  { id: 'b5', type: 'bubble', left: 77, top: 82, size: 16, duration: 12, delay: 7, drift: 10, opacity: 0.5, color: LILAC },
+  { id: 'b6', type: 'bubble', left: 89, top: 52, size: 8, duration: 17, delay: 0.8, drift: 6, opacity: 0.38, color: PINK, blur: 0.4 },
+  { id: 'b7', type: 'bubble', left: 3, top: 36, size: 9, duration: 18, delay: 10, drift: 7, opacity: 0.3, color: BLUE, blur: 0.8 },
+]
+
+function BackgroundOrnaments() {
+  const reduced = useReducedMotion()
+
+  return (
+    <div
+      aria-hidden="true"
+      className="pointer-events-none absolute inset-0 z-0 overflow-hidden"
+    >
+     
+      <div className='absolute -bottom-10 -left-10 w-30 h-30 bg-blue-400/20 blur-[60px] rounded-full'></div>
+      <div className='absolute -bottom-10 -right-10 w-30 h-30 bg-pink-400/20 blur-[60px] rounded-full'></div>
+
+
+      {/* Floating hearts & bubbles */}
+      {ORNAMENTS.map((o) => (
+        <FloatingOrnament key={o.id} o={o} reduced={!!reduced} />
+      ))}
+    </div>
+  )
+}
+
+function FloatingOrnament({
+  o,
+  reduced,
+}: {
+  o: OrnamentConfig
+  reduced: boolean
+}) {
+  const shape =
+    o.type === 'heart' ? (
+      <OrnamentHeart size={o.size} color={o.color} />
+    ) : (
+      <OrnamentBubble size={o.size} color={o.color} />
+    )
+
+  const filter = o.blur ? `blur(${o.blur}px)` : undefined
+
+  // Reduced motion: tampil statis & lebih redup
+  if (reduced) {
+    return (
+      <span
+        className="absolute"
+        style={{
+          left: `${o.left}%`,
+          top: `${o.top}%`,
+          opacity: o.opacity * 0.6,
+          filter,
+        }}
+      >
+        {shape}
+      </span>
+    )
+  }
+
+  return (
+    <motion.span
+      className="absolute will-change-transform"
+      style={{ left: `${o.left}%`, bottom: -24, filter }}
+      initial={{ opacity: 0, y: 0 }}
+      animate={{
+        y: [0, -RISE],
+        x: [-o.drift, o.drift],
+        rotate: o.type === 'heart' ? [-14, 14] : 0,
+        scale: o.type === 'bubble' ? [0.92, 1.08] : [0.95, 1.05],
+        opacity: [0, o.opacity, o.opacity, 0],
+      }}
+      transition={{
+        // naik linear terus-menerus
+        y: {
+          duration: o.duration,
+          delay: o.delay,
+          repeat: Infinity,
+          ease: 'linear',
+        },
+        // goyang kiri-kanan halus
+        x: {
+          duration: o.duration / 3,
+          delay: o.delay,
+          repeat: Infinity,
+          repeatType: 'mirror',
+          ease: 'easeInOut',
+        },
+        rotate: {
+          duration: o.duration / 3,
+          delay: o.delay,
+          repeat: Infinity,
+          repeatType: 'mirror',
+          ease: 'easeInOut',
+        },
+        scale: {
+          duration: o.duration / 4,
+          delay: o.delay,
+          repeat: Infinity,
+          repeatType: 'mirror',
+          ease: 'easeInOut',
+        },
+        // fade in di awal, fade out di akhir
+        opacity: {
+          duration: o.duration,
+          delay: o.delay,
+          repeat: Infinity,
+          ease: 'linear',
+          times: [0, 0.18, 0.78, 1],
+        },
+      }}
+    >
+      {shape}
+    </motion.span>
+  )
+}
+
+function OrnamentHeart({ size, color }: { size: number; color: string }) {
+  return (
+    <svg
+      viewBox="0 0 48 48"
+      width={size}
+      height={size}
+      fill="none"
+      style={{ color, filter: `drop-shadow(0 0 5px ${color}66)` }}
+    >
+      <path
+        d="M24 37C21.5 34.9 10 27.5 10 18.5C10 13.8 13.2 10.5 17.5 10.5C20.3 10.5 22.6 12 24 14.3C25.4 12 27.7 10.5 30.5 10.5C34.8 10.5 38 13.8 38 18.5C38 27.5 26.5 34.9 24 37Z"
+        fill="currentColor"
+      />
+    </svg>
+  )
+}
+
+function OrnamentBubble({ size, color }: { size: number; color: string }) {
+  return (
+    <span
+      className="block rounded-full"
+      style={{
+        width: size,
+        height: size,
+        border: '1px solid rgba(255,255,255,0.22)',
+        background:
+          'radial-gradient(circle at 30% 28%, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.09) 35%, rgba(255,255,255,0.02) 70%)',
+        boxShadow: `inset 0 0 6px rgba(255,255,255,0.08), 0 0 10px ${color}33`,
+      }}
+    />
   )
 }
 
@@ -470,15 +657,6 @@ function RingAvatar({
 
   return (
     <div className="relative size-[64px] sm:size-[76px]">
-      {/* Gradient ring */}
-      <div
-        className={`absolute inset-0 rounded-full ${className} ${
-          isPink
-            ? 'bg-linear-to-br from-[#ffc2d9] via-[#e58fb4] to-[#c9a6ee] shadow-[0_10px_22px_-10px_rgba(214,100,150,0.65)]'
-            : 'bg-linear-to-br from-[#b4d3ff] via-[#7fa8f0] to-[#b9a6ee] shadow-[0_10px_22px_-10px_rgba(90,130,210,0.65)]'
-        }`}
-      />
-
       {/* Avatar */}
       <div className="absolute inset-[2px] rounded-full bg-[#0d0d11] p-[2px]">
         <div className="h-full w-full overflow-hidden rounded-full">

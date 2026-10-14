@@ -1,10 +1,5 @@
 import Link from 'next/link'
-import {
-  ArrowUpRight,
-  CalendarDays,
-  Clock,
-  Plus,
-} from 'lucide-react'
+import { ArrowUpRight, CalendarDays, Clock, Plus } from 'lucide-react'
 
 import DarkCardShell from '@/components/ui/dark-card-shell'
 
@@ -15,25 +10,29 @@ interface PlannerSummaryCardProps {
   description?: string | null
 }
 
-function formatDate(date: string) {
-  return new Date(`${date}T00:00:00`).toLocaleDateString('id-ID', {
-    day: 'numeric',
-    month: 'short',
-  })
-}
-
-function formatDay(date: string) {
-  return new Date(`${date}T00:00:00`).toLocaleDateString('en-US', {
-    weekday: 'short',
-  })
-}
-
 function formatTime(time: string) {
   return time.slice(0, 5)
 }
 
 const openButtonClass =
-  'flex size-9 shrink-0 items-center justify-center rounded-full border border-white/[0.08] bg-white/10 text-neutral-300 backdrop-blur-sm transition-all duration-300 hover:bg-white hover:text-neutral-900'
+  'flex size-8 shrink-0 items-center justify-center rounded-full border border-white/[0.08] bg-white/10 text-neutral-300 backdrop-blur-sm transition-all duration-300 hover:bg-white hover:text-neutral-900'
+
+function CardHeader() {
+  return (
+    <div className="flex items-start justify-between gap-2">
+      <div className="min-w-0 flex-1">
+        <h2 className="break-words text-sm font-medium  text-neutral-50">
+          Planning
+        </h2>
+
+      </div>
+
+      <Link href="/planner" aria-label="Open planner" className={openButtonClass}>
+        <ArrowUpRight size={14} strokeWidth={2.2} />
+      </Link>
+    </div>
+  )
+}
 
 export default function PlannerSummaryCard({
   title,
@@ -45,150 +44,100 @@ export default function PlannerSummaryCard({
 
   if (isEmpty) {
     return (
-      <DarkCardShell>
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <h2 className="mt-2 text-sm font-medium tracking-[-0.055em] text-neutral-50">
-              What are you planning together?
-            </h2>
+      <DarkCardShell variant="rose" compact>
+        <CardHeader />
 
-            <p className="mt-1 text-[11px] text-neutral-400">
-              A little plan, a little memory.
-            </p>
-          </div>
+        <div className="relative mt-4 flex flex-1 flex-col items-center justify-center overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.04] px-3 py-5 text-center">
+          <div className="pointer-events-none absolute -right-10 -top-10 size-24 rounded-full bg-rose-500/[0.10] blur-[40px]" />
 
-          <Link href="/planner" aria-label="Open planner" className={openButtonClass}>
-            <ArrowUpRight size={14} strokeWidth={2.2} />
-          </Link>
-        </div>
-
-        <div className="relative mt-6 overflow-hidden rounded-[1.5rem] border border-white/[0.06] bg-white/[0.04] px-4 py-7">
-          <div className="pointer-events-none absolute -right-12 -top-12 size-32 rounded-full bg-blue-500/[0.12] blur-[55px]" />
-          <div className="pointer-events-none absolute -bottom-12 -left-12 size-32 rounded-full bg-pink-500/[0.12] blur-[55px]" />
-
-          <div className="relative flex flex-col items-center text-center">
-            <div className="relative flex size-14 items-center justify-center">
-              <svg
-                className="pointer-events-none absolute inset-0 size-full"
-                viewBox="0 0 64 64"
-                fill="none"
-                aria-hidden="true"
-              >
-                <circle cx="32" cy="32" r="22" stroke="#ffffff" strokeOpacity=".1" />
-                <circle
-                  cx="32"
-                  cy="32"
-                  r="27"
-                  stroke="#e9a8bd"
-                  strokeOpacity=".35"
-                  strokeDasharray="2 6"
-                />
-                <circle cx="14" cy="25" r="1.7" fill="#9eb9df" fillOpacity=".7" />
-                <circle cx="49" cy="40" r="1.7" fill="#e9a8bd" fillOpacity=".7" />
-              </svg>
-
-              <CalendarDays
-                size={19}
-                strokeWidth={1.4}
-                className="relative text-neutral-400"
-              />
-            </div>
-
-            <h3 className="mt-3 text-sm font-medium tracking-[-0.03em] text-neutral-50">
-              Nothing planned yet.
-            </h3>
-
-            <p className="mt-1 max-w-xs text-xs leading-relaxed text-neutral-400">
-              Add a date night, a trip, or a small ritual to look forward to together.
-            </p>
-
-            <Link
-              href="/planner"
-              className="group mt-4 inline-flex h-9 items-center gap-1.5 rounded-full border border-white/[0.08] bg-white/10 px-4 text-[11px] font-semibold tracking-[-0.01em] text-neutral-200 backdrop-blur-sm transition-all duration-300 hover:bg-white hover:text-neutral-900"
+          <div className="relative flex size-12 items-center justify-center">
+            <svg
+              className="pointer-events-none absolute inset-0 size-full"
+              viewBox="0 0 64 64"
+              fill="none"
+              aria-hidden="true"
             >
-              <Plus size={13} strokeWidth={2.2} />
-              Plan something
-            </Link>
+              <circle cx="32" cy="32" r="22" stroke="#ffffff" strokeOpacity=".1" />
+              <circle
+                cx="32"
+                cy="32"
+                r="27"
+                stroke="#f3b6cd"
+                strokeOpacity=".35"
+                strokeDasharray="2 6"
+              />
+              <circle cx="14" cy="25" r="1.7" fill="#f3b6cd" fillOpacity=".7" />
+              <circle cx="49" cy="40" r="1.7" fill="#cfb4f0" fillOpacity=".7" />
+            </svg>
+
+            <CalendarDays
+              size={17}
+              strokeWidth={1.4}
+              className="relative text-neutral-400"
+            />
           </div>
+
+          <h3 className="relative mt-3 text-[13px] font-medium tracking-[-0.03em] text-neutral-50">
+            Nothing planned yet.
+          </h3>
+
+          <p className="relative mt-1 text-[11px] leading-relaxed text-neutral-400">
+            Add a date night or a trip.
+          </p>
+
+          <Link
+            href="/planner"
+            className="relative mt-3 inline-flex h-8 items-center gap-1.5 rounded-full border border-white/[0.08] bg-white/10 px-3.5 text-[11px] font-semibold tracking-[-0.01em] text-neutral-200 backdrop-blur-sm transition-all duration-300 hover:bg-white hover:text-neutral-900"
+          >
+            <Plus size={12} strokeWidth={2.2} />
+            Plan
+          </Link>
         </div>
       </DarkCardShell>
     )
   }
 
   const parsedDate = new Date(`${date}T00:00:00`)
+  const weekday = parsedDate.toLocaleDateString('en-US', { weekday: 'short' })
+  const month = parsedDate.toLocaleDateString('en-US', { month: 'short' })
 
   return (
-    <DarkCardShell>
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <h2 className="mt-2 text-sm font-medium tracking-[-0.055em] text-neutral-50">
-            What are you planning together?
-          </h2>
+    <DarkCardShell variant="rose" compact>
+      <CardHeader />
 
-          <p className="mt-1 text-[11px] text-neutral-400">
-            A little plan, a little memory.
-          </p>
-        </div>
-
-        <Link href="/planner" aria-label="Open planner" className={openButtonClass}>
-          <ArrowUpRight size={14} strokeWidth={2.2} />
-        </Link>
-      </div>
-
-      <div className="relative mt-6 overflow-hidden rounded-[1.5rem] border border-white/[0.06] bg-white/[0.04] p-4">
-        <div className="pointer-events-none absolute -right-12 -top-12 size-32 rounded-full bg-blue-500/[0.12] blur-[55px]" />
-        <div className="pointer-events-none absolute -bottom-12 -left-12 size-32 rounded-full bg-pink-500/[0.12] blur-[55px]" />
-
-        <div className="relative flex items-center gap-4">
-          <div className="relative flex size-[68px] shrink-0 flex-col items-center justify-center overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.07] text-neutral-50">
-            <div className="pointer-events-none absolute -right-5 -top-5 size-14 rounded-full bg-pink-500/[0.2] blur-[25px]" />
-
-            <p className="relative text-[9px] uppercase tracking-[0.16em] text-neutral-400">
-              {formatDay(date)}
+      <div className="relative mt-4 flex-1 overflow-hidden p-3">
+        <div className="relative flex items-center gap-2.5">
+          <div className="flex size-11 shrink-0 flex-col items-center justify-center rounded-xl border border-white/[0.08] bg-white/[0.07]">
+            <p className="text-[8px] uppercase tracking-[0.14em] text-neutral-400">
+              {month}
             </p>
-
-            <p className="relative mt-1 text-xl font-semibold leading-none tracking-[-0.04em]">
+            <p className="text-lg font-semibold leading-none tracking-[-0.04em] text-neutral-50">
               {parsedDate.getDate()}
             </p>
-
-            <p className="relative mt-1 text-[9px] uppercase tracking-[0.12em] text-neutral-400">
-              {parsedDate.toLocaleDateString('en-US', {
-                month: 'short',
-              })}
-            </p>
           </div>
 
-          <div className="min-w-0 flex-1">
-            <h3 className="truncate text-sm font-medium tracking-[-0.035em] text-neutral-50">
-              {title}
-            </h3>
+          <div className="min-w-0">
+            <p className="text-[10px] uppercase tracking-[0.14em] text-neutral-400">
+              {weekday}
+            </p>
 
-            <div className="mt-2 flex flex-wrap items-center gap-2">
-              <span className="flex items-center gap-1.5 text-[11px] text-neutral-400">
-                <CalendarDays size={12} strokeWidth={2} />
-                {formatDate(date)}
-              </span>
-
-              {startTime && (
-                <>
-                  <span className="size-0.5 rounded-full bg-neutral-600" />
-
-                  <span className="flex items-center gap-1.5 text-[11px] font-medium text-neutral-300">
-                    <Clock size={12} strokeWidth={2} />
-                    {formatTime(startTime)}
-                  </span>
-                </>
-              )}
-            </div>
+            {startTime && (
+              <p className="mt-0.5 flex items-center gap-1 text-[11px] font-medium text-neutral-200">
+                <Clock size={11} strokeWidth={2} />
+                {formatTime(startTime)}
+              </p>
+            )}
           </div>
         </div>
 
+        <h3 className="relative mt-3 line-clamp-2 text-sm font-medium tracking-[-0.035em] text-neutral-50">
+          {title}
+        </h3>
+
         {description && (
-          <div className="relative mt-4 border-t border-white/[0.06] pt-3">
-            <p className="line-clamp-2 text-[11px] leading-relaxed text-neutral-400">
-              {description}
-            </p>
-          </div>
+          <p className="relative mt-1 line-clamp-2 text-[11px] leading-relaxed text-neutral-400">
+            {description}
+          </p>
         )}
       </div>
     </DarkCardShell>
