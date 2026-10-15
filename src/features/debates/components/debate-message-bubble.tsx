@@ -9,7 +9,7 @@ interface DebateMessageBubbleProps {
   variant?: 'stage' | 'mediator' | 'resolution' | 'history'
 }
 
-/* Warna kartu resolution per persona (AI response biasa tetap putih) */
+/* Warna kartu resolution per persona (AI response biasa tetap bg-primary) */
 const resolutionTone: Record<
   AiPersona,
   { card: string; glow: string; accent: string }
@@ -89,7 +89,7 @@ function MediatorCard({
         'relative overflow-hidden rounded-[1.9rem] border',
         resolution
           ? `${tone.card} text-white`
-          : 'border-black/[0.055] bg-white text-neutral-900 shadow-[0_15px_50px_rgba(0,0,0,0.055)]',
+          : 'border-black/[0.055] bg-primary text-secondary shadow-[0_15px_50px_rgba(0,0,0,0.055)]',
       ].join(' ')}
     >
       {/* AMBIENT */}
@@ -118,14 +118,14 @@ function MediatorCard({
                 'flex size-8 items-center justify-center rounded-full',
                 resolution
                   ? 'bg-white/[0.16]'
-                  : 'bg-[#f7f2eb]',
+                  : 'bg-primary',
               ].join(' ')}
             >
               <span
                 className={
                   resolution
                     ? 'text-sm text-white/90'
-                    : 'text-sm text-neutral-500'
+                    : 'text-sm text-description'
                 }
               >
                 {resolution ? '♡' : '✦'}
@@ -138,7 +138,7 @@ function MediatorCard({
               'text-[8.5px]',
               resolution
                 ? 'text-white/60'
-                : 'text-neutral-300',
+                : 'text-description',
             ].join(' ')}
           >
             {formatTime(message.created_at)}
@@ -152,7 +152,7 @@ function MediatorCard({
             'tracking-[-0.012em]',
             resolution
               ? 'mt-7 text-[14px] leading-[1.9] text-white/95'
-              : 'mt-6 text-[13px] leading-[1.8] text-neutral-600',
+              : 'mt-6 text-[13px] leading-[1.8] text-secondary',
           ].join(' ')}
         >
           {analysis?.summary ??
@@ -192,7 +192,7 @@ function MediatorCard({
                 'text-[8px] font-semibold uppercase tracking-[0.17em]',
                 resolution
                   ? 'text-white/70'
-                  : 'text-neutral-300',
+                  : 'text-description',
               ].join(' ')}
             >
               Facts
@@ -207,7 +207,7 @@ function MediatorCard({
                       'pl-3 text-[11px] leading-5',
                       resolution
                         ? 'border-l border-white/30 text-white/85'
-                        : 'border-l border-neutral-200 text-neutral-500',
+                        : 'border-l border-neutral-200 text-description',
                     ].join(' ')}
                   >
                     {renderListItem(fact)}
@@ -236,7 +236,7 @@ function MediatorCard({
                 'text-[8px] font-semibold uppercase tracking-[0.17em]',
                 resolution
                   ? 'text-white/70'
-                  : 'text-neutral-300',
+                  : 'text-description',
               ].join(' ')}
             >
               Perspectives
@@ -251,7 +251,7 @@ function MediatorCard({
                       'pl-3 text-[11px] leading-5',
                       resolution
                         ? 'border-l border-white/30 text-white/85'
-                        : 'border-l border-pink-300/30 text-neutral-500',
+                        : 'border-l border-pink-300/30 text-description',
                     ].join(' ')}
                   >
                     {renderListItem(opinion)}
@@ -270,7 +270,7 @@ function MediatorCard({
               'mt-7 rounded-[1.35rem] border p-4.5',
               resolution
                 ? 'border-white/20 bg-white/[0.12]'
-                : 'border-black/[0.045] bg-[#f8f7f3]',
+                : 'border-black/[0.045] bg-primary',
             ].join(' ')}
           >
             <div className="flex items-center gap-2">
@@ -279,7 +279,7 @@ function MediatorCard({
                   'text-sm',
                   resolution
                     ? 'text-white/80'
-                    : 'text-neutral-400',
+                    : 'text-description',
                 ].join(' ')}
               >
                 ♡
@@ -290,7 +290,7 @@ function MediatorCard({
                   'text-[8px] font-semibold uppercase tracking-[0.17em]',
                   resolution
                     ? 'text-white/75'
-                    : 'text-neutral-300',
+                    : 'text-description',
                 ].join(' ')}
               >
                 Common ground
@@ -302,7 +302,7 @@ function MediatorCard({
                 'mt-2.5 text-[11.5px] leading-5',
                 resolution
                   ? 'text-white/90'
-                  : 'text-neutral-500',
+                  : 'text-description',
               ].join(' ')}
             >
               {analysis.common_ground}
@@ -346,8 +346,8 @@ function HistoryThought({
         className={[
           'rounded-[1.35rem] border px-4 py-3.5 transition-all duration-200 shadow-md',
           isOwnMessage
-            ? 'border-black/[0.055] bg-neutral-100 text-black'
-            : 'border-black/[0.045] bg-white text-neutral-800',
+            ? 'border-black/[0.055] bg-primary text-secondary'
+            : 'border-black/[0.045] bg-primary text-secondary',
         ].join(' ')}
       >
         <div className="flex items-center justify-between gap-3">
@@ -355,35 +355,21 @@ function HistoryThought({
             className={[
               'text-[8px] font-semibold uppercase tracking-[0.13em]',
               isOwnMessage
-                ? 'text-black'
-                : 'text-neutral-300',
+                ? 'text-secondary'
+                : 'text-description',
             ].join(' ')}
           >
             {senderName}
           </p>
 
-          <span
-            className={[
-              'text-[8px]',
-              isOwnMessage
-                ? 'text-black/25'
-                : 'text-neutral-300',
-            ].join(' ')}
-          >
+          <span className="text-[8px] text-description">
             {formatTime(
               message.created_at,
             )}
           </span>
         </div>
 
-        <p
-          className={[
-            'mt-2.5 whitespace-pre-line break-words text-[11.5px] leading-[1.7]',
-            isOwnMessage
-              ? 'text-black'
-              : 'text-neutral-600',
-          ].join(' ')}
-        >
+        <p className="mt-2.5 whitespace-pre-line break-words text-[11.5px] leading-[1.7] text-secondary">
           {message.content}
         </p>
       </div>

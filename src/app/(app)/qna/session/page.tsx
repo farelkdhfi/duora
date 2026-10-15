@@ -96,7 +96,7 @@ export default function QnaSessionPage() {
 
   if (isLoading) {
     return (
-      <main className="min-h-dvh w-full bg-[#ffffff] px-5 py-7 sm:px-8 sm:py-10">
+      <main className="min-h-dvh w-full bg-primary px-5 py-7 sm:px-8 sm:py-10">
         <div className="mx-auto flex min-h-[calc(100dvh-3.5rem)] w-full max-w-3xl flex-col">
           <header className="flex shrink-0 items-start justify-between">
             <div>
@@ -119,17 +119,17 @@ export default function QnaSessionPage() {
 
   if (!relationshipDetails || !profile) {
     return (
-      <main className="flex min-h-dvh items-center justify-center bg-[#fff] px-6">
+      <main className="flex min-h-dvh items-center justify-center bg-primary px-6">
         <div className="max-w-sm text-center">
           <div className="mx-auto flex size-12 items-center justify-center rounded-2xl bg-[#1e1318]">
             <span className="text-sm text-white">♡</span>
           </div>
 
-          <h2 className="mt-5 text-lg font-semibold tracking-tight text-[#171717]">
+          <h2 className="mt-5 text-lg font-semibold tracking-tight text-secondary">
             Belum terhubung
           </h2>
 
-          <p className="mt-2 text-sm leading-6 text-black/45">
+          <p className="mt-2 text-sm leading-6 text-description">
             Hubungkan pasanganmu terlebih dahulu untuk mulai menggunakan Q&A
             bersama.
           </p>
@@ -139,17 +139,17 @@ export default function QnaSessionPage() {
   }
 
   return (
-    <main className="relative min-h-dvh w-full overflow-hidden bg-[#ffffff]">
+    <main className="relative min-h-dvh w-full overflow-hidden bg-primary">
       {/* Tanpa padding di wrapper. Tiap section mengatur jaraknya sendiri. */}
       <div className="relative z-10 flex min-h-dvh w-full flex-col">
         {/* Header */}
         <header className="flex shrink-0 items-start justify-between gap-5 px-5 pt-7 sm:px-8 sm:pt-10">
           <div>
-            <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-neutral-400">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-description">
               Q&A
             </p>
 
-            <h1 className="mt-1 text-[25px] font-medium leading-tight tracking-[-0.045em] text-neutral-950 sm:text-[32px]">
+            <h1 className="mt-1 text-[25px] font-medium leading-tight tracking-[-0.045em] text-secondary sm:text-[32px]">
               Answer anything.
             </h1>
           </div>
@@ -158,7 +158,7 @@ export default function QnaSessionPage() {
             type="button"
             onClick={() => router.push("/qna")}
             aria-label="Kembali ke Q&A"
-            className="flex size-9 shrink-0 items-center justify-center rounded-full border border-black/[0.05] bg-neutral-800 text-white shadow-sm transition-all duration-200 hover:bg-white hover:text-neutral-900 active:scale-95"
+            className="flex size-9 shrink-0 items-center justify-center rounded-full border border-black/[0.05] bg-neutral-800 text-white shadow-sm transition-all duration-200 hover:bg-primary hover:text-secondary active:scale-95"
           >
             <X className="size-4" strokeWidth={1.8} />
           </button>
@@ -202,7 +202,7 @@ export default function QnaSessionPage() {
                 <div className="flex items-center justify-center gap-3">
                   <span className="h-px w-8 bg-black/10" />
 
-                  <span className="text-[9px] font-semibold uppercase tracking-[0.22em] text-black/30">
+                  <span className="text-[9px] font-semibold uppercase tracking-[0.22em] text-description">
                     Sesi selesai
                   </span>
 
@@ -211,11 +211,11 @@ export default function QnaSessionPage() {
                   <span className="h-px w-8 bg-black/10" />
                 </div>
 
-                <h2 className="mt-7 text-[34px] font-medium leading-[1.08] tracking-[-0.055em] text-[#171717] sm:text-[48px]">
+                <h2 className="mt-7 text-[34px] font-medium leading-[1.08] tracking-[-0.055em] text-secondary sm:text-[48px]">
                   Sesi ini sudah berakhir.
                 </h2>
 
-                <p className="mt-5 max-w-sm text-[13px] leading-6 text-black/40 sm:text-[15px]">
+                <p className="mt-5 max-w-sm text-[13px] leading-6 text-description sm:text-[15px]">
                   Tidak ada percakapan yang sedang berlangsung. Kalian bisa
                   kembali ke Q&A dan memilih sesuatu yang ingin dibicarakan.
                 </p>
@@ -238,7 +238,7 @@ export default function QnaSessionPage() {
                   <span className="h-px w-8 bg-black/10" />
                 </div>
 
-                <p className="mt-5 text-[10px] font-semibold uppercase tracking-[0.2em] text-black/30">
+                <p className="mt-5 text-[10px] font-semibold uppercase tracking-[0.2em] text-description">
                   Menyiapkan sesi
                 </p>
               </div>

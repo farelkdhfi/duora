@@ -27,7 +27,7 @@ interface AiResponseOverlayProps {
 const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1]
 
 const eyebrow =
-  'text-[9px] font-semibold uppercase tracking-[0.24em] text-neutral-500'
+  'text-[9px] font-semibold uppercase tracking-[0.24em] text-description'
 
 /* ===================================================== */
 /* STUDIO BACKDROP (sama dengan debate-intro section 2)  */
@@ -131,7 +131,7 @@ const StudioBackdrop = memo(function StudioBackdrop({
   return (
     <div
       aria-hidden
-      className="pointer-events-none absolute inset-0 overflow-hidden bg-[#fafaf9]"
+      className="pointer-events-none absolute inset-0 overflow-hidden bg-primary"
     >
       {/* dinding + cove + lantai */}
       <div
@@ -302,7 +302,7 @@ export default function AiResponseOverlay({
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.35, ease: 'easeOut' }}
-        className="fixed inset-0 z-[200] flex h-[100dvh] min-h-[100dvh] flex-col overflow-hidden bg-[#fafaf9]"
+        className="fixed inset-0 z-[200] flex h-[100dvh] min-h-[100dvh] flex-col overflow-hidden bg-primary"
       >
         {/* STUDIO BACKDROP */}
 
@@ -312,7 +312,7 @@ export default function AiResponseOverlay({
 
         <header className="pointer-events-none absolute inset-x-0 top-0 z-20 flex items-center justify-between px-5 pb-4 pt-[max(1.25rem,env(safe-area-inset-top))] sm:px-8 sm:pt-7">
           <div className="flex items-center gap-2.5">
-            <p className="text-[9px] font-semibold uppercase tracking-[0.3em] text-neutral-500">
+            <p className="text-[9px] font-semibold uppercase tracking-[0.3em] text-description">
               Duora
             </p>
 
@@ -320,7 +320,7 @@ export default function AiResponseOverlay({
               <>
                 <span className="h-3 w-px bg-black/10" />
 
-                <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-neutral-500">
+                <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-description">
                   Resolution
                 </p>
               </>
@@ -335,7 +335,7 @@ export default function AiResponseOverlay({
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.4, ease: EASE }}
-              className="pointer-events-auto flex size-9 shrink-0 items-center justify-center rounded-full border border-black/[0.055] bg-white/80 text-neutral-500 shadow-[0_8px_25px_rgba(0,0,0,0.06)] backdrop-blur-xl transition-colors hover:bg-neutral-900 hover:text-white"
+              className="pointer-events-auto flex size-9 shrink-0 items-center justify-center rounded-full border border-black/[0.055] bg-primary/80 text-description shadow-[0_8px_25px_rgba(0,0,0,0.06)] backdrop-blur-xl transition-colors hover:bg-neutral-900 hover:text-white"
             >
               <X size={14} strokeWidth={1.8} />
             </motion.button>
@@ -447,12 +447,12 @@ export default function AiResponseOverlay({
                 transition={{ duration: 0.45, ease: EASE }}
                 className="flex flex-col items-center"
               >
-                <h1 className="mt-3 max-w-[320px] text-balance text-[26px] font-medium leading-[1.15] tracking-[-0.04em] text-neutral-900 sm:max-w-md sm:text-[34px]">
+                <h1 className="mt-3 max-w-[320px] text-balance text-[26px] font-medium leading-[1.15] tracking-[-0.04em] text-secondary sm:max-w-md sm:text-[34px]">
                   {title}
                 </h1>
 
                 {subtitle && (
-                  <p className="mt-3 max-w-[300px] text-[11px] leading-5 text-neutral-500 sm:max-w-md sm:text-[12px]">
+                  <p className="mt-3 max-w-[300px] text-[11px] leading-5 text-description sm:max-w-md sm:text-[12px]">
                     {subtitle}
                   </p>
                 )}
@@ -514,9 +514,9 @@ export default function AiResponseOverlay({
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: EASE, delay: 0.35 }}
-            className="relative z-20 shrink-0 bg-[#fafaf9]/70 px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-3 backdrop-blur-xl sm:bg-transparent sm:px-8 sm:pb-8 sm:pt-3 sm:backdrop-blur-none"
+            className="relative z-20 shrink-0 bg-primary/70 px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-3 backdrop-blur-xl sm:bg-transparent sm:px-8 sm:pb-8 sm:pt-3 sm:backdrop-blur-none"
           >
-            <div className="flex justify-center text-xs text-neutral-400">
+            <div className="flex justify-center text-xs text-description">
               <p>● Respons AI bisa membuat kesalahan</p>
             </div>
           </motion.footer>

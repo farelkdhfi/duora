@@ -4,17 +4,19 @@ import Link from "next/link";
 interface HeaderProps {
     title: string
     text: string
+    colorTitle?: string
 }
 
 export default function HeaderWithoutShell({
     title,
-    text
+    text,
+    colorTitle = 'text-white'
 }: HeaderProps) {
     return (
         <div className="flex items-start justify-between gap-4">
             <div>
                 <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-neutral-400">{title}</p>
-                <h1 className="mt-1 text-[25px] font-medium leading-tight tracking-[-0.045em] text-neutral-950 sm:text-[29px]">
+                <h1 className={`mt-1 text-[25px] font-medium leading-tight tracking-[-0.045em] ${colorTitle} sm:text-[29px]`}>
                     {text}
                 </h1>
             </div>

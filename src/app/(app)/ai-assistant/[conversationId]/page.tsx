@@ -237,9 +237,9 @@ function ConversationView({
     isLoadingSubscription
   ) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#fafaf9]">
-        <div className="flex items-center gap-3 text-sm text-neutral-400">
-          <div className="h-4 w-4 animate-spin rounded-full border-2 border-neutral-200 border-t-neutral-500" />
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-primary">
+        <div className="flex items-center gap-3 text-sm text-description">
+          <div className="h-4 w-4 animate-spin rounded-full border-2 border-white/10 border-t-description" />
           Memuat Duora AI...
         </div>
       </div>
@@ -248,20 +248,20 @@ function ConversationView({
 
   if (!relationshipDetails) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#fafaf9] px-6">
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-primary px-6">
         <div className="max-w-sm text-center">
-          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-neutral-900">
+          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-secondary">
             <Sparkles
               size={22}
-              className="text-white"
+              className="text-primary"
             />
           </div>
 
-          <h1 className="mt-5 text-lg font-semibold tracking-tight text-neutral-900">
+          <h1 className="mt-5 text-lg font-semibold tracking-tight text-secondary">
             Hubungkan pasanganmu dulu
           </h1>
 
-          <p className="mt-2 text-sm leading-6 text-neutral-500">
+          <p className="mt-2 text-sm leading-6 text-description">
             Duora AI membutuhkan hubungan
             yang terhubung agar dapat
             memahami konteks hubungan
@@ -274,38 +274,38 @@ function ConversationView({
 
   if (!hasAccess) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#fafaf9] px-6">
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-primary px-6">
         <div className="w-full max-w-md text-center">
           <div className="relative mx-auto flex h-20 w-20 items-center justify-center">
-            <div className="absolute inset-0 rounded-[26px] bg-gradient-to-br from-fuchsia-500 via-pink-500 to-orange-400 opacity-15 blur-xl" />
+            <div className="absolute inset-0 rounded-[26px] bg-gradient-to-br from-fuchsia-500 via-pink-500 to-orange-400 opacity-25 blur-xl" />
           </div>
 
-          <h1 className="mt-7 text-2xl font-semibold tracking-tight text-neutral-950">
+          <h1 className="mt-7 text-2xl font-semibold tracking-tight text-secondary">
             Duora AI
           </h1>
 
-          <p className="mx-auto mt-3 max-w-sm text-sm leading-6 text-neutral-500">
+          <p className="mx-auto mt-3 max-w-sm text-sm leading-6 text-description">
             Assistant pribadi untuk membantu
             memahami hubungan, membaca pola,
             dan menemukan perspektif baru
             tentang kalian.
           </p>
 
-          <div className="mt-7 rounded-2xl border border-neutral-200 bg-white p-4 text-left shadow-sm">
+          <div className="mt-7 rounded-2xl border border-white/10 bg-primary p-4 text-left shadow-sm">
             <div className="flex items-start gap-3">
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-neutral-100">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/[0.06]">
                 <Sparkles
                   size={16}
-                  className="text-neutral-700"
+                  className="text-secondary"
                 />
               </div>
 
               <div>
-                <p className="text-sm font-medium text-neutral-900">
+                <p className="text-sm font-medium text-secondary">
                   Tersedia di Plus & Pro
                 </p>
 
-                <p className="mt-1 text-xs leading-5 text-neutral-500">
+                <p className="mt-1 text-xs leading-5 text-description">
                   Upgrade untuk mulai
                   menggunakan Duora AI dan
                   mendapatkan insight yang lebih
@@ -338,7 +338,7 @@ function ConversationView({
     !pending;
 
   return (
-    <div className="fixed inset-0 z-50 flex min-h-0 overflow-hidden bg-white">
+    <div className="fixed inset-0 z-50 flex min-h-0 overflow-hidden bg-primary">
       {/* =========================
           SHARED AI SIDEBAR
       ========================== */}
@@ -373,31 +373,31 @@ function ConversationView({
             {showSkeleton && (
               <div className="space-y-4">
                 <div className="flex justify-end">
-                  <div className="h-10 w-48 animate-pulse rounded-2xl bg-neutral-200/70" />
+                  <div className="h-10 w-48 animate-pulse rounded-2xl bg-white/[0.08]" />
                 </div>
 
-                <div className="h-16 w-72 animate-pulse rounded-2xl bg-neutral-200/50" />
+                <div className="h-16 w-72 animate-pulse rounded-2xl bg-white/[0.06]" />
 
                 <div className="flex justify-end">
-                  <div className="h-10 w-36 animate-pulse rounded-2xl bg-neutral-200/70" />
+                  <div className="h-10 w-36 animate-pulse rounded-2xl bg-white/[0.08]" />
                 </div>
               </div>
             )}
 
             {showEmpty && (
               <div className="flex flex-col items-center justify-center py-24 text-center">
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-neutral-950">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-secondary">
                   <Sparkles
                     size={20}
-                    className="text-white"
+                    className="text-primary"
                   />
                 </div>
 
-                <p className="mt-4 text-sm font-medium text-neutral-800">
+                <p className="mt-4 text-sm font-medium text-secondary">
                   Belum ada pesan
                 </p>
 
-                <p className="mt-1 text-xs text-neutral-400">
+                <p className="mt-1 text-xs text-description">
                   Mulai percakapan lewat kolom
                   di bawah.
                 </p>
@@ -423,7 +423,7 @@ function ConversationView({
             )}
 
             {sendError && (
-              <div className="rounded-xl border border-red-200/70 bg-red-50/80 px-4 py-3 text-center text-xs text-red-600">
+              <div className="rounded-xl border border-red-400/20 bg-red-500/10 px-4 py-3 text-center text-xs text-red-400">
                 Pesan gagal dikirim. Silakan
                 coba lagi.
               </div>
@@ -444,14 +444,14 @@ function ConversationView({
             />
 
             <div className="mt-2.5 flex items-center justify-center gap-2">
-              <span className="text-[10px] text-neutral-400">
+              <span className="text-[10px] text-description">
                 {messagesSentToday ?? 0}/
                 {dailyLimit} pesan hari ini
               </span>
 
-              <span className="h-0.5 w-0.5 rounded-full bg-neutral-300" />
+              <span className="h-0.5 w-0.5 rounded-full bg-description/50" />
 
-              <span className="text-[10px] text-neutral-400">
+              <span className="text-[10px] text-description">
                 Duora AI dapat membuat
                 kesalahan
               </span>

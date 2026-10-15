@@ -25,25 +25,25 @@ export default function AiMemoryPocket({
   onClose,
 }: AiMemoryPocketProps) {
   return (
-    <div className="fixed inset-0 z-[180] flex items-end justify-center bg-neutral-950/20 p-2.5 backdrop-blur-[3px] sm:items-center sm:p-6">
-      <div className="relative flex max-h-[90dvh] w-full max-w-2xl flex-col overflow-hidden rounded-[1.6rem] border border-black/[0.06] bg-[#faf9f6] shadow-[0_30px_100px_rgba(0,0,0,0.18)] sm:max-h-[82vh] sm:rounded-[2rem]">
-        <div className="pointer-events-none absolute -right-20 -top-20 size-48 rounded-full bg-blue-300/[0.09] blur-[70px]" />
+    <div className="fixed inset-0 z-[180] flex items-end justify-center bg-black/50 p-2.5 backdrop-blur-[3px] sm:items-center sm:p-6">
+      <div className="relative flex max-h-[90dvh] w-full max-w-2xl flex-col overflow-hidden rounded-[1.6rem] border border-white/10 bg-primary shadow-[0_30px_100px_rgba(0,0,0,0.6)] sm:max-h-[82vh] sm:rounded-[2rem]">
+        <div className="pointer-events-none absolute -right-20 -top-20 size-48 rounded-full bg-blue-300/[0.12] blur-[70px]" />
 
-        <div className="pointer-events-none absolute -left-20 bottom-0 size-48 rounded-full bg-pink-300/[0.07] blur-[70px]" />
+        <div className="pointer-events-none absolute -left-20 bottom-0 size-48 rounded-full bg-pink-300/[0.1] blur-[70px]" />
 
         {/* HEADER */}
 
-        <header className="relative z-10 flex shrink-0 items-center justify-between gap-4 border-b border-black/[0.05] px-4 py-4 sm:px-6 sm:py-5">
+        <header className="relative z-10 flex shrink-0 items-center justify-between gap-4 border-b border-white/[0.08] px-4 py-4 sm:px-6 sm:py-5">
           <div className="min-w-0">
-            <p className="text-[7px] font-semibold uppercase tracking-[0.18em] text-neutral-300 sm:text-[8px]">
+            <p className="text-[7px] font-semibold uppercase tracking-[0.18em] text-description/70 sm:text-[8px]">
               Memory pocket
             </p>
 
-            <h2 className="mt-1 text-[16px] font-semibold tracking-[-0.04em] text-neutral-900 sm:text-[19px]">
+            <h2 className="mt-1 text-[16px] font-semibold tracking-[-0.04em] text-secondary sm:text-[19px]">
               Duora AI
             </h2>
 
-            <p className="mt-1 text-[9px] text-neutral-400 sm:text-[10px]">
+            <p className="mt-1 text-[9px] text-description sm:text-[10px]">
               {messages.length}{' '}
               {messages.length === 1
                 ? 'saved response'
@@ -55,7 +55,7 @@ export default function AiMemoryPocket({
             type="button"
             onClick={onClose}
             aria-label="Close AI memory pocket"
-            className="flex size-8 shrink-0 items-center justify-center rounded-full border border-black/[0.05] bg-white text-neutral-400 transition hover:bg-neutral-900 hover:text-white sm:size-9"
+            className="flex size-8 shrink-0 items-center justify-center rounded-full border border-white/10 bg-primary text-description transition hover:bg-secondary hover:text-primary sm:size-9"
           >
             <X size={13} strokeWidth={1.7} />
           </button>

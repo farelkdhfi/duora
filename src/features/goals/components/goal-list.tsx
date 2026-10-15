@@ -285,7 +285,7 @@ export default function GoalList({
       {/* TOOLBAR */}
 
       <div className="flex items-center justify-between gap-2">
-        <div className="flex min-w-0 items-center gap-1 overflow-x-auto rounded-full bg-neutral-100 p-1 scrollbar-none">
+        <div className="flex min-w-0 items-center gap-1 overflow-x-auto rounded-full bg-black p-1 scrollbar-none">
           {filterOptions.map((filter) => {
             const isActive =
               activeFilter === filter.value

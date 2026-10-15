@@ -1,12 +1,26 @@
 'use client'
 
+import { useEffect, useRef, useState } from 'react'
 import { Clock, Trash2 } from 'lucide-react'
+
 import type { PlannerEvent } from '../types'
 import { useDeletePlannerEvent } from '../queries'
-import { useState } from 'react'
+
+export type EventStatus = 'in-progress' | 'upcoming' | 'done'
+
+export interface Participant {
+  id?: string
+  name: string
+  avatarUrl?: string | null
+}
 
 interface EventCardProps {
   event: PlannerEvent
+  status: EventStatus
+  expanded: boolean
+  onToggle: () => void
+  /** Opsional: avatar yang tampil di kiri jam (mis. kamu + partner) */
+  participants?: Participant[]
 }
 
 const categoryLabels: Record<PlannerEvent['category'], string> = {
@@ -20,70 +34,128 @@ const categoryLabels: Record<PlannerEvent['category'], string> = {
   other: 'Other',
 }
 
-const categoryAccent: Record<PlannerEvent['category'], string> = {
-  relationship: 'bg-neutral-500',
-  finance: 'bg-neutral-500',
-  birthday: 'bg-neutral-500',
-  anniversary: 'bg-neutral-500',
-  travel: 'bg-neutral-500',
-  health: 'bg-neutral-500',
-  work: 'bg-neutral-500',
-  other: 'bg-neutral-500',
+const statusMeta: Record<
+  EventStatus,
+  { label: string; text: string; bar: string }
+> = {
+  'in-progress': {
+    label: 'In Progress',
+    text: 'text-pink-300',
+    bar: 'bg-pink-400',
+  },
+  upcoming: {
+    label: 'Upcoming',
+    text: 'text-neutral-400',
+    bar: 'bg-neutral-500',
+  },
+  done: {
+    label: 'Done',
+    text: 'text-neutral-500',
+    bar: 'bg-neutral-700',
+  },
 }
 
+/** "13:30:00" -> "1:30 PM" */
 function formatTime(time: string) {
-  const [hours, minutes] = time.split(':')
-  return `${hours}:${minutes}`
+  const [h, m] = time.split(':').map(Number)
+  const suffix = h >= 12 ? 'PM' : 'AM'
+  return `${h % 12 || 12}:${String(m).padStart(2, '0')} ${suffix}`
 }
 
-export default function EventCard({ event }: EventCardProps) {
+function AvatarStack({ participants }: { participants: Participant[] }) {
+  return (
+    <div className="flex -space-x-1.5">
+      {participants.map((person, index) => (
+        <span
+          key={person.id ?? `${person.name}-${index}`}
+          title={person.name}
+          className="relative flex size-6 items-center justify-center overflow-hidden rounded-full bg-neutral-700 text-[10px] font-semibold uppercase text-neutral-100 ring-2 ring-[#0f0f13]"
+        >
+          {person.avatarUrl ? (
+            <img
+              src={person.avatarUrl}
+              alt={person.name}
+              className="size-full object-cover"
+            />
+          ) : (
+            person.name.charAt(0)
+          )}
+        </span>
+      ))}
+    </div>
+  )
+}
+
+export default function EventCard({
+  event,
+  status,
+  expanded,
+  onToggle,
+  participants,
+}: EventCardProps) {
+  const [menuOpen, setMenuOpen] = useState(false)
   const [isConfirmingDelete, setIsConfirmingDelete] = useState(false)
+  const menuRef = useRef<HTMLDivElement>(null)
 
   const deleteMutation = useDeletePlannerEvent()
+  const meta = statusMeta[status]
 
-  const accent = categoryAccent[event.category]
+  // tutup menu "..." kalau klik di luar atau tekan Escape
+  useEffect(() => {
+    if (!menuOpen) return
 
-  const handleDelete = () => {
-    if (!isConfirmingDelete) {
-      setIsConfirmingDelete(true)
-      return
+    const handlePointerDown = (e: PointerEvent) => {
+      if (!menuRef.current?.contains(e.target as Node)) setMenuOpen(false)
+    }
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setMenuOpen(false)
     }
 
-    deleteMutation.mutate(event.id)
-  }
+    document.addEventListener('pointerdown', handlePointerDown)
+    document.addEventListener('keydown', handleKeyDown)
+
+    return () => {
+      document.removeEventListener('pointerdown', handlePointerDown)
+      document.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [menuOpen])
+
+  const handleDelete = () => deleteMutation.mutate(event.id)
 
   const handleCancelDelete = () => {
     if (deleteMutation.isPending) return
-
     setIsConfirmingDelete(false)
   }
 
+  const showTime = !event.is_all_day && event.start_time
+
   return (
-    <div className="group w-full overflow-hidden rounded-[1.25rem] border border-white/[0.08] bg-linear-to-br from-[#17171d] to-[#0c0c0f] shadow-[0_8px_25px_-20px_rgba(0,0,0,0.6)] transition-all duration-300 hover:border-white/[0.14] hover:shadow-[0_15px_35px_-20px_rgba(0,0,0,0.7)] sm:rounded-[1.35rem]">
+    <article className="relative w-full rounded-[1.4rem] border border-white/[0.08] bg-linear-to-br from-[#17171d] to-[#0c0c0f] shadow-[0_8px_25px_-20px_rgba(0,0,0,0.6)] transition-colors duration-300 hover:border-white/[0.14]">
       {isConfirmingDelete ? (
-        <div className="flex min-h-[116px] w-full flex-col items-center justify-center px-4 py-5 text-center sm:min-h-[104px] sm:flex-row sm:justify-between sm:px-5 sm:text-left lg:px-6">
+        /* ===== Konfirmasi hapus ===== */
+        <div className="flex min-h-[104px] flex-col items-center justify-center gap-3 px-4 py-4 text-center sm:flex-row sm:justify-between sm:text-left">
           <div className="min-w-0">
             <div className="flex items-center justify-center gap-2 sm:justify-start">
               <div className="flex size-7 shrink-0 items-center justify-center rounded-full bg-red-500/15 text-red-400">
                 <Trash2 size={12} strokeWidth={2} />
               </div>
 
-              <p className="text-[12px] font-semibold tracking-[-0.02em] text-neutral-50 sm:text-[13px]">
+              <p className="text-[13px] font-semibold tracking-[-0.02em] text-neutral-50">
                 Delete this event?
               </p>
             </div>
 
-            <p className="mt-1 text-[9px] leading-5 text-neutral-500 sm:ml-9 sm:text-[10px]">
+            <p className="mt-1 text-[10px] text-neutral-500 sm:ml-9">
               This action cannot be undone.
             </p>
           </div>
 
-          <div className="mt-4 flex shrink-0 items-center gap-1.5 sm:mt-0 sm:ml-5">
+          <div className="flex shrink-0 items-center gap-1.5">
             <button
               type="button"
               onClick={handleCancelDelete}
               disabled={deleteMutation.isPending}
-              className="inline-flex min-h-8.5 items-center justify-center rounded-full border border-white/[0.08] bg-white/[0.06] px-4 text-[10px] font-semibold text-neutral-300 transition-all duration-200 hover:bg-white/[0.12] hover:text-white active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 sm:px-4.5"
+              className="inline-flex min-h-8 items-center justify-center rounded-full border border-white/[0.08] bg-white/[0.06] px-4 text-[10px] font-semibold text-neutral-300 transition-all hover:bg-white/[0.12] hover:text-white active:scale-95 disabled:cursor-not-allowed disabled:opacity-50"
             >
               Cancel
             </button>
@@ -92,75 +164,116 @@ export default function EventCard({ event }: EventCardProps) {
               type="button"
               onClick={handleDelete}
               disabled={deleteMutation.isPending}
-              className="inline-flex min-h-8.5 items-center justify-center gap-1.5 rounded-full bg-white px-4 text-[10px] font-semibold text-neutral-900 transition-all duration-200 hover:bg-neutral-200 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 sm:px-4.5"
+              className="inline-flex min-h-8 items-center justify-center gap-1.5 rounded-full bg-white px-4 text-[10px] font-semibold text-neutral-900 transition-all hover:bg-neutral-200 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50"
             >
               <Trash2 size={11} strokeWidth={2} />
-
               {deleteMutation.isPending ? 'Deleting...' : 'Yes, delete'}
             </button>
           </div>
         </div>
       ) : (
-        <div className="flex w-full items-start gap-3 p-3 sm:items-center sm:gap-4 sm:p-4 lg:gap-5 lg:p-4.5">
-          <div className="flex size-13 shrink-0 flex-col items-center justify-center rounded-[0.9rem] border border-white/[0.08] bg-white/[0.06] sm:size-12 sm:rounded-[1rem] lg:size-13">
-            <span className="text-[8px] font-semibold uppercase tracking-[0.12em] text-neutral-400 sm:text-[9px]">
-              {new Date(`${event.event_date}T00:00:00`).toLocaleDateString(
-                'en-US',
-                {
-                  month: 'short',
-                },
-              )}
-            </span>
+        <>
+          {/* garis status di kiri */}
+          <span
+            aria-hidden
+            className={`absolute bottom-4 left-3 top-4 w-[3px] rounded-full transition-colors ${meta.bar}`}
+          />
 
-            <span className="mt-1 text-[17px] font-semibold leading-none tracking-[-0.04em] text-neutral-50 sm:text-lg">
-              {new Date(`${event.event_date}T00:00:00`).getDate()}
-            </span>
-          </div>
-
-          <div className="min-w-0 flex-1 pt-0.5 sm:pt-0">
-            <div className="flex min-w-0 items-center gap-2">
-              <span className={`size-1.5 shrink-0 rounded-full ${accent}`} />
-
-              <p className="truncate text-[8px] font-semibold uppercase tracking-[0.14em] text-neutral-500 sm:text-[9px] lg:text-[10px]">
-                {categoryLabels[event.category]}
-              </p>
-            </div>
-
-            <h4 className="mt-1.5 truncate text-[13px] font-semibold tracking-[-0.025em] text-neutral-50 sm:text-[14px] lg:text-[15px]">
+          {/* area utama: klik untuk buka/tutup deskripsi */}
+          <button
+            type="button"
+            onClick={onToggle}
+            aria-expanded={expanded}
+            className="block w-full rounded-[1.4rem] py-4 pl-6 pr-12 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
+          >
+            <h4 className="line-clamp-2 break-words text-[14px] font-medium leading-snug tracking-[-0.02em] text-neutral-50">
               {event.title}
             </h4>
 
-            <div className="mt-1.5 flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1.5 text-[9px] text-neutral-400 sm:text-[10px] lg:text-[10.5px]">
+            <p className={`mt-0.5 text-[12px] ${meta.text}`}>{meta.label}</p>
 
-              {!event.is_all_day && event.start_time && (
-                <span className="flex shrink-0 items-center gap-1.5">
-                  <Clock size={10} strokeWidth={2} />
-
-                  {formatTime(event.start_time)}
-
-                  {event.end_time && ` – ${formatTime(event.end_time)}`}
-                </span>
+            <div className="mt-3 flex min-h-6 items-center justify-between gap-3">
+              {participants && participants.length > 0 ? (
+                <AvatarStack participants={participants} />
+              ) : (
+                <span />
               )}
 
-              {event.is_all_day && (
-                <span className="shrink-0 rounded-full bg-white/[0.08] px-2 py-0.5 text-[8.5px] font-medium text-neutral-300 sm:text-[9.5px]">
+              {showTime ? (
+                <span className="flex shrink-0 items-center gap-1.5 text-[11px] tabular-nums text-neutral-300">
+                  <Clock size={11} strokeWidth={2} />
+                  {formatTime(event.start_time as string)}
+                  {event.end_time && ` – ${formatTime(event.end_time)}`}
+                </span>
+              ) : (
+                <span className="shrink-0 rounded-full bg-white/[0.08] px-2.5 py-0.5 text-[10px] font-medium text-neutral-300">
                   All day
                 </span>
               )}
             </div>
+          </button>
+
+          {/* menu "..." */}
+          <div ref={menuRef} className="absolute right-3 top-3">
+            <button
+              type="button"
+              onClick={() => setMenuOpen((open) => !open)}
+              aria-label="Event options"
+              aria-haspopup="menu"
+              aria-expanded={menuOpen}
+              className="flex size-7 items-center justify-center rounded-full text-neutral-400 transition-colors hover:bg-white/[0.08] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
+            >
+              <span className="flex gap-[3px]">
+                <span className="size-[3px] rounded-full bg-current" />
+                <span className="size-[3px] rounded-full bg-current" />
+                <span className="size-[3px] rounded-full bg-current" />
+              </span>
+            </button>
+
+            {menuOpen && (
+              <div
+                role="menu"
+                className="absolute right-0 top-9 z-20 w-36 rounded-xl border border-white/[0.1] bg-[#15151b] p-1 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.8)]"
+              >
+                <button
+                  type="button"
+                  role="menuitem"
+                  onClick={() => {
+                    setMenuOpen(false)
+                    setIsConfirmingDelete(true)
+                  }}
+                  className="flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-left text-[12px] font-medium text-red-400 transition-colors hover:bg-red-500/10"
+                >
+                  <Trash2 size={12} strokeWidth={2} />
+                  Delete
+                </button>
+              </div>
+            )}
           </div>
 
-          <button
-            type="button"
-            onClick={handleDelete}
-            disabled={deleteMutation.isPending}
-            aria-label="Delete event"
-            className="group/delete flex size-8 shrink-0 items-center justify-center rounded-full border border-white/[0.08] bg-white/[0.06] text-neutral-400 transition-all duration-200 hover:border-red-500/30 hover:bg-red-500/15 hover:text-red-400 active:scale-95 sm:size-7.5 sm:border-transparent sm:bg-white/[0.04] sm:opacity-70 sm:group-hover:opacity-100 sm:focus:opacity-100"
+          {/* deskripsi (expand) */}
+          <div
+            aria-hidden={!expanded}
+            className={`grid transition-[grid-template-rows] duration-300 ease-out ${
+              expanded ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'
+            }`}
           >
-            <Trash2 size={12} strokeWidth={2} className="transition-transform duration-200 group-hover/delete:scale-105" />
-          </button>
-        </div>
+            <div className="overflow-hidden">
+              <div className="pb-4 pl-6 pr-4">
+                <div className="rounded-xl bg-white/[0.06] p-3">
+                  <span className="inline-block rounded-full bg-white/[0.08] px-2 py-0.5 text-[9px] font-semibold uppercase tracking-[0.12em] text-neutral-400">
+                    {categoryLabels[event.category] ?? event.category}
+                  </span>
+
+                  <p className="mt-2 whitespace-pre-line text-[12px] leading-relaxed text-neutral-200">
+                    {event.description?.trim() || 'No description.'}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
       )}
-    </div>
+    </article>
   )
 }

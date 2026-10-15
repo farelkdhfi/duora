@@ -8,21 +8,22 @@ interface HeaderProps {
         label: string;
         onClick: () => void;
     };
+    colorTitle?: string
 }
 
-const Header = ({ icon: Icon, title, description, action }: HeaderProps) => {
+const Header = ({ icon: Icon, title, description, action, colorTitle = 'text-white' }: HeaderProps) => {
     return (
         <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between sm:gap-6">
             <div>
                 <div className="flex items-center gap-x-2">
                     {Icon && <Icon size={20} className="text-black" />}
 
-                    <h1 className="text-2xl font-semibold tracking-[-0.04em] text-neutral-800 sm:text-3xl lg:text-4xl capitalize">
+                    <h1 className={`text-2xl font-semibold tracking-[-0.04em] ${colorTitle} sm:text-3xl lg:text-4xl capitalize`}>
                         {title}
                     </h1>
                 </div>
 
-                <p className="mt-2 max-w-md text-[13px] leading-6 text-neutral-400 sm:text-sm">
+                <p className="mt-2 max-w-md text-xs leading-6 text-neutral-400 sm:text-sm">
                     {description}
                 </p>
             </div>

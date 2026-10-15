@@ -34,7 +34,7 @@ const SHUFFLE_CYCLE_S = SHUFFLE_CYCLE_MS / 1000;
 const SHUFFLE_CARDS = [
   { id: "blue", className: "bg-blue-100" },
   { id: "pink", className: "bg-pink-100" },
-  { id: "white", className: "bg-gradient-to-b from-white to-[#fcf7fa]" },
+  { id: "white", className: "bg-primary" },
 ] as const;
 
 /**
@@ -257,17 +257,17 @@ export function QuestionCard({ session, onShufflingChange }: QuestionCardProps) 
             {/* Kartu utama */}
             <div
               key={session.question_text}
-              className="qna-card-in relative z-10 flex min-h-[100px] flex-col rounded-[2rem] border border-black/[0.06] bg-gradient-to-b from-white to-[#fcf7fa] px-6 py-5 shadow-[0_30px_80px_-45px_rgba(30,19,24,0.35)] sm:min-h-[340px] sm:px-9"
+              className="qna-card-in relative z-10 flex min-h-[100px] flex-col rounded-[2rem] border border-black/[0.06] bg-primary px-6 py-5 shadow-[0_30px_80px_-45px_rgba(30,19,24,0.35)] sm:min-h-[340px] sm:px-9"
             >
               <div className="flex flex-1 flex-col items-center justify-center py-6 text-center">
-                <p className="mt-6 max-w-xl text-sm font-medium leading-snug tracking-[-0.02em] text-[#171717] sm:text-[32px] md:text-[38px]">
+                <p className="mt-6 max-w-xl text-sm font-medium leading-snug tracking-[-0.02em] text-secondary sm:text-[32px] md:text-[38px]">
                   {session.question_text}
                 </p>
               </div>
 
               <div className="mx-auto flex items-center gap-2.5 pt-7">
                 <span className="h-[1px] w-7 bg-black/30" />
-                <span className="text-[9px] font-semibold uppercase tracking-[0.2em] text-black/35">
+                <span className="text-[9px] font-semibold uppercase tracking-[0.2em] text-description">
                   {categoryInfo.name}
                 </span>
                 <span className="h-[1px] w-7 bg-black/30" />
@@ -281,7 +281,7 @@ export function QuestionCard({ session, onShufflingChange }: QuestionCardProps) 
           <button
             type="button"
             onClick={handleReroll}
-            className="group absolute right-6 top-5 z-30 flex h-7 items-center gap-1.5 rounded-full border border-black/[0.08] bg-white/80 px-3 text-[10px] font-semibold uppercase tracking-[0.14em] text-black backdrop-blur transition-colors hover:bg-white sm:right-9"
+            className="group absolute right-6 top-5 z-30 flex h-7 items-center gap-1.5 rounded-full border border-black/[0.08] bg-primary/80 px-3 text-[10px] font-semibold uppercase tracking-[0.14em] text-secondary backdrop-blur transition-colors hover:bg-primary sm:right-9"
           >
             <RefreshCw className="size-3 transition-transform duration-300 group-hover:rotate-180" />
 

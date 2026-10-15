@@ -58,22 +58,22 @@ const statusConfig = {
   active: {
     label: 'Active',
     dot: 'bg-emerald-400',
-    className: 'bg-emerald-50 text-emerald-600',
+    className: 'bg-emerald-400/10 text-emerald-400',
   },
   pending_verdict: {
     label: 'Thinking',
     dot: 'bg-amber-400',
-    className: 'bg-amber-50 text-amber-600',
+    className: 'bg-amber-400/10 text-amber-400',
   },
   resolved: {
     label: 'Resolved',
     dot: 'bg-neutral-400',
-    className: 'bg-neutral-100 text-neutral-500',
+    className: 'bg-white/[0.06] text-description',
   },
   archived: {
     label: 'Archived',
-    dot: 'bg-neutral-300',
-    className: 'bg-neutral-100/70 text-neutral-400',
+    dot: 'bg-neutral-500',
+    className: 'bg-white/[0.04] text-description',
   },
 }
 
@@ -183,12 +183,12 @@ function DeleteControl({
   return (
     <div className={className}>
       {isConfirmingDelete ? (
-        <div className="flex items-center gap-1 rounded-full border border-black/[0.05] bg-white p-1 shadow-[0_10px_30px_-15px_rgba(0,0,0,0.3)]">
+        <div className="flex items-center gap-1 rounded-full border border-white/10 bg-primary p-1 shadow-[0_10px_30px_-15px_rgba(0,0,0,0.6)]">
           <button
             type="button"
             onClick={handleDeleteClick}
             disabled={deleteDebateMutation.isPending}
-            className="rounded-full bg-neutral-900 px-3.5 py-1.5 text-xs font-semibold text-white transition hover:bg-black disabled:opacity-50"
+            className="rounded-full bg-red-500 px-3.5 py-1.5 text-xs font-semibold text-white transition hover:bg-red-600 disabled:opacity-50"
           >
             {deleteDebateMutation.isPending
               ? '...'
@@ -200,7 +200,7 @@ function DeleteControl({
             onClick={handleCancelDelete}
             disabled={deleteDebateMutation.isPending}
             aria-label="Cancel delete"
-            className="rounded-full px-2 py-1.5 text-xs font-semibold text-neutral-400 transition hover:bg-neutral-100 hover:text-neutral-700 disabled:opacity-50"
+            className="rounded-full px-2 py-1.5 text-xs font-semibold text-description transition hover:bg-white/10 hover:text-secondary disabled:opacity-50"
           >
             <X
               size={10}
@@ -213,7 +213,7 @@ function DeleteControl({
           type="button"
           onClick={handleDeleteClick}
           aria-label={`Delete ${debateTitle}`}
-          className="flex size-8 items-center justify-center rounded-full border border-black/20 bg-white text-neutral-400 shadow-[0_5px_20px_-12px_rgba(0,0,0,0.25)] transition-all hover:border-red-100 hover:bg-red-50 hover:text-red-500 sm:opacity-0 sm:group-hover:opacity-100"
+          className="flex size-8 items-center justify-center rounded-full border border-white/10 bg-primary text-description shadow-[0_5px_20px_-12px_rgba(0,0,0,0.6)] transition-all hover:border-red-400/30 hover:bg-red-500/10 hover:text-red-400 sm:opacity-0 sm:group-hover:opacity-100"
         >
           <Trash2
             size={12}
@@ -243,7 +243,7 @@ function DebateListItem({
     <div className="group relative">
       <Link
         href={`/debates/${debate.id}`}
-        className="relative block overflow-hidden rounded-[1.6rem] border border-black/[0.055] bg-white px-4 py-4 shadow-[0_10px_35px_-28px_rgba(0,0,0,0.25)] transition-all duration-300 hover:-translate-y-0.5 hover:border-black/[0.09] hover:shadow-[0_18px_45px_-28px_rgba(0,0,0,0.2)] sm:px-5 sm:py-4.5"
+        className="relative block overflow-hidden rounded-[1.6rem] border border-white/[0.08] bg-primary px-4 py-4 shadow-[0_10px_35px_-28px_rgba(0,0,0,0.6)] transition-all duration-300 hover:-translate-y-0.5 hover:border-white/[0.15] hover:shadow-[0_18px_45px_-28px_rgba(0,0,0,0.7)] sm:px-5 sm:py-4.5"
       >
         <div className="pointer-events-none absolute -right-16 -top-20 size-36 rounded-full bg-pink-300/[0.06] blur-[60px] opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
 
@@ -261,20 +261,20 @@ function DebateListItem({
           </div>
 
           <div className="min-w-0 flex-1">
-            <h3 className="truncate text-sm font-semibold tracking-[-0.025em] text-neutral-900 sm:text-[14px]">
+            <h3 className="truncate text-sm font-semibold tracking-[-0.025em] text-secondary sm:text-[14px]">
               {debate.title}
             </h3>
 
             <div className="mt-1.5 flex items-center gap-2">
-              <span className="text-xs font-medium text-neutral-400">
+              <span className="text-xs font-medium text-description">
                 {persona.label}
               </span>
 
-              <span className="text-xs text-neutral-200">
+              <span className="text-xs text-description/50">
                 ·
               </span>
 
-              <span className="text-[10px] text-neutral-300">
+              <span className="text-[10px] text-description">
                 {formatDate(debate.created_at)}
               </span>
             </div>
@@ -321,35 +321,35 @@ type CardTheme = {
 
 const cardThemes: Record<string, CardTheme> = {
   formal: {
-    card: 'border-neutral-200 shadow-[0_20px_50px_-30px_rgba(0,0,0,0.3)] hover:border-neutral-300',
-    wall: '236, 238, 237',
-    shade: '170, 175, 173',
-    glow: 'bg-neutral-300/50',
-    accentText: 'text-neutral-600',
+    card: 'border-white/10 shadow-[0_20px_50px_-30px_rgba(0,0,0,0.7)] hover:border-white/20',
+    wall: '44, 46, 46',
+    shade: '16, 18, 18',
+    glow: 'bg-neutral-400/20',
+    accentText: 'text-neutral-300',
     button: 'bg-neutral-900',
   },
   kasar: {
-    card: 'border-red-100 shadow-[0_20px_50px_-30px_rgba(220,38,38,0.4)] hover:border-red-200',
-    wall: '255, 195, 195',
-    shade: '210, 100, 100',
-    glow: 'bg-red-300/50',
-    accentText: 'text-red-600',
+    card: 'border-red-400/15 shadow-[0_20px_50px_-30px_rgba(220,38,38,0.5)] hover:border-red-400/30',
+    wall: '92, 38, 42',
+    shade: '40, 14, 18',
+    glow: 'bg-red-400/20',
+    accentText: 'text-red-400',
     button: 'bg-red-500',
   },
   lebay: {
-    card: 'border-blue-100 shadow-[0_20px_50px_-30px_rgba(37,99,235,0.4)] hover:border-blue-200',
-    wall: '190, 220, 255',
-    shade: '90, 145, 210',
-    glow: 'bg-blue-300/50',
-    accentText: 'text-blue-600',
+    card: 'border-blue-400/15 shadow-[0_20px_50px_-30px_rgba(37,99,235,0.5)] hover:border-blue-400/30',
+    wall: '36, 60, 98',
+    shade: '14, 26, 50',
+    glow: 'bg-blue-400/20',
+    accentText: 'text-blue-400',
     button: 'bg-blue-500',
   },
   lembut: {
-    card: 'border-pink-100 shadow-[0_20px_50px_-30px_rgba(236,72,153,0.4)] hover:border-pink-200',
-    wall: '255, 220, 235',
-    shade: '225, 130, 175',
-    glow: 'bg-pink-300/50',
-    accentText: 'text-pink-600',
+    card: 'border-pink-400/15 shadow-[0_20px_50px_-30px_rgba(236,72,153,0.5)] hover:border-pink-400/30',
+    wall: '90, 42, 66',
+    shade: '44, 18, 32',
+    glow: 'bg-pink-400/20',
+    accentText: 'text-pink-400',
     button: 'bg-pink-500',
   },
 }
@@ -392,20 +392,20 @@ const CARD_COVE: CardStop[] = [
   [-26, 0], [-18, 0.025], [-10, 0.065], [-3, 0.1], [3, 0.11], [10, 0.08], [18, 0.04], [27, 0],
 ]
 
-// Bloom key light di dinding, tepat di atas persona.
+// Bloom key light di dinding, tepat di atas persona (diredam untuk dark mode).
 const CARD_KEY_LIGHT =
-  'radial-gradient(ellipse 72% 42% at 50% 30%, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.34) 28%, rgba(255,255,255,0.15) 55%, rgba(255,255,255,0.04) 80%, rgba(255,255,255,0) 100%)'
+  'radial-gradient(ellipse 72% 42% at 50% 30%, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0.09) 28%, rgba(255,255,255,0.04) 55%, rgba(255,255,255,0.01) 80%, rgba(255,255,255,0) 100%)'
 
 // Bayangan lantai berwarna di bawah persona (ukuran ellipse disesuaikan buat card).
 const cardFloorShade = (rgb: string) =>
-  `radial-gradient(ellipse 200px 60px at 50% ${CARD_HORIZON + 3}%, ${cardRgba(rgb, 0.2)} 0%, ${cardRgba(rgb, 0.1)} 40%, ${cardRgba(rgb, 0.03)} 75%, ${cardRgba(rgb, 0)} 100%)`
+  `radial-gradient(ellipse 200px 60px at 50% ${CARD_HORIZON + 3}%, ${cardRgba(rgb, 0.5)} 0%, ${cardRgba(rgb, 0.25)} 40%, ${cardRgba(rgb, 0.08)} 75%, ${cardRgba(rgb, 0)} 100%)`
 
-// Cahaya studio miring dari kiri atas.
+// Cahaya studio miring dari kiri atas (diredam untuk dark mode).
 const CARD_SIDE_LIGHT =
-  'linear-gradient(112deg, rgba(255,255,255,0.42) 0%, rgba(255,255,255,0.2) 26%, rgba(255,255,255,0.06) 50%, rgba(255,255,255,0) 68%)'
+  'linear-gradient(112deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 26%, rgba(255,255,255,0.015) 50%, rgba(255,255,255,0) 68%)'
 
 const CARD_LIGHT_CONE =
-  'conic-gradient(from 0deg at -10% -16%, rgba(255,255,255,0) 104deg, rgba(255,255,255,0.05) 114deg, rgba(255,255,255,0.13) 124deg, rgba(255,255,255,0.22) 134deg, rgba(255,255,255,0.26) 141deg, rgba(255,255,255,0.21) 149deg, rgba(255,255,255,0.11) 160deg, rgba(255,255,255,0.04) 171deg, rgba(255,255,255,0) 182deg)'
+  'conic-gradient(from 0deg at -10% -16%, rgba(255,255,255,0) 104deg, rgba(255,255,255,0.015) 114deg, rgba(255,255,255,0.04) 124deg, rgba(255,255,255,0.07) 134deg, rgba(255,255,255,0.085) 141deg, rgba(255,255,255,0.065) 149deg, rgba(255,255,255,0.035) 160deg, rgba(255,255,255,0.012) 171deg, rgba(255,255,255,0) 182deg)'
 
 // Biar cahaya miring hilang sendiri sebelum sampai lantai.
 const CARD_FADE_BEFORE_FLOOR =
@@ -413,9 +413,9 @@ const CARD_FADE_BEFORE_FLOOR =
 
 // Sisi yang tidak kena cahaya sedikit lebih gelap + vignette halus.
 const CARD_LIGHT_FALLOFF =
-  'linear-gradient(292deg, rgba(24,24,32,0.05) 0%, rgba(24,24,32,0.022) 30%, rgba(24,24,32,0) 55%)'
+  'linear-gradient(292deg, rgba(0,0,0,0.12) 0%, rgba(0,0,0,0.05) 30%, rgba(0,0,0,0) 55%)'
 const CARD_VIGNETTE =
-  'radial-gradient(ellipse 85% 75% at 50% 44%, rgba(24,24,32,0) 50%, rgba(24,24,32,0.026) 78%, rgba(24,24,32,0.052) 100%)'
+  'radial-gradient(ellipse 85% 75% at 50% 44%, rgba(0,0,0,0) 50%, rgba(0,0,0,0.08) 78%, rgba(0,0,0,0.16) 100%)'
 
 // Film grain: nyamarin banding gradient + kesan matte fotografis.
 const CARD_GRAIN = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E")`
@@ -431,7 +431,7 @@ const buildCardBackdrop = (wall: string, shade: string) =>
 
 function CardBackdrop({ wall, shade }: { wall: string; shade: string }) {
   return (
-    <div aria-hidden className="pointer-events-none absolute inset-0 bg-[#fafaf9]">
+    <div aria-hidden className="pointer-events-none absolute inset-0 bg-primary">
       {/* WALL + CURVED COVE + FLOOR */}
       <div className="absolute inset-0" style={{ background: buildCardBackdrop(wall, shade) }} />
 
@@ -491,21 +491,21 @@ function DebateCard({
             alt={persona.label}
             fill
             sizes="(max-width: 640px) 66vw, 255px"
-            className="object-contain drop-shadow-[0_16px_20px_rgba(0,0,0,0.12)] transition-transform duration-300 group-hover:scale-105"
+            className="object-contain drop-shadow-[0_16px_20px_rgba(0,0,0,0.35)] transition-transform duration-300 group-hover:scale-105"
           />
         </div>
 
         {/* TITLE + PERSONA */}
         <div className="relative mt-3 w-full px-5 text-center">
-          <h3 className="line-clamp-2 min-h-[3.1rem] text-lg font-semibold leading-snug tracking-[-0.03em] text-neutral-900">
+          <h3 className="line-clamp-2 min-h-[3.1rem] text-lg font-semibold leading-snug tracking-[-0.03em] text-secondary">
             {debate.title}
           </h3>
 
-          <p className="mt-1.5 text-xs text-neutral-500">
+          <p className="mt-1.5 text-xs text-description">
             <span className={`font-semibold ${theme.accentText}`}>
               {persona.label}
             </span>
-            <span className="mx-1.5 text-neutral-300">·</span>
+            <span className="mx-1.5 text-description/50">·</span>
             {persona.description}
           </p>
         </div>
@@ -520,7 +520,7 @@ function DebateCard({
               }`}
           />
 
-          <span className="text-xs text-neutral-400">
+          <span className="text-xs text-description">
             {formatDate(debate.created_at)}
           </span>
         </div>
@@ -668,14 +668,14 @@ function DebateCarousel({
                   onClick={() => scrollToIndex(index)}
                   aria-label={`Go to debate ${index + 1}`}
                   className={`h-1.5 rounded-full transition-all duration-300 ${index === currentIndex
-                    ? 'w-5 bg-neutral-800'
-                    : 'w-1.5 bg-neutral-200 hover:bg-neutral-300'
+                    ? 'w-5 bg-secondary'
+                    : 'w-1.5 bg-white/20 hover:bg-white/40'
                     }`}
                 />
               ))}
             </div>
           ) : (
-            <span className="text-xs font-medium text-neutral-400">
+            <span className="text-xs font-medium text-description">
               {currentIndex + 1} / {total}
             </span>
           )}
@@ -691,7 +691,7 @@ function DebateCarousel({
                 }
                 disabled={!canPrev}
                 aria-label="Previous debate"
-                className="flex size-8 items-center justify-center rounded-full border border-black/[0.06] bg-white text-neutral-500 transition hover:bg-neutral-50 hover:text-neutral-800 disabled:cursor-not-allowed disabled:opacity-40"
+                className="flex size-8 items-center justify-center rounded-full border border-white/10 bg-primary text-description transition hover:bg-white/10 hover:text-secondary disabled:cursor-not-allowed disabled:opacity-40"
               >
                 <ChevronLeft
                   size={14}
@@ -708,7 +708,7 @@ function DebateCarousel({
                 }
                 disabled={!canNext}
                 aria-label="Next debate"
-                className="flex size-8 items-center justify-center rounded-full border border-black/[0.06] bg-white text-neutral-500 transition hover:bg-neutral-50 hover:text-neutral-800 disabled:cursor-not-allowed disabled:opacity-40"
+                className="flex size-8 items-center justify-center rounded-full border border-white/10 bg-primary text-description transition hover:bg-white/10 hover:text-secondary disabled:cursor-not-allowed disabled:opacity-40"
               >
                 <ChevronRight
                   size={14}
@@ -753,7 +753,7 @@ function ViewModeToggle({
     <div
       role="group"
       aria-label="Debate view mode"
-      className="flex items-center gap-0.5 rounded-full bg-neutral-100/80 p-1"
+      className="flex items-center gap-0.5 rounded-full bg-white/[0.06] p-1"
     >
       {options.map(({ mode, label, Icon }) => {
         const isActive = value === mode
@@ -767,8 +767,8 @@ function ViewModeToggle({
             aria-pressed={isActive}
             title={label}
             className={`flex size-7 items-center justify-center rounded-full transition-all duration-200 ${isActive
-              ? 'bg-white text-neutral-800 shadow-[0_2px_8px_-4px_rgba(0,0,0,0.2)]'
-              : 'text-neutral-400 hover:text-neutral-600'
+              ? 'bg-primary text-secondary shadow-[0_2px_8px_-4px_rgba(0,0,0,0.6)]'
+              : 'text-description hover:text-secondary'
               }`}
           >
             <Icon
@@ -884,11 +884,11 @@ function CreateDebateButton({
           : 'Start a new debate'
       }
       className={`mx-auto flex h-12 w-40 shrink-0 items-center justify-center gap-1.5 rounded-full text-sm font-semibold transition-all duration-200 sm:w-[340px] ${floating
-        ? 'fixed bottom-6 left-1/2 -translate-x-1/2 z-20 mt-6 shadow-[0_12px_30px_-10px_rgba(0,0,0,0.35)]'
+        ? 'fixed bottom-6 left-1/2 -translate-x-1/2 z-20 mt-6 shadow-[0_12px_30px_-10px_rgba(0,0,0,0.6)]'
         : 'mt-4'
         } ${disabled
-          ? 'cursor-not-allowed bg-neutral-200 text-neutral-400'
-          : 'bg-neutral-800 text-white hover:bg-black active:scale-[0.98]'
+          ? 'cursor-not-allowed bg-white/10 text-description'
+          : 'bg-secondary text-primary hover:bg-secondary/90 active:scale-[0.98]'
         }`}
     >
       <Plus
@@ -924,7 +924,7 @@ function ListPagination({
         onClick={() => onChange(page - 1)}
         disabled={page <= 1}
         aria-label="Previous page"
-        className="flex size-8 items-center justify-center rounded-full border border-black/[0.06] bg-white text-neutral-500 transition hover:bg-neutral-50 hover:text-neutral-800 disabled:cursor-not-allowed disabled:opacity-40"
+        className="flex size-8 items-center justify-center rounded-full border border-white/10 bg-primary text-description transition hover:bg-white/10 hover:text-secondary disabled:cursor-not-allowed disabled:opacity-40"
       >
         <ChevronLeft
           size={14}
@@ -932,7 +932,7 @@ function ListPagination({
         />
       </button>
 
-      <span className="text-xs font-medium text-neutral-400">
+      <span className="text-xs font-medium text-description">
         {page} / {totalPages}
       </span>
 
@@ -941,7 +941,7 @@ function ListPagination({
         onClick={() => onChange(page + 1)}
         disabled={page >= totalPages}
         aria-label="Next page"
-        className="flex size-8 items-center justify-center rounded-full border border-black/[0.06] bg-white text-neutral-500 transition hover:bg-neutral-50 hover:text-neutral-800 disabled:cursor-not-allowed disabled:opacity-40"
+        className="flex size-8 items-center justify-center rounded-full border border-white/10 bg-primary text-description transition hover:bg-white/10 hover:text-secondary disabled:cursor-not-allowed disabled:opacity-40"
       >
         <ChevronRight
           size={14}
@@ -1019,7 +1019,7 @@ export default function DebateList({
             {[1, 2].map((item) => (
               <div
                 key={item}
-                className="h-[340px] w-[88%] shrink-0 animate-pulse rounded-[2rem] border border-black/[0.04] bg-neutral-100/70 sm:w-[340px]"
+                className="h-[340px] w-[88%] shrink-0 animate-pulse rounded-[2rem] border border-white/[0.06] bg-white/[0.06] sm:w-[340px]"
               />
             ))}
           </div>
@@ -1032,7 +1032,7 @@ export default function DebateList({
         {[1, 2, 3].map((item) => (
           <div
             key={item}
-            className="h-[84px] animate-pulse rounded-[1.6rem] border border-black/[0.04] bg-neutral-100/70"
+            className="h-[84px] animate-pulse rounded-[1.6rem] border border-white/[0.06] bg-white/[0.06]"
           />
         ))}
       </div>
@@ -1098,10 +1098,10 @@ export default function DebateList({
     ]
 
   return (
-    <div className="flex flex-1 flex-col">
+    <div className="flex flex-1 flex-col bg-primary">
       {/* TOOLBAR (filter saja) */}
       <div className="mb-5 flex items-center">
-        <div className="flex min-w-0 items-center gap-1 overflow-x-auto rounded-full bg-neutral-100/80 p-1 scrollbar-none">
+        <div className="flex min-w-0 items-center gap-1 overflow-x-auto rounded-full bg-white/[0.06] p-1 scrollbar-none">
           {filterOptions.map((filter) => {
             const isActive =
               activeFilter === filter.value
@@ -1115,8 +1115,8 @@ export default function DebateList({
                   setListPage(1)
                 }}
                 className={`whitespace-nowrap rounded-full px-3 py-1.5 text-sm font-semibold transition-all duration-200 sm:px-3.5 sm:text-xs ${isActive
-                  ? 'bg-white text-neutral-800 shadow-[0_2px_8px_-4px_rgba(0,0,0,0.2)]'
-                  : 'text-neutral-400 hover:text-neutral-600'
+                  ? 'bg-primary text-secondary shadow-[0_2px_8px_-4px_rgba(0,0,0,0.6)]'
+                  : 'text-description hover:text-secondary'
                   }`}
               >
                 {filter.label}
@@ -1134,15 +1134,15 @@ export default function DebateList({
 
       {/* INFO + VIEW TOGGLE (tetap di atas, tidak ikut ditengahkan) */}
       <div className="mb-3 flex items-center justify-between px-1">
-        <p className="text-xs text-neutral-400">
+        <p className="text-xs text-description">
           {filteredDebates.length}{' '}
           {filteredDebates.length === 1
             ? 'debate'
             : 'debates'}
-          <span className="mx-1.5 text-neutral-200">
+          <span className="mx-1.5 text-description/50">
             ·
           </span>
-          <span className="font-medium text-neutral-300">
+          <span className="font-medium text-description/70">
             AI mediated
           </span>
         </p>
@@ -1166,13 +1166,13 @@ export default function DebateList({
       >
         {/* EMPTY STATE */}
         {!filteredDebates.length && (
-          <div className="relative overflow-hidden rounded-[1.8rem] border border-black/[0.05] bg-white px-6 py-12 text-center shadow-[0_15px_45px_-30px_rgba(0,0,0,0.15)]">
+          <div className="relative overflow-hidden rounded-[1.8rem] border border-white/[0.08] bg-primary px-6 py-12 text-center shadow-[0_15px_45px_-30px_rgba(0,0,0,0.6)]">
             <div className="pointer-events-none absolute -right-20 -top-20 size-44 rounded-full bg-pink-300/[0.06] blur-[70px]" />
 
             <div className="pointer-events-none absolute -left-20 bottom-[-50px] size-44 rounded-full bg-blue-300/[0.05] blur-[70px]" />
 
             <div className="relative">
-              <div className="mx-auto flex size-12 items-center justify-center rounded-full bg-[#faf9f6]">
+              <div className="mx-auto flex size-12 items-center justify-center rounded-full bg-white/[0.06]">
                 <Image
                   src={formalAi}
                   alt="Duora mediator"
@@ -1182,7 +1182,7 @@ export default function DebateList({
                 />
               </div>
 
-              <h3 className="mt-4 text-[16px] font-semibold tracking-[-0.03em] text-neutral-800">
+              <h3 className="mt-4 text-[16px] font-semibold tracking-[-0.03em] text-secondary">
                 {activeFilter === 'all'
                   ? 'No debates yet.'
                   : activeFilter === 'today'
@@ -1192,7 +1192,7 @@ export default function DebateList({
                       : 'No resolved debates.'}
               </h3>
 
-              <p className="mx-auto mt-1.5 max-w-xs text-sm leading-5 text-neutral-400">
+              <p className="mx-auto mt-1.5 max-w-xs text-sm leading-5 text-description">
                 {activeFilter === 'all'
                   ? 'Start your first debate whenever you need a little help finding common ground.'
                   : activeFilter === 'today'

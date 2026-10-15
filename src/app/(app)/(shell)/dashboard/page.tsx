@@ -10,7 +10,6 @@ import {
   useMyRelationshipDetails,
 } from '@/features/relationship/queries'
 
-import RelationshipCard from '@/features/dashboard/components/relationship-card'
 import PlannerSummaryCard from '@/features/dashboard/components/planner-summary-card'
 import PartnerCheckinCard from '@/features/dashboard/components/partner-checkin-card'
 import GoalListSummary from '@/features/dashboard/components/goal-list-summary'
@@ -24,6 +23,7 @@ import {
 import { useGetMyProfile } from '@/features/profiles/queries'
 import WaitingForPartner from '@/features/dashboard/components/waiting-for-partner'
 import DashboardSkeleton from '@/features/dashboard/components/dashboard-skeleton'
+import RelationshipHeader from '@/features/dashboard/components/relationship-header'
 
 /**
  * Header section yang dipakai ulang.
@@ -153,7 +153,7 @@ export default function DashboardPage() {
     <main className="relative min-h-screen overflow-hidden">
       <div className="relative mx-auto">
         <section>
-          <RelationshipCard
+          <RelationshipHeader
             userName={user?.display_name ?? 'You'}
             partnerName={partner?.display_name ?? 'Partner'}
             userAvatarUrl={user?.avatar_url}
@@ -171,30 +171,29 @@ export default function DashboardPage() {
               linkLabel="Open check-in"
             />
 
+
             <PartnerCheckinCard
-              userCheckin={yourCheckin ?? null}
-              partnerCheckin={partnerCheckin}
-              userName={user?.display_name ?? 'You'}
-              partnerName={partner?.display_name ?? 'Partner'}
+              checkins={checkins}
+              userId={user?.id}
             />
+
           </section>
 
-          {/* Workspaces: header + garis full width, tanpa tombol panah */}
-          <section className="mt-6">
-            <SectionHeader title="Your workspaces" divider />
+          {/* planner */}
+          <section className="mt-10">
+            <SectionHeader title="Your planning" divider />
+            <PlannerSummaryCard events={events} />
+          </section>
 
+          {/* workspace */}
+          <section className='mt-10'>
+            <SectionHeader title="Your Workspace" divider />
             <div className="grid grid-cols-2 gap-2 sm:gap-5">
-              {/* Goals & Planner: sejajar horizontal */}
-              <GoalListSummary relationshipId={relationshipId} />
+              {/* Goals jadi full width juga supaya grid tidak bolong */}
+              <div className="col-span-2">
+                <GoalListSummary relationshipId={relationshipId} />
+              </div>
 
-              <PlannerSummaryCard
-                title={upcomingEvent?.title}
-                date={upcomingEvent?.event_date}
-                startTime={upcomingEvent?.start_time}
-                description={upcomingEvent?.description}
-              />
-
-              {/* AI Debates & Q&A: sejajar horizontal */}
               <LatestDebateCard relationshipId={relationshipId} />
 
               <LatestQnaCard />

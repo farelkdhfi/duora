@@ -30,8 +30,8 @@ export default function DebateDetailPage({
 
   if (!relationship || !userId) {
     return (
-      <div className="flex min-h-[50vh] items-center justify-center">
-        <p className="text-sm text-neutral-400">
+      <div className="flex min-h-[50vh] bg-primary items-center justify-center">
+        <p className="text-sm text-description">
           Memuat...
         </p>
       </div>

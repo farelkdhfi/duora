@@ -34,7 +34,7 @@ export default function DateSeparator({
 }: DateSeparatorProps) {
   return (
     <div className="flex items-center justify-center py-3">
-      <span className="rounded-full bg-neutral-100 px-3 py-1 text-[10px] font-medium text-neutral-400">
+      <span className="rounded-full bg-white/[0.06] px-3 py-1 text-[10px] font-medium text-description">
         {formatDateLabel(date)}
       </span>
     </div>

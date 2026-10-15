@@ -23,7 +23,7 @@ const TOOL_LABELS: Record<string, string> = {
 export function UserBubble({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex justify-end">
-      <div className="max-w-[85%] whitespace-pre-wrap break-words rounded-2xl rounded-br-md bg-neutral-100 px-4 py-2.5 text-sm leading-6 text-black shadow-md sm:max-w-[75%]">
+      <div className="max-w-[85%] whitespace-pre-wrap break-words rounded-2xl rounded-br-md bg-white/10 px-4 py-2.5 text-sm leading-6 text-secondary shadow-md sm:max-w-[75%]">
         {children}
       </div>
     </div>
@@ -36,41 +36,41 @@ const markdownComponents: Components = {
   p: ({ children }) => <p className="my-2.5">{children}</p>,
 
   h1: ({ children }) => (
-    <h1 className="mb-2 mt-5 text-base font-semibold tracking-tight text-neutral-950">
+    <h1 className="mb-2 mt-5 text-base font-semibold tracking-tight text-secondary">
       {children}
     </h1>
   ),
   h2: ({ children }) => (
-    <h2 className="mb-2 mt-5 text-[15px] font-semibold tracking-tight text-neutral-950">
+    <h2 className="mb-2 mt-5 text-[15px] font-semibold tracking-tight text-secondary">
       {children}
     </h2>
   ),
   h3: ({ children }) => (
-    <h3 className="mb-1.5 mt-4 text-sm font-semibold text-neutral-900">
+    <h3 className="mb-1.5 mt-4 text-sm font-semibold text-secondary">
       {children}
     </h3>
   ),
   h4: ({ children }) => (
-    <h4 className="mb-1.5 mt-3 text-sm font-medium text-neutral-900">
+    <h4 className="mb-1.5 mt-3 text-sm font-medium text-secondary">
       {children}
     </h4>
   ),
 
   strong: ({ children }) => (
-    <strong className="font-semibold text-neutral-950">{children}</strong>
+    <strong className="font-semibold text-secondary">{children}</strong>
   ),
   em: ({ children }) => <em className="italic">{children}</em>,
   del: ({ children }) => (
-    <del className="text-neutral-400 line-through">{children}</del>
+    <del className="text-description line-through">{children}</del>
   ),
 
   ul: ({ children }) => (
-    <ul className="my-2.5 list-disc space-y-1.5 pl-5 marker:text-neutral-300 [&_ol]:mt-1.5 [&_ul]:mt-1.5">
+    <ul className="my-2.5 list-disc space-y-1.5 pl-5 marker:text-description/60 [&_ol]:mt-1.5 [&_ul]:mt-1.5">
       {children}
     </ul>
   ),
   ol: ({ children }) => (
-    <ol className="my-2.5 list-decimal space-y-1.5 pl-5 marker:font-medium marker:text-neutral-400 [&_ol]:mt-1.5 [&_ul]:mt-1.5">
+    <ol className="my-2.5 list-decimal space-y-1.5 pl-5 marker:font-medium marker:text-description [&_ol]:mt-1.5 [&_ul]:mt-1.5">
       {children}
     </ol>
   ),
@@ -81,23 +81,23 @@ const markdownComponents: Components = {
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className="font-medium text-neutral-900 underline decoration-neutral-300 underline-offset-4 transition hover:decoration-neutral-900"
+      className="font-medium text-secondary underline decoration-white/30 underline-offset-4 transition hover:decoration-secondary"
     >
       {children}
     </a>
   ),
 
   blockquote: ({ children }) => (
-    <blockquote className="my-3 border-l-2 border-neutral-200 pl-4 text-neutral-500">
+    <blockquote className="my-3 border-l-2 border-white/20 pl-4 text-description">
       {children}
     </blockquote>
   ),
 
-  hr: () => <hr className="my-5 border-neutral-200/80" />,
+  hr: () => <hr className="my-5 border-white/10" />,
 
   code: ({ className, children }) => (
     <code
-      className={`rounded-md bg-neutral-100 px-1.5 py-0.5 font-mono text-[0.85em] text-neutral-800 ${
+      className={`rounded-md bg-white/10 px-1.5 py-0.5 font-mono text-[0.85em] text-secondary ${
         className ?? ""
       }`}
     >
@@ -105,34 +105,34 @@ const markdownComponents: Components = {
     </code>
   ),
   pre: ({ children }) => (
-    <pre className="my-3 overflow-x-auto rounded-xl bg-neutral-950 p-4 font-mono text-[12.5px] leading-6 text-neutral-100 [&>code]:bg-transparent [&>code]:p-0 [&>code]:text-[1em] [&>code]:text-inherit">
+    <pre className="my-3 overflow-x-auto rounded-xl border border-white/10 bg-black/40 p-4 font-mono text-[12.5px] leading-6 text-secondary [&>code]:bg-transparent [&>code]:p-0 [&>code]:text-[1em] [&>code]:text-inherit">
       {children}
     </pre>
   ),
 
   table: ({ children }) => (
-    <div className="my-3.5 overflow-x-auto rounded-xl border border-neutral-200 bg-white">
+    <div className="my-3.5 overflow-x-auto rounded-xl border border-white/10 bg-primary">
       <table className="w-full min-w-max border-collapse text-left text-[13px]">
         {children}
       </table>
     </div>
   ),
   thead: ({ children }) => (
-    <thead className="bg-neutral-50 text-neutral-500">{children}</thead>
+    <thead className="bg-white/[0.04] text-description">{children}</thead>
   ),
   tbody: ({ children }) => (
-    <tbody className="divide-y divide-neutral-100">{children}</tbody>
+    <tbody className="divide-y divide-white/[0.06]">{children}</tbody>
   ),
   tr: ({ children }) => (
-    <tr className="transition-colors hover:bg-neutral-50/70">{children}</tr>
+    <tr className="transition-colors hover:bg-white/[0.04]">{children}</tr>
   ),
   th: ({ children }) => (
-    <th className="whitespace-nowrap border-b border-neutral-200 px-3.5 py-2.5 text-[11px] font-semibold uppercase tracking-wider">
+    <th className="whitespace-nowrap border-b border-white/10 px-3.5 py-2.5 text-[11px] font-semibold uppercase tracking-wider">
       {children}
     </th>
   ),
   td: ({ children }) => (
-    <td className="px-3.5 py-2.5 align-top text-neutral-700">{children}</td>
+    <td className="px-3.5 py-2.5 align-top text-secondary/90">{children}</td>
   ),
 };
 
@@ -163,7 +163,7 @@ function MessageBubbleBase({ message }: MessageBubbleProps) {
   return (
     <div className="group flex items-start gap-3">
       <div className="min-w-0 flex-1">
-        <div className="break-words text-[14.5px] leading-7 text-neutral-700 [&>*:first-child]:mt-0 [&>*:last-child]:mb-0">
+        <div className="break-words text-[14.5px] leading-7 text-secondary/90 [&>*:first-child]:mt-0 [&>*:last-child]:mb-0">
           <ReactMarkdown
             remarkPlugins={remarkPlugins}
             components={markdownComponents}
@@ -176,7 +176,7 @@ function MessageBubbleBase({ message }: MessageBubbleProps) {
           {tools.map((tool) => (
             <span
               key={tool}
-              className="inline-flex items-center gap-1 rounded-full border border-neutral-200 bg-white px-2 py-0.5 text-[10px] font-medium text-neutral-500"
+              className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-primary px-2 py-0.5 text-[10px] font-medium text-description"
             >
               <Database size={9} />
               {TOOL_LABELS[tool] ?? tool}
@@ -187,7 +187,7 @@ function MessageBubbleBase({ message }: MessageBubbleProps) {
             type="button"
             onClick={handleCopy}
             aria-label="Salin balasan"
-            className="inline-flex items-center gap-1 rounded-md px-1.5 py-1 text-[10px] font-medium text-neutral-400 transition hover:bg-neutral-100 hover:text-neutral-700 md:opacity-0 md:group-hover:opacity-100 md:focus-visible:opacity-100"
+            className="inline-flex items-center gap-1 rounded-md px-1.5 py-1 text-[10px] font-medium text-description transition hover:bg-white/10 hover:text-secondary md:opacity-0 md:group-hover:opacity-100 md:focus-visible:opacity-100"
           >
             {copied ? <Check size={11} /> : <Copy size={11} />}
             {copied ? "Tersalin" : "Salin"}

@@ -68,25 +68,25 @@ export function ConversationHistory({
             {[1, 2, 3, 4].map((item) => (
               <div
                 key={item}
-                className="h-[54px] animate-pulse rounded-xl bg-white/70"
+                className="h-[54px] animate-pulse rounded-xl bg-white/[0.06]"
               />
             ))}
           </div>
         ) : !conversations ||
           conversations.length === 0 ? (
           <div className="px-3 py-10 text-center">
-            <div className="mx-auto flex h-9 w-9 items-center justify-center rounded-xl bg-white">
+            <div className="mx-auto flex h-9 w-9 items-center justify-center rounded-xl bg-white/[0.06]">
               <MessageSquare
                 size={15}
-                className="text-neutral-300"
+                className="text-description"
               />
             </div>
 
-            <p className="mt-3 text-[11px] font-medium text-neutral-500">
+            <p className="mt-3 text-[11px] font-medium text-description">
               Belum ada percakapan
             </p>
 
-            <p className="mt-1 text-[10px] leading-4 text-neutral-400">
+            <p className="mt-1 text-[10px] leading-4 text-description/70">
               Mulai percakapan baru dengan Duora AI.
             </p>
           </div>
@@ -103,8 +103,8 @@ export function ConversationHistory({
                 key={conv.id}
                 className={`group relative flex w-full items-center rounded-xl transition ${
                   isActive
-                    ? "bg-white shadow-sm"
-                    : "hover:bg-white/70"
+                    ? "bg-white/[0.08] shadow-sm"
+                    : "hover:bg-white/[0.05]"
                 }`}
               >
                 <button
@@ -118,15 +118,15 @@ export function ConversationHistory({
                     <p
                       className={`truncate text-xs font-medium ${
                         isActive
-                          ? "text-neutral-900"
-                          : "text-neutral-600"
+                          ? "text-secondary"
+                          : "text-description"
                       }`}
                     >
                       {conv.title ||
                         "Percakapan baru"}
                     </p>
 
-                    <p className="mt-0.5 text-[9px] text-neutral-400">
+                    <p className="mt-0.5 text-[9px] text-description/70">
                       {new Date(
                         conv.updated_at,
                       ).toLocaleDateString("id-ID", {
@@ -149,8 +149,8 @@ export function ConversationHistory({
                   }
                   className={`mr-1.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg transition ${
                     isConfirmingDelete
-                      ? "bg-red-50 text-red-500 opacity-100"
-                      : "text-neutral-300 opacity-0 hover:bg-red-50 hover:text-red-500 group-hover:opacity-100"
+                      ? "bg-red-500/10 text-red-400 opacity-100"
+                      : "text-description/60 opacity-0 hover:bg-red-500/10 hover:text-red-400 group-hover:opacity-100"
                   }`}
                 >
                   {isConfirmingDelete ? (

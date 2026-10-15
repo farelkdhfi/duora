@@ -91,7 +91,7 @@ const personaLabel: Record<
   formal: {
     text: 'Formal',
     image: formalAi,
-    button: 'bg-white text-neutral-800 hover:bg-neutral-50',
+    button: 'bg-primary text-secondary hover:bg-primary/80',
   },
   lembut: {
     text: 'Lembut',
@@ -315,9 +315,9 @@ function MediatorStage({
     .split(' ')
     .find((c) => c.startsWith('bg-'))
 
-  /* Formal = bg-white, tidak kelihatan di latar putih, jadi pakai abu */
+  /* Formal = bg-primary, tidak kelihatan di latar yang sama, jadi pakai abu */
   const ringColor =
-    !personaBg || personaBg === 'bg-white'
+    !personaBg || personaBg === 'bg-primary'
       ? 'bg-neutral-300'
       : personaBg
 
@@ -375,7 +375,7 @@ function MediatorStage({
 
   /* tombol "Batal": netral supaya beda dengan "Ya, akhiri" di semua persona */
   const quietPill = [
-    'inline-flex h-9 items-center justify-center whitespace-nowrap rounded-full bg-black/[0.06] text-[11px] font-medium text-neutral-600 transition-colors duration-300 hover:bg-black/[0.1]',
+    'inline-flex h-9 items-center justify-center whitespace-nowrap rounded-full bg-black/[0.06] text-[11px] font-medium text-description transition-colors duration-300 hover:bg-black/[0.1]',
     'disabled:cursor-not-allowed disabled:opacity-40',
     'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-400',
   ].join(' ')
@@ -490,7 +490,7 @@ function MediatorStage({
           {/* BAWAH: pilihan penyedia AI */}
           <OrbitSlot placement="bottom" visible={showVertical} delay={180}>
             <div className="flex items-center gap-2 whitespace-nowrap">
-              <span className="text-[10.5px] text-neutral-400">
+              <span className="text-[10.5px] text-description">
                 Penyedia AI
               </span>
 
@@ -513,8 +513,8 @@ function MediatorStage({
                       className={[
                         'h-6 rounded-full px-2.5 text-[10px] font-medium transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-50',
                         selected
-                          ? 'bg-white text-neutral-900 shadow-sm'
-                          : 'text-neutral-500 hover:text-neutral-800',
+                          ? 'bg-primary text-secondary shadow-sm'
+                          : 'text-description hover:text-secondary',
                       ].join(' ')}
                     >
                       {option.label}
@@ -538,11 +538,11 @@ function MediatorStage({
       >
         <div className="min-h-0 overflow-hidden">
           <div className="flex flex-col items-center pt-2">
-            <p className="text-xs font-semibold text-neutral-800">
+            <p className="text-xs font-semibold text-secondary">
               {persona.text} mediator
             </p>
 
-            <p className="mt-1 text-[10.5px] text-neutral-400">
+            <p className="mt-1 text-[10.5px] text-description">
               Tap avatar AI untuk buka menu
             </p>
           </div>
@@ -553,11 +553,11 @@ function MediatorStage({
       {confirming ? (
         <div className="mt-2 flex max-w-[260px] animate-[debate-content-in_0.5s_cubic-bezier(0.22,1,0.36,1)_both] flex-col items-center motion-reduce:animate-none">
           <div role="status" className="text-center">
-            <p className="text-[12px] font-semibold text-neutral-800">
+            <p className="text-[12px] font-semibold text-secondary">
               Akhiri diskusi ini?
             </p>
 
-            <p className="mt-1 text-[10.5px] leading-4 text-neutral-500">
+            <p className="mt-1 text-[10.5px] leading-4 text-description">
               Diskusi akan ditutup dan Duora AI akan menyiapkan
               putusan akhir untuk kalian berdua.
             </p>
@@ -592,7 +592,7 @@ function MediatorStage({
         <p
           key={hint}
           role="status"
-          className="mt-2 max-w-[260px] animate-[debate-content-in_0.5s_cubic-bezier(0.22,1,0.36,1)_both] text-center text-[10.5px] leading-4 text-neutral-500 motion-reduce:animate-none"
+          className="mt-2 max-w-[260px] animate-[debate-content-in_0.5s_cubic-bezier(0.22,1,0.36,1)_both] text-center text-[10.5px] leading-4 text-description motion-reduce:animate-none"
         >
           {hint}
         </p>
@@ -637,7 +637,7 @@ function PartnerAvatar({
     >
       <span
         className={[
-          'relative block size-[68px] rounded-full ring-offset-[5px] ring-offset-[#faf9f6] transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] sm:size-[76px]',
+          'relative block size-[68px] rounded-full ring-offset-[5px] ring-offset-primary transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] sm:size-[76px]',
           isActive
             ? `scale-100 ring-[1.5px] ${tone.ring}`
             : 'ring-1 ring-black/[0.06]',
@@ -646,7 +646,7 @@ function PartnerAvatar({
             : '',
         ].join(' ')}
       >
-        <span className="relative block size-full overflow-hidden rounded-full bg-[#f3eee6]">
+        <span className="relative block size-full overflow-hidden rounded-full bg-primary">
           {avatarUrl ? (
             <Image
               src={avatarUrl}
@@ -672,8 +672,8 @@ function PartnerAvatar({
           className={[
             'max-w-[110px] truncate text-[12px] font-medium tracking-[-0.01em] transition-colors duration-500',
             isActive
-              ? 'text-neutral-900'
-              : 'text-neutral-400',
+              ? 'text-secondary'
+              : 'text-description',
           ].join(' ')}
         >
           {name}
@@ -719,11 +719,11 @@ function ActiveBubble({
       {/* pointer yang meluncur ke avatar aktif */}
       <span
         aria-hidden
-        className="pointer-events-none absolute top-0 z-10 size-3.5 -translate-x-1/2 -translate-y-1/2 rotate-45 border-l border-t border-black/[0.06] bg-white transition-[left] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]"
+        className="pointer-events-none absolute top-0 z-10 size-3.5 -translate-x-1/2 -translate-y-1/2 rotate-45 border-l border-t border-black/[0.06] bg-primary transition-[left] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]"
         style={{ left: side === 'left' ? '25%' : '75%' }}
       />
 
-      <div className="relative overflow-hidden rounded-[1.75rem] border border-black/[0.06] bg-white shadow-lg">
+      <div className="relative overflow-hidden rounded-[1.75rem] border border-black/[0.06] bg-primary shadow-lg">
         <div
           key={`${side}-${message?.id ?? 'empty'}`}
           className="animate-[debate-content-in_0.6s_cubic-bezier(0.22,1,0.36,1)_both] p-6 motion-reduce:animate-none sm:p-8"
@@ -744,18 +744,18 @@ function ActiveBubble({
             </p>
 
             {message && (
-              <span className="text-[10px] tabular-nums text-neutral-600">
+              <span className="text-[10px] tabular-nums text-description">
                 {formatTime(message.created_at)}
               </span>
             )}
           </div>
 
           {message ? (
-            <p className="mt-5 whitespace-pre-line break-words  text-sm leading-[1.7] tracking-[-0.01em] text-neutral-800 sm:text-[19px]">
+            <p className="mt-5 whitespace-pre-line break-words  text-sm leading-[1.7] tracking-[-0.01em] text-secondary sm:text-[19px]">
               {message.content}
             </p>
           ) : (
-            <p className="mt-5  text-sm leading-[1.7] text-neutral-300 sm:text-[17px]">
+            <p className="mt-5  text-sm leading-[1.7] text-description sm:text-[17px]">
               {emptyText}
             </p>
           )}
@@ -765,7 +765,7 @@ function ActiveBubble({
               <button
                 type="button"
                 onClick={onOpenPocket}
-                className="group/pocket inline-flex items-center gap-1.5 text-[10.5px] font-medium text-neutral-400 transition-colors hover:text-neutral-800"
+                className="group/pocket inline-flex items-center gap-1.5 text-[10.5px] font-medium text-description transition-colors hover:text-secondary"
               >
                 {formatThoughtCount(previousCount)}
 
@@ -800,20 +800,20 @@ function MemoryPocket({
 }) {
   return (
     <div className="fixed inset-0 z-[100] flex items-end justify-center bg-neutral-950/20 p-2.5 backdrop-blur-[3px] xs:p-3 sm:items-center sm:p-6">
-      <div className="relative flex max-h-[88dvh] w-full max-w-xl flex-col overflow-hidden rounded-[1.6rem] border border-black/[0.06] bg-[#faf9f6] shadow-[0_30px_100px_rgba(0,0,0,0.18)] sm:max-h-[80vh] sm:rounded-[2rem]">
+      <div className="relative flex max-h-[88dvh] w-full max-w-xl flex-col overflow-hidden rounded-[1.6rem] border border-black/[0.06] bg-primary shadow-[0_30px_100px_rgba(0,0,0,0.18)] sm:max-h-[80vh] sm:rounded-[2rem]">
         <div className="absolute -right-20 -top-20 size-48 rounded-full bg-pink-300/[0.08] blur-[70px]" />
 
         <header className="relative z-10 flex shrink-0 items-center justify-between gap-4 border-b border-black/[0.05] px-4 py-4 sm:px-6 sm:py-5">
           <div className="min-w-0">
-            <p className="text-[8px] font-semibold uppercase tracking-[0.2em] text-neutral-300">
+            <p className="text-[8px] font-semibold uppercase tracking-[0.2em] text-description">
               Memory pocket
             </p>
 
-            <h2 className="mt-1 truncate  text-[18px] tracking-[-0.02em] text-neutral-900 sm:text-[20px]">
+            <h2 className="mt-1 truncate  text-[18px] tracking-[-0.02em] text-secondary sm:text-[20px]">
               {name}&apos;s thoughts
             </h2>
 
-            <p className="mt-1 text-[10px] text-neutral-400">
+            <p className="mt-1 text-[10px] text-description">
               {formatThoughtCount(messages.length)}
             </p>
           </div>
@@ -821,7 +821,7 @@ function MemoryPocket({
           <button
             type="button"
             onClick={onClose}
-            className="flex size-8 shrink-0 items-center justify-center rounded-full border border-black/[0.05] bg-white text-neutral-400 transition hover:bg-neutral-900 hover:text-white sm:size-9"
+            className="flex size-8 shrink-0 items-center justify-center rounded-full border border-black/[0.05] bg-primary text-description transition hover:bg-neutral-900 hover:text-white sm:size-9"
             aria-label="Close memory pocket"
           >
             <X size={13} strokeWidth={1.7} />
@@ -961,7 +961,7 @@ export default function DebateRoom({
       <div className="flex min-h-[50vh] items-center justify-center">
         <Loader2
           size={18}
-          className="animate-spin text-neutral-300"
+          className="animate-spin text-description"
         />
       </div>
     )
@@ -1286,7 +1286,7 @@ export default function DebateRoom({
       {/* ROOM SHELL */}
 
       <div className="fixed inset-0 z-20 flex flex-col overflow-hidden">
-        <div className="relative flex min-h-0 flex-1 flex-col overflow-hidden rounded-[1.6rem] border border-black/[0.055] bg-white shadow-[0_28px_90px_-45px_rgba(0,0,0,0.22)] sm:rounded-[2rem] md:rounded-[2.4rem]">
+        <div className="relative flex min-h-0 flex-1 flex-col overflow-hidden border border-black/[0.055] bg-primary shadow-[0_28px_90px_-45px_rgba(0,0,0,0.22)] sm:rounded-[2rem] md:rounded-[2.4rem]">
 
           {/* HEADER */}
           <header className="relative z-30 flex min-h-[60px] shrink-0 items-center justify-between gap-3 border-b border-black/[0.045] px-3.5 py-3 sm:min-h-[68px] sm:px-7 sm:py-4">
@@ -1294,13 +1294,13 @@ export default function DebateRoom({
               <Link
                 href="/debates"
                 aria-label="Back to discussions"
-                className="flex size-8 shrink-0 items-center justify-center rounded-full border border-black/[0.055] bg-white/70 text-neutral-400 transition-all hover:bg-neutral-900 hover:text-white"
+                className="flex size-8 shrink-0 items-center justify-center rounded-full border border-black/[0.055] bg-primary/70 text-description transition-all hover:bg-neutral-900 hover:text-white"
               >
                 <ArrowLeft size={13} strokeWidth={1.8} />
               </Link>
 
               <div className="min-w-0">
-                <p className="max-w-[calc(100vw-130px)] truncate  text-[15px] tracking-[-0.015em] text-neutral-900 sm:max-w-none sm:text-[16px]">
+                <p className="max-w-[calc(100vw-130px)] truncate  text-[15px] tracking-[-0.015em] text-secondary sm:max-w-none sm:text-[16px]">
                   {debate.title}
                 </p>
               </div>
@@ -1314,7 +1314,7 @@ export default function DebateRoom({
               <div className="flex min-h-[40vh] items-center justify-center">
                 <Loader2
                   size={18}
-                  className="animate-spin text-neutral-300"
+                  className="animate-spin text-description"
                 />
               </div>
             ) : (
@@ -1426,17 +1426,17 @@ export default function DebateRoom({
                         }
                       />
 
-                      <p className="mt-5 text-center text-xs tracking-[0.02em] text-neutral-300">
+                      <p className="mt-5 text-center text-xs tracking-[0.02em] text-description">
                         Tap avatar untuk melihat obrolan
                       </p>
                     </>
                   ) : (
                     <div className="px-4 text-center">
-                      <h2 className=" text-[26px] text-neutral-900 sm:text-[30px]">
+                      <h2 className=" text-[26px] text-secondary sm:text-[30px]">
                         Start with what you feel.
                       </h2>
 
-                      <p className="mx-auto mt-3 max-w-[300px] text-[12px] leading-6 text-neutral-400">
+                      <p className="mx-auto mt-3 max-w-[300px] text-[12px] leading-6 text-description">
                         There is no need to be right here.
                         Just say what is on your mind.
                       </p>

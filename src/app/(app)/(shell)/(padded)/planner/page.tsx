@@ -59,6 +59,7 @@ export default function PlannerPage() {
         <Header
           title="planner"
           description="Plan the moments you want to remember."
+          colorTitle='text-pink-200'
         />
 
         <button

@@ -28,21 +28,21 @@ function HistoryReveal({
 
   if (isLoading) {
     return (
-      <div className="border-t border-black/[0.05] px-5 pb-5 pt-5">
+      <div className="border-t border-white/10 px-5 pb-5 pt-5">
         <div className="space-y-5">
           {[0, 1].map((item) => (
             <div key={item}>
-              <div className="mb-3 h-2.5 w-10 animate-pulse rounded-full bg-black/[0.06]" />
+              <div className="mb-3 h-2.5 w-10 animate-pulse rounded-full bg-white/[0.08]" />
 
               <div className="space-y-2">
                 <div
-                  className="h-3 w-full animate-pulse rounded-full bg-black/[0.045]"
+                  className="h-3 w-full animate-pulse rounded-full bg-white/[0.06]"
                   style={{
                     animationDelay: `${item * 120}ms`,
                   }}
                 />
                 <div
-                  className="h-3 w-[82%] animate-pulse rounded-full bg-black/[0.045]"
+                  className="h-3 w-[82%] animate-pulse rounded-full bg-white/[0.06]"
                   style={{
                     animationDelay: `${item * 180}ms`,
                   }}
@@ -50,7 +50,7 @@ function HistoryReveal({
               </div>
 
               {item === 0 && (
-                <div className="mt-5 h-px w-full bg-black/[0.04]" />
+                <div className="mt-5 h-px w-full bg-white/[0.06]" />
               )}
             </div>
           ))}
@@ -74,26 +74,26 @@ function HistoryReveal({
       : session.answer_a_text;
 
   return (
-    <div className="border-t border-black/[0.05] px-5 pb-5 pt-5">
+    <div className="border-t border-white/10 px-5 pb-5 pt-5">
       <div className="space-y-5">
         <div>
-          <p className="text-[10px] font-medium uppercase tracking-[0.16em] text-black/25">
+          <p className="text-[10px] font-medium uppercase tracking-[0.16em] text-white/40">
             Kamu
           </p>
 
-          <p className="mt-2 text-[14px] leading-6 tracking-[-0.01em] text-[#171717]">
+          <p className="mt-2 text-[14px] leading-6 tracking-[-0.01em] text-white/90">
             {myAnswer}
           </p>
         </div>
 
-        <div className="h-px w-full bg-black/[0.04]" />
+        <div className="h-px w-full bg-white/[0.08]" />
 
         <div>
-          <p className="text-[10px] font-medium uppercase tracking-[0.16em] text-black/25">
+          <p className="text-[10px] font-medium uppercase tracking-[0.16em] text-white/40">
             Pasangan
           </p>
 
-          <p className="mt-2 text-[14px] leading-6 tracking-[-0.01em] text-[#171717]">
+          <p className="mt-2 text-[14px] leading-6 tracking-[-0.01em] text-white/90">
             {partnerAnswer}
           </p>
         </div>
@@ -126,7 +126,7 @@ export function QnaHistoryList({ currentUserId }: QnaHistoryProps) {
           {[0, 1, 2, 3].map((item) => (
             <div
               key={item}
-              className="h-[150px] animate-pulse rounded-[1.5rem] border border-black/[0.04] bg-white/60"
+              className="h-[150px] animate-pulse rounded-[1.5rem] border border-white/10 bg-white/[0.04]"
             />
           ))}
         </div>
@@ -137,11 +137,11 @@ export function QnaHistoryList({ currentUserId }: QnaHistoryProps) {
   if (!history || history.length === 0) {
     return (
       <div className="flex min-h-[280px] flex-col items-center justify-center px-6 text-center">
-        <span className="text-[10px] font-medium uppercase tracking-[0.22em] text-black/25">
+        <span className="text-[10px] font-medium uppercase tracking-[0.22em] text-white/40">
           Belum ada cerita
         </span>
 
-        <p className="mt-4 max-w-xs text-[15px] leading-6 tracking-[-0.01em] text-black/40">
+        <p className="mt-4 max-w-xs text-[15px] leading-6 tracking-[-0.01em] text-white/50">
           Jawaban dari percakapan kalian akan tersimpan di sini.
         </p>
       </div>
@@ -169,10 +169,10 @@ export function QnaHistoryList({ currentUserId }: QnaHistoryProps) {
           return (
             <div
               key={item.session_id}
-              className={`group overflow-hidden rounded-[1.5rem] border transition-all duration-300 shadow-lg ${
+              className={`group overflow-hidden rounded-[1.5rem] border bg-[#050507] shadow-[0_20px_30px_-20px_rgba(0,0,0,0.8)] transition-all duration-300 ${
                 isOpen
-                  ? "border-black/[0.09] bg-white"
-                  : "border-black/[0.05] bg-white/65 hover:-translate-y-0.5 hover:border-black/[0.09] hover:bg-white"
+                  ? "border-white/20"
+                  : "border-white/10 hover:-translate-y-0.5 hover:border-white/20"
               }`}
             >
               <button
@@ -185,22 +185,22 @@ export function QnaHistoryList({ currentUserId }: QnaHistoryProps) {
                 <div className="flex min-h-[150px] flex-col justify-between p-5">
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex items-center gap-2">
-                      <span className="text-[9px] font-medium tabular-nums tracking-[0.16em] text-black/20">
+                      <span className="text-[9px] font-medium tabular-nums tracking-[0.16em] text-white/30">
                         {String(globalIndex).padStart(2, "0")}
                       </span>
 
-                      <span className="h-0.5 w-0.5 rounded-full bg-black/15" />
+                      <span className="h-0.5 w-0.5 rounded-full bg-white/25" />
 
-                      <span className="text-[9px] font-semibold uppercase tracking-[0.16em] text-[#a87999]">
+                      <span className="text-[9px] font-semibold uppercase tracking-[0.16em] text-pink-200">
                         {categoryInfo.name}
                       </span>
                     </div>
 
                     <span
-                      className={`flex size-8 shrink-0 items-center justify-center rounded-full transition-all duration-300 ${
+                      className={`flex size-8 shrink-0 items-center justify-center rounded-full border transition-all duration-300 ${
                         isOpen
-                          ? "bg-[#1e1318] text-white"
-                          : "bg-black/[0.025] text-black/25 group-hover:bg-black/[0.05] group-hover:text-black/50"
+                          ? "border-white bg-white text-neutral-900"
+                          : "border-white/10 bg-white/5 text-white/50 group-hover:bg-white/10 group-hover:text-white"
                       }`}
                     >
                       <ArrowUpRight
@@ -214,11 +214,11 @@ export function QnaHistoryList({ currentUserId }: QnaHistoryProps) {
                   </div>
 
                   <div className="mt-5">
-                    <p className="line-clamp-2 text-[14px] font-medium leading-6 tracking-[-0.015em] text-[#171717]">
+                    <p className="line-clamp-2 text-[14px] font-medium leading-6 tracking-[-0.015em] text-white">
                       {item.question_text}
                     </p>
 
-                    <p className="mt-2 text-[10px] uppercase tracking-[0.12em] text-black/25">
+                    <p className="mt-2 text-[10px] uppercase tracking-[0.12em] text-white/35">
                       {date}
                     </p>
                   </div>
@@ -240,7 +240,7 @@ export function QnaHistoryList({ currentUserId }: QnaHistoryProps) {
                         deleteSession(item.session_id);
                         setOpenSessionId(null);
                       }}
-                      className="flex items-center gap-2 rounded-full px-2 py-1.5 text-[10px] font-medium uppercase tracking-[0.12em] text-black/20 transition-colors hover:text-red-400"
+                      className="flex items-center gap-2 rounded-full px-2 py-1.5 text-[10px] font-medium uppercase tracking-[0.12em] text-white/35 transition-colors hover:text-red-300"
                     >
                       <Trash2 size={12} strokeWidth={1.6} />
                       Hapus
@@ -262,7 +262,7 @@ export function QnaHistoryList({ currentUserId }: QnaHistoryProps) {
               setCurrentPage((page) => Math.max(1, page - 1));
               setOpenSessionId(null);
             }}
-            className="flex size-9 items-center justify-center rounded-full border border-black/[0.05] bg-white/70 text-black/35 transition-all hover:bg-white hover:text-black/70 disabled:pointer-events-none disabled:opacity-30"
+            className="flex size-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white/50 transition-all hover:border-white/20 hover:text-white disabled:pointer-events-none disabled:opacity-30"
             aria-label="Halaman sebelumnya"
           >
             <ChevronLeft size={15} strokeWidth={1.7} />
@@ -283,8 +283,8 @@ export function QnaHistoryList({ currentUserId }: QnaHistoryProps) {
                   }}
                   className={`flex size-9 items-center justify-center rounded-full text-[11px] font-medium tabular-nums transition-all ${
                     isActive
-                      ? "bg-[#1e1318] text-white"
-                      : "text-black/30 hover:bg-black/[0.04] hover:text-black/60"
+                      ? "bg-white text-neutral-900"
+                      : "text-white/40 hover:bg-white/10 hover:text-white"
                   }`}
                 >
                   {page}
@@ -300,7 +300,7 @@ export function QnaHistoryList({ currentUserId }: QnaHistoryProps) {
               setCurrentPage((page) => Math.min(totalPages, page + 1));
               setOpenSessionId(null);
             }}
-            className="flex size-9 items-center justify-center rounded-full border border-black/[0.05] bg-white/70 text-black/35 transition-all hover:bg-white hover:text-black/70 disabled:pointer-events-none disabled:opacity-30"
+            className="flex size-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white/50 transition-all hover:border-white/20 hover:text-white disabled:pointer-events-none disabled:opacity-30"
             aria-label="Halaman berikutnya"
           >
             <ChevronRight size={15} strokeWidth={1.7} />

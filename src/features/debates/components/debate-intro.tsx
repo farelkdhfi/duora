@@ -51,7 +51,7 @@ const sideAccent: Record<Side, { ring: string; dot: string }> = {
 }
 
 const eyebrow =
-  'text-[9px] font-semibold uppercase tracking-[0.24em] text-neutral-400'
+  'text-[9px] font-semibold uppercase tracking-[0.24em] text-description'
 
 /* ===================================================== */
 /* STUDIO BACKDROP (mengikuti check-in form)             */
@@ -152,7 +152,7 @@ const StudioBackdrop = memo(function StudioBackdrop({
   return (
     <div
       aria-hidden
-      className="pointer-events-none absolute inset-0 overflow-hidden bg-[#fafaf9]"
+      className="pointer-events-none absolute inset-0 overflow-hidden bg-primary"
     >
       {/* dinding + cove + lantai */}
       <div
@@ -277,11 +277,11 @@ function PartnerBadge({
     >
       <div
         className={[
-          'relative size-[76px] rounded-full shadow-[0_18px_40px_-18px_rgba(0,0,0,0.2)] ring-[1.5px] ring-offset-[5px] ring-offset-white sm:size-[92px]',
+          'relative size-[76px] rounded-full shadow-[0_18px_40px_-18px_rgba(0,0,0,0.2)] ring-[1.5px] ring-offset-[5px] ring-offset-primary sm:size-[92px]',
           accent.ring,
         ].join(' ')}
       >
-        <div className="relative size-full overflow-hidden rounded-full bg-[#f3eee6]">
+        <div className="relative size-full overflow-hidden rounded-full bg-primary">
           {avatarUrl ? (
             <Image
               src={avatarUrl}
@@ -303,7 +303,7 @@ function PartnerBadge({
         </div>
       </div>
 
-      <p className="mt-4 max-w-[110px] truncate text-[12px] font-medium tracking-[-0.01em] text-neutral-800 sm:text-[13px]">
+      <p className="mt-4 max-w-[110px] truncate text-[12px] font-medium tracking-[-0.01em] text-secondary sm:text-[13px]">
         {name}
       </p>
 
@@ -378,7 +378,7 @@ function PartnersSection({
       <motion.h1
         variants={rise}
         custom={1.7}
-        className="mt-3 line-clamp-3 max-w-[440px] text-balance text-[26px] leading-[1.2] tracking-[-0.025em] text-neutral-900 sm:text-[36px]"
+        className="mt-3 line-clamp-3 max-w-[440px] text-balance text-[26px] leading-[1.2] tracking-[-0.025em] text-secondary sm:text-[36px]"
       >
         {title}
       </motion.h1>
@@ -463,7 +463,7 @@ function MediatorSection({
         <motion.h2
           variants={rise}
           custom={0.6}
-          className="mt-3 text-[34px] font-medium leading-none tracking-[-0.045em] text-neutral-900 sm:text-[44px]"
+          className="mt-3 text-[34px] font-medium leading-none tracking-[-0.045em] text-secondary sm:text-[44px]"
         >
           {personaName}
         </motion.h2>
@@ -475,7 +475,7 @@ function MediatorSection({
         >
           <span className="size-1 rounded-full bg-neutral-300" />
 
-          <span className="text-[9px] font-medium uppercase tracking-[0.2em] text-neutral-400">
+          <span className="text-[9px] font-medium uppercase tracking-[0.2em] text-description">
             Find a place in the middle
           </span>
 
@@ -502,7 +502,7 @@ function StepDots({ current }: { current: 0 | 1 }) {
             opacity: index === current ? 0.6 : 0.2,
           }}
           transition={{ duration: 0.6, ease: EASE }}
-          className="h-[5px] rounded-full bg-neutral-900"
+          className="h-[5px] rounded-full bg-secondary"
         />
       ))}
     </div>
@@ -565,7 +565,7 @@ export default function DebateIntro({
         animate={{ opacity: isExit ? 0 : 1 }}
         transition={{ duration: EXIT_MS / 1000, ease: 'easeInOut' }}
         className={[
-          'fixed inset-0 z-[9999] flex items-center justify-center overflow-hidden bg-white px-6',
+          'fixed inset-0 z-[9999] flex items-center justify-center overflow-hidden bg-primary px-6',
           isExit ? 'pointer-events-none' : '',
         ].join(' ')}
       >
@@ -587,7 +587,7 @@ export default function DebateIntro({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.1 }}
-          className="absolute inset-x-0 top-[calc(2rem_+_env(safe-area-inset-top))] text-center text-[9px] font-semibold uppercase tracking-[0.3em] text-neutral-400 sm:top-[calc(2.5rem_+_env(safe-area-inset-top))]"
+          className="absolute inset-x-0 top-[calc(2rem_+_env(safe-area-inset-top))] text-center text-[9px] font-semibold uppercase tracking-[0.3em] text-description sm:top-[calc(2.5rem_+_env(safe-area-inset-top))]"
         >
           Duora
         </motion.p>

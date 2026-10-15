@@ -53,14 +53,14 @@ export function QnaReveal({
     return (
       <div className="flex min-h-[240px] w-full items-center justify-center">
         <div className="flex flex-col items-center gap-3">
-          <div className="flex size-10 items-center justify-center rounded-[1rem] border border-black/[0.055] bg-white/70 shadow-[0_15px_35px_-20px_rgba(30,19,24,0.2)]">
+          <div className="flex size-10 items-center justify-center rounded-[1rem] border border-black/[0.055] bg-primary/70 shadow-[0_15px_35px_-20px_rgba(30,19,24,0.2)]">
             <Loader2
-              className="size-4 animate-spin text-black/35"
+              className="size-4 animate-spin text-description"
               strokeWidth={1.7}
             />
           </div>
 
-          <span className="text-[8px] font-semibold uppercase tracking-[0.2em] text-black/30">
+          <span className="text-[8px] font-semibold uppercase tracking-[0.2em] text-description">
             Memuat jawaban
           </span>
         </div>
@@ -110,16 +110,16 @@ export function QnaReveal({
           />
 
           {/* Kartu utama */}
-          <div className="qna-card-in relative z-10 flex min-h-[100px] flex-col rounded-[2rem] border border-black/[0.06] bg-gradient-to-b from-white to-[#fcf7fa] px-6 py-5 shadow-[0_30px_80px_-45px_rgba(30,19,24,0.35)] sm:min-h-[340px] sm:px-9">
+          <div className="qna-card-in relative z-10 flex min-h-[100px] flex-col rounded-[2rem] border border-black/[0.06] bg-primary px-6 py-5 shadow-[0_30px_80px_-45px_rgba(30,19,24,0.35)] sm:min-h-[340px] sm:px-9">
             <div className="flex flex-1 flex-col items-center justify-center py-6 text-center">
-              <p className="mt-6 max-w-xl text-sm font-medium leading-snug tracking-[-0.02em] text-[#171717] sm:text-[32px] md:text-[38px]">
+              <p className="mt-6 max-w-xl text-sm font-medium leading-snug tracking-[-0.02em] text-secondary sm:text-[32px] md:text-[38px]">
                 {session.question_text}
               </p>
             </div>
 
             <div className="mx-auto flex items-center gap-2.5 pt-7">
               <span className="h-[1px] w-7 bg-black/30" />
-              <span className="text-[9px] font-semibold uppercase tracking-[0.2em] text-black/35">
+              <span className="text-[9px] font-semibold uppercase tracking-[0.2em] text-description">
                 {categoryInfo.name}
               </span>
               <span className="h-[1px] w-7 bg-black/30" />
@@ -132,9 +132,9 @@ export function QnaReveal({
         {/* ------------------------------------------------------------ */}
         <div className="space-y-3">
           {/* My Answer */}
-          <div className="rounded-[2rem] border border-black/[0.06] bg-white/65 p-6 shadow-[0_20px_60px_-40px_rgba(30,19,24,0.25)] backdrop-blur-xl sm:p-7">
+          <div className="rounded-[2rem] border border-black/[0.06] bg-primary/65 p-6 shadow-[0_20px_60px_-40px_rgba(30,19,24,0.25)] backdrop-blur-xl sm:p-7">
             <div className="flex items-center justify-between">
-              <span className="text-[9px] font-semibold uppercase tracking-[0.2em] text-black/30">
+              <span className="text-[9px] font-semibold uppercase tracking-[0.2em] text-description">
                 Jawaban kamu
               </span>
 
@@ -143,24 +143,24 @@ export function QnaReveal({
               </span>
             </div>
 
-            <p className="mt-4 whitespace-pre-wrap text-[15px] leading-7 tracking-[-0.01em] text-black/65 sm:text-[16px]">
+            <p className="mt-4 whitespace-pre-wrap text-[15px] leading-7 tracking-[-0.01em] text-secondary sm:text-[16px]">
               {myAnswer}
             </p>
           </div>
 
           {/* Partner Answer */}
-          <div className="rounded-[2rem] border border-black/[0.06] bg-white/65 p-6 shadow-[0_20px_60px_-40px_rgba(30,19,24,0.25)] backdrop-blur-xl sm:p-7">
+          <div className="rounded-[2rem] border border-black/[0.06] bg-primary/65 p-6 shadow-[0_20px_60px_-40px_rgba(30,19,24,0.25)] backdrop-blur-xl sm:p-7">
             <div className="flex items-center justify-between">
-              <span className="text-[9px] font-semibold uppercase tracking-[0.2em] text-black/30">
+              <span className="text-[9px] font-semibold uppercase tracking-[0.2em] text-description">
                 Jawaban pasangan
               </span>
 
-              <span className="rounded-full bg-black/[0.035] px-2.5 py-1 text-[8px] font-semibold uppercase tracking-[0.14em] text-black/40">
+              <span className="rounded-full bg-black/[0.035] px-2.5 py-1 text-[8px] font-semibold uppercase tracking-[0.14em] text-description">
                 Pasangan
               </span>
             </div>
 
-            <p className="mt-4 whitespace-pre-wrap text-[15px] leading-7 tracking-[-0.01em] text-black/65 sm:text-[16px]">
+            <p className="mt-4 whitespace-pre-wrap text-[15px] leading-7 tracking-[-0.01em] text-secondary sm:text-[16px]">
               {partnerAnswer}
             </p>
           </div>
@@ -209,7 +209,7 @@ export function QnaReveal({
                 type="button"
                 onClick={onClose}
                 aria-label="Tutup"
-                className="flex size-12 shrink-0 items-center justify-center rounded-full border border-black/[0.08] bg-white/65 text-black/60 backdrop-blur-xl transition-all duration-300 hover:bg-white hover:text-black"
+                className="flex size-12 shrink-0 items-center justify-center rounded-full border border-black/[0.08] bg-primary/65 text-description backdrop-blur-xl transition-all duration-300 hover:bg-primary hover:text-secondary"
               >
                 <X className="size-4" strokeWidth={1.7} />
               </button>
@@ -220,7 +220,7 @@ export function QnaReveal({
             <button
               type="button"
               onClick={onClose}
-              className="mt-4 flex h-12 w-full items-center justify-center gap-2 rounded-full border border-black/[0.08] bg-white/65 text-sm font-semibold tracking-[-0.01em] text-black/60 backdrop-blur-xl transition-all duration-300 hover:bg-white hover:text-black"
+              className="mt-4 flex h-12 w-full items-center justify-center gap-2 rounded-full border border-black/[0.08] bg-primary/65 text-sm font-semibold tracking-[-0.01em] text-description backdrop-blur-xl transition-all duration-300 hover:bg-primary hover:text-secondary"
             >
               <X className="size-3.5" strokeWidth={1.7} />
               <span>Tutup</span>

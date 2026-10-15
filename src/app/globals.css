@@ -5,6 +5,11 @@
 @theme {
   --color-primary: #0F0F0F;
   --color-description: #666666;
+  --color-secondary: #ffffff;
+}
+
+body {
+  background-color: #0F0F0F;
 }
 
 
