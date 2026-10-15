@@ -220,7 +220,7 @@ export function AiSidebar({
                 <button
                   type="button"
                   onClick={handleNewConversation}
-                  className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-secondary text-xs font-medium text-primary shadow-sm transition hover:bg-secondary/90 active:scale-[0.99]"
+                  className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-subprimary text-xs font-medium text-secondary shadow-sm transition hover:bg-secondary/90 active:scale-[0.99]"
                 >
                   <Plus size={15} />
                   New chat

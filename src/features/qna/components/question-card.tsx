@@ -7,7 +7,7 @@ import { getCategoryInfo } from "../category-info";
 import { useRerollQuestion } from "../queries";
 import type { ActiveQnaSession } from "../types";
 
-import logo from "@/assets/logo.png";
+import logo from "@/assets/logo-white.png";
 
 interface QuestionCardProps {
   session: ActiveQnaSession;
@@ -32,8 +32,8 @@ const SHUFFLE_CYCLE_S = SHUFFLE_CYCLE_MS / 1000;
  * jadi elemen terakhir supaya selalu jadi kartu yang "terpilih" di akhir.
  */
 const SHUFFLE_CARDS = [
-  { id: "blue", className: "bg-blue-100" },
-  { id: "pink", className: "bg-pink-100" },
+  { id: "blue", className: "bg-[#1d335c]" },
+  { id: "pink", className: "bg-[#5c1d4d]" },
   { id: "white", className: "bg-primary" },
 ] as const;
 
@@ -206,7 +206,7 @@ export function QuestionCard({ session, onShufflingChange }: QuestionCardProps) 
   return (
     // Tanpa padding dan tanpa overflow clip, supaya kartu yang bergeser saat
     // shuffle tidak terpotong. flow-root menjaga margin deck tetap di dalam.
-    <div className="relative flow-root w-full">
+    <div className="relative flow-root w-full mb-5">
       <style>{qnaStyles}</style>
 
       {/* Jarak ke tepi layar dan ke elemen lain pakai margin, bukan padding */}
@@ -247,11 +247,11 @@ export function QuestionCard({ session, onShufflingChange }: QuestionCardProps) 
             {/* Kartu-kartu di belakang (efek tumpukan) */}
             <div
               aria-hidden
-              className="absolute inset-0 origin-bottom translate-y-[13px] scale-[0.94] rounded-[2rem] border border-black/[0.05] bg-pink-200"
+              className="absolute inset-0 origin-bottom translate-y-[13px] scale-[0.94] rounded-[2rem] border border-black/[0.05] bg-[#5c1d4d]"
             />
             <div
               aria-hidden
-              className="absolute inset-0 origin-bottom translate-y-[26px] scale-[0.88] rounded-[2rem] border border-black/[0.04] bg-blue-200/50"
+              className="absolute inset-0 origin-bottom translate-y-[26px] scale-[0.88] rounded-[2rem] border border-black/[0.04] bg-[#1d335c]"
             />
 
             {/* Kartu utama */}

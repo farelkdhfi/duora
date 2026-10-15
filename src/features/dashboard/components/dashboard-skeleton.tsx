@@ -2,252 +2,243 @@
 
 export default function DashboardSkeleton() {
   return (
-    <main className="relative min-h-screen overflow-hidden">
-      <div className="relative mx-auto animate-pulse">
-
-        {/* =================================================== */}
+    <main className="relative min-h-screen overflow-hidden bg-primary text-white">
+      <div className="relative mx-auto w-full max-w-7xl animate-pulse px-4 pb-10 pt-4 sm:px-6 lg:px-8">
         {/* HEADER */}
-        {/* =================================================== */}
-
-        <header>
-          <div className="h-4 w-24 rounded-full bg-neutral-200" />
-
-          <div className="mt-2 flex items-center justify-between gap-4">
-            <div>
-              <div className="h-9 w-44 rounded-xl bg-neutral-200 sm:h-10 sm:w-52" />
-              <div className="mt-3 h-4 w-64 rounded-full bg-neutral-100" />
+        <header className="flex items-center justify-between gap-4">
+          <div className="flex min-w-0 items-center gap-3">
+            <div className="flex shrink-0 -space-x-3">
+              <div className="size-9 rounded-full bg-subprimary ring-2 ring-primary sm:size-10" />
+              <div className="size-9 rounded-full bg-subprimary ring-2 ring-primary sm:size-10" />
             </div>
 
-            <div className="size-5 rounded-full bg-neutral-200" />
+            <div className="min-w-0">
+              <div className="flex items-center gap-2">
+                <div className="h-4 w-10 rounded bg-subprimary" />
+                <div className="h-2 w-24 rounded-full bg-subprimary sm:w-28" />
+              </div>
+              <div className="mt-1.5 h-2 w-28 rounded-full bg-subprimary sm:w-32" />
+            </div>
+          </div>
+
+          <div className="flex shrink-0 items-center gap-2">
+            <div className="size-9 rounded-full border border-white/10 bg-subprimary sm:size-10" />
+            <div className="size-9 rounded-full border border-white/10 bg-subprimary sm:size-10" />
           </div>
         </header>
 
+        {/* RELATIONSHIP CHECK-IN */}
+        <section className="mt-12 sm:mt-14">
+          <div className="flex items-center justify-between gap-3">
+            <div className="h-4 w-36 rounded bg-subprimary sm:w-40" />
+            <div className="size-9 rounded-full bg-subprimary" />
+          </div>
 
-        {/* =================================================== */}
-        {/* RELATIONSHIP */}
-        {/* =================================================== */}
+          {/* Partner mood */}
+          <div className="mt-5 grid grid-cols-[1fr_auto_1fr] items-center gap-3 sm:gap-8">
+            {/* You */}
+            <div className="flex flex-col gap-4">
+              <div>
+                <div className="h-2 w-12 rounded-full bg-subprimary" />
+                <div className="mt-1.5 h-0.5 w-full max-w-20 bg-white/10" />
+              </div>
+              <div>
+                <div className="h-2 w-14 rounded-full bg-subprimary" />
+                <div className="mt-1.5 h-0.5 w-full max-w-20 bg-white/10" />
+              </div>
+            </div>
 
-        <section className="mt-8">
-          <div className="relative overflow-hidden rounded-[1.75rem] border border-black/[0.05] bg-white p-6 shadow-[0_15px_40px_-25px_rgba(0,0,0,0.14)] sm:p-7">
+            {/* Mood actions */}
+            <div className="flex items-start gap-5 sm:gap-10">
+              <div className="flex flex-col items-center">
+                <div className="size-12 rounded-full border border-white/[0.06] bg-subprimary sm:size-14" />
+                <div className="mt-3 h-2 w-12 rounded-full bg-subprimary" />
+                <div className="mt-2 h-3 w-8 rounded bg-subprimary" />
+              </div>
 
-            <div className="flex items-center gap-5">
+              <div className="flex flex-col items-center">
+                <div className="size-12 rounded-full border border-white/[0.06] bg-subprimary sm:size-14" />
+                <div className="mt-3 h-2 w-12 rounded-full bg-subprimary" />
+                <div className="mt-2 h-3 w-12 rounded bg-subprimary" />
+              </div>
+            </div>
 
-              <div className="size-14 shrink-0 rounded-full bg-neutral-200" />
+            {/* Partner mood stats */}
+            <div className="flex flex-col gap-4">
+              <div className="ml-auto w-full max-w-20">
+                <div className="ml-auto h-2 w-12 rounded-full bg-subprimary" />
+                <div className="mt-1.5 h-0.5 w-full bg-white/10" />
+              </div>
+              <div className="ml-auto w-full max-w-20">
+                <div className="ml-auto h-2 w-14 rounded-full bg-subprimary" />
+                <div className="mt-1.5 h-0.5 w-full bg-white/10" />
+              </div>
+            </div>
+          </div>
+
+          {/* Weekly semicircle timeline */}
+          <div className="relative mt-8 h-28 overflow-hidden sm:mt-10 sm:h-32">
+            <div className="absolute left-1/2 top-0 flex -translate-x-1/2 flex-col items-center">
+              <div className="h-3 w-8 rounded-full bg-subprimary" />
+              <div className="mt-2 h-3 w-12 rounded bg-subprimary" />
+            </div>
+
+            <div className="absolute left-1/2 top-7 h-48 w-[145%] -translate-x-1/2 rounded-[50%] border-[18px] border-[#37373d] bg-transparent sm:w-[120%]" />
+
+            {/* Timeline markers */}
+            <div className="absolute inset-x-0 bottom-3 flex items-center justify-around px-1 sm:px-12">
+              {Array.from({ length: 7 }).map((_, index) => (
+                <div key={index} className="flex flex-col items-center gap-2">
+                  <div
+                    className={`h-1.5 w-1.5 rounded-full ${
+                      index === 6 ? 'h-4 w-1.5 rounded-full bg-white' : 'bg-white/25'
+                    }`}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="-mt-1 flex flex-col items-center">
+            <div className="h-3 w-28 rounded bg-subprimary" />
+            <div className="mt-2 h-2 w-12 rounded-full bg-subprimary" />
+          </div>
+        </section>
+
+        {/* PLANNING */}
+        <section className="mt-12 sm:mt-14">
+          <SectionHeading titleWidth="w-24" />
+
+          <div className="mt-4 overflow-hidden rounded-2xl bg-subprimary p-3 sm:rounded-3xl sm:p-4">
+            {/* Planner pagination */}
+            <div className="flex items-center gap-3">
+              {Array.from({ length: 5 }).map((_, index) => (
+                <div
+                  key={index}
+                  className={`flex size-7 shrink-0 items-center justify-center rounded-full ${
+                    index === 0 ? 'bg-white/15' : 'bg-primary'
+                  }`}
+                >
+                  <div className="size-2 rounded-full bg-white/20" />
+                </div>
+              ))}
+              <div className="ml-auto h-7 w-14 shrink-0 rounded-full bg-primary" />
+            </div>
+
+            {/* Planner event */}
+            <div className="mt-4 flex items-center gap-3">
+              <div className="flex size-16 shrink-0 flex-col items-center justify-center rounded-2xl bg-primary sm:size-[72px]">
+                <div className="h-2 w-6 rounded-full bg-subprimary" />
+                <div className="mt-1.5 h-6 w-8 rounded bg-subprimary" />
+              </div>
 
               <div className="min-w-0 flex-1">
-                <div className="h-4 w-32 rounded-full bg-neutral-200" />
-                <div className="mt-2 h-3 w-24 rounded-full bg-neutral-100" />
+                <div className="h-2 w-28 max-w-full rounded-full bg-white/10" />
+                <div className="mt-2 h-3 w-32 max-w-full rounded bg-white/10" />
+                <div className="mt-2 h-2 w-24 max-w-full rounded-full bg-white/[0.06]" />
               </div>
 
-              <div className="hidden sm:block">
-                <div className="h-3 w-20 rounded-full bg-neutral-100" />
-              </div>
-
+              <div className="hidden h-8 w-20 shrink-0 rounded-full bg-primary sm:block" />
             </div>
-
-            <div className="mt-6 h-px w-full bg-neutral-100" />
-
-            <div className="mt-5 flex items-center justify-between">
-              <div className="h-3 w-28 rounded-full bg-neutral-100" />
-              <div className="h-3 w-20 rounded-full bg-neutral-100" />
-            </div>
-
           </div>
         </section>
 
+        {/* WORKSPACE */}
+        <section className="mt-10 sm:mt-12">
+          <SectionHeading titleWidth="w-32" />
 
-        {/* =================================================== */}
-        {/* YOUR SPACE */}
-        {/* =================================================== */}
-
-        <section className="mt-8">
-
-          <div className="mb-4 flex items-center justify-between">
-            <div>
-              <div className="h-3 w-20 rounded-full bg-neutral-100" />
-              <div className="mt-2 h-6 w-40 rounded-lg bg-neutral-200" />
+          {/* Goals */}
+          <div className="relative mt-4 min-h-52 overflow-hidden rounded-[1.75rem] bg-subprimary p-5 sm:min-h-56 sm:p-6">
+            <div className="flex items-center justify-between gap-4">
+              <div className="h-3 w-28 rounded bg-white/10" />
+              <div className="size-8 rounded-full bg-white/[0.06]" />
             </div>
 
-            <div className="size-5 rounded-full bg-neutral-100" />
-          </div>
-
-
-          <div className="grid gap-5 md:grid-cols-2">
-
-            {/* Partner Check-in */}
-
-            <SkeletonCard>
-              <SkeletonIcon />
-
-              <div className="mt-5 h-3 w-24 rounded-full bg-neutral-100" />
-              <div className="mt-2 h-5 w-40 rounded-lg bg-neutral-200" />
-              <div className="mt-2 h-3 w-56 rounded-full bg-neutral-100" />
-
-              <div className="mt-6 h-3 w-28 rounded-full bg-neutral-100" />
-            </SkeletonCard>
-
-
-            {/* Goals */}
-
-            <SkeletonCard>
-              <SkeletonIcon />
-
-              <div className="mt-5 h-3 w-16 rounded-full bg-neutral-100" />
-              <div className="mt-2 h-5 w-32 rounded-lg bg-neutral-200" />
-
-              <div className="mt-5 space-y-3">
-                <SkeletonLine />
-                <SkeletonLine />
-                <SkeletonLine />
-              </div>
-            </SkeletonCard>
-
-
-            {/* Planner */}
-
-            <SkeletonCard>
-              <SkeletonIcon />
-
-              <div className="mt-5 h-3 w-20 rounded-full bg-neutral-100" />
-              <div className="mt-2 h-5 w-44 rounded-lg bg-neutral-200" />
-              <div className="mt-2 h-3 w-60 rounded-full bg-neutral-100" />
-
-              <div className="mt-5 h-3 w-32 rounded-full bg-neutral-100" />
-            </SkeletonCard>
-
-
-            {/* Your Check-in */}
-
-            <div className="relative overflow-hidden rounded-[1.75rem] bg-neutral-900 p-6 sm:p-7">
-
-              <div className="flex items-start justify-between">
-
-                <div className="size-10 rounded-[13px] bg-white/[0.08]" />
-
-                <div className="h-6 w-20 rounded-full bg-white/[0.06]" />
-
-              </div>
-
-              <div className="mt-6 h-3 w-24 rounded-full bg-white/[0.06]" />
-
-              <div className="mt-3 h-5 w-40 rounded-lg bg-white/[0.08]" />
-
-              <div className="mt-2 h-3 w-64 max-w-full rounded-full bg-white/[0.05]" />
-
-              <div className="mt-6 h-6 w-36 rounded-full bg-white/[0.05]" />
-
+            <div className="mt-8">
+              <div className="h-2 w-20 rounded-full bg-white/[0.08]" />
+              <div className="mt-3 h-5 w-32 rounded bg-white/10" />
             </div>
 
+            {/* Decorative goal progress */}
+            <div className="absolute -bottom-10 right-5 size-24 rounded-full border-[10px] border-white/[0.05] sm:right-10 sm:size-28" />
+            <div className="absolute -bottom-12 right-7 size-24 rounded-full border-[3px] border-white/[0.08] sm:right-12 sm:size-28" />
           </div>
 
+          {/* Latest activity */}
+          <div className="mt-4 grid grid-cols-2 gap-3 sm:gap-5">
+            <ActivitySkeleton />
+            <ActivitySkeleton />
+          </div>
+
+          {/* More workspace items */}
+          <div className="mt-3 grid grid-cols-2 gap-3 sm:gap-5">
+            <WorkspaceMiniSkeleton />
+            <WorkspaceMiniSkeleton />
+          </div>
         </section>
 
+        {/* TODAY / SUMMARY */}
+        <section className="mt-10 sm:mt-12">
+          <SectionHeading titleWidth="w-28" />
 
-        {/* =================================================== */}
-        {/* TODAY */}
-        {/* =================================================== */}
-
-        <section className="mt-10">
-
-          <div className="mb-4">
-            <div className="h-3 w-12 rounded-full bg-neutral-100" />
-            <div className="mt-2 h-6 w-44 rounded-lg bg-neutral-200" />
-          </div>
-
-
-          <div className="grid gap-5 md:grid-cols-2">
-
-            {/* Reminder */}
-
-            <div className="relative overflow-hidden rounded-[1.75rem] border border-black/[0.05] bg-white p-6 shadow-[0_15px_40px_-25px_rgba(0,0,0,0.14)] sm:p-7">
-
-              <div className="size-10 rounded-[13px] bg-neutral-100" />
-
-              <div className="mt-5 h-3 w-28 rounded-full bg-neutral-100" />
-
-              <div className="mt-2 h-5 w-48 rounded-lg bg-neutral-200" />
-
-              <div className="mt-2 h-3 w-64 max-w-full rounded-full bg-neutral-100" />
-
+          <div className="mt-4 grid gap-3 sm:grid-cols-2 sm:gap-5">
+            <div className="rounded-2xl bg-subprimary p-5 sm:rounded-3xl sm:p-6">
+              <div className="size-9 rounded-full bg-primary" />
+              <div className="mt-5 h-2 w-24 rounded-full bg-white/[0.08]" />
+              <div className="mt-2 h-4 w-40 max-w-full rounded bg-white/10" />
+              <div className="mt-2 h-2 w-52 max-w-full rounded-full bg-white/[0.06]" />
             </div>
 
-
-            {/* Quick Stats */}
-
-            <div className="grid grid-cols-2 gap-4">
-
-              <SkeletonMiniStat />
-
-              <SkeletonMiniStat />
-
+            <div className="grid grid-cols-2 gap-3">
+              <MiniStatSkeleton />
+              <MiniStatSkeleton />
             </div>
-
           </div>
-
         </section>
-
       </div>
     </main>
   )
 }
 
-
-/* ============================================================= */
-/* SKELETON CARD */
-/* ============================================================= */
-
-function SkeletonCard({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+function SectionHeading({ titleWidth }: { titleWidth: string }) {
   return (
-    <div className="relative overflow-hidden rounded-[1.75rem] border border-black/[0.05] bg-white p-6 shadow-[0_15px_40px_-25px_rgba(0,0,0,0.14)] sm:p-7">
-      {children}
+    <div className="flex items-center gap-4">
+      <div className={`h-3 shrink-0 rounded bg-subprimary ${titleWidth}`} />
+      <div className="h-px flex-1 bg-white/10" />
     </div>
   )
 }
 
-
-/* ============================================================= */
-/* SKELETON ICON */
-/* ============================================================= */
-
-function SkeletonIcon() {
+function ActivitySkeleton() {
   return (
-    <div className="size-10 rounded-[13px] bg-neutral-100" />
-  )
-}
-
-
-/* ============================================================= */
-/* SKELETON LINE */
-/* ============================================================= */
-
-function SkeletonLine() {
-  return (
-    <div className="flex items-center gap-3">
-      <div className="size-7 rounded-lg bg-neutral-100" />
-      <div className="h-3 flex-1 rounded-full bg-neutral-100" />
+    <div className="min-w-0 overflow-hidden rounded-2xl bg-subprimary p-3 sm:rounded-3xl sm:p-5">
+      <div className="flex items-center justify-between gap-2">
+        <div className="h-3 w-20 max-w-full rounded bg-white/10" />
+        <div className="size-7 shrink-0 rounded-full bg-primary" />
+      </div>
+      <div className="mt-5 h-20 rounded-xl bg-primary/70 sm:h-24" />
+      <div className="mt-4 h-3 w-28 max-w-full rounded bg-white/10" />
+      <div className="mt-2 h-2 w-20 max-w-full rounded-full bg-white/[0.06]" />
     </div>
   )
 }
 
-
-/* ============================================================= */
-/* MINI STAT SKELETON */
-/* ============================================================= */
-
-function SkeletonMiniStat() {
+function WorkspaceMiniSkeleton() {
   return (
-    <div className="relative overflow-hidden rounded-[1.5rem] border border-black/[0.05] bg-white p-5 shadow-[0_15px_40px_-25px_rgba(0,0,0,0.14)]">
+    <div className="min-w-0 rounded-2xl bg-subprimary p-3 sm:rounded-3xl sm:p-5">
+      <div className="size-8 rounded-xl bg-primary" />
+      <div className="mt-4 h-3 w-24 max-w-full rounded bg-white/10" />
+      <div className="mt-2 h-2 w-16 max-w-full rounded-full bg-white/[0.06]" />
+    </div>
+  )
+}
 
-      <div className="size-9 rounded-[11px] bg-neutral-100" />
-
-      <div className="mt-4 h-3 w-20 rounded-full bg-neutral-100" />
-
-      <div className="mt-2 h-4 w-24 rounded-lg bg-neutral-200" />
-
+function MiniStatSkeleton() {
+  return (
+    <div className="min-w-0 rounded-2xl bg-subprimary p-3 sm:rounded-3xl sm:p-5">
+      <div className="size-8 rounded-xl bg-primary" />
+      <div className="mt-4 h-2 w-14 max-w-full rounded-full bg-white/[0.08]" />
+      <div className="mt-2 h-4 w-16 max-w-full rounded bg-white/10" />
     </div>
   )
 }

@@ -213,7 +213,7 @@ function DeleteControl({
           type="button"
           onClick={handleDeleteClick}
           aria-label={`Delete ${debateTitle}`}
-          className="flex size-8 items-center justify-center rounded-full border border-white/10 bg-primary text-description shadow-[0_5px_20px_-12px_rgba(0,0,0,0.6)] transition-all hover:border-red-400/30 hover:bg-red-500/10 hover:text-red-400 sm:opacity-0 sm:group-hover:opacity-100"
+          className="flex size-8 items-center justify-center rounded-full border border-white/10 bg-subprimary text-secondary shadow-[0_5px_20px_-12px_rgba(0,0,0,0.6)] transition-all hover:border-red-400/30 hover:bg-red-500/10 hover:text-red-400 sm:opacity-0 sm:group-hover:opacity-100"
         >
           <Trash2
             size={12}
@@ -301,7 +301,7 @@ function DebateListItem({
         debateId={debate.id}
         debateTitle={debate.title}
         relationshipId={relationshipId}
-        className="absolute right-0 top-0 z-10 -translate-y-1/2 sm:right-[3.75rem]"
+        className="absolute right-2 top-1/2 z-10 -translate-y-1/2 sm:right-[3.75rem]"
       />
     </div>
   )
@@ -321,7 +321,7 @@ type CardTheme = {
 
 const cardThemes: Record<string, CardTheme> = {
   formal: {
-    card: 'border-white/10 shadow-[0_20px_50px_-30px_rgba(0,0,0,0.7)] hover:border-white/20',
+    card: 'border-white/10  hover:border-white/20',
     wall: '44, 46, 46',
     shade: '16, 18, 18',
     glow: 'bg-neutral-400/20',
@@ -329,7 +329,7 @@ const cardThemes: Record<string, CardTheme> = {
     button: 'bg-neutral-900',
   },
   kasar: {
-    card: 'border-red-400/15 shadow-[0_20px_50px_-30px_rgba(220,38,38,0.5)] hover:border-red-400/30',
+    card: 'border-red-400/15  hover:border-red-400/30',
     wall: '92, 38, 42',
     shade: '40, 14, 18',
     glow: 'bg-red-400/20',
@@ -337,7 +337,7 @@ const cardThemes: Record<string, CardTheme> = {
     button: 'bg-red-500',
   },
   lebay: {
-    card: 'border-blue-400/15 shadow-[0_20px_50px_-30px_rgba(37,99,235,0.5)] hover:border-blue-400/30',
+    card: 'border-blue-400/15  hover:border-blue-400/30',
     wall: '36, 60, 98',
     shade: '14, 26, 50',
     glow: 'bg-blue-400/20',
@@ -345,7 +345,7 @@ const cardThemes: Record<string, CardTheme> = {
     button: 'bg-blue-500',
   },
   lembut: {
-    card: 'border-pink-400/15 shadow-[0_20px_50px_-30px_rgba(236,72,153,0.5)] hover:border-pink-400/30',
+    card: 'border-pink-400/15 hover:border-pink-400/30',
     wall: '90, 42, 66',
     shade: '44, 18, 32',
     glow: 'bg-pink-400/20',
@@ -888,7 +888,7 @@ function CreateDebateButton({
         : 'mt-4'
         } ${disabled
           ? 'cursor-not-allowed bg-white/10 text-description'
-          : 'bg-secondary text-primary hover:bg-secondary/90 active:scale-[0.98]'
+          : 'bg-subprimary text-secondary hover:bg-subprimary/90 active:scale-[0.98]'
         }`}
     >
       <Plus

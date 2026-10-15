@@ -1,4 +1,3 @@
-import { Sparkles } from "lucide-react";
 
 export function PendingUserBubble({ text }: { text: string }) {
   return (

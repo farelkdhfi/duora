@@ -200,8 +200,8 @@ export default function NoteCard({
         overflow-hidden
         rounded-[1.75rem]
         border
-        ${color.border}
-        ${color.bg}
+        border-white/10
+        bg-primary
         shadow-[0_8px_28px_rgba(0,0,0,0.035)]
         transition-all
         duration-300
@@ -213,7 +213,7 @@ export default function NoteCard({
     >
       {/* AMBIENT */}
 
-      <div className="pointer-events-none absolute -right-12 -top-12 size-28 rounded-full bg-white/50 blur-[45px]" />
+      <div className="pointer-events-none absolute -right-12 -top-12 size-28 rounded-full bg-white/5 blur-[45px]" />
 
       <div className="relative p-5">
         {/* ---------------------------------------------------------------- */}
@@ -230,7 +230,7 @@ export default function NoteCard({
                   truncate
                   items-center
                   rounded-full
-                  bg-white/60
+                  bg-subprimary
                   px-2.5
                   py-1
                   text-[8.5px]
@@ -243,7 +243,7 @@ export default function NoteCard({
                 {note.category}
               </span>
             ) : (
-              <span className="text-[9px] font-medium uppercase tracking-[0.16em] text-neutral-300">
+              <span className="text-[9px] font-medium uppercase tracking-[0.16em] text-description">
                 Note
               </span>
             )}
@@ -260,10 +260,10 @@ export default function NoteCard({
                 justify-center
                 rounded-full
                 transition-all
-                hover:bg-white/70
+                hover:bg-subprimary
                 ${note.is_favorite
                   ? 'text-amber-500'
-                  : 'text-neutral-300'
+                  : 'text-description'
                 }
               `}
             >
@@ -288,10 +288,10 @@ export default function NoteCard({
                 justify-center
                 rounded-full
                 transition-all
-                hover:bg-white/70
+                hover:bg-subprimary
                 ${note.is_pinned
-                  ? 'text-neutral-900'
-                  : 'text-neutral-300'
+                  ? 'text-secondary'
+                  : 'text-description'
                 }
               `}
             >
@@ -325,18 +325,18 @@ export default function NoteCard({
                 w-full
                 rounded-xl
                 border
-                border-black/[0.055]
-                bg-white/80
+                border-white/10
+                bg-subprimary
                 px-3.5
                 py-2.5
                 text-[14px]
                 font-semibold
                 tracking-[-0.02em]
-                text-neutral-900
+                text-secondary
                 outline-none
-                placeholder:text-neutral-300
-                focus:border-black/[0.12]
-                focus:bg-white
+                placeholder:text-description
+                focus:border-white/25
+                focus:bg-subprimary
               "
             />
 
@@ -352,17 +352,17 @@ export default function NoteCard({
                 resize-none
                 rounded-xl
                 border
-                border-black/[0.055]
-                bg-white/80
+                border-white/10
+                bg-subprimary
                 px-3.5
                 py-2.5
                 text-[12.5px]
                 leading-6
-                text-neutral-700
+                text-description
                 outline-none
-                placeholder:text-neutral-300
-                focus:border-black/[0.12]
-                focus:bg-white
+                placeholder:text-description
+                focus:border-white/25
+                focus:bg-subprimary
               "
             />
 
@@ -376,16 +376,16 @@ export default function NoteCard({
                 w-full
                 rounded-xl
                 border
-                border-black/[0.055]
-                bg-white/80
+                border-white/10
+                bg-subprimary
                 px-3.5
                 py-2.5
                 text-[11px]
-                text-neutral-600
+                text-description
                 outline-none
-                placeholder:text-neutral-300
-                focus:border-black/[0.12]
-                focus:bg-white
+                placeholder:text-description
+                focus:border-white/25
+                focus:bg-subprimary
               "
             />
 
@@ -396,7 +396,7 @@ export default function NoteCard({
                 {note.checklist_items.map((item) => (
                   <div
                     key={item.id}
-                    className="flex items-center gap-2 rounded-xl border border-black/[0.035] bg-white/55 px-2.5 py-2"
+                    className="flex items-center gap-2 rounded-xl border border-white/10 bg-subprimary px-2.5 py-2"
                   >
                     <button
                       type="button"
@@ -417,7 +417,7 @@ export default function NoteCard({
                       ) : (
                         <Square
                           size={14}
-                          className="text-neutral-300"
+                          className="text-description"
                         />
                       )}
                     </button>
@@ -428,9 +428,10 @@ export default function NoteCard({
                         flex-1
                         truncate
                         text-[11px]
+                        text-description
                         ${item.is_completed
-                          ? 'text-neutral-400 line-through'
-                          : 'text-neutral-600'
+                          ? 'line-through'
+                          : ''
                         }
                       `}
                     >
@@ -444,7 +445,7 @@ export default function NoteCard({
                           item.id,
                         )
                       }
-                      className="text-neutral-300 transition-colors hover:text-red-500"
+                      className="text-description transition-colors hover:text-red-500"
                     >
                       <X size={12} />
                     </button>
@@ -476,14 +477,14 @@ export default function NoteCard({
                   rounded-xl
                   border
                   border-dashed
-                  border-black/[0.08]
+                  border-white/15
                   bg-transparent
                   px-3
                   py-2
                   text-[11px]
-                  text-neutral-600
+                  text-description
                   outline-none
-                  placeholder:text-neutral-300
+                  placeholder:text-description
                 "
               />
 
@@ -500,12 +501,12 @@ export default function NoteCard({
                   items-center
                   justify-center
                   rounded-xl
-                  bg-white
-                  text-neutral-500
+                  bg-subprimary
+                  text-description
                   shadow-[0_3px_10px_rgba(0,0,0,0.04)]
                   transition
-                  hover:bg-neutral-900
-                  hover:text-white
+                  hover:bg-subprimary
+                  hover:text-secondary
                   disabled:opacity-40
                 "
               >
@@ -522,7 +523,7 @@ export default function NoteCard({
 
             {/* EDIT FOOTER */}
 
-            <div className="mt-2 flex items-center justify-between gap-2 border-t border-black/[0.04] pt-4">
+            <div className="mt-2 flex items-center justify-between gap-2 border-t border-white/10 pt-4">
               {isConfirmingDelete ? (
                 <div className="flex items-center gap-1.5">
                   <button
@@ -556,13 +557,13 @@ export default function NoteCard({
                     }
                     className="
                       rounded-full
-                      bg-white
+                      bg-subprimary
                       px-3
                       py-1.5
                       text-[10px]
                       font-medium
-                      text-neutral-500
-                      hover:bg-neutral-100
+                      text-description
+                      hover:bg-subprimary
                     "
                   >
                     Cancel
@@ -581,9 +582,9 @@ export default function NoteCard({
                     py-1.5
                     text-[10px]
                     font-medium
-                    text-neutral-400
+                    text-description
                     transition
-                    hover:bg-white/70
+                    hover:bg-subprimary
                     hover:text-red-500
                   "
                 >
@@ -602,9 +603,9 @@ export default function NoteCard({
                     py-1.5
                     text-[10px]
                     font-medium
-                    text-neutral-400
-                    hover:bg-white/70
-                    hover:text-neutral-700
+                    text-description
+                    hover:bg-subprimary
+                    hover:text-secondary
                   "
                 >
                   Cancel
@@ -622,14 +623,14 @@ export default function NoteCard({
                     items-center
                     gap-1.5
                     rounded-full
-                    bg-neutral-900
+                    bg-subprimary
                     px-4
                     py-1.5
                     text-[10px]
                     font-semibold
-                    text-white
+                    text-secondary
                     transition
-                    hover:bg-black
+                    hover:bg-subprimary
                     disabled:opacity-40
                   "
                 >
@@ -662,7 +663,7 @@ export default function NoteCard({
                 font-semibold
                 leading-[1.35]
                 tracking-[-0.025em]
-                text-neutral-900
+                text-secondary
               "
             >
               {note.title}
@@ -677,7 +678,7 @@ export default function NoteCard({
                   text-[12px]
                   leading-[1.75]
                   tracking-[-0.005em]
-                  text-neutral-500
+                  text-description
                 "
               >
                 {note.content}
@@ -703,7 +704,7 @@ export default function NoteCard({
                       ) : (
                         <Square
                           size={13}
-                          className="shrink-0 text-neutral-300"
+                          className="shrink-0 text-description"
                         />
                       )}
 
@@ -712,9 +713,10 @@ export default function NoteCard({
                           min-w-0
                           truncate
                           text-[11.5px]
+                          text-description
                           ${item.is_completed
-                            ? 'text-neutral-400 line-through'
-                            : 'text-neutral-600'
+                            ? 'line-through'
+                            : ''
                           }
                         `}
                       >
@@ -724,7 +726,7 @@ export default function NoteCard({
                   ))}
 
                 {note.checklist_items.length > 4 && (
-                  <p className="pl-5 text-[10px] text-neutral-400">
+                  <p className="pl-5 text-[10px] text-description">
                     +
                     {note.checklist_items.length - 4}{' '}
                     more
@@ -732,9 +734,9 @@ export default function NoteCard({
                 )}
 
                 <div className="mt-2 flex items-center gap-2 pl-5">
-                  <div className="h-1 flex-1 overflow-hidden rounded-full bg-black/[0.05]">
+                  <div className="h-1 flex-1 overflow-hidden rounded-full bg-white/10">
                     <div
-                      className="h-full rounded-full bg-neutral-400 transition-all"
+                      className="h-full rounded-full bg-description transition-all"
                       style={{
                         width: `${(completedCount /
                           note.checklist_items
@@ -745,7 +747,7 @@ export default function NoteCard({
                     />
                   </div>
 
-                  <span className="shrink-0 text-[9px] font-medium text-neutral-400">
+                  <span className="shrink-0 text-[9px] font-medium text-description">
                     {completedCount}/
                     {note.checklist_items.length}
                   </span>
@@ -755,12 +757,12 @@ export default function NoteCard({
 
             {/* FOOTER */}
 
-            <div className="mt-5 flex items-center justify-between gap-2 border-t border-black/[0.045] pt-3">
-              <span className="max-w-[120px] truncate text-[9.5px] font-medium text-neutral-400">
+            <div className="mt-5 flex items-center justify-between gap-2 border-t border-white/10 pt-3">
+              <span className="max-w-[120px] truncate text-[9.5px] font-medium text-description">
                 {editorName}
               </span>
 
-              <span className="shrink-0 text-[9.5px] text-neutral-300">
+              <span className="shrink-0 text-[9.5px] text-description">
                 {formatRelativeTime(
                   note.updated_at,
                 )}

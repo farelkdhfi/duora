@@ -108,7 +108,7 @@ export function ChatInput({
           type="submit"
           disabled={!canSend}
           aria-label="Kirim pesan"
-          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-secondary text-primary transition disabled:cursor-not-allowed disabled:opacity-50"
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-subprimary text-secondary transition disabled:cursor-not-allowed disabled:opacity-50"
         >
           {isSending ? (
             <Loader2 size={16} className="animate-spin" />

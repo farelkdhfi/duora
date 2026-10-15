@@ -79,9 +79,9 @@ export function CountdownList({
         return (
             <div className="flex flex-1 items-center justify-center px-5 pb-10">
                 <div className="w-full max-w-5xl animate-pulse">
-                    <div className="mx-auto h-[60svh] w-full max-w-4xl rounded-[2.5rem] border border-neutral-200 bg-white" />
+                    <div className="mx-auto h-[60svh] w-full max-w-4xl rounded-[2.5rem] border border-white/10 bg-primary" />
 
-                    <div className="mx-auto mt-7 h-12 w-64 rounded-full bg-neutral-100" />
+                    <div className="mx-auto mt-7 h-12 w-64 rounded-full bg-subprimary" />
                 </div>
             </div>
         );
@@ -91,19 +91,19 @@ export function CountdownList({
         return (
             <div className="flex flex-1 items-center justify-center px-6">
                 <div className="text-center">
-                    <div className="mx-auto flex size-12 items-center justify-center rounded-2xl bg-white shadow-sm">
+                    <div className="mx-auto flex size-12 items-center justify-center rounded-2xl bg-subprimary shadow-sm">
                         <Sparkles
                             size={18}
                             strokeWidth={1.8}
-                            className="text-neutral-400"
+                            className="text-description"
                         />
                     </div>
 
-                    <p className="mt-4 text-sm font-medium text-neutral-600">
+                    <p className="mt-4 text-sm font-medium text-secondary">
                         Gagal memuat countdown
                     </p>
 
-                    <p className="mt-1 text-xs text-neutral-400">
+                    <p className="mt-1 text-xs text-description">
                         Coba refresh halaman dan ulangi lagi.
                     </p>
                 </div>
@@ -115,25 +115,25 @@ export function CountdownList({
         return (
             <div className="flex flex-1 items-center justify-center px-6 pb-12">
                 <div className="w-full max-w-md text-center">
-                    <div className="relative mx-auto flex size-20 items-center justify-center rounded-[2rem] border border-neutral-200 bg-white shadow-[0_20px_60px_-30px_rgba(0,0,0,0.2)]">
-                        <div className="absolute inset-0 rounded-[2rem] bg-gradient-to-br from-pink-50 via-white to-blue-50" />
+                    <div className="relative mx-auto flex size-20 items-center justify-center rounded-[2rem] border border-white/10 bg-primary shadow-[0_20px_60px_-30px_rgba(0,0,0,0.2)]">
+                        <div className="absolute inset-0 rounded-[2rem] bg-gradient-to-br from-pink-500/10 via-transparent to-blue-500/10" />
 
                         <Sparkles
                             size={23}
                             strokeWidth={1.5}
-                            className="relative text-neutral-400"
+                            className="relative text-description"
                         />
                     </div>
 
-                    <p className="mt-7 text-[10px] font-semibold uppercase tracking-[0.2em] text-neutral-300">
+                    <p className="mt-7 text-[10px] font-semibold uppercase tracking-[0.2em] text-description">
                         Your next moment
                     </p>
 
-                    <h2 className="mt-2 text-2xl font-semibold tracking-[-0.05em] text-neutral-800">
+                    <h2 className="mt-2 text-2xl font-semibold tracking-[-0.05em] text-secondary">
                         Belum ada countdown
                     </h2>
 
-                    <p className="mx-auto mt-3 max-w-sm text-sm leading-6 text-neutral-400">
+                    <p className="mx-auto mt-3 max-w-sm text-sm leading-6 text-description">
                         Buat countdown untuk momen yang sedang kalian
                         tunggu bersama.
                     </p>
@@ -142,7 +142,7 @@ export function CountdownList({
                         type="button"
                         onClick={onCreate}
                         disabled={isLimitReached}
-                        className="mt-7 inline-flex items-center gap-2 rounded-full bg-neutral-900 px-5 py-3 text-xs font-semibold text-white shadow-lg shadow-neutral-900/10 transition hover:bg-neutral-800 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
+                        className="mt-7 inline-flex items-center gap-2 rounded-full bg-subprimary px-5 py-3 text-xs font-semibold text-secondary shadow-lg shadow-black/10 transition hover:bg-subprimary active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
                     >
                         <Plus size={14} strokeWidth={2.2} />
                         Buat Countdown
@@ -186,7 +186,7 @@ export function CountdownList({
                             scrollToIndex(activeIndex - 1)
                         }
                         disabled={!canGoPrevious}
-                        className="flex size-11 shrink-0 items-center justify-center rounded-full border border-neutral-200 bg-white/90 text-neutral-600 shadow-[0_10px_30px_-15px_rgba(0,0,0,0.25)] backdrop-blur-xl transition hover:bg-white active:scale-[0.96] disabled:pointer-events-none disabled:opacity-30"
+                        className="flex size-11 shrink-0 items-center justify-center rounded-full border border-white/10 bg-subprimary text-secondary shadow-[0_10px_30px_-15px_rgba(0,0,0,0.25)] backdrop-blur-xl transition hover:bg-subprimary active:scale-[0.96] disabled:pointer-events-none disabled:opacity-30"
                         aria-label="Countdown sebelumnya"
                     >
                         <ChevronLeft
@@ -196,7 +196,7 @@ export function CountdownList({
                     </button>
 
                     {/* Indicator */}
-                    <div className="flex h-11 min-w-24 items-center justify-center gap-1.5 rounded-full border border-neutral-200 bg-white/90 px-4 shadow-[0_10px_30px_-15px_rgba(0,0,0,0.25)] backdrop-blur-xl">
+                    <div className="flex h-11 min-w-24 items-center justify-center gap-1.5 rounded-full border border-white/10 bg-subprimary px-4 shadow-[0_10px_30px_-15px_rgba(0,0,0,0.25)] backdrop-blur-xl">
                         {countdowns.map((countdown, index) => (
                             <button
                                 key={countdown.id}
@@ -206,8 +206,8 @@ export function CountdownList({
                                 }
                                 aria-label={`Countdown ${index + 1}`}
                                 className={`h-1.5 rounded-full transition-all duration-300 ${index === activeIndex
-                                        ? "w-5 bg-neutral-800"
-                                        : "w-1.5 bg-neutral-200"
+                                        ? "w-5 bg-secondary"
+                                        : "w-1.5 bg-description"
                                     }`}
                             />
                         ))}
@@ -220,7 +220,7 @@ export function CountdownList({
                             scrollToIndex(activeIndex + 1)
                         }
                         disabled={!canGoNext}
-                        className="flex size-11 shrink-0 items-center justify-center rounded-full border border-neutral-200 bg-white/90 text-neutral-600 shadow-[0_10px_30px_-15px_rgba(0,0,0,0.25)] backdrop-blur-xl transition hover:bg-white active:scale-[0.96] disabled:pointer-events-none disabled:opacity-30"
+                        className="flex size-11 shrink-0 items-center justify-center rounded-full border border-white/10 bg-subprimary text-secondary shadow-[0_10px_30px_-15px_rgba(0,0,0,0.25)] backdrop-blur-xl transition hover:bg-subprimary active:scale-[0.96] disabled:pointer-events-none disabled:opacity-30"
                         aria-label="Countdown berikutnya"
                     >
                         <ChevronRight
@@ -234,7 +234,7 @@ export function CountdownList({
                     type="button"
                     onClick={onCreate}
                     disabled={isLimitReached}
-                    className="flex h-11 mt-2 w-full text-center justify-center mx-auto shrink-0 items-center gap-2 rounded-full bg-neutral-800 px-4 text-sm font-semibold text-white shadow-[0_12px_30px_-12px_rgba(0,0,0,0.35)] transition hover:bg-neutral-800 active:scale-[0.97] disabled:cursor-not-allowed disabled:bg-neutral-300"
+                    className="flex h-11 mt-2 w-full text-center justify-center mx-auto shrink-0 items-center gap-2 rounded-full bg-subprimary px-4 text-sm font-semibold text-secondary shadow-[0_12px_30px_-12px_rgba(0,0,0,0.35)] transition hover:bg-subprimary active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-50"
                 >
                     Buat countdown
                 </button>

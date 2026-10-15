@@ -122,7 +122,7 @@ export default function QnaSessionPage() {
       <main className="flex min-h-dvh items-center justify-center bg-primary px-6">
         <div className="max-w-sm text-center">
           <div className="mx-auto flex size-12 items-center justify-center rounded-2xl bg-[#1e1318]">
-            <span className="text-sm text-white">♡</span>
+            <span className="text-sm text-secondary">♡</span>
           </div>
 
           <h2 className="mt-5 text-lg font-semibold tracking-tight text-secondary">
@@ -158,7 +158,7 @@ export default function QnaSessionPage() {
             type="button"
             onClick={() => router.push("/qna")}
             aria-label="Kembali ke Q&A"
-            className="flex size-9 shrink-0 items-center justify-center rounded-full border border-black/[0.05] bg-neutral-800 text-white shadow-sm transition-all duration-200 hover:bg-primary hover:text-secondary active:scale-95"
+            className="flex size-9 shrink-0 items-center justify-center rounded-full border border-black/[0.05] bg-neutral-800 text-secondary shadow-sm transition-all duration-200 hover:bg-primary hover:text-secondary active:scale-95"
           >
             <X className="size-4" strokeWidth={1.8} />
           </button>
@@ -223,7 +223,7 @@ export default function QnaSessionPage() {
                 <button
                   type="button"
                   onClick={() => router.push("/qna")}
-                  className="mt-8 flex h-13 w-full items-center justify-center rounded-full bg-[#1e1318] px-6 text-sm font-semibold tracking-[-0.01em] text-white shadow-[0_18px_40px_-18px_rgba(30,19,24,0.5)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#281a21] active:translate-y-0"
+                  className="mt-8 flex h-13 w-full items-center justify-center rounded-full bg-[#1e1318] px-6 text-sm font-semibold tracking-[-0.01em] text-secondary shadow-[0_18px_40px_-18px_rgba(30,19,24,0.5)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#281a21] active:translate-y-0"
                 >
                   Kembali ke Q&A
                 </button>

@@ -164,15 +164,15 @@ export function ShareButton({
 
   const modal = isOpen ? (
     <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/45 p-3 backdrop-blur-sm sm:p-4">
-      <div className="flex max-h-[95svh] w-full max-w-[420px] flex-col overflow-hidden rounded-[28px] bg-[#fafaf9] shadow-[0_30px_100px_-30px_rgba(0,0,0,0.4)]">
+      <div className="flex max-h-[95svh] w-full max-w-[420px] flex-col overflow-hidden rounded-[28px] bg-primary shadow-[0_30px_100px_-30px_rgba(0,0,0,0.4)]">
         {/* Header */}
-        <div className="flex shrink-0 items-center justify-between border-b border-black/[0.06] px-5 py-4">
+        <div className="flex shrink-0 items-center justify-between border-b border-white/10 px-5 py-4">
           <div>
-            <p className="text-sm font-semibold tracking-[-0.025em] text-[#171717]">
+            <p className="text-sm font-semibold tracking-[-0.025em] text-secondary">
               Share countdown
             </p>
 
-            <p className="mt-0.5 text-[10px] text-black/35">
+            <p className="mt-0.5 text-[10px] text-description">
               Fixed 9:16 · 1080 × 1920
             </p>
           </div>
@@ -180,7 +180,7 @@ export function ShareButton({
           <button
             type="button"
             onClick={() => setIsOpen(false)}
-            className="flex size-8 items-center justify-center rounded-full bg-black/[0.04] text-black/45 transition hover:bg-black/[0.08] hover:text-black"
+            className="flex size-8 items-center justify-center rounded-full bg-subprimary text-description transition hover:bg-subprimary hover:text-secondary"
           >
             <X size={15} strokeWidth={1.8} />
           </button>
@@ -241,13 +241,13 @@ export function ShareButton({
         </div>
 
         {/* Actions */}
-        <div className="shrink-0 border-t border-black/[0.06] bg-[#fafaf9] px-5 py-4">
+        <div className="shrink-0 border-t border-white/10 bg-primary px-5 py-4">
           <div className="flex gap-2">
             <button
               type="button"
               onClick={handleDownload}
               disabled={isGenerating}
-              className="flex h-11 flex-1 items-center justify-center gap-2 rounded-xl border border-black/[0.08] bg-white text-xs font-medium text-[#171717] transition hover:bg-black/[0.025] disabled:opacity-50"
+              className="flex h-11 flex-1 items-center justify-center gap-2 rounded-xl border border-white/10 bg-subprimary text-xs font-medium text-secondary transition hover:bg-subprimary disabled:opacity-50"
             >
               <Download size={14} strokeWidth={1.8} />
 
@@ -258,7 +258,7 @@ export function ShareButton({
               type="button"
               onClick={handleShare}
               disabled={isGenerating}
-              className="flex h-11 flex-1 items-center justify-center gap-2 rounded-xl bg-[#171717] text-xs font-medium text-white transition hover:bg-black/90 disabled:opacity-50"
+              className="flex h-11 flex-1 items-center justify-center gap-2 rounded-xl bg-subprimary text-xs font-medium text-secondary transition hover:bg-subprimary disabled:opacity-50"
             >
               <Share2 size={14} strokeWidth={1.8} />
 
@@ -266,7 +266,7 @@ export function ShareButton({
             </button>
           </div>
 
-          <p className="mt-3 text-center text-[10px] text-black/25">
+          <p className="mt-3 text-center text-[10px] text-description">
             Fixed 9:16 · 1080 × 1920 px
           </p>
         </div>
@@ -279,7 +279,7 @@ export function ShareButton({
       <button
         type="button"
         onClick={() => setIsOpen(true)}
-        className="flex items-center gap-1 text-xs text-gray-400 transition hover:text-pink-500"
+        className="flex items-center gap-1 text-xs text-description transition hover:text-pink-500"
       >
         <Share2 size={14} strokeWidth={1.7} />
 

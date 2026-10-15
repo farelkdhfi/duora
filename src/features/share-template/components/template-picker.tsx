@@ -104,32 +104,32 @@ export function TemplatePicker({
   }
 
   return (
-    <section className="overflow-hidden rounded-[24px] border border-black/[0.06] bg-white shadow-[0_12px_40px_-24px_rgba(0,0,0,0.22)]">
+    <section className="overflow-hidden rounded-[24px] border border-white/10 bg-primary shadow-[0_12px_40px_-24px_rgba(0,0,0,0.22)]">
       {/* Header */}
-      <div className="border-b border-black/[0.05] px-5 py-4">
+      <div className="border-b border-white/10 px-5 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="flex size-8 items-center justify-center rounded-full bg-black/[0.035]">
+            <div className="flex size-8 items-center justify-center rounded-full bg-subprimary">
               <Palette
                 size={14}
                 strokeWidth={1.7}
-                className="text-black/55"
+                className="text-description"
               />
             </div>
 
             <div>
-              <h3 className="text-[13px] font-semibold tracking-[-0.02em] text-[#171717]">
+              <h3 className="text-[13px] font-semibold tracking-[-0.02em] text-secondary">
                 Card appearance
               </h3>
 
-              <p className="mt-0.5 text-[10px] text-black/35">
+              <p className="mt-0.5 text-[10px] text-description">
                 Choose the look for your countdown
               </p>
             </div>
           </div>
 
           {isCustomMode && (
-            <span className="rounded-full bg-black/[0.045] px-2.5 py-1 text-[9px] font-medium text-black/45">
+            <span className="rounded-full bg-subprimary px-2.5 py-1 text-[9px] font-medium text-description">
               Custom
             </span>
           )}
@@ -139,11 +139,11 @@ export function TemplatePicker({
       {/* Presets */}
       <div className="px-5 py-5">
         <div className="mb-3 flex items-center justify-between">
-          <span className="text-[10px] font-medium uppercase tracking-[0.12em] text-black/30">
+          <span className="text-[10px] font-medium uppercase tracking-[0.12em] text-description">
             Presets
           </span>
 
-          <span className="text-[10px] text-black/25">
+          <span className="text-[10px] text-description">
             {TEMPLATE_PRESETS.length} styles
           </span>
         </div>
@@ -169,7 +169,7 @@ export function TemplatePicker({
                   handleSelectPreset(preset.id)
                 }
                 className={`group relative overflow-hidden rounded-[16px] text-left transition-all duration-200 ${isSelected
-                  ? "ring-1 ring-[#171717] ring-offset-2 ring-offset-white"
+                  ? "ring-1 ring-secondary ring-offset-2 ring-offset-primary"
                   : ""
                   } ${isLocked
                     ? "cursor-not-allowed"
@@ -211,17 +211,17 @@ export function TemplatePicker({
                 {/* Label */}
                 <div
                   className={`flex items-center justify-between border px-3 py-2.5 ${isSelected
-                    ? "border-[#171717]/10 bg-[#fafaf9]"
-                    : "border-black/[0.055] bg-white"
+                    ? "border-white/10 bg-subprimary"
+                    : "border-white/10 bg-primary"
                     }`}
                 >
                   <div className="min-w-0">
-                    <p className="truncate text-[11px] font-medium text-[#171717]">
+                    <p className="truncate text-[11px] font-medium text-secondary">
                       {preset.name}
                     </p>
 
                     {preset.minPlan !== "free" && (
-                      <p className="mt-0.5 text-[9px] text-black/30">
+                      <p className="mt-0.5 text-[9px] text-description">
                         {preset.minPlan === "plus"
                           ? "Plus"
                           : "Pro"}
@@ -233,7 +233,7 @@ export function TemplatePicker({
                     <ChevronRight
                       size={12}
                       strokeWidth={1.7}
-                      className="shrink-0 text-black/20 transition-transform group-hover:translate-x-0.5"
+                      className="shrink-0 text-description transition-transform group-hover:translate-x-0.5"
                     />
                   )}
                 </div>
@@ -244,7 +244,7 @@ export function TemplatePicker({
       </div>
 
       {/* Custom */}
-      <div className="border-t border-black/[0.05]">
+      <div className="border-t border-white/10">
         {canCustomize ? (
           <div className="px-5 py-5">
             <div className="mb-4 flex items-start justify-between gap-4">
@@ -253,21 +253,21 @@ export function TemplatePicker({
                   <Sparkles
                     size={13}
                     strokeWidth={1.7}
-                    className="text-black/45"
+                    className="text-description"
                   />
 
-                  <p className="text-[11px] font-semibold text-[#171717]">
+                  <p className="text-[11px] font-semibold text-secondary">
                     Your own palette
                   </p>
                 </div>
 
-                <p className="mt-1 text-[10px] leading-relaxed text-black/35">
+                <p className="mt-1 text-[10px] leading-relaxed text-description">
                   Create a gradient that feels like yours.
                 </p>
               </div>
 
               {isCustomMode && (
-                <span className="shrink-0 text-[9px] font-medium text-black/35">
+                <span className="shrink-0 text-[9px] font-medium text-description">
                   Active
                 </span>
               )}
@@ -297,16 +297,16 @@ export function TemplatePicker({
                   className="group cursor-pointer"
                 >
                   <div className="mb-1.5 flex items-center justify-between px-0.5">
-                    <span className="text-[9px] font-medium text-black/30">
+                    <span className="text-[9px] font-medium text-description">
                       {color.label}
                     </span>
 
-                    <span className="font-mono text-[8px] uppercase text-black/20">
+                    <span className="font-mono text-[8px] uppercase text-description">
                       {color.value}
                     </span>
                   </div>
 
-                  <div className="relative h-11 overflow-hidden rounded-xl border border-black/[0.07] bg-[#fafaf9] transition group-hover:border-black/15">
+                  <div className="relative h-11 overflow-hidden rounded-xl border border-white/10 bg-subprimary transition group-hover:border-white/20">
                     <div
                       className="absolute inset-1 rounded-[9px]"
                       style={{
@@ -330,16 +330,16 @@ export function TemplatePicker({
             {/* Preview */}
             <div className="mt-4">
               <div className="mb-1.5 flex items-center justify-between">
-                <span className="text-[9px] font-medium uppercase tracking-[0.1em] text-black/25">
+                <span className="text-[9px] font-medium uppercase tracking-[0.1em] text-description">
                   Preview
                 </span>
 
-                <span className="text-[9px] text-black/20">
+                <span className="text-[9px] text-description">
                   9:16
                 </span>
               </div>
 
-              <div className="relative h-24 overflow-hidden rounded-[16px] border border-black/[0.06]">
+              <div className="relative h-24 overflow-hidden rounded-[16px] border border-white/10">
                 <div
                   className="absolute inset-0"
                   style={{
@@ -365,7 +365,7 @@ export function TemplatePicker({
               type="button"
               onClick={handleApplyCustom}
               disabled={isPending}
-              className="mt-4 flex h-10 w-full items-center justify-center gap-2 rounded-xl bg-[#171717] text-[11px] font-medium text-white transition hover:bg-black/90 disabled:cursor-not-allowed disabled:opacity-50"
+              className="mt-4 flex h-10 w-full items-center justify-center gap-2 rounded-xl bg-subprimary text-[11px] font-medium text-secondary transition hover:bg-subprimary disabled:cursor-not-allowed disabled:opacity-50"
             >
               {isPending
                 ? "Saving..."
@@ -381,24 +381,24 @@ export function TemplatePicker({
           </div>
         ) : (
           <div className="px-5 py-5">
-            <div className="relative overflow-hidden rounded-[18px] border border-black/[0.06] bg-[#fafaf9] p-4">
-              <div className="absolute -right-8 -top-8 size-24 rounded-full bg-pink-200/40 blur-2xl" />
+            <div className="relative overflow-hidden rounded-[18px] border border-white/10 bg-subprimary p-4">
+              <div className="absolute -right-8 -top-8 size-24 rounded-full bg-pink-500/10 blur-2xl" />
 
               <div className="relative flex items-start gap-3">
-                <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-white shadow-sm ring-1 ring-black/[0.04]">
+                <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary shadow-sm ring-1 ring-white/10">
                   <Lock
                     size={12}
                     strokeWidth={1.7}
-                    className="text-black/40"
+                    className="text-description"
                   />
                 </div>
 
                 <div className="min-w-0">
-                  <p className="text-[11px] font-semibold text-[#171717]">
+                  <p className="text-[11px] font-semibold text-secondary">
                     Make it yours
                   </p>
 
-                  <p className="mt-1 text-[10px] leading-relaxed text-black/35">
+                  <p className="mt-1 text-[10px] leading-relaxed text-description">
                     Unlock custom colors and premium
                     templates with Duora Premium.
                   </p>

@@ -212,7 +212,7 @@ export function WrappedGenerator({
   }
 
   return (
-    <div className="relative overflow-hidden rounded-[1.75rem] border border-black/[0.05] bg-white/80 shadow-[0_25px_70px_rgba(0,0,0,0.045)] backdrop-blur-xl sm:rounded-[2rem]">
+    <div className="relative overflow-hidden">
       <div className="flex flex-col">
         {/* ================================================= */}
         {/* PREVIEW */}
@@ -220,7 +220,7 @@ export function WrappedGenerator({
 
         <div
           ref={previewContainerRef}
-          className="relative flex min-w-0 flex-col overflow-hidden bg-white scroll-mt-4"
+          className="relative flex min-w-0 flex-col overflow-hidden bg-transparent scroll-mt-4"
         >
           <div className="relative flex min-h-0 flex-1 flex-col">
             <div className="min-h-0 flex-1 overflow-auto [scrollbar-width:thin] [scrollbar-color:rgba(163,163,163,0.35)_transparent]">
@@ -232,21 +232,14 @@ export function WrappedGenerator({
               >
                 {isLoading ? (
                   <div
-                    className="flex shrink-0 items-center justify-center rounded-[2rem] border border-black/[0.05] bg-white shadow-[0_30px_70px_-35px_rgba(0,0,0,0.25)]"
+                    className="flex shrink-0 items-center justify-center rounded-[2rem] bg-subprimary"
                     style={{
                       width: `${540 * previewScale}px`,
                       height: `${960 * previewScale}px`,
                     }}
                   >
                     <div className="text-center">
-                      <div className="mx-auto flex size-10 items-center justify-center rounded-2xl border border-black/[0.05] bg-neutral-50">
-                        <Sparkles
-                          size={15}
-                          className="animate-pulse text-neutral-400"
-                        />
-                      </div>
-
-                      <p className="mt-4 text-xs text-neutral-400">
+                      <p className="mt-4 text-xs text-description">
                         Preparing your story...
                       </p>
                     </div>
@@ -293,19 +286,18 @@ export function WrappedGenerator({
         {/* CONTROLS */}
         {/* ================================================= */}
 
-        <div className="flex min-h-0 flex-col border-t border-black/[0.05] bg-white lg:border-l lg:border-t-0">
-          <div className="border-b border-black/[0.05] px-6 pb-5 pt-6 sm:px-7 sm:pt-7">
-            <h2 className="mt-3 text-xl font-semibold tracking-[-0.045em] text-neutral-900">
+        <div className="flex min-h-0 flex-col">
+          <div className="border-b border-black/[0.05] pb-5 pt-6 sm:px-7 sm:pt-7">
+            <h2 className="mt-3 text-xl font-semibold tracking-[-0.045em] text-secondary">
               Make it yours.
             </h2>
 
-            <p className="mt-1.5 max-w-sm text-xs leading-5 text-neutral-400">
-              Choose the look and moments you want
-              to keep in your wrapped.
+            <p className="mt-1.5 max-w-sm text-xs leading-5 text-description">
+              pilih tampilan dan momen yang ingin ditampilkan didalam wrapped.
             </p>
           </div>
 
-          <div className="min-h-0 flex-1 overflow-y-auto px-6 py-6 sm:px-7 [scrollbar-width:thin] [scrollbar-color:rgba(163,163,163,0.25)_transparent]">
+          <div className="min-h-0 flex-1 overflow-y-auto [scrollbar-width:thin] [scrollbar-color:rgba(163,163,163,0.25)_transparent]">
             <WrappedPreferencePicker
               relationshipId={relationshipId}
               onTemplateSelect={scrollToPreview}
@@ -313,7 +305,7 @@ export function WrappedGenerator({
             />
           </div>
 
-          <div className="shrink-0 border-t border-black/[0.05] bg-[#fafaf9] px-6 py-5 sm:px-7">
+          <div className="shrink-0 border-t border-secondary/30 bg-transparent px-6 py-5 sm:px-7">
             <div className="grid grid-cols-2 gap-2.5">
               <button
                 type="button"
@@ -322,7 +314,7 @@ export function WrappedGenerator({
                   isGenerating ||
                   isLoading
                 }
-                className="flex h-11 items-center justify-center gap-2 rounded-full border border-black/[0.07] bg-white text-xs font-medium text-neutral-700 shadow-sm transition hover:bg-neutral-50 hover:text-neutral-900 disabled:cursor-not-allowed disabled:opacity-40"
+                className="flex h-11 items-center justify-center gap-2 rounded-full border border-black/[0.07] bg-subprimary text-sm font-medium text-secondary shadow-sm transition  disabled:cursor-not-allowed disabled:opacity-40"
               >
                 <Download size={14} />
 
@@ -338,7 +330,7 @@ export function WrappedGenerator({
                   isGenerating ||
                   isLoading
                 }
-                className="flex h-11 items-center justify-center gap-2 rounded-full bg-neutral-800 text-xs font-medium text-white shadow-[0_10px_30px_-15px_rgba(0,0,0,0.5)] transition hover:bg-neutral-800 disabled:cursor-not-allowed disabled:opacity-40"
+                className="flex h-11 items-center justify-center gap-2 rounded-full bg-black text-sm font-medium text-white shadow-[0_10px_30px_-15px_rgba(0,0,0,0.5)] transition disabled:cursor-not-allowed disabled:opacity-40"
               >
                 <Share2 size={14} />
 

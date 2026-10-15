@@ -304,20 +304,20 @@ export function WrappedPreferencePicker({
       {/* LEFT — TEMPLATE */}
       {/* ================================================= */}
 
-      <section className="min-w-0 lg:border-r lg:border-black/[0.05] lg:pr-7">
+      <section className="min-w-0 lg:border-r lg:border-white/[0.05] lg:pr-7">
         <div className="flex items-end justify-between gap-4">
           <div>
-            <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-neutral-300">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-secondary">
               Appearance
             </p>
 
-            <h3 className="mt-1 text-sm font-semibold tracking-[-0.025em] text-neutral-900">
-              Choose your style
+            <h3 className="mt-1 text-xs font-semibold tracking-[-0.025em] text-description">
+              Pilih template kamu
             </h3>
           </div>
 
           {isPending && (
-            <span className="text-[10px] font-medium text-neutral-400">
+            <span className="text-[10px] font-medium text-description">
               Saving...
             </span>
           )}
@@ -347,9 +347,9 @@ export function WrappedPreferencePicker({
                       template.id,
                     )
                   }
-                  className={`group relative flex w-full items-center gap-3.5 rounded-2xl border px-3.5 py-3 text-left transition-all duration-200 ${isSelected
-                      ? "border-black/[0.10] bg-neutral-50"
-                      : "border-black/[0.05] bg-white hover:border-black/[0.09] hover:bg-neutral-50/70"
+                  className={`group relative flex w-full items-center gap-3.5 rounded-2xl border border-subprimary px-3.5 py-3 text-left transition-all duration-200 ${isSelected
+                    ? "border-black/[0.10] bg-black"
+                    : "border-black/[0.05] bg-subprimary"
                     } ${isLocked
                       ? "cursor-not-allowed opacity-55"
                       : ""
@@ -362,12 +362,12 @@ export function WrappedPreferencePicker({
 
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2">
-                      <span className="text-xs font-semibold text-neutral-800">
+                      <span className="text-xs font-semibold text-secondary">
                         {template.name}
                       </span>
 
                       {template.minPlan !== "free" && (
-                        <span className="rounded-full border border-pink-100 bg-pink-50 px-1.5 py-0.5 text-[8px] font-semibold uppercase tracking-[0.08em] text-pink-500">
+                        <span className="rounded-full border border-description bg-black px-1.5 py-0.5 text-[8px] font-semibold uppercase tracking-[0.08em] text-pink-200">
                           {template.minPlan === "plus"
                             ? "Plus"
                             : "Pro"}
@@ -375,15 +375,15 @@ export function WrappedPreferencePicker({
                       )}
                     </div>
 
-                    <p className="mt-0.5 truncate text-[10px] leading-4 text-neutral-400">
+                    <p className="mt-0.5 truncate text-[10px] leading-4 text-secondary/60">
                       {template.description}
                     </p>
                   </div>
 
                   <div
                     className={`flex size-6 shrink-0 items-center justify-center rounded-full border transition ${isSelected
-                        ? "border-neutral-900 bg-neutral-900 text-white"
-                        : "border-black/[0.07] bg-white text-transparent"
+                      ? "border-neutral-900 bg-neutral-900 text-white"
+                      : "border-secondary/30 bg-black text-transparent"
                       }`}
                   >
                     {isLocked ? (
@@ -412,7 +412,7 @@ export function WrappedPreferencePicker({
                 handlePreviousTemplatePage
               }
               disabled={templatePage === 0}
-              className="flex size-8 items-center justify-center rounded-full border border-black/20 bg-white text-neutral-800 transition hover:bg-neutral-50 disabled:cursor-not-allowed disabled:opacity-30"
+              className="flex size-8 items-center justify-center rounded-full border border-secondary/20 bg-subprimary text-secondary transition hover:bg-neutral-50 disabled:cursor-not-allowed disabled:opacity-30"
               aria-label="Previous templates"
             >
               <ChevronLeft size={14} />
@@ -431,8 +431,8 @@ export function WrappedPreferencePicker({
                   aria-label={`Go to template page ${index + 1
                     }`}
                   className={`size-1.5 rounded-full transition-all ${templatePage === index
-                      ? "w-4 bg-neutral-900"
-                      : "bg-neutral-200 hover:bg-neutral-300"
+                    ? "w-4 bg-neutral-900"
+                    : "bg-neutral-200 hover:bg-neutral-300"
                     }`}
                 />
               ))}
@@ -447,7 +447,7 @@ export function WrappedPreferencePicker({
                 templatePage ===
                 totalTemplatePages - 1
               }
-              className="flex size-8 items-center justify-center rounded-full border border-black/20 bg-white text-neutral-800 transition hover:bg-neutral-50 disabled:cursor-not-allowed disabled:opacity-30"
+              className="flex size-8 items-center justify-center rounded-full border border-secondary/20 bg-subprimary text-secondary transition hover:bg-neutral-50 disabled:cursor-not-allowed disabled:opacity-30"
               aria-label="Next templates"
             >
               <ChevronRight size={14} />
@@ -456,7 +456,7 @@ export function WrappedPreferencePicker({
         )}
 
         {totalTemplatePages > 1 && (
-          <p className="mt-2 text-center text-[9px] font-medium text-neutral-300">
+          <p className="mt-2 text-center text-[9px] font-medium text-secondary/40">
             {templatePage + 1} /{" "}
             {totalTemplatePages}
           </p>
@@ -470,16 +470,16 @@ export function WrappedPreferencePicker({
       <div className="min-w-0 lg:pl-7">
         <section>
           <div>
-            <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-neutral-300">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-secondary">
               Your story
             </p>
 
-            <h3 className="mt-1 text-sm font-semibold tracking-[-0.025em] text-neutral-900">
-              Choose what stays in it
-            </h3>
+            <h3 className="mt-1 text-xs font-semibold tracking-[-0.025em] text-description">
+              Pilih apa yang mau ditampilkan
+            </h3> 
           </div>
 
-          <div className="mt-4 overflow-hidden rounded-2xl border border-black/[0.05]">
+          <div className="mt-4 overflow-hidden rounded-2xl border border-secondary/[0.05]">
             {sections.map(
               (item, index) => (
                 <PreferenceRow
@@ -502,24 +502,23 @@ export function WrappedPreferencePicker({
             )}
           </div>
 
-          <p className="mt-2.5 text-[10px] leading-4 text-neutral-400">
-            Your total LDR days always
-            remain visible as the main story.
+          <p className="mt-2.5 text-[10px] leading-4 text-secondary/60">
+            Total hari hubungan kalian akan selalu terlihat di wrapped.
           </p>
         </section>
 
-                {/* ================================================= */}
+        {/* ================================================= */}
         {/* SCREEN TIME ICON */}
         {/* ================================================= */}
 
         {showScreenTime && screenTimeSummary && (
           <section className="mt-7 border-t border-black/[0.05] pt-6">
             <div>
-              <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-neutral-300">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-secondary">
                 Screen time
               </p>
 
-              <h3 className="mt-1 text-sm font-semibold tracking-[-0.025em] text-neutral-900">
+              <h3 className="mt-1 text-xs font-semibold tracking-[-0.025em] text-description">
                 Customize your icon
               </h3>
             </div>
@@ -540,18 +539,17 @@ export function WrappedPreferencePicker({
         {templateId === "bold" && (
           <section className="mt-7 border-t border-black/[0.05] pt-6">
             <div className="flex items-start gap-3">
-              <div className="flex size-9 shrink-0 items-center justify-center rounded-xl border border-black/[0.05] bg-neutral-50 text-neutral-500">
+              <div className="flex size-9 shrink-0 items-center justify-center rounded-xl border border-black/[0.05] bg-subprimary text-secondary/50">
                 <Palette size={15} />
               </div>
 
               <div>
-                <p className="text-sm font-semibold tracking-[-0.025em] text-neutral-900">
+                <p className="text-sm font-semibold tracking-[-0.025em] text-secondary">
                   Custom colors
                 </p>
 
-                <p className="mt-0.5 text-[10px] leading-4 text-neutral-400">
-                  Personalize the gradient of
-                  your Bold wrapped.
+                <p className="mt-0.5 text-xs leading-4 text-secondary/40">
+                  Personalisasi warna gradient didalam wrapped card
                 </p>
               </div>
             </div>
@@ -582,7 +580,7 @@ export function WrappedPreferencePicker({
                     handleApplyCustomColor
                   }
                   disabled={isPending}
-                  className="mt-3 flex h-11 w-full items-center justify-center gap-2 rounded-full bg-neutral-800 text-xs font-medium text-white transition hover:bg-neutral-800 disabled:opacity-40"
+                  className="mt-3 flex h-11 w-full items-center justify-center gap-2 rounded-full bg-subprimary text-sm font-medium text-secondary transition hover:opacity-40 disabled:opacity-40"
                 >
                   <span>
                     {isPending
@@ -596,18 +594,18 @@ export function WrappedPreferencePicker({
                 </button>
               </div>
             ) : (
-              <div className="mt-4 rounded-2xl border border-black/[0.05] bg-[#fafaf9] p-4">
+              <div className="mt-4 rounded-2xl border border-black/[0.05] bg-subprimary p-4">
                 <div className="flex items-start gap-3">
-                  <div className="flex size-8 shrink-0 items-center justify-center rounded-xl bg-neutral-900 text-white">
+                  <div className="flex size-8 shrink-0 items-center justify-center rounded-xl bg-black text-secondary/80">
                     <Lock size={12} />
                   </div>
 
                   <div>
-                    <p className="text-xs font-semibold text-neutral-800">
+                    <p className="text-xs font-semibold text-secondary">
                       Plus customization
                     </p>
 
-                    <p className="mt-1 text-[10px] leading-4 text-neutral-400">
+                    <p className="mt-1 text-[10px] leading-4 text-secondary/40">
                       Custom colors are available
                       starting from the Duora Plus plan.
                     </p>
@@ -637,8 +635,8 @@ function TemplatePreview({
     return (
       <div
         className={`relative flex h-14 w-10 shrink-0 overflow-hidden rounded-lg border ${selected
-            ? "border-black/[0.10]"
-            : "border-black/[0.06]"
+          ? "border-black/[0.10]"
+          : "border-black/[0.06]"
           } bg-neutral-900`}
       >
         <div className="absolute -right-4 -top-4 size-10 rounded-full bg-pink-500/30 blur-md" />
@@ -660,8 +658,8 @@ function TemplatePreview({
     return (
       <div
         className={`relative flex h-14 w-10 shrink-0 overflow-hidden rounded-lg border ${selected
-            ? "border-black/[0.14]"
-            : "border-black/[0.06]"
+          ? "border-black/[0.14]"
+          : "border-black/[0.06]"
           } bg-[#11110f]`}
       >
         <div className="absolute -right-4 -top-4 size-9 rounded-full bg-[#b69b79]/20 blur-md" />
@@ -683,8 +681,8 @@ function TemplatePreview({
     return (
       <div
         className={`relative flex h-14 w-10 shrink-0 overflow-hidden rounded-lg border ${selected
-            ? "border-[#d99aad]/40"
-            : "border-black/[0.06]"
+          ? "border-[#d99aad]/40"
+          : "border-black/[0.06]"
           } bg-[#fbf7f6]`}
       >
         <div className="absolute -left-3 -top-3 size-9 rounded-full bg-[#efc8d4]/70 blur-md" />
@@ -708,8 +706,8 @@ function TemplatePreview({
     return (
       <div
         className={`relative flex h-14 w-10 shrink-0 overflow-hidden rounded-lg border ${selected
-            ? "border-[#8195ff]/40"
-            : "border-black/[0.06]"
+          ? "border-[#8195ff]/40"
+          : "border-black/[0.06]"
           } bg-[#0b1020]`}
       >
         <div className="absolute -right-4 -top-4 size-10 rounded-full bg-[#7386ff]/25 blur-md" />
@@ -730,8 +728,8 @@ function TemplatePreview({
   return (
     <div
       className={`relative flex h-14 w-10 shrink-0 overflow-hidden rounded-lg border ${selected
-          ? "border-black/[0.10]"
-          : "border-black/[0.06]"
+        ? "border-black/[0.10]"
+        : "border-black/[0.06]"
         } bg-[#f3f1ee]`}
     >
       <div className="absolute -right-3 -top-3 size-8 rounded-full bg-pink-200/60 blur-md" />
@@ -770,17 +768,17 @@ function PreferenceRow({
 }) {
   return (
     <div
-      className={`flex items-center justify-between gap-4 bg-white px-3.5 py-3 transition hover:bg-neutral-50 ${!first
-          ? "border-t border-black/[0.045]"
-          : ""
+      className={`flex items-center justify-between gap-4 bg-subprimary px-3.5 py-3 transition hover:bg-neutral-50 ${!first
+        ? "border-t border-black/[0.045]"
+        : ""
         }`}
     >
       <div className="min-w-0">
-        <p className="text-xs font-medium text-neutral-700">
+        <p className="text-xs font-medium text-secondary">
           {label}
         </p>
 
-        <p className="mt-0.5 truncate text-[9px] text-neutral-400">
+        <p className="mt-0.5 truncate text-[9px] text-secondary/40">
           {description}
         </p>
       </div>
@@ -792,8 +790,8 @@ function PreferenceRow({
         disabled={disabled}
         onClick={() => onChange(!checked)}
         className={`relative flex h-5 w-9 shrink-0 items-center rounded-full p-0.5 transition-colors duration-200 ${checked
-            ? "bg-neutral-900"
-            : "bg-neutral-200"
+          ? "bg-black"
+          : "bg-neutral-400"
           } ${disabled
             ? "cursor-not-allowed opacity-50"
             : "cursor-pointer"
@@ -801,8 +799,8 @@ function PreferenceRow({
       >
         <span
           className={`block size-4 rounded-full bg-white shadow-[0_1px_4px_rgba(0,0,0,0.2)] transition-transform duration-200 ease-out ${checked
-              ? "translate-x-4"
-              : "translate-x-0"
+            ? "translate-x-4"
+            : "translate-x-0"
             }`}
         />
       </button>
@@ -825,11 +823,11 @@ function ColorInput({
 }) {
   return (
     <label className="block">
-      <span className="mb-1.5 block text-[9px] font-semibold uppercase tracking-[0.12em] text-neutral-400">
+      <span className="mb-1.5 block text-[9px] font-semibold uppercase tracking-[0.12em] text-secondary/60">
         {label}
       </span>
 
-      <div className="flex h-10 items-center gap-2 rounded-xl border border-black/[0.06] bg-neutral-50 px-2">
+      <div className="flex h-10 items-center gap-2 rounded-xl border border-black/[0.06] bg-primary px-2">
         <input
           type="color"
           value={value}
@@ -839,7 +837,7 @@ function ColorInput({
           className="size-6 cursor-pointer overflow-hidden rounded-lg border-0 bg-transparent p-0"
         />
 
-        <span className="font-mono text-[10px] uppercase text-neutral-500">
+        <span className="font-mono text-[10px] uppercase text-secondary/60">
           {value}
         </span>
       </div>

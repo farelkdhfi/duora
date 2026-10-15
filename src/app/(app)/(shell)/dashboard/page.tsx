@@ -55,7 +55,7 @@ function SectionHeader({
           <Link
             href={href}
             aria-label={linkLabel ?? title}
-            className="flex size-9 shrink-0 items-center justify-center rounded-full border border-neutral-200/5 bg-neutral-800 text-neutral-white transition-all duration-300 hover:bg-neutral-900 hover:text-white"
+            className="flex size-9 shrink-0 items-center justify-center rounded-full border border-neutral-200/5 bg-subprimary text-neutral-white transition-all duration-300 hover:bg-neutral-900 hover:text-white"
           >
             <ArrowUpRight size={14} strokeWidth={2.2} />
           </Link>
@@ -104,15 +104,6 @@ export default function DashboardPage() {
       router.replace('/onboarding')
     }
   }, [hasNoRelationship, router])
-
-  const partnerCheckin =
-    checkins?.find((checkin) => checkin.user_id !== user?.id) ?? null
-
-  const upcomingEvent = events?.find(
-    (event) => event.event_date >= new Date().toISOString().slice(0, 10),
-  )
-
-  const yourCheckin = checkins?.find((checkin) => checkin.user_id === user?.id)
 
   if (isLoading || relationshipLoading) {
     return <DashboardSkeleton />

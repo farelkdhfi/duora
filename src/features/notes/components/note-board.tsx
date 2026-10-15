@@ -35,8 +35,8 @@ function NoteBoardSkeleton() {
             overflow-hidden
             rounded-[1.75rem]
             border
-            border-black/[0.045]
-            bg-white
+            border-white/10
+            bg-primary
             p-5
             shadow-[0_8px_28px_rgba(0,0,0,0.035)]
           `}
@@ -45,23 +45,23 @@ function NoteBoardSkeleton() {
             {/* category + actions */}
 
             <div className="flex items-center justify-between">
-              <div className="h-5 w-16 rounded-full bg-neutral-100" />
+              <div className="h-5 w-16 rounded-full bg-subprimary" />
 
               <div className="flex gap-1.5">
-                <div className="size-6 rounded-full bg-neutral-100" />
-                <div className="size-6 rounded-full bg-neutral-100" />
+                <div className="size-6 rounded-full bg-subprimary" />
+                <div className="size-6 rounded-full bg-subprimary" />
               </div>
             </div>
 
             {/* content */}
 
             <div className="mt-6 space-y-3">
-              <div className="h-4 w-[72%] rounded-lg bg-neutral-100" />
+              <div className="h-4 w-[72%] rounded-lg bg-subprimary" />
 
               <div className="space-y-2">
-                <div className="h-2.5 w-full rounded-full bg-neutral-100" />
-                <div className="h-2.5 w-[86%] rounded-full bg-neutral-100" />
-                <div className="h-2.5 w-[62%] rounded-full bg-neutral-100" />
+                <div className="h-2.5 w-full rounded-full bg-subprimary" />
+                <div className="h-2.5 w-[86%] rounded-full bg-subprimary" />
+                <div className="h-2.5 w-[62%] rounded-full bg-subprimary" />
               </div>
             </div>
 
@@ -71,9 +71,9 @@ function NoteBoardSkeleton() {
 
             {/* footer */}
 
-            <div className="mt-8 flex items-center justify-between border-t border-black/[0.035] pt-3">
-              <div className="h-2.5 w-16 rounded-full bg-neutral-100" />
-              <div className="h-2.5 w-12 rounded-full bg-neutral-100" />
+            <div className="mt-8 flex items-center justify-between border-t border-white/10 pt-3">
+              <div className="h-2.5 w-16 rounded-full bg-subprimary" />
+              <div className="h-2.5 w-12 rounded-full bg-subprimary" />
             </div>
           </div>
         </div>
@@ -88,24 +88,24 @@ function NoteBoardSkeleton() {
 
 function NoteEmptyState() {
   return (
-    <div className="rounded-[2rem] border border-black/[0.045] bg-white p-10 text-center shadow-[0_8px_30px_rgba(0,0,0,0.025)]">
-      <div className="relative mx-auto flex size-14 items-center justify-center overflow-hidden rounded-2xl border border-black/[0.04] bg-neutral-50">
-        <div className="absolute -right-5 -top-5 size-12 rounded-full bg-pink-100 blur-2xl" />
+    <div className="rounded-[2rem] border border-white/10 bg-primary p-10 text-center shadow-[0_8px_30px_rgba(0,0,0,0.025)]">
+      <div className="relative mx-auto flex size-14 items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-subprimary">
+        <div className="absolute -right-5 -top-5 size-12 rounded-full bg-pink-500/10 blur-2xl" />
 
-        <div className="absolute -bottom-5 -left-5 size-12 rounded-full bg-blue-100 blur-2xl" />
+        <div className="absolute -bottom-5 -left-5 size-12 rounded-full bg-blue-500/10 blur-2xl" />
 
         <StickyNote
           size={19}
           strokeWidth={1.7}
-          className="relative text-neutral-400"
+          className="relative text-description"
         />
       </div>
 
-      <h3 className="mt-5 text-[13px] font-semibold tracking-[-0.025em] text-neutral-800">
+      <h3 className="mt-5 text-[13px] font-semibold tracking-[-0.025em] text-secondary">
         No notes yet
       </h3>
 
-      <p className="mx-auto mt-2 max-w-[250px] text-[11.5px] leading-5 text-neutral-400">
+      <p className="mx-auto mt-2 max-w-[250px] text-[11.5px] leading-5 text-description">
         Save ideas, plans, reminders, or little messages
         for your partner.
       </p>
@@ -168,8 +168,8 @@ export default function NoteBoard({
 
   if (error) {
     return (
-      <div className="rounded-[2rem] border border-black/[0.045] bg-white px-6 py-12 text-center shadow-[0_8px_30px_rgba(0,0,0,0.025)]">
-        <p className="text-[12px] leading-5 text-neutral-400">
+      <div className="rounded-[2rem] border border-white/10 bg-primary px-6 py-12 text-center shadow-[0_8px_30px_rgba(0,0,0,0.025)]">
+        <p className="text-[12px] leading-5 text-description">
           {error.message}
         </p>
       </div>
@@ -184,23 +184,23 @@ export default function NoteBoard({
 
       <div className="mb-5">
         {showCreate ? (
-          <div className="relative overflow-hidden rounded-[1.75rem] border border-black/[0.055] bg-white shadow-[0_12px_35px_rgba(0,0,0,0.055)]">
+          <div className="relative overflow-hidden rounded-[1.75rem] border border-white/10 bg-primary shadow-[0_12px_35px_rgba(0,0,0,0.055)]">
             {/* ambient */}
 
-            <div className="pointer-events-none absolute -right-16 -top-16 size-36 rounded-full bg-pink-100/60 blur-[70px]" />
+            <div className="pointer-events-none absolute -right-16 -top-16 size-36 rounded-full bg-pink-500/10 blur-[70px]" />
 
-            <div className="pointer-events-none absolute -bottom-16 -left-16 size-36 rounded-full bg-blue-100/50 blur-[70px]" />
+            <div className="pointer-events-none absolute -bottom-16 -left-16 size-36 rounded-full bg-blue-500/10 blur-[70px]" />
 
             <div className="relative p-5 sm:p-6">
               {/* header */}
 
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-neutral-300">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-description">
                     New note
                   </p>
 
-                  <h3 className="mt-1 text-[14px] font-semibold tracking-[-0.025em] text-neutral-900">
+                  <h3 className="mt-1 text-[14px] font-semibold tracking-[-0.025em] text-secondary">
                     Write something
                   </h3>
                 </div>
@@ -215,12 +215,12 @@ export default function NoteBoard({
                     justify-center
                     rounded-full
                     border
-                    border-black/[0.045]
-                    bg-neutral-50
-                    text-neutral-400
+                    border-white/10
+                    bg-subprimary
+                    text-description
                     transition-all
-                    hover:bg-neutral-900
-                    hover:text-white
+                    hover:bg-subprimary
+                    hover:text-secondary
                   "
                 >
                   <X size={14} />
@@ -240,16 +240,16 @@ export default function NoteBoard({
                   mt-5
                   w-full
                   border-b
-                  border-black/[0.07]
+                  border-white/10
                   bg-transparent
                   pb-3
                   text-[16px]
                   font-semibold
                   tracking-[-0.025em]
-                  text-neutral-900
+                  text-secondary
                   outline-none
-                  placeholder:text-neutral-300
-                  focus:border-black/[0.18]
+                  placeholder:text-description
+                  focus:border-white/25
                 "
               />
 
@@ -269,16 +269,16 @@ export default function NoteBoard({
                   bg-transparent
                   text-[13px]
                   leading-6
-                  text-neutral-600
+                  text-description
                   outline-none
-                  placeholder:text-neutral-300
+                  placeholder:text-description
                 "
               />
 
               {/* category */}
 
               <div className="mt-2 flex items-center gap-2">
-                <span className="text-[10px] font-medium text-neutral-300">
+                <span className="text-[10px] font-medium text-description">
                   #
                 </span>
 
@@ -292,17 +292,17 @@ export default function NoteBoard({
                     flex-1
                     bg-transparent
                     text-[11px]
-                    text-neutral-500
+                    text-description
                     outline-none
-                    placeholder:text-neutral-300
+                    placeholder:text-description
                   "
                 />
               </div>
 
               {/* footer */}
 
-              <div className="mt-5 flex items-center justify-between border-t border-black/[0.04] pt-4">
-                <p className="text-[10px] text-neutral-300">
+              <div className="mt-5 flex items-center justify-between border-t border-white/10 pt-4">
+                <p className="text-[10px] text-description">
                   This note will be saved for both of you.
                 </p>
 
@@ -318,15 +318,15 @@ export default function NoteBoard({
                     items-center
                     gap-1.5
                     rounded-full
-                    bg-neutral-900
+                    bg-subprimary
                     px-5
                     py-2.5
                     text-[11px]
                     font-semibold
-                    text-white
+                    text-secondary
                     shadow-[0_5px_16px_rgba(0,0,0,0.12)]
                     transition-all
-                    hover:bg-black
+                    hover:bg-subprimary
                     active:scale-[0.98]
                     disabled:opacity-40
                   "
@@ -360,21 +360,21 @@ export default function NoteBoard({
               rounded-[1.5rem]
               border
               border-dashed
-              border-black/[0.075]
-              bg-white/70
+              border-white/10
+              bg-primary
               py-5
               text-[12px]
               font-medium
-              text-neutral-400
+              text-description
               transition-all
               duration-300
-              hover:border-black/[0.13]
-              hover:bg-white
-              hover:text-neutral-700
+              hover:border-white/20
+              hover:bg-subprimary
+              hover:text-secondary
               hover:shadow-[0_8px_25px_rgba(0,0,0,0.035)]
             "
           >
-            <span className="flex size-6 items-center justify-center rounded-full bg-neutral-100 transition-colors group-hover:bg-neutral-900 group-hover:text-white">
+            <span className="flex size-6 items-center justify-center rounded-full bg-subprimary transition-colors group-hover:bg-subprimary group-hover:text-secondary">
               <Plus size={13} strokeWidth={2} />
             </span>
 

@@ -149,27 +149,27 @@ export function CountdownCard({
     ];
 
     return (
-        <article className="relative mx-auto flex h-full min-h-[calc(100svh-180px)] w-full max-w-5xl flex-col overflow-hidden rounded-[2rem] border border-neutral-200/80 bg-white shadow-[0_30px_100px_-45px_rgba(0,0,0,0.28)] sm:min-h-[calc(100svh-185px)] sm:rounded-[2.75rem]">
+        <article className="relative mx-auto flex h-full min-h-[calc(100svh-180px)] w-full max-w-5xl flex-col overflow-hidden rounded-[2rem] border border-white/10 bg-primary shadow-[0_30px_100px_-45px_rgba(0,0,0,0.28)] sm:min-h-[calc(100svh-185px)] sm:rounded-[2.75rem]">
             {/* Ambient gradients */}
             <div className="pointer-events-none absolute inset-0 overflow-hidden">
-                <div className="absolute -right-40 -top-40 size-[30rem] rounded-full bg-blue-100/35 blur-[100px]" />
-                <div className="absolute -left-40 bottom-[-8rem] size-[28rem] rounded-full bg-pink-100/35 blur-[100px]" />
-                <div className="absolute left-1/2 top-1/2 size-[24rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-purple-50/30 blur-[110px]" />
+                <div className="absolute -right-40 -top-40 size-[30rem] rounded-full bg-blue-500/10 blur-[100px]" />
+                <div className="absolute -left-40 bottom-[-8rem] size-[28rem] rounded-full bg-pink-500/10 blur-[100px]" />
+                <div className="absolute left-1/2 top-1/2 size-[24rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-purple-500/10 blur-[110px]" />
             </div>
 
             {/* Top bar */}
             <div className="relative z-10 flex items-start justify-between px-5 py-5 sm:px-8 sm:py-7">
                 <div className="min-w-0 max-w-[70%]">
-                    <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-neutral-300">
+                    <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-description">
                         Your next moment
                     </p>
 
-                    <h2 className="mt-2 truncate text-lg font-semibold tracking-[-0.04em] text-neutral-800 sm:text-xl">
+                    <h2 className="mt-2 truncate text-lg font-semibold tracking-[-0.04em] text-secondary sm:text-xl">
                         {countdown.title}
                     </h2>
 
                     {countdown.location && (
-                        <div className="mt-1.5 flex items-center gap-1.5 text-[11px] text-neutral-400">
+                        <div className="mt-1.5 flex items-center gap-1.5 text-[11px] text-description">
                             <MapPin
                                 size={11}
                                 strokeWidth={1.8}
@@ -188,7 +188,7 @@ export function CountdownCard({
                         onClick={() =>
                             setIsMenuOpen((prev) => !prev)
                         }
-                        className="flex size-9 items-center justify-center rounded-full border border-neutral-200 bg-white/80 text-neutral-400 shadow-sm backdrop-blur transition hover:bg-white hover:text-neutral-700"
+                        className="flex size-9 items-center justify-center rounded-full border border-white/10 bg-subprimary text-description shadow-sm backdrop-blur transition hover:bg-subprimary hover:text-secondary"
                         aria-label="Menu countdown"
                     >
                         <MoreHorizontal
@@ -198,7 +198,7 @@ export function CountdownCard({
                     </button>
 
                     {isMenuOpen && (
-                        <div className="absolute right-0 top-11 z-30 w-36 overflow-hidden rounded-2xl border border-neutral-100 bg-white p-1.5 shadow-[0_20px_50px_-20px_rgba(0,0,0,0.25)]">
+                        <div className="absolute right-0 top-11 z-30 w-36 overflow-hidden rounded-2xl border border-white/10 bg-subprimary p-1.5 shadow-[0_20px_50px_-20px_rgba(0,0,0,0.25)]">
                             <button
                                 type="button"
                                 onClick={() => {
@@ -207,7 +207,7 @@ export function CountdownCard({
                                     );
                                     setIsMenuOpen(false);
                                 }}
-                                className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-left text-xs font-medium text-neutral-500 transition hover:bg-red-50 hover:text-red-500"
+                                className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-left text-xs font-medium text-description transition hover:bg-red-500/10 hover:text-red-500"
                             >
                                 <Trash2
                                     size={13}
@@ -225,7 +225,7 @@ export function CountdownCard({
             <div className="relative z-10 flex flex-1 flex-col justify-center px-5 pb-5 sm:px-10 sm:pb-8">
                 {countdown.is_completed ? (
                     <div className="mx-auto w-full max-w-2xl text-center">
-                        <div className="mx-auto flex size-20 items-center justify-center rounded-full border border-emerald-100 bg-emerald-50 shadow-sm">
+                        <div className="mx-auto flex size-20 items-center justify-center rounded-full border border-emerald-500/20 bg-emerald-500/10 shadow-sm">
                             <Check
                                 size={29}
                                 strokeWidth={1.8}
@@ -237,17 +237,17 @@ export function CountdownCard({
                             Moment completed
                         </p>
 
-                        <h3 className="mt-2 text-3xl font-semibold tracking-[-0.06em] text-neutral-800 sm:text-5xl">
+                        <h3 className="mt-2 text-3xl font-semibold tracking-[-0.06em] text-secondary sm:text-5xl">
                             Sudah ketemu
                         </h3>
 
-                        <p className="mx-auto mt-4 max-w-sm text-sm leading-6 text-neutral-400">
+                        <p className="mx-auto mt-4 max-w-sm text-sm leading-6 text-description">
                             Another moment to remember.
                         </p>
                     </div>
                 ) : timeLeft.isPast ? (
                     <div className="mx-auto w-full max-w-2xl text-center">
-                        <div className="mx-auto flex size-20 items-center justify-center rounded-full border border-pink-100 bg-gradient-to-br from-pink-50 to-purple-50">
+                        <div className="mx-auto flex size-20 items-center justify-center rounded-full border border-pink-500/20 bg-gradient-to-br from-pink-500/10 to-purple-500/10">
                             <Sparkles
                                 size={27}
                                 strokeWidth={1.7}
@@ -259,11 +259,11 @@ export function CountdownCard({
                             The moment is here
                         </p>
 
-                        <h3 className="mt-2 text-3xl font-semibold tracking-[-0.06em] text-neutral-800 sm:text-5xl">
+                        <h3 className="mt-2 text-3xl font-semibold tracking-[-0.06em] text-secondary sm:text-5xl">
                             Hari yang ditunggu tiba
                         </h3>
 
-                        <p className="mx-auto mt-4 max-w-sm text-sm leading-6 text-neutral-400">
+                        <p className="mx-auto mt-4 max-w-sm text-sm leading-6 text-description">
                             Saatnya menandai momen ini.
                         </p>
 
@@ -272,7 +272,7 @@ export function CountdownCard({
                             onClick={() =>
                                 markCompleted(countdown.id)
                             }
-                            className="mt-7 rounded-full bg-neutral-900 px-6 py-3 text-xs font-semibold text-white shadow-lg shadow-neutral-900/10 transition hover:bg-neutral-800 active:scale-[0.98]"
+                            className="mt-7 rounded-full bg-subprimary px-6 py-3 text-xs font-semibold text-secondary shadow-lg shadow-black/10 transition hover:bg-subprimary active:scale-[0.98]"
                         >
                             Tandai Sudah Ketemu
                         </button>
@@ -280,7 +280,7 @@ export function CountdownCard({
                 ) : (
                     <div className="mx-auto w-full max-w-3xl">
                         <div className="text-center">
-                            <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-neutral-300">
+                            <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-description">
                                 Counting down to
                             </p>
 
@@ -290,7 +290,7 @@ export function CountdownCard({
                                         key={item.label}
                                         className="relative flex flex-col items-center"
                                     >
-                                        <p className="font-mono text-[clamp(2.5rem,9vw,6.5rem)] font-medium leading-none tracking-[-0.09em] text-neutral-800">
+                                        <p className="font-mono text-[clamp(2.5rem,9vw,6.5rem)] font-medium leading-none tracking-[-0.09em] text-secondary">
                                             {item.value
                                                 .toString()
                                                 .padStart(
@@ -299,7 +299,7 @@ export function CountdownCard({
                                                 )}
                                         </p>
 
-                                        <p className="mt-3 text-[8px] font-semibold uppercase tracking-[0.18em] text-neutral-300 sm:text-[9px]">
+                                        <p className="mt-3 text-[8px] font-semibold uppercase tracking-[0.18em] text-description sm:text-[9px]">
                                             {item.label}
                                         </p>
                                     </div>
@@ -308,22 +308,22 @@ export function CountdownCard({
                         </div>
 
                         {/* Date */}
-                        <div className="mx-auto mt-10 flex w-fit items-center gap-2 rounded-full border border-neutral-200 bg-white/80 px-4 py-2.5 shadow-sm backdrop-blur">
+                        <div className="mx-auto mt-10 flex w-fit items-center gap-2 rounded-full border border-white/10 bg-subprimary px-4 py-2.5 shadow-sm backdrop-blur">
                             <CalendarDays
                                 size={13}
                                 strokeWidth={1.8}
-                                className="text-neutral-400"
+                                className="text-description"
                             />
 
-                            <span className="text-[10px] font-medium text-neutral-500 sm:text-[11px]">
+                            <span className="text-[10px] font-medium text-description sm:text-[11px]">
                                 {formattedDate}
                             </span>
 
-                            <span className="text-neutral-200">
+                            <span className="text-description">
                                 •
                             </span>
 
-                            <span className="text-[10px] font-medium text-neutral-500 sm:text-[11px]">
+                            <span className="text-[10px] font-medium text-description sm:text-[11px]">
                                 {formattedTime}
                             </span>
                         </div>
@@ -332,8 +332,8 @@ export function CountdownCard({
 
                 {/* Description */}
                 {countdown.description && (
-                    <div className="mx-auto mt-8 max-w-xl border-l border-neutral-200 pl-3">
-                        <p className="text-center text-[11px] leading-5 text-neutral-400 sm:text-xs">
+                    <div className="mx-auto mt-8 max-w-xl border-l border-white/10 pl-3">
+                        <p className="text-center text-[11px] leading-5 text-description sm:text-xs">
                             {countdown.description}
                         </p>
                     </div>
@@ -341,15 +341,15 @@ export function CountdownCard({
             </div>
 
             {/* Bottom meta */}
-            <div className="relative z-10 flex shrink-0 items-center justify-between border-t border-neutral-100/80 px-5 py-4 sm:px-8 sm:py-5">
+            <div className="relative z-10 flex shrink-0 items-center justify-between border-t border-white/10 px-5 py-4 sm:px-8 sm:py-5">
                 <div className="min-w-0">
-                    <p className="text-[8px] font-semibold uppercase tracking-[0.18em] text-neutral-300">
+                    <p className="text-[8px] font-semibold uppercase tracking-[0.18em] text-description">
                         Together
                     </p>
 
-                    <p className="mt-1 truncate text-[10px] text-neutral-400 sm:text-[11px]">
+                    <p className="mt-1 truncate text-[10px] text-description sm:text-[11px]">
                         {nameA}{" "}
-                        <span className="mx-1 text-neutral-200">
+                        <span className="mx-1 text-description">
                             ×
                         </span>{" "}
                         {nameB}

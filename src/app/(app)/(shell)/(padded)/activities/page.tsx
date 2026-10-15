@@ -40,7 +40,7 @@ export default function ActivitiesPage() {
       />
 
       {/* ACTIVITY FEED */}
-      <section className="mt-6 overflow-hidden rounded-[2rem] border border-black/[0.05] bg-white shadow-[0_15px_50px_-30px_rgba(0,0,0,0.15)] sm:mt-8">
+      <section className="mt-6 overflow-hidden rounded-[2rem] border border-black/[0.05] bg-subprimary sm:mt-8">
         <ActivityFeed relationshipId={relationshipId} />
       </section>
     </div>

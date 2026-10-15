@@ -12,9 +12,9 @@ export default function NotesPage() {
     if (isLoading) {
         return (
             <div className="animate-pulse">
-                <div className="h-3 w-24 rounded-full bg-neutral-100" />
-                <div className="mt-3 h-8 w-48 rounded-xl bg-neutral-100" />
-                <div className="mt-6 h-96 rounded-[2rem] bg-neutral-100" />
+                <div className="h-3 w-24 rounded-full bg-subprimary" />
+                <div className="mt-3 h-8 w-48 rounded-xl bg-subprimary" />
+                <div className="mt-6 h-96 rounded-[2rem] bg-subprimary" />
             </div>
         )
     }
@@ -22,7 +22,7 @@ export default function NotesPage() {
     if (!data) {
         return (
             <div className="flex min-h-[50vh] items-center justify-center">
-                <p className="text-sm text-neutral-400">
+                <p className="text-sm text-description">
                     Kamu perlu terhubung dengan pasangan dulu.
                 </p>
             </div>

@@ -83,7 +83,7 @@ export function IconCustomizer({ totalSeconds, theme }: IconCustomizerProps) {
   return (
     <div className="space-y-7">
       {/* Preview: selalu tier kalian saat ini */}
-      <section className="rounded-[1.75rem] border border-black/[0.05] bg-[#fafaf9] px-4 py-6">
+      <section className="rounded-[1.75rem] border border-black/[0.05] bg-primary px-4 py-6">
         <div className="flex flex-col items-center">
           <TierIcon
             level={currentTier.level}
@@ -97,11 +97,11 @@ export function IconCustomizer({ totalSeconds, theme }: IconCustomizerProps) {
             Tier {currentTier.level}
           </p>
 
-          <p className="mt-1 text-lg font-semibold tracking-[-0.04em] text-neutral-900">
+          <p className="mt-1 text-lg font-semibold tracking-[-0.04em] text-secondary">
             {currentTier.name}
           </p>
 
-          <p className="mt-1 text-center text-[10px] leading-4 text-neutral-400">
+          <p className="mt-1 text-center text-xs leading-4 text-description">
             {nextTier && hoursUntilNextTier !== null
               ? `${hoursUntilNextTier.toLocaleString("id-ID", {
                   maximumFractionDigits: 1,
@@ -113,7 +113,7 @@ export function IconCustomizer({ totalSeconds, theme }: IconCustomizerProps) {
 
       {/* Theme */}
       <section>
-        <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-neutral-300">
+        <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-secondary">
           Bentuk
         </p>
 
@@ -130,8 +130,8 @@ export function IconCustomizer({ totalSeconds, theme }: IconCustomizerProps) {
                 aria-pressed={selected}
                 className={`flex flex-col items-center gap-1.5 rounded-2xl border px-2 py-3 transition disabled:opacity-60 ${
                   selected
-                    ? "border-black/[0.12] bg-neutral-50"
-                    : "border-black/[0.05] bg-white hover:bg-neutral-50/70"
+                    ? "border bg-primary"
+                    : "border-black/[0.05] bg-primary opacity-50 hover:bg-neutral-50/70"
                 }`}
               >
                 <TierIcon
@@ -141,7 +141,7 @@ export function IconCustomizer({ totalSeconds, theme }: IconCustomizerProps) {
                   color={style.color}
                 />
 
-                <span className="text-[11px] font-medium text-neutral-700">
+                <span className="text-[11px] font-medium text-secondary/60">
                   {THEME_LABELS[item]}
                 </span>
               </button>
@@ -150,7 +150,7 @@ export function IconCustomizer({ totalSeconds, theme }: IconCustomizerProps) {
         </div>
 
         {saveFailed && (
-          <p className="mt-2 text-[10px] font-medium text-rose-500">
+          <p className="mt-2 text-[10px] font-medium text-rose-300">
             Bentuk belum tersimpan di akun. Tampilan di perangkat ini tetap
             berubah.
           </p>
@@ -170,8 +170,8 @@ export function IconCustomizer({ totalSeconds, theme }: IconCustomizerProps) {
             aria-pressed={style.color === null}
             className={`flex h-8 items-center gap-1.5 rounded-full border px-3 text-[11px] font-medium transition ${
               style.color === null
-                ? "border-neutral-900 bg-neutral-900 text-white"
-                : "border-black/[0.08] bg-white text-neutral-600 hover:bg-neutral-50"
+                ? "border-neutral-900 bg-primary text-secondary"
+                : "border-black/[0.08] bg-primary text-secondary/70 hover:bg-neutral-50"
             }`}
           >
             <span
@@ -221,11 +221,11 @@ export function IconCustomizer({ totalSeconds, theme }: IconCustomizerProps) {
       </section>
 
       {/* Animation */}
-      <section className="flex items-center justify-between gap-4 rounded-2xl border border-black/[0.05] bg-white px-3.5 py-3">
+      <section className="flex items-center justify-between gap-4 rounded-2xl border border-black/[0.05] bg-primary px-3.5 py-3">
         <div className="min-w-0">
-          <p className="text-xs font-medium text-neutral-700">Animasi</p>
+          <p className="text-xs font-medium text-secondary">Animasi</p>
 
-          <p className="mt-0.5 truncate text-[9px] text-neutral-400">
+          <p className="mt-0.5 truncate text-[9px] text-secondary/60">
             Cahaya berdenyut dan kilauan berkelip
           </p>
         </div>
@@ -237,7 +237,7 @@ export function IconCustomizer({ totalSeconds, theme }: IconCustomizerProps) {
           aria-label="Animasi ikon"
           onClick={() => setAnimated(!style.animated)}
           className={`relative flex h-5 w-9 shrink-0 items-center rounded-full p-0.5 transition-colors duration-200 ${
-            style.animated ? "bg-neutral-900" : "bg-neutral-200"
+            style.animated ? "bg-subprimary" : "bg-neutral-500"
           }`}
         >
           <span

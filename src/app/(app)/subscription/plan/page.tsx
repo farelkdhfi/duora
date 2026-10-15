@@ -145,15 +145,15 @@ export default function SubscriptionPlanPage() {
   const isPro = plan.id === "pro";
 
   return (
-    <main className="h-dvh overflow-y-auto overflow-x-hidden bg-[#fafaf9]">
+    <main className="h-dvh overflow-y-auto overflow-x-hidden bg-primary">
       <div className="mx-auto flex min-h-full w-full max-w-[1180px] flex-col px-4 py-4 sm:px-8 sm:py-6 lg:px-10">
         {/* HEADER */}
         <header className="flex shrink-0 items-center justify-between">
           <button
             onClick={() => router.back()}
-            className="group flex items-center gap-2 text-xs font-medium text-neutral-800 transition hover:text-[#171717]"
+            className="group flex items-center gap-2 text-xs font-medium text-secondary transition hover:text-secondary"
           >
-            <span className="flex size-8 items-center justify-center rounded-full border border-black/20 bg-white transition group-hover:border-black/[0.12]">
+            <span className="flex size-8 items-center justify-center rounded-full border border-white/10 bg-subprimary transition group-hover:border-white/20">
               <ArrowLeft size={17} />
             </span>
 
@@ -163,7 +163,7 @@ export default function SubscriptionPlanPage() {
           <div className="flex items-center">
             <Image src={logo} alt="Duora" className="size-5" />
 
-            <span className="text-base font-bold text-[#171717]">
+            <span className="text-base font-bold text-secondary">
               Duora
             </span>
           </div>
@@ -172,30 +172,30 @@ export default function SubscriptionPlanPage() {
         {/* MAIN */}
         <section className="relative flex flex-1 items-center justify-center py-5 sm:py-7 lg:py-8">
           {/* AMBIENT */}
-          <div className="pointer-events-none absolute left-[8%] top-[8%] size-[260px] rounded-full bg-pink-200/25 blur-[110px]" />
+          <div className="pointer-events-none absolute left-[8%] top-[8%] size-[260px] rounded-full bg-pink-500/10 blur-[110px]" />
 
-          <div className="pointer-events-none absolute bottom-[5%] right-[5%] size-[300px] rounded-full bg-blue-200/20 blur-[115px]" />
+          <div className="pointer-events-none absolute bottom-[5%] right-[5%] size-[300px] rounded-full bg-blue-500/10 blur-[115px]" />
 
           <div className="relative flex w-full max-w-[1040px] flex-col">
             {/* TOP COPY */}
             <div className="mb-4 px-1 sm:mb-5">
               <div className="hidden sm:flex items-end justify-between gap-4">
                 <div>
-                  <p className="mb-2 text-[9px] font-semibold uppercase tracking-[0.18em] text-neutral-400">
+                  <p className="mb-2 text-[9px] font-semibold uppercase tracking-[0.18em] text-description">
                     Choose your plan
                   </p>
 
-                  <h1 className="text-2xl font-semibold tracking-[-0.055em] text-[#111] sm:text-3xl">
+                  <h1 className="text-2xl font-semibold tracking-[-0.055em] text-secondary sm:text-3xl">
                     Pick what fits the two of you.
                   </h1>
                 </div>
 
                 <div className="hidden text-right sm:block">
-                  <p className="text-xs text-neutral-400">
+                  <p className="text-xs text-description">
                     Change anytime.
                   </p>
 
-                  <p className="mt-0.5 text-xs text-neutral-400">
+                  <p className="mt-0.5 text-xs text-description">
                     No long-term commitment.
                   </p>
                 </div>
@@ -204,7 +204,7 @@ export default function SubscriptionPlanPage() {
 
             {/* PLAN SELECTOR */}
             <div className="mb-4 sm:mb-5">
-              <div className="w-full rounded-full border border-black/[0.06] bg-white/80 p-1.5 shadow-[0_12px_40px_rgba(0,0,0,0.04)] backdrop-blur-sm sm:w-fit">
+              <div className="w-full rounded-full border border-white/10 bg-primary p-1.5 shadow-[0_12px_40px_rgba(0,0,0,0.04)] backdrop-blur-sm sm:w-fit">
                 <div className="grid grid-cols-3 gap-1 sm:flex sm:min-w-[390px]">
                   {PLANS.map((item, index) => {
                     const selected = activePlan === index;
@@ -222,11 +222,11 @@ export default function SubscriptionPlanPage() {
                         className={`relative flex min-h-[46px] flex-1 items-center justify-center gap-2 rounded-full px-3 py-2 transition-all duration-300 sm:min-h-[48px] sm:px-5 ${
                           selected
                             ? itemIsFree
-                              ? "bg-[#171717] text-white shadow-sm"
+                              ? "bg-subprimary text-secondary shadow-sm"
                               : itemIsPlus
-                                ? "bg-[#f7e9ef] text-[#171717] shadow-sm"
-                                : "bg-[#e8f1fa] text-[#171717] shadow-sm"
-                            : "text-neutral-400 hover:bg-black/[0.025] hover:text-neutral-700"
+                                ? "bg-pink-500/15 text-secondary shadow-sm"
+                                : "bg-blue-500/15 text-secondary shadow-sm"
+                            : "text-description hover:bg-white/5 hover:text-secondary"
                         }`}
                       >
                         <span className="text-sm font-semibold sm:text-sm">
@@ -237,8 +237,8 @@ export default function SubscriptionPlanPage() {
                           <span
                             className={`rounded-full px-1.5 py-0.5 text-[7px] font-semibold uppercase tracking-[0.08em] ${
                               selected
-                                ? "bg-pink-200/60 text-pink-500"
-                                : "bg-pink-50 text-pink-400"
+                                ? "bg-pink-500/20 text-pink-300"
+                                : "bg-pink-500/10 text-pink-400"
                             }`}
                           >
                             Popular
@@ -252,15 +252,15 @@ export default function SubscriptionPlanPage() {
             </div>
 
             {/* PLAN CARD */}
-            <div className="relative overflow-hidden rounded-[1.75rem] border border-black/[0.06] bg-white shadow-[0_30px_100px_rgba(0,0,0,0.07)] sm:rounded-[2rem]">
+            <div className="relative overflow-hidden rounded-[1.75rem] border border-white/10 bg-primary shadow-[0_30px_100px_rgba(0,0,0,0.07)] sm:rounded-[2rem]">
               {/* PLAN AMBIENT */}
               <div
                 className={`pointer-events-none absolute left-[-100px] top-[-100px] size-[320px] rounded-full blur-[110px] ${
                   isFree
-                    ? "bg-neutral-200/35"
+                    ? "bg-white/5"
                     : isPlus
-                      ? "bg-pink-200/40"
-                      : "bg-blue-200/35"
+                      ? "bg-pink-500/10"
+                      : "bg-blue-500/10"
                 }`}
               />
 
@@ -268,24 +268,24 @@ export default function SubscriptionPlanPage() {
                 {/* LEFT */}
                 <div className="flex flex-col p-6 sm:p-8 lg:p-10 xl:p-11">
                   <div className="">
-                    <h2 className="max-w-md text-[2.35rem] font-semibold leading-[0.95] tracking-[-0.065em] text-[#111] sm:text-5xl lg:text-[3.35rem]">
+                    <h2 className="max-w-md text-[2.35rem] font-semibold leading-[0.95] tracking-[-0.065em] text-secondary sm:text-5xl lg:text-[3.35rem]">
                       {plan.title}
                     </h2>
 
-                    <p className="mt-5 max-w-md text-sm leading-6 text-neutral-500">
+                    <p className="mt-5 max-w-md text-sm leading-6 text-description">
                       {plan.description}
                     </p>
                   </div>
 
                   {/* PRICE */}
-                  <div className="mt-8 border-t border-black/[0.06] pt-6">
+                  <div className="mt-8 border-t border-white/10 pt-6">
                     <div className="flex items-end gap-2">
-                      <span className="text-3xl font-semibold text-[#111] sm:text-4xl">
+                      <span className="text-3xl font-semibold text-secondary sm:text-4xl">
                         {plan.price}
                       </span>
 
                       {!isFree && (
-                        <span className="mb-1 text-xs text-neutral-400">
+                        <span className="mb-1 text-xs text-description">
                           / month
                         </span>
                       )}
@@ -293,15 +293,15 @@ export default function SubscriptionPlanPage() {
 
                     {!isFree && (
                       <div className="mt-2 flex items-center gap-2">
-                        <span className="text-xs text-neutral-300 line-through">
+                        <span className="text-xs text-description line-through">
                           {plan.oldPrice}
                         </span>
 
                         <span
                           className={`rounded-full px-2 py-1 text-[8px] font-medium uppercase tracking-[0.08em] ${
                             isPlus
-                              ? "bg-pink-50 text-pink-400"
-                              : "bg-blue-50 text-blue-400"
+                              ? "bg-pink-500/10 text-pink-400"
+                              : "bg-blue-500/10 text-blue-400"
                           }`}
                         >
                           Intro price
@@ -310,7 +310,7 @@ export default function SubscriptionPlanPage() {
                     )}
 
                     {isFree && (
-                      <p className="mt-2 text-xs text-neutral-400">
+                      <p className="mt-2 text-xs text-description">
                         No payment required
                       </p>
                     )}
@@ -318,15 +318,7 @@ export default function SubscriptionPlanPage() {
                 </div>
 
                 {/* RIGHT */}
-                <div
-                  className={`relative m-3 overflow-hidden rounded-[1.4rem] text-white sm:m-4 lg:m-4 lg:ml-0 lg:rounded-[1.65rem] ${
-                    isFree
-                      ? "bg-[#171717]"
-                      : isPlus
-                        ? "bg-[#191719]"
-                        : "bg-[#17191d]"
-                  }`}
-                >
+                <div className="relative m-3 overflow-hidden rounded-[1.4rem] bg-subprimary text-secondary sm:m-4 lg:m-4 lg:ml-0 lg:rounded-[1.65rem]">
                   {/* GLOWS */}
                   <div
                     className={`pointer-events-none absolute right-[-100px] top-[-120px] size-[320px] rounded-full blur-[95px] ${
@@ -357,14 +349,14 @@ export default function SubscriptionPlanPage() {
                             size={14}
                             className={
                               isFree
-                                ? "text-white/50"
+                                ? "text-description"
                                 : isPlus
                                   ? "text-pink-200"
                                   : "text-blue-200"
                             }
                           />
 
-                          <p className="text-[9px] font-medium uppercase tracking-[0.18em] text-white/40">
+                          <p className="text-[9px] font-medium uppercase tracking-[0.18em] text-description">
                             {plan.name}
                           </p>
                         </div>
@@ -387,7 +379,7 @@ export default function SubscriptionPlanPage() {
                           size={13}
                           className={
                             isFree
-                              ? "text-white/50"
+                              ? "text-description"
                               : isPlus
                                 ? "text-pink-200"
                                 : "text-blue-200"
@@ -407,7 +399,7 @@ export default function SubscriptionPlanPage() {
                             <div
                               className={`flex size-6 shrink-0 items-center justify-center rounded-full ${
                                 isFree
-                                  ? "bg-white/5 text-white/50"
+                                  ? "bg-white/5 text-description"
                                   : isPlus
                                     ? "bg-pink-300/10 text-pink-200"
                                     : "bg-blue-300/10 text-blue-200"
@@ -416,7 +408,7 @@ export default function SubscriptionPlanPage() {
                               <Check size={11} strokeWidth={1.8} />
                             </div>
 
-                            <span className="truncate text-xs text-white/80">
+                            <span className="truncate text-xs text-secondary">
                               {label}
                             </span>
                           </div>
@@ -424,7 +416,7 @@ export default function SubscriptionPlanPage() {
                           <span
                             className={`shrink-0 text-[9px] ${
                               isFree
-                                ? "text-white/40"
+                                ? "text-description"
                                 : isPlus
                                   ? "text-pink-200/75"
                                   : "text-blue-200/75"
@@ -444,7 +436,7 @@ export default function SubscriptionPlanPage() {
                     )}
 
                     {/* CTA */}
-                    <div className="mt-7 border-t border-white/[0.08] pt-5 sm:mt-auto sm:pt-7">
+                    <div className="mt-7 border-t border-white/10 pt-5 sm:mt-auto sm:pt-7">
                       {isPlus && !alreadyUsedTrial && (
                         <button
                           onClick={handleStartTrial}
@@ -453,7 +445,7 @@ export default function SubscriptionPlanPage() {
                             isActivating ||
                             isSuccess
                           }
-                          className="mb-3 flex w-full items-center justify-center gap-2 rounded-full border border-white/20 bg-white/[0.05] px-5 py-3.5 text-sm font-medium text-white transition hover:bg-white/[0.1] disabled:cursor-not-allowed disabled:opacity-50"
+                          className="mb-3 flex w-full items-center justify-center gap-2 rounded-full border border-white/20 bg-white/[0.05] px-5 py-3.5 text-sm font-medium text-secondary transition hover:bg-white/[0.1] disabled:cursor-not-allowed disabled:opacity-50"
                         >
                           {isTrialPending ? (
                             <>
@@ -475,7 +467,7 @@ export default function SubscriptionPlanPage() {
                       {isFree ? (
                         <button
                           onClick={() => router.push("/subscription")}
-                          className="group flex w-full items-center justify-center gap-2 rounded-full border border-white/15 bg-white/[0.06] px-5 py-3.5 text-sm font-medium text-white transition hover:-translate-y-0.5 hover:bg-white/[0.1]"
+                          className="group flex w-full items-center justify-center gap-2 rounded-full border border-white/15 bg-white/[0.06] px-5 py-3.5 text-sm font-medium text-secondary transition hover:-translate-y-0.5 hover:bg-white/[0.1]"
                         >
                           Paket Free
                         </button>
@@ -489,7 +481,7 @@ export default function SubscriptionPlanPage() {
                             isTrialPending ||
                             isSuccess
                           }
-                          className="group flex w-full items-center justify-center gap-2 rounded-full bg-white px-5 py-3.5 text-sm font-medium text-black transition hover:-translate-y-0.5 hover:bg-neutral-100 disabled:cursor-not-allowed disabled:opacity-70"
+                          className="group flex w-full items-center justify-center gap-2 rounded-full border border-white/10 bg-primary px-5 py-3.5 text-sm font-medium text-secondary transition hover:-translate-y-0.5 hover:bg-primary disabled:cursor-not-allowed disabled:opacity-70"
                         >
                           {isSuccess ? (
                             <>
@@ -518,7 +510,7 @@ export default function SubscriptionPlanPage() {
             </div>
 
             {/* MOBILE HELPER */}
-            <p className="mt-3 text-center text-[10px] text-neutral-400 sm:hidden">
+            <p className="mt-3 text-center text-[10px] text-description sm:hidden">
               Pilih paket untuk melihat detail dan harga.
             </p>
           </div>

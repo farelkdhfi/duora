@@ -209,7 +209,7 @@ export default function CheckinForm({ relationshipId, date }: CheckinFormProps) 
           )}
 
           <div className="mt-auto">
-            <button type="submit" disabled={mutation.isPending || isLimitReached} className="flex h-13 w-full items-center justify-center rounded-full bg-black px-5 text-sm font-semibold tracking-[-0.01em] text-white shadow-[0_16px_35px_-18px_rgba(0,0,0,0.8)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-neutral-200 active:translate-y-0 disabled:cursor-not-allowed disabled:opacity-50">
+            <button type="submit" disabled={mutation.isPending || isLimitReached} className="flex h-13 w-full items-center justify-center rounded-full bg-subprimary px-5 text-sm font-semibold tracking-[-0.01em] text-secondary shadow-[0_16px_35px_-18px_rgba(0,0,0,0.8)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-neutral-200 active:translate-y-0 disabled:cursor-not-allowed disabled:opacity-50">
               {mutation.isPending ? (
                 <>
                   <span className="mr-2 size-3.5 animate-spin rounded-full border-2 border-neutral-900/30 border-t-neutral-900" />

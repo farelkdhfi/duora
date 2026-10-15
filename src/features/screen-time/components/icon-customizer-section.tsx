@@ -30,7 +30,7 @@ export function IconCustomizerSection({
   const activeTheme = style.theme ?? theme;
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-black/[0.05] bg-white">
+    <div className="overflow-hidden rounded-2xl border border-secondary/[0.05] bg-subprimary">
       <button
         type="button"
         onClick={() => setOpen((value) => !value)}
@@ -45,11 +45,11 @@ export function IconCustomizerSection({
         />
 
         <div className="min-w-0 flex-1">
-          <p className="text-xs font-medium text-neutral-700">
+          <p className="text-xs font-medium text-secondary">
             Screen time icon
           </p>
 
-          <p className="mt-0.5 truncate text-[9px] text-neutral-400">
+          <p className="mt-0.5 truncate text-[9px] text-secondary/50">
             Tier {tier.level} · {tier.name}
           </p>
         </div>

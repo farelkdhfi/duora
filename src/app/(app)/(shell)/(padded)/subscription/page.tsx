@@ -52,8 +52,8 @@ export default function SubscriptionPage() {
 
   if (isLoading) {
     return (
-      <div className="flex min-h-[60vh] items-center justify-center bg-[#fafaf9]">
-        <div className="flex items-center gap-2 text-xs text-neutral-400">
+      <div className="flex min-h-[60vh] items-center justify-center bg-primary">
+        <div className="flex items-center gap-2 text-xs text-description">
           <Loader2 size={14} className="animate-spin" />
           Memuat langganan...
         </div>
@@ -63,17 +63,17 @@ export default function SubscriptionPage() {
 
   if (!subscription) {
     return (
-      <div className="flex min-h-[60vh] items-center justify-center bg-[#fafaf9] px-5">
+      <div className="flex min-h-[60vh] items-center justify-center bg-primary px-5">
         <div className="max-w-sm text-center">
-          <div className="mx-auto flex size-11 items-center justify-center rounded-full border border-black/[0.06] bg-white">
+          <div className="mx-auto flex size-11 items-center justify-center rounded-full border border-white/10 bg-subprimary">
             <HeartPlus size={17} className="text-pink-400" />
           </div>
 
-          <h2 className="mt-5 text-lg font-semibold tracking-[-0.04em] text-[#171717]">
+          <h2 className="mt-5 text-lg font-semibold tracking-[-0.04em] text-secondary">
             Belum terhubung
           </h2>
 
-          <p className="mt-2 text-sm leading-6 text-neutral-400">
+          <p className="mt-2 text-sm leading-6 text-description">
             Hubungkan relationship kamu terlebih dahulu untuk mengelola
             langganan Duora.
           </p>
@@ -152,7 +152,7 @@ export default function SubscriptionPage() {
 
   return (
     <>
-      <main className="min-h-screen bg-[#fafaf9]">
+      <main className="min-h-screen bg-primary">
         <div className="mx-auto">
           {/* HEADER */}
           <Header
@@ -165,10 +165,10 @@ export default function SubscriptionPage() {
             <div
               className={`relative overflow-hidden rounded-[1.75rem] border p-6 sm:p-8 ${
                 nearingExpiry
-                  ? "border-amber-200/80 bg-[#fffaf0]"
+                  ? "border-amber-500/30 bg-amber-500/10"
                   : isPaid
-                    ? "border-white/10 bg-[#171717] text-white"
-                    : "border-black/[0.06] bg-white"
+                    ? "border-white/10 bg-subprimary text-secondary"
+                    : "border-white/10 bg-primary"
               }`}
             >
               {isPaid && !nearingExpiry && (
@@ -179,7 +179,7 @@ export default function SubscriptionPage() {
               )}
 
               {nearingExpiry && (
-                <div className="pointer-events-none absolute -right-24 -top-24 size-64 rounded-full bg-amber-200/30 blur-[80px]" />
+                <div className="pointer-events-none absolute -right-24 -top-24 size-64 rounded-full bg-amber-500/10 blur-[80px]" />
               )}
 
               <div className="relative">
@@ -188,10 +188,10 @@ export default function SubscriptionPage() {
                     <div
                       className={`flex size-10 items-center justify-center rounded-full border ${
                         nearingExpiry
-                          ? "border-amber-200 bg-amber-100 text-amber-500"
+                          ? "border-amber-500/30 bg-amber-500/20 text-amber-400"
                           : isPaid
                             ? "border-white/10 bg-white/[0.06] text-pink-200"
-                            : "border-black/[0.06] bg-neutral-50 text-neutral-400"
+                            : "border-white/10 bg-subprimary text-description"
                       }`}
                     >
                       {nearingExpiry ? (
@@ -211,10 +211,8 @@ export default function SubscriptionPage() {
                       <h2
                         className={`text-sm font-semibold tracking-[-0.055em] sm:text-3xl ${
                           nearingExpiry
-                            ? "text-amber-800"
-                            : isPaid
-                              ? "text-white"
-                              : "text-[#171717]"
+                            ? "text-amber-400"
+                            : "text-secondary"
                         }`}
                       >
                         {trial
@@ -229,10 +227,8 @@ export default function SubscriptionPage() {
                       <p
                         className={`mt-1 text-xs ${
                           nearingExpiry
-                            ? "text-amber-700/60"
-                            : isPaid
-                              ? "text-white/40"
-                              : "text-neutral-400"
+                            ? "text-amber-400/70"
+                            : "text-description"
                         }`}
                       >
                         {trial
@@ -250,7 +246,7 @@ export default function SubscriptionPage() {
                     <span
                       className={`rounded-full px-3 py-1.5 text-[8px] font-medium uppercase tracking-[0.14em] ${
                         nearingExpiry
-                          ? "bg-amber-200 text-amber-700"
+                          ? "bg-amber-500/20 text-amber-400"
                           : "border border-white/10 bg-white/[0.06] text-pink-100"
                       }`}
                     >
@@ -263,10 +259,8 @@ export default function SubscriptionPage() {
                   <div
                     className={`mt-8 flex items-center gap-2.5 border-t pt-5 text-xs ${
                       nearingExpiry
-                        ? "border-amber-200/70 text-amber-700"
-                        : isPaid
-                          ? "border-white/[0.08] text-white/45"
-                          : "border-black/[0.06] text-neutral-400"
+                        ? "border-amber-500/30 text-amber-400"
+                        : "border-white/10 text-description"
                     }`}
                   >
                     <Clock size={14} />
@@ -285,11 +279,7 @@ export default function SubscriptionPage() {
                     ) : (
                       <span>
                         Berakhir pada{" "}
-                        <span
-                          className={
-                            isPaid ? "text-white/70" : "text-neutral-700"
-                          }
-                        >
+                        <span className="text-secondary">
                           {formatDate(expiryDate)}
                         </span>
                       </span>
@@ -304,17 +294,17 @@ export default function SubscriptionPage() {
           <section className="mb-10">
             <div className="mb-3 flex items-end justify-between">
               <div>
-                <span className="text-[9px] font-medium uppercase tracking-[0.2em] text-neutral-400">
+                <span className="text-[9px] font-medium uppercase tracking-[0.2em] text-description">
                   Current access
                 </span>
 
-                <h3 className="mt-2 text-sm font-semibold tracking-[-0.045em] text-[#171717]">
+                <h3 className="mt-2 text-sm font-semibold tracking-[-0.045em] text-secondary">
                   Fitur yang kamu punya
                 </h3>
               </div>
             </div>
 
-            <div className="overflow-hidden rounded-[1.5rem] border border-black/[0.06] bg-white">
+            <div className="overflow-hidden rounded-[1.5rem] border border-white/10 bg-primary">
               {limitItems.map((item, index) => {
                 const Icon = item.icon;
                 const unlimited =
@@ -326,23 +316,23 @@ export default function SubscriptionPage() {
                     key={item.label}
                     className={`flex items-center justify-between gap-5 px-5 py-4.5 sm:px-6 sm:py-5 ${
                       index !== limitItems.length - 1
-                        ? "border-b border-black/[0.05]"
+                        ? "border-b border-white/10"
                         : ""
                     }`}
                   >
                     <div className="flex min-w-0 items-center gap-3">
-                      <div className="flex size-7 shrink-0 items-center justify-center rounded-full bg-neutral-50 text-neutral-400">
+                      <div className="flex size-7 shrink-0 items-center justify-center rounded-full bg-subprimary text-description">
                         <Icon size={13} />
                       </div>
 
-                      <span className="truncate text-xs font-medium text-neutral-700">
+                      <span className="truncate text-xs font-medium text-secondary">
                         {item.label}
                       </span>
                     </div>
 
                     <span
                       className={`shrink-0 text-right text-[11px] font-medium ${
-                        unlimited ? "text-pink-500" : "text-neutral-400"
+                        unlimited ? "text-pink-500" : "text-description"
                       }`}
                     >
                       {item.value}
@@ -356,15 +346,15 @@ export default function SubscriptionPage() {
           {/* TRIAL */}
           <section className="mb-10">
             <div className="mb-3">
-              <span className="text-[9px] font-medium uppercase tracking-[0.2em] text-neutral-400">
+              <span className="text-[9px] font-medium uppercase tracking-[0.2em] text-description">
                 Free experience
               </span>
             </div>
 
-            <div className="rounded-[1.5rem] border border-black/[0.06] bg-white p-5 sm:p-6">
+            <div className="rounded-[1.5rem] border border-white/10 bg-primary p-5 sm:p-6">
               <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex items-start gap-4">
-                  <div className="mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-full bg-pink-50 text-pink-400">
+                  <div className="mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-full bg-pink-500/10 text-pink-400">
                     {subscription.has_used_trial ? (
                       <CheckCircle2 size={15} />
                     ) : (
@@ -373,13 +363,13 @@ export default function SubscriptionPage() {
                   </div>
 
                   <div>
-                    <h3 className="text-sm font-semibold tracking-[-0.035em] text-[#171717]">
+                    <h3 className="text-sm font-semibold tracking-[-0.035em] text-secondary">
                       {subscription.has_used_trial
                         ? "Trial sudah digunakan"
                         : "Coba Duora+ gratis"}
                     </h3>
 
-                    <p className="mt-1.5 max-w-md text-xs leading-5 text-neutral-400">
+                    <p className="mt-1.5 max-w-md text-xs leading-5 text-description">
                       {subscription.has_used_trial
                         ? "Kamu sudah pernah menggunakan trial premium selama 3 hari."
                         : "Nikmati akses Plus selama 3 hari tanpa biaya."}
@@ -391,7 +381,7 @@ export default function SubscriptionPage() {
                   <button
                     onClick={handleStartTrial}
                     disabled={isTrialPending}
-                    className="group flex shrink-0 items-center justify-center gap-2 rounded-full border border-black/[0.08] bg-white px-5 py-2.5 text-sm font-medium text-[#171717] transition hover:border-black/[0.15] hover:bg-neutral-50 disabled:cursor-not-allowed disabled:opacity-50"
+                    className="group flex shrink-0 items-center justify-center gap-2 rounded-full border border-white/10 bg-subprimary px-5 py-2.5 text-sm font-medium text-secondary transition hover:border-white/20 hover:bg-subprimary disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     {isTrialPending ? (
                       <>
@@ -407,7 +397,7 @@ export default function SubscriptionPage() {
                 )}
 
                 {trialSuccess && (
-                  <div className="flex shrink-0 items-center gap-2 text-sm font-medium text-emerald-600">
+                  <div className="flex shrink-0 items-center gap-2 text-sm font-medium text-emerald-500">
                     <CheckCircle2 size={15} />
                     Trial aktif
                   </div>
@@ -415,7 +405,7 @@ export default function SubscriptionPage() {
               </div>
 
               {trialError && (
-                <div className="mt-5 border-t border-black/[0.05] pt-4">
+                <div className="mt-5 border-t border-white/10 pt-4">
                   <p className="text-xs text-rose-500">
                     {trialError.message}
                   </p>
@@ -426,7 +416,7 @@ export default function SubscriptionPage() {
 
           {/* PREMIUM CTA */}
           {(!isPaid || nearingExpiry) && (
-            <section className="relative overflow-hidden rounded-[1.75rem] bg-[#171717] text-white">
+            <section className="relative overflow-hidden rounded-[1.75rem] border border-white/10 bg-primary text-secondary">
               <div className="pointer-events-none absolute -right-24 -top-32 size-80 rounded-full bg-pink-400/10 blur-[100px]" />
               <div className="pointer-events-none absolute -bottom-32 -left-20 size-72 rounded-full bg-blue-400/10 blur-[100px]" />
 
@@ -435,7 +425,7 @@ export default function SubscriptionPage() {
                   <div className="flex items-center gap-2">
                     <Crown size={14} className="text-pink-200" />
 
-                    <span className="text-[9px] font-medium uppercase tracking-[0.22em] text-white/40">
+                    <span className="text-[9px] font-medium uppercase tracking-[0.22em] text-description">
                       Duora plan
                     </span>
                   </div>
@@ -446,7 +436,7 @@ export default function SubscriptionPage() {
                       : "Make more space for your relationship."}
                   </h3>
 
-                  <p className="mt-3 max-w-md text-xs leading-6 text-white/40">
+                  <p className="mt-3 max-w-md text-xs leading-6 text-description">
                     Lebih banyak ruang untuk debate, countdown, check-in, dan
                     momen yang ingin kalian simpan bersama.
                   </p>
@@ -454,7 +444,7 @@ export default function SubscriptionPage() {
                   <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:items-center">
                     <Link
                       href="/subscription/plan"
-                      className="group flex items-center justify-center gap-3 rounded-full bg-white px-5 py-3 text-sm font-medium text-[#171717] transition hover:bg-neutral-100"
+                      className="group flex items-center justify-center gap-3 rounded-full border border-white/10 bg-subprimary px-5 py-3 text-sm font-medium text-secondary transition hover:bg-subprimary"
                     >
                       Lihat Premium
                     </Link>
@@ -467,11 +457,11 @@ export default function SubscriptionPage() {
           {/* FOOTER */}
           {isPaid && !nearingExpiry && (
             <div className="mt-7 flex flex-col gap-2 text-center sm:flex-row sm:items-center sm:justify-between sm:text-left">
-              <p className="text-[9px] text-neutral-400">
+              <p className="text-[9px] text-description">
                 Duora gives you more room for the moments that matter.
               </p>
 
-              <div className="flex items-center justify-center gap-2 text-[8px] uppercase tracking-[0.14em] text-neutral-300">
+              <div className="flex items-center justify-center gap-2 text-[8px] uppercase tracking-[0.14em] text-description">
                 <span className="size-1 rounded-full bg-pink-300" />
                 Private for two
               </div>
