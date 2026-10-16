@@ -27,24 +27,28 @@ interface AiResponseOverlayProps {
 const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1]
 
 const eyebrow =
-  'text-[9px] font-semibold uppercase tracking-[0.24em] text-description'
+  'text-[9px] font-semibold uppercase tracking-[0.24em] text-secondary/60'
 
 /* ===================================================== */
-/* STUDIO BACKDROP (sama dengan debate-intro section 2)  */
+/* STUDIO BACKDROP (dark theme)                          */
 /* ===================================================== */
 
 const HORIZON = 46
 
-/* wall = warna kertas backdrop, shade = versi lebih gelap untuk cove & bayangan */
+/* wall = warna dinding gelap bernuansa persona,
+   shade = warna aksen persona (untuk cove glow, bayangan lantai & radar) */
 const personaTheme: Record<
   AiPersona,
   { wall: string; shade: string }
 > = {
-  formal: { wall: '244, 245, 244', shade: '165, 170, 168' },
-  lembut: { wall: '255, 220, 235', shade: '225, 130, 175' },
-  kasar: { wall: '255, 195, 195', shade: '210, 100, 100' },
-  lebay: { wall: '190, 220, 255', shade: '90, 145, 210' },
+  formal: { wall: '34, 36, 36', shade: '120, 126, 124' },
+  lembut: { wall: '62, 30, 48', shade: '225, 130, 175' },
+  kasar: { wall: '66, 28, 28', shade: '210, 100, 100' },
+  lebay: { wall: '26, 46, 76', shade: '90, 145, 210' },
 }
+
+/* hitam murni untuk semua lapisan yang menggelapkan */
+const DARK = '0, 0, 0'
 
 type Stop = [position: number, alpha: number]
 
@@ -64,17 +68,20 @@ const WALL_TO_FLOOR: Stop[] = [
   [57, 0.32], [67, 0.18], [78, 0.08], [90, 0.02], [100, 0],
 ]
 
+/* atap: gelap di atas, memudar ke bawah */
 const CEILING_FALLOFF: Stop[] = [
-  [0, 0.12], [8, 0.08], [16, 0.045], [26, 0.015], [34, 0],
+  [0, 0.45], [8, 0.32], [16, 0.2], [26, 0.08], [34, 0],
 ]
 
+/* glow tipis aksen persona di garis horizon */
 const COVE: Stop[] = [
-  [-26, 0], [-18, 0.025], [-10, 0.065], [-3, 0.1],
-  [3, 0.11], [10, 0.08], [18, 0.04], [27, 0],
+  [-26, 0], [-18, 0.02], [-10, 0.05], [-3, 0.08],
+  [3, 0.09], [10, 0.06], [18, 0.03], [27, 0],
 ]
 
-const KEY_LIGHT =
-  'radial-gradient(ellipse 72% 42% at 50% 30%, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.34) 28%, rgba(255,255,255,0.15) 55%, rgba(255,255,255,0.04) 80%, rgba(255,255,255,0) 100%)'
+/* pusat panggung: glow lembut warna persona (bukan putih) */
+const keyLight = (shade: string) =>
+  `radial-gradient(ellipse 72% 42% at 50% 30%, ${rgba(shade, 0.16)} 0%, ${rgba(shade, 0.1)} 28%, ${rgba(shade, 0.045)} 55%, ${rgba(shade, 0.012)} 80%, ${rgba(shade, 0)} 100%)`
 
 const buildBackdrop = ({
   wall,
@@ -85,37 +92,39 @@ const buildBackdrop = ({
 }) =>
   [
     vertical(shade, COVE, HORIZON),
-    vertical(shade, CEILING_FALLOFF),
-    KEY_LIGHT,
+    vertical(DARK, CEILING_FALLOFF),
+    keyLight(shade),
     vertical(wall, WALL_TO_FLOOR),
   ].join(', ')
 
+/* "cahaya" dari kiri atas sekarang berupa gradient gelap */
 const SIDE_LIGHT =
-  'linear-gradient(112deg, rgba(255,255,255,0.42) 0%, rgba(255,255,255,0.2) 26%, rgba(255,255,255,0.06) 50%, rgba(255,255,255,0) 68%)'
+  'linear-gradient(112deg, rgba(0,0,0,0.38) 0%, rgba(0,0,0,0.2) 26%, rgba(0,0,0,0.06) 50%, rgba(0,0,0,0) 68%)'
 
 const LIGHT_CONE =
-  'conic-gradient(from 0deg at -10% -16%, rgba(255,255,255,0) 104deg, rgba(255,255,255,0.05) 114deg, rgba(255,255,255,0.13) 124deg, rgba(255,255,255,0.22) 134deg, rgba(255,255,255,0.26) 141deg, rgba(255,255,255,0.21) 149deg, rgba(255,255,255,0.11) 160deg, rgba(255,255,255,0.04) 171deg, rgba(255,255,255,0) 182deg)'
+  'conic-gradient(from 0deg at -10% -16%, rgba(0,0,0,0) 104deg, rgba(0,0,0,0.06) 114deg, rgba(0,0,0,0.15) 124deg, rgba(0,0,0,0.26) 134deg, rgba(0,0,0,0.32) 141deg, rgba(0,0,0,0.25) 149deg, rgba(0,0,0,0.13) 160deg, rgba(0,0,0,0.05) 171deg, rgba(0,0,0,0) 182deg)'
 
 const FADE_BEFORE_FLOOR =
   'linear-gradient(to bottom, #000 0%, #000 40%, transparent 80%)'
 
 const LIGHT_FALLOFF =
-  'linear-gradient(292deg, rgba(24,24,32,0.05) 0%, rgba(24,24,32,0.022) 30%, rgba(24,24,32,0) 55%)'
+  'linear-gradient(292deg, rgba(0,0,0,0.22) 0%, rgba(0,0,0,0.1) 30%, rgba(0,0,0,0) 55%)'
 
 const VIGNETTE =
-  'radial-gradient(ellipse 85% 75% at 50% 44%, rgba(24,24,32,0) 50%, rgba(24,24,32,0.026) 78%, rgba(24,24,32,0.052) 100%)'
+  'radial-gradient(ellipse 85% 75% at 50% 44%, rgba(0,0,0,0) 45%, rgba(0,0,0,0.22) 76%, rgba(0,0,0,0.5) 100%)'
 
 const SOFT_SHADOW =
-  'radial-gradient(ellipse closest-side, rgba(24,24,32,0.075) 0%, rgba(24,24,32,0.04) 45%, rgba(24,24,32,0.012) 78%, rgba(24,24,32,0) 100%)'
+  'radial-gradient(ellipse closest-side, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.2) 45%, rgba(0,0,0,0.06) 78%, rgba(0,0,0,0) 100%)'
 
 const CONTACT_SHADOW =
-  'radial-gradient(ellipse closest-side, rgba(24,24,32,0.15) 0%, rgba(24,24,32,0.07) 48%, rgba(24,24,32,0.015) 80%, rgba(24,24,32,0) 100%)'
+  'radial-gradient(ellipse closest-side, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.32) 48%, rgba(0,0,0,0.07) 80%, rgba(0,0,0,0) 100%)'
 
-/* bayangan berwarna persona di lantai, ikut posisi gambar */
+/* glow berwarna persona di lantai, ikut posisi gambar */
 const floorTint = (shade: string) =>
-  `radial-gradient(ellipse closest-side, ${rgba(shade, 0.22)} 0%, ${rgba(shade, 0.1)} 45%, ${rgba(shade, 0.03)} 78%, ${rgba(shade, 0)} 100%)`
+  `radial-gradient(ellipse closest-side, ${rgba(shade, 0.2)} 0%, ${rgba(shade, 0.09)} 45%, ${rgba(shade, 0.025)} 78%, ${rgba(shade, 0)} 100%)`
 
-const GRAIN = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E")`
+/* grain putih tipis supaya kelihatan di background gelap */
+const GRAIN = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E")`
 
 /* konten yang discroll memudar halus saat lewat di bawah header */
 const TOP_FADE =
@@ -139,7 +148,7 @@ const StudioBackdrop = memo(function StudioBackdrop({
         style={{ background: buildBackdrop(theme) }}
       />
 
-      {/* cahaya studio dari kiri atas */}
+      {/* gradient gelap dari kiri atas (pengganti cahaya studio) */}
       <div
         className="absolute inset-0"
         style={{
@@ -159,7 +168,7 @@ const StudioBackdrop = memo(function StudioBackdrop({
 
       {/* film grain */}
       <div
-        className="absolute inset-0 opacity-[0.05]"
+        className="absolute inset-0 opacity-[0.045]"
         style={{ backgroundImage: GRAIN }}
       />
     </div>
@@ -226,8 +235,8 @@ const RadarRings = memo(function RadarRings({
                 key={index}
                 className="debate-radar-ring absolute inset-0 rounded-full"
                 style={{
-                  backgroundColor: rgba(rgb, 0.3),
-                  border: `1px solid ${rgba(rgb, 0.4)}`,
+                  backgroundColor: rgba(rgb, 0.22),
+                  border: `1px solid ${rgba(rgb, 0.45)}`,
                   animationDuration: `${RADAR_DURATION}s`,
                   /* delay negatif: ring kedua langsung mulai di tengah siklus,
                      jadi jarak antar ring rata sejak detik pertama */
@@ -312,13 +321,13 @@ export default function AiResponseOverlay({
 
         <header className="pointer-events-none absolute inset-x-0 top-0 z-20 flex items-center justify-between px-5 pb-4 pt-[max(1.25rem,env(safe-area-inset-top))] sm:px-8 sm:pt-7">
           <div className="flex items-center gap-2.5">
-            <p className="text-[9px] font-semibold uppercase tracking-[0.3em] text-description">
+            <p className="text-[9px] font-semibold uppercase tracking-[0.3em] text-secondary">
               Duora
             </p>
 
             {isResolution && (
               <>
-                <span className="h-3 w-px bg-black/10" />
+                <span className="h-3 w-px bg-white/15" />
 
                 <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-description">
                   Resolution
@@ -335,7 +344,7 @@ export default function AiResponseOverlay({
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.4, ease: EASE }}
-              className="pointer-events-auto flex size-9 shrink-0 items-center justify-center rounded-full border border-black/[0.055] bg-primary/80 text-description shadow-[0_8px_25px_rgba(0,0,0,0.06)] backdrop-blur-xl transition-colors hover:bg-neutral-900 hover:text-white"
+              className="pointer-events-auto flex size-9 shrink-0 items-center justify-center rounded-full border border-white/10 bg-primary/80 text-description shadow-[0_8px_25px_rgba(0,0,0,0.35)] backdrop-blur-xl transition-colors hover:bg-white hover:text-neutral-900"
             >
               <X size={14} strokeWidth={1.8} />
             </motion.button>

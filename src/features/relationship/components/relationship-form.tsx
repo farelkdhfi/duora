@@ -85,15 +85,15 @@ export default function RelationshipForm() {
   if (isLoading) {
     return (
       <div className="animate-pulse">
-        <div className="h-5 w-40 rounded-lg bg-neutral-100" />
+        <div className="h-5 w-40 rounded-lg bg-subprimary" />
 
-        <div className="mt-2 h-4 w-64 rounded-lg bg-neutral-100" />
+        <div className="mt-2 h-4 w-64 rounded-lg bg-subprimary" />
 
-        <div className="mt-7 h-12 rounded-[14px] bg-neutral-100" />
+        <div className="mt-7 h-12 rounded-[14px] bg-subprimary" />
 
-        <div className="mt-5 h-12 rounded-[14px] bg-neutral-100" />
+        <div className="mt-5 h-12 rounded-[14px] bg-subprimary" />
 
-        <div className="mt-5 h-12 w-24 rounded-[14px] bg-neutral-100" />
+        <div className="mt-5 h-12 w-24 rounded-[14px] bg-subprimary" />
       </div>
     )
   }
@@ -105,11 +105,11 @@ export default function RelationshipForm() {
   return (
     <div>
       <div>
-        <h2 className="text-lg font-semibold tracking-[-0.03em] text-neutral-900 sm:text-xl">
+        <h2 className="text-lg font-semibold tracking-[-0.03em] text-secondary sm:text-xl">
           Relationship
         </h2>
 
-        <p className="mt-1 text-sm leading-6 text-neutral-400">
+        <p className="mt-1 text-sm leading-6 text-description">
           The details of your shared space.
         </p>
       </div>
@@ -118,7 +118,7 @@ export default function RelationshipForm() {
         <div>
           <label
             htmlFor="relationship_name"
-            className="block text-[13px] font-semibold text-neutral-900"
+            className="block text-[13px] font-semibold text-secondary"
           >
             Relationship name
           </label>
@@ -130,14 +130,14 @@ export default function RelationshipForm() {
             onChange={(e) => handleNameChange(e.target.value)}
             placeholder="e.g. Tika & Farel"
             maxLength={50}
-            className="mt-2.5 min-h-12 w-full rounded-[14px] border border-black/[0.06] bg-neutral-50 px-4 py-3 text-sm text-neutral-900 outline-none transition-all duration-200 placeholder:text-neutral-400 focus:border-neutral-900/20 focus:bg-white focus:ring-4 focus:ring-neutral-900/[0.04]"
+            className="mt-2.5 min-h-12 w-full rounded-[14px] border border-white/[0.08] bg-subprimary/40 px-4 py-3 text-sm text-secondary outline-none transition-all duration-200 placeholder:text-description focus:border-white/20 focus:bg-primary focus:ring-4 focus:ring-white/[0.04]"
           />
         </div>
 
         <div>
           <label
             htmlFor="started_at"
-            className="block text-[13px] font-semibold text-neutral-900"
+            className="block text-[13px] font-semibold text-secondary"
           >
             Together since
           </label>
@@ -148,7 +148,7 @@ export default function RelationshipForm() {
             value={startedAt}
             onChange={(e) => handleDateChange(e.target.value)}
             max={new Date().toISOString().split('T')[0]}
-            className="mt-2.5 min-h-12 w-full rounded-[14px] border border-black/[0.06] bg-neutral-50 px-4 py-3 text-sm text-neutral-900 outline-none transition-all duration-200 focus:border-neutral-900/20 focus:bg-white focus:ring-4 focus:ring-neutral-900/[0.04]"
+            className="mt-2.5 min-h-12 w-full rounded-[14px] border border-white/[0.08] bg-subprimary/40 px-4 py-3 text-sm text-secondary outline-none transition-all duration-200 focus:border-white/20 focus:bg-primary focus:ring-4 focus:ring-white/[0.04] [color-scheme:dark]"
           />
         </div>
 
@@ -160,7 +160,7 @@ export default function RelationshipForm() {
               updateRelationship.isPending ||
               isUnchanged
             }
-            className="h-11 rounded-full bg-neutral-800 px-6 text-sm font-semibold text-white transition-all duration-200 hover:bg-black active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-30"
+            className="h-11 rounded-full bg-subprimary px-6 text-sm font-semibold text-secondary transition-all duration-200 hover:bg-primary active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-30"
           >
             {updateRelationship.isPending ? (
               <span className="flex items-center justify-center gap-2">

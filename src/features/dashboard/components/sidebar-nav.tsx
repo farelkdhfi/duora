@@ -138,12 +138,12 @@ export default function SidebarNav({ onNavigate }: SidebarNavProps) {
           <div>
             <div className='flex items-center gap-1'>
               <Image src={logoImage} width={20} height={20} alt='logo' />
-              <p className="text-[17px] uppercase font-bold tracking-[-0.04em] text-[#111111]">
+              <p className="text-[17px] uppercase font-bold tracking-[-0.04em] text-secondary">
                 duora
               </p>
             </div>
 
-            <p className="mt-0.5 text-[11px] text-neutral-400">
+            <p className="mt-0.5 text-[11px] text-description">
               Grow together.
             </p>
 
@@ -165,7 +165,7 @@ export default function SidebarNav({ onNavigate }: SidebarNavProps) {
 
       <nav className="flex-1 px-3">
 
-        <p className="mb-3 px-3 text-[10px] font-semibold uppercase tracking-[0.12em] text-neutral-300">
+        <p className="mb-3 px-3 text-[10px] font-semibold uppercase tracking-[0.12em] text-description/60">
           Workspace
         </p>
 
@@ -192,9 +192,9 @@ export default function SidebarNav({ onNavigate }: SidebarNavProps) {
               return (
                 <div
                   key={item.href}
-                  className="group relative flex cursor-not-allowed items-center gap-3 rounded-2xl px-3.5 py-3 text-[13px] font-medium text-neutral-300"
+                  className="group relative flex cursor-not-allowed items-center gap-3 rounded-2xl px-3.5 py-3 text-[13px] font-medium text-description/60"
                 >
-                  <span className="flex size-8 shrink-0 items-center justify-center rounded-xl text-neutral-300">
+                  <span className="flex size-8 shrink-0 items-center justify-center rounded-xl text-description/60">
                     <Icon size={17} strokeWidth={1.9} />
                   </span>
 
@@ -202,7 +202,7 @@ export default function SidebarNav({ onNavigate }: SidebarNavProps) {
 
                   <Lock
                     size={12}
-                    className="ml-auto text-neutral-300"
+                    className="ml-auto text-description/60"
                   />
                 </div>
               )
@@ -220,8 +220,8 @@ export default function SidebarNav({ onNavigate }: SidebarNavProps) {
                   text-[13px] font-medium
                   transition-all duration-200
                   ${isActive
-                    ? 'bg-gradient-to-r from-blue-50/90 via-indigo-50/60 to-pink-50/70 text-neutral-900 shadow-[0_4px_15px_-8px_rgba(99,102,241,0.25)]'
-                    : 'text-neutral-500 hover:bg-black/[0.025] hover:text-neutral-900'
+                    ? 'bg-gradient-to-r from-blue-500/15 via-indigo-500/10 to-pink-500/10 text-secondary shadow-[0_4px_15px_-8px_rgba(99,102,241,0.25)]'
+                    : 'text-description hover:bg-white/[0.04] hover:text-secondary'
                   }
                 `}
               >
@@ -235,8 +235,8 @@ export default function SidebarNav({ onNavigate }: SidebarNavProps) {
                     flex size-8 shrink-0 items-center justify-center
                     rounded-xl transition
                     ${isActive
-                      ? 'bg-white text-black shadow-sm'
-                      : 'text-neutral-400 group-hover:text-neutral-700'
+                      ? 'bg-subprimary text-secondary shadow-sm'
+                      : 'text-description group-hover:text-secondary'
                     }
                   `}
                 >
@@ -253,7 +253,7 @@ export default function SidebarNav({ onNavigate }: SidebarNavProps) {
                 </span>
 
                 {isActive && (
-                  <span className="ml-auto size-1.5 rounded-full bg-black" />
+                  <span className="ml-auto size-1.5 rounded-full bg-secondary" />
                 )}
 
               </Link>
@@ -273,27 +273,27 @@ export default function SidebarNav({ onNavigate }: SidebarNavProps) {
       <div className="px-4 py-4">
 
         {locked ? (
-          <div className="relative overflow-hidden rounded-[1.5rem] border border-black/[0.05] bg-neutral-50 p-4">
+          <div className="relative overflow-hidden rounded-[1.5rem] border border-white/[0.08] bg-subprimary/40 p-4">
             <div className="flex items-center gap-2">
-              <div className="flex size-7 items-center justify-center rounded-xl bg-white shadow-sm">
-                <Lock size={12} className="text-neutral-400" />
+              <div className="flex size-7 items-center justify-center rounded-xl bg-subprimary shadow-sm">
+                <Lock size={12} className="text-description" />
               </div>
 
-              <span className="text-[11px] font-semibold text-neutral-500">
+              <span className="text-[11px] font-semibold text-description">
                 Waiting for partner
               </span>
             </div>
 
-            <p className="mt-3 text-[12px] leading-5 text-neutral-400">
+            <p className="mt-3 text-[12px] leading-5 text-description">
               Your space unlocks once your
               partner joins with the invite code.
             </p>
           </div>
         ) : (
-          <div className="relative overflow-hidden rounded-[1.5rem] border border-black/[0.05] bg-gradient-to-br from-blue-50/70 via-white to-pink-50/70 p-4">
+          <div className="relative overflow-hidden rounded-[1.5rem] border border-white/[0.08] bg-gradient-to-br from-blue-500/10 via-subprimary/40 to-pink-500/10 p-4">
 
-            <div className="pointer-events-none absolute -right-8 -top-8 size-24 rounded-full bg-pink-200/30 blur-2xl" />
-            <div className="pointer-events-none absolute -bottom-8 -left-8 size-24 rounded-full bg-blue-200/30 blur-2xl" />
+            <div className="pointer-events-none absolute -right-8 -top-8 size-24 rounded-full bg-pink-400/15 blur-2xl" />
+            <div className="pointer-events-none absolute -bottom-8 -left-8 size-24 rounded-full bg-blue-400/15 blur-2xl" />
 
             <div className="relative">
 
@@ -301,7 +301,7 @@ export default function SidebarNav({ onNavigate }: SidebarNavProps) {
 
                 <div className="flex items-center gap-2">
 
-                  <div className="flex size-7 items-center justify-center rounded-xl bg-white shadow-sm">
+                  <div className="flex size-7 items-center justify-center rounded-xl bg-subprimary shadow-sm">
                     <Heart
                       size={13}
                       fill="currentColor"
@@ -309,7 +309,7 @@ export default function SidebarNav({ onNavigate }: SidebarNavProps) {
                     />
                   </div>
 
-                  <span className="text-[11px] font-semibold text-neutral-600">
+                  <span className="text-[11px] font-semibold text-secondary">
                     Your relationship
                   </span>
 
@@ -317,27 +317,27 @@ export default function SidebarNav({ onNavigate }: SidebarNavProps) {
 
                 <Pin
                   size={13}
-                  className="text-black"
+                  className="text-secondary"
                 />
 
               </div>
 
-              <p className="mt-4 text-[12px] leading-5 text-neutral-500">
+              <p className="mt-4 text-[12px] leading-5 text-description">
                 Every little moment you share
                 becomes part of your story.
               </p>
 
               <div className="mt-4 flex items-center">
 
-                <div className="flex size-7 items-center justify-center rounded-full border-2 border-white bg-blue-100 text-[10px] font-semibold text-blue-500">
+                <div className="flex size-7 items-center justify-center rounded-full border-2 border-primary bg-blue-500/20 text-[10px] font-semibold text-blue-400">
                   Y
                 </div>
 
-                <div className="-ml-2 flex size-7 items-center justify-center rounded-full border-2 border-white bg-pink-100 text-[10px] font-semibold text-pink-500">
+                <div className="-ml-2 flex size-7 items-center justify-center rounded-full border-2 border-primary bg-pink-500/20 text-[10px] font-semibold text-pink-400">
                   P
                 </div>
 
-                <span className="ml-2 text-[10px] text-neutral-400">
+                <span className="ml-2 text-[10px] text-description">
                   Growing together
                 </span>
 
@@ -355,15 +355,15 @@ export default function SidebarNav({ onNavigate }: SidebarNavProps) {
       {/* FOOTER */}
       {/* ===================================================== */}
 
-      <div className="border-t border-black/[0.04] px-3 py-3">
+      <div className="border-t border-white/[0.06] px-3 py-3">
 
         <button
           type="button"
           onClick={handleLogout}
           disabled={isLoggingOut}
-          className="group flex w-full items-center gap-3 rounded-2xl px-3.5 py-3 text-[13px] font-medium text-neutral-500 transition-all duration-200 hover:bg-rose-50/70 hover:text-rose-600 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:bg-transparent disabled:hover:text-neutral-500"
+          className="group flex w-full items-center gap-3 rounded-2xl px-3.5 py-3 text-[13px] font-medium text-description transition-all duration-200 hover:bg-rose-500/10 hover:text-rose-400 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:bg-transparent disabled:hover:text-description"
         >
-          <span className="flex size-8 shrink-0 items-center justify-center rounded-xl text-neutral-400 transition group-hover:text-rose-500">
+          <span className="flex size-8 shrink-0 items-center justify-center rounded-xl text-description transition group-hover:text-rose-400">
             {isLoggingOut ? (
               <Loader2 size={17} strokeWidth={1.9} className="animate-spin" />
             ) : (
@@ -374,7 +374,7 @@ export default function SidebarNav({ onNavigate }: SidebarNavProps) {
           <span>{isLoggingOut ? 'Logging out...' : 'Log out'}</span>
         </button>
 
-        <p className="mt-2 px-3.5 text-[10px] text-neutral-300">
+        <p className="mt-2 px-3.5 text-[10px] text-description/60">
           Grow together with DUORA
         </p>
 

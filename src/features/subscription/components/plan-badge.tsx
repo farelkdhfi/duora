@@ -35,27 +35,27 @@ export function PlanBadge({ onNavigate }: PlanBadgeProps) {
       <Link
         href="/subscription"
         onClick={onNavigate}
-        className="group flex w-full items-center gap-3.5 rounded-[1.25rem] border border-amber-200/70 bg-amber-50/60 px-3.5 py-3.5 transition-all duration-200 active:bg-amber-50"
+        className="group flex w-full items-center gap-3.5 rounded-[1.25rem] border border-amber-500/20 bg-amber-500/10 px-3.5 py-3.5 transition-all duration-200 active:bg-amber-500/15"
       >
-        <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-amber-100/80 text-amber-500">
+        <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-amber-500/15 text-amber-400">
           <AlertTriangle size={17} strokeWidth={1.7} />
         </div>
 
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
-            <p className="text-[12px] font-medium text-amber-800">
+            <p className="text-[12px] font-medium text-amber-300">
               {trial ? 'Trial' : planType === 'pro' ? 'Pro' : 'Plus'}
             </p>
 
             <span className="size-1 rounded-full bg-amber-400" />
           </div>
 
-          <p className="mt-0.5 truncate text-[10px] text-amber-600/70">
+          <p className="mt-0.5 truncate text-[10px] text-amber-400/70">
             {daysLeft === 0 ? 'Berakhir hari ini' : `${daysLeft} hari lagi`}
           </p>
         </div>
 
-        <div className="flex size-7 shrink-0 items-center justify-center rounded-full bg-amber-100/70 text-amber-500 transition-transform group-active:translate-x-0.5">
+        <div className="flex size-7 shrink-0 items-center justify-center rounded-full bg-amber-500/15 text-amber-400 transition-transform group-active:translate-x-0.5">
           <ArrowUpRight size={12} strokeWidth={1.8} />
         </div>
       </Link>
@@ -71,27 +71,27 @@ export function PlanBadge({ onNavigate }: PlanBadgeProps) {
       <Link
         href="/subscription"
         onClick={onNavigate}
-        className="group relative flex w-full items-center gap-3.5 overflow-hidden rounded-[1.25rem] border border-pink-200/70 bg-pink-50/50 px-3.5 py-3.5 transition-all duration-300 active:bg-pink-50"
+        className="group relative flex w-full items-center gap-3.5 overflow-hidden rounded-[1.25rem] border border-pink-500/20 bg-pink-500/10 px-3.5 py-3.5 transition-all duration-300 active:bg-pink-500/15"
       >
-        <div className="relative z-10 flex size-9 shrink-0 items-center justify-center rounded-xl bg-pink-100/80 text-pink-500">
+        <div className="relative z-10 flex size-9 shrink-0 items-center justify-center rounded-xl bg-pink-500/15 text-pink-400">
           <Sparkles size={17} strokeWidth={1.7} />
         </div>
 
         <div className="relative z-10 min-w-0 flex-1">
           <div className="flex items-center gap-2">
-            <p className="text-[12px] font-medium text-[#171717]">
+            <p className="text-[12px] font-medium text-secondary">
               Trial
             </p>
 
             <span className="size-1 rounded-full bg-pink-400" />
           </div>
 
-          <p className="mt-0.5 truncate text-[10px] text-pink-500/70">
+          <p className="mt-0.5 truncate text-[10px] text-pink-400/70">
             Trial active
           </p>
         </div>
 
-        <div className="relative z-10 flex size-7 shrink-0 items-center justify-center rounded-full bg-pink-100/80 text-pink-500 transition-transform duration-200 group-active:translate-x-0.5">
+        <div className="relative z-10 flex size-7 shrink-0 items-center justify-center rounded-full bg-pink-500/15 text-pink-400 transition-transform duration-200 group-active:translate-x-0.5">
           <ArrowUpRight size={12} strokeWidth={1.8} />
         </div>
       </Link>
@@ -107,7 +107,7 @@ export function PlanBadge({ onNavigate }: PlanBadgeProps) {
       <Link
         href="/subscription"
         onClick={onNavigate}
-        className="group relative flex w-full items-center gap-3.5 overflow-hidden rounded-[1.25rem] border border-white/[0.08] bg-[#171717] px-3.5 py-3.5 shadow-[0_10px_35px_rgba(0,0,0,0.12)] transition-all duration-300 active:bg-[#1d1d1d]"
+        className="group relative flex w-full items-center gap-3.5 overflow-hidden rounded-[1.25rem] border border-white/[0.08] bg-subprimary px-3.5 py-3.5 shadow-[0_10px_35px_rgba(0,0,0,0.12)] transition-all duration-300 active:bg-primary"
       >
         <div className="pointer-events-none absolute -right-16 -top-20 size-44 rounded-full bg-pink-400/15 blur-[55px]" />
 
@@ -121,19 +121,19 @@ export function PlanBadge({ onNavigate }: PlanBadgeProps) {
 
         <div className="relative z-10 min-w-0 flex-1">
           <div className="flex items-center gap-2">
-            <p className="text-[12px] font-medium text-white/90">
+            <p className="text-[12px] font-medium text-secondary">
               Duora+
             </p>
 
             <span className="size-1 rounded-full bg-pink-300" />
           </div>
 
-          <p className="mt-0.5 truncate text-[10px] text-white/40">
+          <p className="mt-0.5 truncate text-[10px] text-description">
             Pro active
           </p>
         </div>
 
-        <div className="relative z-10 flex size-7 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/[0.07] text-white/70 transition-transform duration-200 group-active:translate-x-0.5">
+        <div className="relative z-10 flex size-7 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/[0.07] text-secondary transition-transform duration-200 group-active:translate-x-0.5">
           <ArrowUpRight size={12} strokeWidth={1.8} />
         </div>
       </Link>
@@ -149,27 +149,27 @@ export function PlanBadge({ onNavigate }: PlanBadgeProps) {
       <Link
         href="/subscription"
         onClick={onNavigate}
-        className="group relative flex w-full items-center gap-3.5 overflow-hidden rounded-[1.25rem] border border-pink-200/70 bg-pink-50/50 px-3.5 py-3.5 transition-all duration-300 active:bg-pink-50"
+        className="group relative flex w-full items-center gap-3.5 overflow-hidden rounded-[1.25rem] border border-pink-500/20 bg-pink-500/10 px-3.5 py-3.5 transition-all duration-300 active:bg-pink-500/15"
       >
-        <div className="relative z-10 flex size-9 shrink-0 items-center justify-center rounded-xl bg-pink-100/80 text-pink-500">
+        <div className="relative z-10 flex size-9 shrink-0 items-center justify-center rounded-xl bg-pink-500/15 text-pink-400">
           <Sparkles size={17} strokeWidth={1.7} />
         </div>
 
         <div className="relative z-10 min-w-0 flex-1">
           <div className="flex items-center gap-2">
-            <p className="text-[12px] font-medium text-[#171717]">
+            <p className="text-[12px] font-medium text-secondary">
               Duora+
             </p>
 
             <span className="size-1 rounded-full bg-pink-400" />
           </div>
 
-          <p className="mt-0.5 truncate text-[10px] text-pink-500/70">
+          <p className="mt-0.5 truncate text-[10px] text-pink-400/70">
             Plus active
           </p>
         </div>
 
-        <div className="relative z-10 flex size-7 shrink-0 items-center justify-center rounded-full bg-pink-100/80 text-pink-500 transition-transform duration-200 group-active:translate-x-0.5">
+        <div className="relative z-10 flex size-7 shrink-0 items-center justify-center rounded-full bg-pink-500/15 text-pink-400 transition-transform duration-200 group-active:translate-x-0.5">
           <ArrowUpRight size={12} strokeWidth={1.8} />
         </div>
       </Link>
@@ -184,27 +184,27 @@ export function PlanBadge({ onNavigate }: PlanBadgeProps) {
     <Link
       href="/subscription"
       onClick={onNavigate}
-      className="group flex w-full items-center gap-3.5 rounded-[1.25rem] border border-black/[0.06] bg-white/65 px-3.5 py-3.5 transition-all duration-200 active:bg-black/[0.04]"
+      className="group flex w-full items-center gap-3.5 rounded-[1.25rem] border border-white/[0.08] bg-subprimary/40 px-3.5 py-3.5 transition-all duration-200 active:bg-white/[0.04]"
     >
-      <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-black/[0.035] text-black/45">
+      <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-white/[0.06] text-description">
         <Sparkles size={17} strokeWidth={1.7} />
       </div>
 
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">
-          <p className="text-[12px] font-medium text-black/70">
+          <p className="text-[12px] font-medium text-secondary">
             Free
           </p>
 
-          <span className="size-1 rounded-full bg-black/15" />
+          <span className="size-1 rounded-full bg-white/20" />
         </div>
 
-        <p className="mt-0.5 truncate text-[10px] text-black/35">
+        <p className="mt-0.5 truncate text-[10px] text-description">
           Upgrade to unlock more
         </p>
       </div>
 
-      <div className="flex size-7 shrink-0 items-center justify-center rounded-full bg-[#171717] text-white transition-transform group-active:translate-x-0.5">
+      <div className="flex size-7 shrink-0 items-center justify-center rounded-full bg-subprimary text-secondary transition-transform group-active:translate-x-0.5">
         <ArrowUpRight size={12} strokeWidth={1.8} />
       </div>
     </Link>

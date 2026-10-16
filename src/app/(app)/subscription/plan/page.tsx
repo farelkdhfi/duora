@@ -16,7 +16,7 @@ import {
   useStartTrialManual,
 } from "@/features/subscription/queries";
 import Image from "next/image";
-import logo from "@/assets/logo.png";
+import logo from "@/assets/logo-white.png";
 
 const PLANS = [
   {
@@ -161,9 +161,9 @@ export default function SubscriptionPlanPage() {
           </button>
 
           <div className="flex items-center">
-            <Image src={logo} alt="Duora" className="size-5" />
+            <Image src={logo} alt="Duora" className="size-4" />
 
-            <span className="text-base font-bold text-secondary">
+            <span className="text-sm font-semibold text-secondary">
               Duora
             </span>
           </div>

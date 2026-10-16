@@ -136,12 +136,12 @@ export default function ProfileForm() {
 
   return (
     <div>
-      <div className="flex flex-col items-center rounded-[1.5rem] bg-neutral-50/80 p-6 text-center sm:p-8">
+      <div className="flex flex-col items-center rounded-[1.5rem] bg-subprimary/40 p-6 text-center sm:p-8">
         <button
           type="button"
           onClick={handleAvatarClick}
           disabled={updateAvatar.isPending}
-          className="group relative size-35 shrink-0 overflow-hidden rounded-full bg-neutral-200 outline-none ring-1 ring-black/[0.06] transition-transform duration-200 hover:scale-[1.02] focus-visible:ring-2 focus-visible:ring-neutral-900/20 disabled:cursor-not-allowed"
+          className="group relative size-35 shrink-0 overflow-hidden rounded-full bg-subprimary outline-none ring-1 ring-white/[0.08] transition-transform duration-200 hover:scale-[1.02] focus-visible:ring-2 focus-visible:ring-white/20 disabled:cursor-not-allowed"
         >
           {profile?.avatar_url ? (
             <img
@@ -150,7 +150,7 @@ export default function ProfileForm() {
               className="h-full w-full object-cover"
             />
           ) : (
-            <div className="flex h-full w-full items-center justify-center bg-neutral-900 text-2xl font-semibold text-white">
+            <div className="flex h-full w-full items-center justify-center bg-subprimary text-2xl font-semibold text-secondary">
               {(
                 profile?.display_name ??
                 profile?.username ??
@@ -165,13 +165,13 @@ export default function ProfileForm() {
             {updateAvatar.isPending ? (
               <Loader2
                 size={20}
-                className="animate-spin text-white"
+                className="animate-spin text-secondary"
               />
             ) : (
               <Camera
                 size={18}
                 strokeWidth={2}
-                className="text-white opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+                className="text-secondary opacity-0 transition-opacity duration-200 group-hover:opacity-100"
               />
             )}
           </div>
@@ -186,7 +186,7 @@ export default function ProfileForm() {
         />
 
         <div className="mt-4 flex flex-col items-center">
-          <p className="text-[15px] font-semibold tracking-[-0.02em] text-neutral-900">
+          <p className="text-[15px] font-semibold tracking-[-0.02em] text-secondary">
             {profile?.display_name || 'Your name'}
           </p>
 
@@ -194,7 +194,7 @@ export default function ProfileForm() {
             type="button"
             onClick={handleAvatarClick}
             disabled={updateAvatar.isPending}
-            className="mt-4 h-11 inline-flex items-center justify-center gap-1.5 rounded-full bg-neutral-800 px-6 text-sm font-semibold text-white transition-all duration-200 hover:bg-black active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
+            className="mt-4 h-11 inline-flex items-center justify-center gap-1.5 rounded-full bg-subprimary px-6 text-sm font-semibold text-secondary transition-all duration-200 hover:bg-primary active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
           >
             {updateAvatar.isPending ? (
               <>
@@ -215,7 +215,7 @@ export default function ProfileForm() {
             )}
           </button>
 
-          <p className="mt-2 text-[10.5px] text-neutral-400">
+          <p className="mt-2 text-[10.5px] text-description">
             PNG, JPG, or WEBP · Max 5MB
           </p>
 
@@ -230,7 +230,7 @@ export default function ProfileForm() {
       <div className="mt-7">
         <label
           htmlFor="display_name"
-          className="block text-[13px] font-semibold text-neutral-900"
+          className="block text-[13px] font-semibold text-secondary"
         >
           Display name
         </label>
@@ -243,7 +243,7 @@ export default function ProfileForm() {
             onChange={(e) => handleNameChange(e.target.value)}
             placeholder="Your name"
             maxLength={50}
-            className="min-h-12 w-full flex-1 rounded-[14px] border border-black/[0.06] bg-neutral-50 px-4 py-3 text-sm text-neutral-900 outline-none transition-all duration-200 placeholder:text-neutral-400 focus:border-neutral-900/20 focus:bg-white focus:ring-4 focus:ring-neutral-900/[0.04]"
+            className="min-h-12 w-full flex-1 rounded-[14px] border border-white/[0.08] bg-subprimary/40 px-4 py-3 text-sm text-secondary outline-none transition-all duration-200 placeholder:text-description focus:border-white/20 focus:bg-primary focus:ring-4 focus:ring-white/[0.04]"
           />
 
           <button
@@ -253,7 +253,7 @@ export default function ProfileForm() {
               updateProfile.isPending ||
               isNameUnchanged
             }
-            className="h-11 shrink-0 rounded-full bg-neutral-800 px-6 text-sm font-semibold text-white transition-all duration-200 hover:bg-black active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-30"
+            className="h-11 shrink-0 rounded-full bg-subprimary px-6 text-sm font-semibold text-secondary transition-all duration-200 hover:bg-primary active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-30"
           >
             {updateProfile.isPending ? (
               <span className="flex items-center justify-center gap-2">

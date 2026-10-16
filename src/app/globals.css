@@ -15,12 +15,12 @@ body {
 
 
 .modal-scroll::-webkit-scrollbar {
-  background-color: white;
+  background-color: black;
   width: 3px;
 }
 
 .modal-scroll::-webkit-scrollbar-track {
-  background: white;
+  background: black;
 }
 
 .modal-scroll::-webkit-scrollbar-thumb {

@@ -20,18 +20,18 @@ const resolutionTone: Record<
     accent: 'text-amber-300/70',
   },
   lembut: {
-    card: 'bg-[#C8808E] shadow-lg',
-    glow: 'bg-white/[0.18]',
+    card: 'bg-linear-to-b from-[#DAA0AC] to-black',
+    glow: 'bg-black/[0.18]',
     accent: 'text-white/85',
   },
   kasar: {
-    card: 'bg-[#C13131] shadow-lg',
-    glow: 'bg-white/[0.18]',
+    card: 'bg-linear-to-b from-[#B92725] to-black shadow-lg',
+    glow: 'bg-black/[0.18]',
     accent: 'text-white/85',
   },
   lebay: {
-    card: 'bg-[#9CB8D9] shadow-lg',
-    glow: 'bg-white/[0.18]',
+    card: 'bg-linear-to-b from-[#398FD7] to-black',
+    glow: 'bg-black/[0.18]',
     accent: 'text-white/85',
   },
 }
@@ -86,7 +86,7 @@ function MediatorCard({
   return (
     <article
       className={[
-        'relative overflow-hidden rounded-[1.9rem] border',
+        'relative overflow-hidden rounded-[1.9rem]',
         resolution
           ? `${tone.card} text-white`
           : 'border-black/[0.055] bg-primary text-secondary shadow-[0_15px_50px_rgba(0,0,0,0.055)]',

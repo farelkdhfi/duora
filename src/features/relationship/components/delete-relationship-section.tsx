@@ -27,17 +27,17 @@ export default function DeleteRelationshipSection() {
   }
 
   return (
-    <div className="relative w-full overflow-hidden rounded-[28px] border border-red-100 bg-white p-5 shadow-[0_1px_2px_rgba(0,0,0,0.03)] sm:p-8">
+    <div className="relative w-full overflow-hidden rounded-[28px] border border-red-500/20 bg-primary p-5 shadow-[0_1px_2px_rgba(0,0,0,0.03)] sm:p-8">
       <div className="flex items-start gap-3">
-        <div className="flex size-8 shrink-0 items-center justify-center rounded-[11px] bg-red-50">
+        <div className="flex size-8 shrink-0 items-center justify-center rounded-[11px] bg-red-500/10">
           <AlertTriangle size={15} className="text-red-500" />
         </div>
 
         <div>
-          <p className="text-[13px] font-semibold text-neutral-900">
+          <p className="text-[13px] font-semibold text-secondary">
             Delete relationship
           </p>
-          <p className="mt-1 text-[12px] leading-relaxed text-neutral-400">
+          <p className="mt-1 text-[12px] leading-relaxed text-description">
             Menghapus relationship akan menghapus permanen semua data kalian
             berdua (goals, check-in, Q&A, planner, countdown, debat, dan
             langganan). Pasanganmu tidak perlu menyetujui dan tindakan ini
@@ -50,15 +50,15 @@ export default function DeleteRelationshipSection() {
         <button
           type="button"
           onClick={() => setIsOpen(true)}
-          className="mt-5 rounded-[14px] border border-red-200 px-4 py-2.5 text-[12px] font-semibold text-red-500 transition hover:bg-red-50"
+          className="mt-5 rounded-[14px] border border-red-500/30 px-4 py-2.5 text-[12px] font-semibold text-red-500 transition hover:bg-red-500/10"
         >
           Delete relationship
         </button>
       ) : (
         <div className="mt-5 space-y-3">
-          <label className="block text-[12px] text-neutral-500">
+          <label className="block text-[12px] text-description">
             Ketik{' '}
-            <span className="font-semibold text-neutral-900">
+            <span className="font-semibold text-secondary">
               {relationshipName}
             </span>{' '}
             untuk mengonfirmasi
@@ -69,7 +69,7 @@ export default function DeleteRelationshipSection() {
             value={confirmText}
             onChange={(e) => setConfirmText(e.target.value)}
             placeholder={relationshipName}
-            className="min-h-12 w-full rounded-[16px] border border-red-100 bg-neutral-50 px-4 py-3 text-[14px] outline-none focus:border-red-300 focus:bg-white"
+            className="min-h-12 w-full rounded-[16px] border border-red-500/20 bg-subprimary/40 px-4 py-3 text-[14px] text-secondary outline-none placeholder:text-description focus:border-red-500/40 focus:bg-primary"
           />
 
           {deleteRelationship.isError && (
@@ -103,7 +103,7 @@ export default function DeleteRelationshipSection() {
                 setIsOpen(false)
                 setConfirmText('')
               }}
-              className="min-h-11 rounded-[14px] border border-black/[0.06] px-5 text-[12px] font-medium text-neutral-500 hover:bg-neutral-50"
+              className="min-h-11 rounded-[14px] border border-white/[0.08] bg-subprimary px-5 text-[12px] font-medium text-secondary hover:bg-primary"
             >
               Batal
             </button>
