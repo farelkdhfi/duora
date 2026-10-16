@@ -12,7 +12,7 @@ import {
 } from 'framer-motion'
 import logo from '@/assets/logo-white.png'
 import hero1 from '@/assets/landingpage/hero-mobile-1.png'
-import hero2 from '@/assets/landingpage/hero-mobile-2.png'
+import hero2 from '@/assets/landingpage/hero-mobile-2-2.png'
 import heroDesktop1 from '@/assets/landingpage/hero-desktop.png'
 import heroDesktop2 from '@/assets/landingpage/hero-desktop-2.png'
 import heroBg from '@/assets/landingpage/hero-bg-mobile.png'
