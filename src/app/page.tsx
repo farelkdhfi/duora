@@ -11,9 +11,9 @@ import {
   type Variants,
 } from 'framer-motion'
 import logo from '@/assets/logo-white.png'
-import hero1 from '@/assets/landingpage/hero-mobile-1.png'
+import hero1 from '@/assets/landingpage/hero-mobile-1-2.png'
 import hero2 from '@/assets/landingpage/hero-mobile-2-2.png'
-import heroDesktop1 from '@/assets/landingpage/hero-desktop.png'
+import heroDesktop1 from '@/assets/landingpage/hero-desktop-1.png'
 import heroDesktop2 from '@/assets/landingpage/hero-desktop-2.png'
 import heroBg from '@/assets/landingpage/hero-bg-mobile.png'
 import heroBg2 from '@/assets/landingpage/hero-bg-mobile-2.png'
@@ -29,6 +29,10 @@ const SLIDE_OFFSET = 64 // jarak geser slide saat masuk/keluar (px)
 const SWIPE_DISTANCE = 60 // minimal jarak drag agar dianggap swipe (px)
 const SWIPE_VELOCITY = 400 // atau minimal kecepatan flick (px/s)
 const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1]
+
+// ← DIUBAH: aspect ratio gambar hero desktop pertama jadi patokan
+// untuk semua slide di desktop (hero 1 tidak ke-crop, hero 2 ngikut).
+const DESKTOP_IMAGE_RATIO = `${heroDesktop1.width} / ${heroDesktop1.height}`
 
 // Gradient pojok kiri atas khusus desktop, satu per slide.
 const DESKTOP_CORNER_GRADIENTS = [
@@ -298,11 +302,19 @@ export default function LandingPage() {
                 className="relative z-10 col-start-1 row-start-1 flex cursor-grab select-none flex-col active:cursor-grabbing lg:grid lg:grid-cols-[1fr_1.15fr] lg:content-center lg:items-center lg:gap-10 xl:gap-16"
               >
                 {/* Hero illustration */}
+                {/* ← DIUBAH (desktop saja): tinggi fix dihapus, diganti aspect ratio
+                    hero desktop 1 → lebar penuh kolom, tinggi otomatis, tidak ke-crop.
+                    Kelas mobile (tanpa prefix lg:) tidak diubah. */}
                 <motion.div
                   variants={imageVariants}
-                  className="relative flex min-h-[330px] flex-1 items-center justify-center pt-5 sm:min-h-[380px] lg:order-2 lg:h-[520px] lg:min-h-0 lg:flex-none lg:pt-0 xl:h-[620px]"
+                  style={
+                    {
+                      '--desktop-ratio': DESKTOP_IMAGE_RATIO,
+                    } as React.CSSProperties
+                  }
+                  className="relative flex min-h-[330px] flex-1 items-center justify-center pt-5 sm:min-h-[380px] lg:order-2 lg:h-auto lg:min-h-0 lg:w-full lg:flex-none lg:pt-0 lg:[aspect-ratio:var(--desktop-ratio)]"
                 >
-                  {/* Mobile image */}
+                  {/* Mobile image (tidak diubah) */}
                   <Image
                     src={slide.image}
                     alt={slide.alt}
@@ -312,14 +324,14 @@ export default function LandingPage() {
                     className="pointer-events-none h-full max-h-[440px] w-full object-contain object-center lg:hidden"
                   />
 
-                  {/* Desktop image */}
+                  {/* Desktop image ← DIUBAH: mengisi penuh kotak ber-ratio hero 1 */}
                   <Image
                     src={slide.imageDesktop}
                     alt={slide.alt}
                     priority={index === 0}
                     sizes="(min-width: 1024px) 55vw, 0px"
                     draggable={false}
-                    className="pointer-events-none hidden h-full w-full object-contain object-center lg:block"
+                    className="pointer-events-none hidden object-contain object-center lg:absolute lg:inset-0 lg:block lg:h-full lg:w-full"
                   />
                 </motion.div>
 
@@ -390,7 +402,7 @@ export default function LandingPage() {
               onClick={handleStart}
               disabled={isNavigating}
               aria-busy={isNavigating}
-              className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-black px-6 text-[14px] font-semibold text-white shadow-[0_3px_4px_rgba(0,0,0,0.28)] transition-transform duration-200 hover:scale-[1.01] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-4 disabled:cursor-not-allowed disabled:opacity-80 disabled:hover:scale-100 lg:h-14 lg:w-auto lg:min-w-[260px] lg:px-10 lg:text-[16px]"
+              className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-subprimary px-6 text-[14px] font-semibold text-white shadow-[0_3px_4px_rgba(0,0,0,0.28)] transition-transform duration-200 hover:scale-[1.01] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-4 disabled:cursor-not-allowed disabled:opacity-80 disabled:hover:scale-100 lg:h-14 lg:w-auto lg:min-w-[260px] lg:px-10 lg:text-[16px]"
             >
               {isNavigating ? (
                 <>

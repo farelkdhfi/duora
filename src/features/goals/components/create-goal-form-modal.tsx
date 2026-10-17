@@ -1,13 +1,5 @@
 'use client'
 
-import {
-  CalendarDays,
-  Loader2,
-  Target,
-  Tag,
-  Wallet,
-  X,
-} from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 
@@ -36,28 +28,24 @@ const categories = [
 ] as const
 
 const inputClass =
-  'mt-2 w-full rounded-[1rem] border border-black/[0.06] bg-[#f8f8f7] px-4 py-3.5 text-[13px] text-neutral-900 outline-none transition placeholder:text-neutral-400 focus:border-black/[0.12] focus:bg-white focus:ring-4 focus:ring-black/[0.03] disabled:cursor-not-allowed disabled:bg-neutral-100 disabled:text-neutral-400'
+  'mt-2 w-full rounded-xl border border-white/10 bg-subprimary px-4 py-3.5 text-[13px] text-secondary outline-none transition placeholder:text-description focus:border-white/25 focus:ring-4 focus:ring-white/5 disabled:cursor-not-allowed disabled:opacity-50'
 
-const errorClass =
-  'mt-2 text-[11px] font-medium text-rose-500'
+const errorClass = 'mt-2 text-[11px] font-medium text-rose-400'
 
 function FieldLabel({
-  icon,
+  htmlFor,
   children,
 }: {
-  icon: React.ReactNode
+  htmlFor?: string
   children: React.ReactNode
 }) {
   return (
-    <div className="flex items-center gap-2">
-      <div className="flex size-7 items-center justify-center rounded-full bg-white shadow-sm">
-        {icon}
-      </div>
-
-      <label className="text-[11px] font-medium uppercase tracking-[0.14em] text-neutral-400">
-        {children}
-      </label>
-    </div>
+    <label
+      htmlFor={htmlFor}
+      className="block text-[11px] font-medium uppercase tracking-[0.14em] text-description"
+    >
+      {children}
+    </label>
   )
 }
 
@@ -75,7 +63,6 @@ export default function CreateGoalFormModal({
     formState: { errors },
   } = useForm<CreateGoalFormValues>({
     resolver: zodResolver(createGoalSchema),
-
     defaultValues: {
       category: 'personal',
     },
@@ -102,121 +89,70 @@ export default function CreateGoalFormModal({
 
   return (
     <div
-      className="fixed inset-0 z-53 flex items-center justify-center bg-black/20 p-4 backdrop-blur-sm"
+      className="fixed inset-0 z-[53] flex items-end justify-center bg-black/60 backdrop-blur-sm"
       onMouseDown={(event) => {
         if (event.target === event.currentTarget) {
           onClose()
         }
       }}
     >
-      <div className="relative max-h-[90vh] w-full max-w-2xl overflow-hidden rounded-[2rem] border border-black/[0.06] bg-white shadow-[0_30px_100px_rgba(0,0,0,0.16)]">
+      <div className="relative max-h-[90vh] w-full overflow-hidden rounded-t-[2rem] border-x-0 border-b-0 border-t border-white/10 bg-primary">
 
-        {/* =====================================================
-            AMBIENT
-        ===================================================== */}
+        {/* Gradient halus di bagian atas */}
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-white/[0.06] to-transparent" />
 
-        <div className="pointer-events-none absolute -right-24 -top-24 size-64 rounded-full bg-pink-100/50 blur-[100px]" />
+        {/* Handle */}
+        <div className="relative flex justify-center pt-3">
+          <div className="h-1 w-10 rounded-full bg-white/15" />
+        </div>
 
-        <div className="pointer-events-none absolute -bottom-24 -left-24 size-64 rounded-full bg-blue-100/40 blur-[100px]" />
+        {/* Scroll area */}
+        <div className="modal-scroll relative max-h-[calc(90vh-1.75rem)] overflow-y-auto">
+          <div className="mx-auto w-full max-w-2xl p-5 sm:p-7 md:p-8">
 
-
-        {/* =====================================================
-            SCROLL AREA
-        ===================================================== */}
-
-        <div className="modal-scroll relative max-h-[90vh] overflow-y-auto">
-
-          <div className="p-5 sm:p-7 md:p-8">
-
-
-            {/* =================================================
-                HEADER
-            ================================================= */}
-
+            {/* Header */}
             <div className="flex items-start justify-between gap-6">
-
               <div>
+                <p className="text-[10px] font-medium uppercase tracking-[0.2em] text-description">
+                  Shared goal
+                </p>
 
-                <div className="flex items-center gap-3">
-
-                  <div className="size-1.5 rounded-full bg-pink-500" />
-
-                  <p className="text-[10px] font-medium uppercase tracking-[0.2em] text-neutral-400">
-                    Shared goal
-                  </p>
-
-                </div>
-
-                <h2 className="mt-5 text-3xl font-semibold leading-none tracking-[-0.055em] text-neutral-900 sm:text-4xl">
+                <h2 className="mt-4 text-3xl font-semibold leading-none tracking-[-0.055em] text-secondary sm:text-4xl">
                   Build something together.
                 </h2>
 
-                <p className="mt-4 max-w-md text-[13px] leading-6 text-neutral-400 sm:text-sm">
+                <p className="mt-4 max-w-md text-[13px] leading-6 text-description sm:text-sm">
                   Turn something you both want into a goal worth working toward.
                 </p>
-
               </div>
-
-
-              {/* Close */}
 
               <button
                 type="button"
                 onClick={onClose}
-                className="flex size-9 shrink-0 items-center justify-center rounded-full bg-[#f8f8f7] text-neutral-400 transition hover:bg-neutral-900 hover:text-white"
+                className="shrink-0 rounded-full bg-subprimary px-4 py-2 text-[12px] font-medium text-description transition hover:text-secondary"
               >
-                <X size={15} />
+                Close
               </button>
-
             </div>
 
-
-            {/* =================================================
-                FORM
-            ================================================= */}
-
-            <form
-              onSubmit={handleSubmit(onSubmit)}
-              className="mt-9"
-            >
-
+            {/* Form */}
+            <form onSubmit={handleSubmit(onSubmit)} className="mt-9">
               <div className="space-y-7">
 
-
-                {/* =============================================
-                    GOAL DETAILS
-                ============================================= */}
-
+                {/* Details */}
                 <div>
-
-                  <div className="mb-4 flex items-center gap-2">
-
-                    <span className="text-[10px] font-medium uppercase tracking-[0.18em] text-neutral-300">
+                  <div className="mb-4 flex items-center gap-3">
+                    <span className="text-[10px] font-medium uppercase tracking-[0.18em] text-description">
                       Details
                     </span>
-
-                    <div className="h-px flex-1 bg-black/[0.05]" />
-
+                    <div className="h-px flex-1 bg-white/10" />
                   </div>
-
 
                   <div className="grid gap-5 sm:grid-cols-2">
 
-
                     {/* Goal name */}
-
                     <div>
-
-                      <FieldLabel
-                        icon={
-                          <Target
-                            size={13}
-                            className="text-pink-400"
-                          />
-                        }
-                      >
-                        Goal name
-                      </FieldLabel>
+                      <FieldLabel htmlFor="title">Goal name</FieldLabel>
 
                       <input
                         id="title"
@@ -226,65 +162,34 @@ export default function CreateGoalFormModal({
                       />
 
                       {errors.title && (
-                        <p className={errorClass}>
-                          {errors.title.message}
-                        </p>
+                        <p className={errorClass}>{errors.title.message}</p>
                       )}
-
                     </div>
 
-
                     {/* Category */}
-
                     <div>
-
-                      <FieldLabel
-                        icon={
-                          <Tag
-                            size={13}
-                            className="text-neutral-500"
-                          />
-                        }
-                      >
-                        Category
-                      </FieldLabel>
+                      <FieldLabel htmlFor="category">Category</FieldLabel>
 
                       <select
                         id="category"
                         {...register('category')}
                         className={`${inputClass} cursor-pointer appearance-none`}
                       >
-
-                        {categories.map(
-                          (category) => (
-                            <option
-                              key={category.value}
-                              value={category.value}
-                            >
-                              {category.label}
-                            </option>
-                          ),
-                        )}
-
+                        {categories.map((category) => (
+                          <option
+                            key={category.value}
+                            value={category.value}
+                            className="bg-primary text-secondary"
+                          >
+                            {category.label}
+                          </option>
+                        ))}
                       </select>
-
                     </div>
 
-
                     {/* Description */}
-
                     <div className="sm:col-span-2">
-
-                      <FieldLabel
-                        icon={
-                          <Tag
-                            size={13}
-                            className="text-neutral-500"
-                          />
-                        }
-                      >
-                        Description
-                      </FieldLabel>
+                      <FieldLabel htmlFor="description">Description</FieldLabel>
 
                       <textarea
                         id="description"
@@ -298,199 +203,113 @@ export default function CreateGoalFormModal({
                           {errors.description.message}
                         </p>
                       )}
-
                     </div>
-
                   </div>
-
                 </div>
 
-
-                {/* =============================================
-                    TARGET
-                ============================================= */}
-
+                {/* Target */}
                 <div>
-
-                  <div className="mb-4 flex items-center gap-2">
-
-                    <span className="text-[10px] font-medium uppercase tracking-[0.18em] text-neutral-300">
+                  <div className="mb-4 flex items-center gap-3">
+                    <span className="text-[10px] font-medium uppercase tracking-[0.18em] text-description">
                       Target
                     </span>
-
-                    <div className="h-px flex-1 bg-black/[0.05]" />
-
+                    <div className="h-px flex-1 bg-white/10" />
                   </div>
-
 
                   <div className="grid gap-5 sm:grid-cols-2">
 
-
                     {/* Amount */}
-
                     <div>
-
-                      <FieldLabel
-                        icon={
-                          <Wallet
-                            size={13}
-                            className="text-blue-400"
-                          />
-                        }
-                      >
+                      <FieldLabel htmlFor="targetAmount">
                         Target amount
                       </FieldLabel>
 
                       <div className="relative">
-
-                        <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[12px] font-medium text-neutral-400">
+                        <span className="pointer-events-none absolute left-4 top-1/2 mt-1 -translate-y-1/2 text-[12px] font-medium text-description">
                           Rp
                         </span>
 
                         <input
                           id="targetAmount"
-                          {...register(
-                            'targetAmount',
-                            {
-                              setValueAs: (
-                                value,
-                              ) =>
-                                value === ''
-                                  ? undefined
-                                  : Number(
-                                      value,
-                                    ),
-                            },
-                          )}
+                          {...register('targetAmount', {
+                            setValueAs: (value) =>
+                              value === '' ? undefined : Number(value),
+                          })}
                           type="number"
                           min="0"
                           placeholder="10.000.000"
                           className={`${inputClass} pl-10`}
                         />
-
                       </div>
 
                       {errors.targetAmount && (
                         <p className={errorClass}>
-                          {
-                            errors.targetAmount
-                              .message
-                          }
+                          {errors.targetAmount.message}
                         </p>
                       )}
-
                     </div>
 
-
                     {/* Deadline */}
-
                     <div>
-
-                      <FieldLabel
-                        icon={
-                          <CalendarDays
-                            size={13}
-                            className="text-pink-400"
-                          />
-                        }
-                      >
-                        Deadline
-                      </FieldLabel>
+                      <FieldLabel htmlFor="deadline">Deadline</FieldLabel>
 
                       <input
                         id="deadline"
                         {...register('deadline')}
                         type="date"
-                        className={inputClass}
+                        className={`${inputClass} [color-scheme:dark]`}
                       />
 
                       {errors.deadline && (
-                        <p className={errorClass}>
-                          {errors.deadline.message}
-                        </p>
+                        <p className={errorClass}>{errors.deadline.message}</p>
                       )}
-
                     </div>
-
                   </div>
-
                 </div>
 
-
-                {/* =============================================
-                    ERROR
-                ============================================= */}
-
+                {/* Error */}
                 {mutation.error && (
-                  <div className="rounded-[1.25rem] border border-rose-500/10 bg-rose-500/[0.04] px-4 py-3">
-
-                    <p className="text-[11px] font-medium text-rose-500">
+                  <div className="rounded-xl border border-rose-400/20 bg-rose-400/5 px-4 py-3">
+                    <p className="text-[11px] font-medium text-rose-400">
                       {mutation.error.message}
                     </p>
-
                   </div>
                 )}
 
+                {/* Footer */}
+                <div className="flex flex-col gap-3 border-t border-white/10 pt-5 sm:flex-row sm:items-center sm:justify-between">
+                  <p className="text-[10px] text-description">
+                    Small steps. Shared dreams.
+                  </p>
 
-                {/* =============================================
-                    FOOTER
-                ============================================= */}
+                  <div className="flex items-center gap-3">
+                    <button
+                      type="button"
+                      onClick={onClose}
+                      className="h-11 rounded-full bg-subprimary px-6 text-[12px] font-medium text-secondary transition hover:bg-white/10"
+                    >
+                      Cancel
+                    </button>
 
-                <div className="flex flex-col gap-3 border-t border-black/[0.06] pt-5 sm:flex-row sm:items-center sm:justify-between">
-
-                  <div className="flex items-center gap-2">
-
-                    <span className="size-1.5 rounded-full bg-pink-400" />
-
-                    <p className="text-[10px] text-neutral-400">
-                      Small steps. Shared dreams.
-                    </p>
-
+                    <button
+                      type="submit"
+                      disabled={mutation.isPending}
+                      className="h-11 rounded-full bg-subprimary px-7 text-[12px] font-medium text-secondary transition hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      {mutation.isPending ? 'Creating...' : 'Create goal'}
+                    </button>
                   </div>
-
-
-                  <button
-                    type="submit"
-                    disabled={mutation.isPending}
-                    className="flex h-11 items-center justify-center gap-2 rounded-full bg-black px-7 text-[12px] font-medium text-white transition hover:bg-neutral-800 disabled:cursor-not-allowed disabled:opacity-50"
-                  >
-
-                    {mutation.isPending ? (
-                      <>
-                        <Loader2
-                          size={14}
-                          className="animate-spin"
-                        />
-
-                        Creating...
-                      </>
-                    ) : (
-                      'Create goal'
-                    )}
-
-                  </button>
-
                 </div>
-
               </div>
-
             </form>
-
           </div>
-
         </div>
-
       </div>
-
-
-      {/* =====================================================
-          SCROLLBAR
-      ===================================================== */}
 
       <style jsx global>{`
         .modal-scroll {
           scrollbar-width: thin;
-          scrollbar-color: rgba(0, 0, 0, 0.12) transparent;
+          scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
         }
 
         .modal-scroll::-webkit-scrollbar {
@@ -502,15 +321,14 @@ export default function CreateGoalFormModal({
         }
 
         .modal-scroll::-webkit-scrollbar-thumb {
-          background: rgba(0, 0, 0, 0.12);
+          background: rgba(255, 255, 255, 0.15);
           border-radius: 999px;
         }
 
         .modal-scroll::-webkit-scrollbar-thumb:hover {
-          background: rgba(0, 0, 0, 0.2);
+          background: rgba(255, 255, 255, 0.25);
         }
       `}</style>
-
     </div>
   )
 }

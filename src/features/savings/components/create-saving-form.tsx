@@ -28,31 +28,7 @@ interface CreateSavingFormProps {
 /* INPUT */
 /* ========================================================= */
 
-const inputClass = `
-  mt-2
-  h-11
-  w-full
-  rounded-[12px]
-  border border-white/[0.08]
-  bg-white/[0.06]
-  px-3.5
-  text-[13px]
-  font-medium
-  text-white
-  outline-none
-  transition-all
-  duration-200
-  placeholder:text-white/25
-  hover:border-white/[0.14]
-  hover:bg-white/[0.08]
-  focus:border-white/20
-  focus:bg-white/[0.1]
-  focus:ring-4
-  focus:ring-white/[0.05]
-  sm:h-12
-  sm:rounded-[14px]
-  sm:px-4
-`
+const inputClass = 'mt-2 h-11 w-full rounded-[12px] border border-white/[0.08] bg-white/[0.06] px-3.5 text-[13px] font-medium text-secondary outline-none transition-all duration-200 placeholder:text-description/50 hover:border-white/[0.14] hover:bg-white/[0.08] focus:border-white/20 focus:bg-white/[0.1] focus:ring-4 focus:ring-white/[0.05] sm:h-12 sm:rounded-[14px] sm:px-4'
 
 export default function CreateSavingForm({
   relationshipId,
@@ -102,31 +78,14 @@ export default function CreateSavingForm({
 
             <label
               htmlFor="amount"
-              className="
-                flex min-w-0 items-center gap-2.5
-                text-[9px]
-                font-semibold
-                uppercase
-                tracking-[0.13em]
-                text-white/40
-                sm:gap-2
-                sm:text-[10px]
-                sm:tracking-[0.14em]
-              "
+              className="flex min-w-0 items-center gap-2.5 text-[9px] font-semibold uppercase tracking-[0.13em] text-description sm:gap-2 sm:text-[10px] sm:tracking-[0.14em]"
             >
 
-              <span
-                className="
-                  flex size-7 shrink-0
-                  items-center justify-center
-                  rounded-[9px]
-                  bg-white/[0.07]
-                "
-              >
+              <span className="flex size-7 shrink-0 items-center justify-center rounded-[9px] bg-white/[0.07]">
                 <Wallet
                   size={12}
                   strokeWidth={2.2}
-                  className="text-white/70"
+                  className="text-secondary/70"
                 />
               </span>
 
@@ -136,7 +95,7 @@ export default function CreateSavingForm({
 
             </label>
 
-            <span className="shrink-0 text-[8px] font-medium text-white/25 sm:text-[9px]">
+            <span className="shrink-0 text-[8px] font-medium text-description sm:text-[9px]">
               Required
             </span>
 
@@ -144,20 +103,7 @@ export default function CreateSavingForm({
 
           <div className="relative">
 
-            <span
-              className="
-                pointer-events-none
-                absolute
-                left-3.5
-                top-1/2
-                -translate-y-1/2
-                text-[11px]
-                font-semibold
-                text-white/30
-                sm:left-4
-                sm:text-[12px]
-              "
-            >
+            <span className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-[11px] font-semibold text-description sm:left-4 sm:text-[12px]">
               Rp
             </span>
 
@@ -196,31 +142,14 @@ export default function CreateSavingForm({
 
             <label
               htmlFor="note"
-              className="
-                flex min-w-0 items-center gap-2.5
-                text-[9px]
-                font-semibold
-                uppercase
-                tracking-[0.13em]
-                text-white/40
-                sm:gap-2
-                sm:text-[10px]
-                sm:tracking-[0.14em]
-              "
+              className="flex min-w-0 items-center gap-2.5 text-[9px] font-semibold uppercase tracking-[0.13em] text-description sm:gap-2 sm:text-[10px] sm:tracking-[0.14em]"
             >
 
-              <span
-                className="
-                  flex size-7 shrink-0
-                  items-center justify-center
-                  rounded-[9px]
-                  bg-white/[0.07]
-                "
-              >
+              <span className="flex size-7 shrink-0 items-center justify-center rounded-[9px] bg-white/[0.07]">
                 <MessageSquare
                   size={12}
                   strokeWidth={2.2}
-                  className="text-white/70"
+                  className="text-secondary/70"
                 />
               </span>
 
@@ -230,7 +159,7 @@ export default function CreateSavingForm({
 
             </label>
 
-            <span className="shrink-0 text-[8px] font-medium text-white/25 sm:text-[9px]">
+            <span className="shrink-0 text-[8px] font-medium text-description sm:text-[9px]">
               Optional
             </span>
 
@@ -256,26 +185,9 @@ export default function CreateSavingForm({
         {/* ================================================= */}
 
         {mutation.error && (
-          <div
-            className="
-              flex items-start gap-2.5
-              rounded-[14px]
-              border border-rose-400/10
-              bg-rose-400/[0.06]
-              px-3.5 py-3
-              sm:gap-3
-              sm:px-4 sm:py-3.5
-            "
-          >
+          <div className="flex items-start gap-2.5 rounded-[14px] border border-rose-400/10 bg-rose-400/[0.06] px-3.5 py-3 sm:gap-3 sm:px-4 sm:py-3.5">
 
-            <div
-              className="
-                flex size-7 shrink-0
-                items-center justify-center
-                rounded-full
-                bg-rose-400/10
-              "
-            >
+            <div className="flex size-7 shrink-0 items-center justify-center rounded-full bg-rose-400/10">
               <span className="text-[10px] font-bold text-rose-300">
                 !
               </span>
@@ -293,27 +205,9 @@ export default function CreateSavingForm({
         {/* ================================================= */}
 
         {mutation.isSuccess && (
-          <div
-            className="
-              flex items-center gap-2.5
-              rounded-[14px]
-              border border-emerald-400/10
-              bg-emerald-400/[0.06]
-              px-3.5 py-3
-              sm:gap-3
-              sm:px-4 sm:py-3.5
-            "
-          >
+          <div className="flex items-center gap-2.5 rounded-[14px] border border-emerald-400/10 bg-emerald-400/[0.06] px-3.5 py-3 sm:gap-3 sm:px-4 sm:py-3.5">
 
-            <div
-              className="
-                flex size-7 shrink-0
-                items-center justify-center
-                rounded-full
-                bg-emerald-500
-                text-white
-              "
-            >
+            <div className="flex size-7 shrink-0 items-center justify-center rounded-full bg-emerald-500 text-secondary">
               <Check
                 size={13}
                 strokeWidth={3}
@@ -342,51 +236,10 @@ export default function CreateSavingForm({
         <button
           type="submit"
           disabled={mutation.isPending}
-          className="
-            group
-            relative
-            flex
-            h-11
-            w-full
-            items-center
-            justify-center
-            gap-2
-            overflow-hidden
-            rounded-[12px]
-            bg-white
-            px-4
-            text-[11px]
-            font-semibold
-            text-neutral-900
-            shadow-[0_12px_30px_-12px_rgba(0,0,0,0.5)]
-            transition-all
-            duration-200
-            hover:-translate-y-0.5
-            hover:bg-neutral-50
-            hover:shadow-[0_18px_35px_-12px_rgba(0,0,0,0.55)]
-            active:translate-y-0
-            active:scale-[0.985]
-            disabled:cursor-not-allowed
-            disabled:opacity-50
-            sm:h-12
-            sm:rounded-[14px]
-            sm:px-5
-            sm:text-[12px]
-          "
+          className="group relative flex h-11 w-full items-center justify-center gap-2 overflow-hidden rounded-[12px] bg-subprimary px-4 text-[11px] font-semibold text-secondary shadow-[0_12px_30px_-12px_rgba(0,0,0,0.5)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-subprimary/80 hover:shadow-[0_18px_35px_-12px_rgba(0,0,0,0.55)] active:translate-y-0 active:scale-[0.985] disabled:cursor-not-allowed disabled:opacity-50 sm:h-12 sm:rounded-[14px] sm:px-5 sm:text-[12px]"
         >
 
-          <span
-            className="
-              pointer-events-none
-              absolute
-              -right-8
-              -top-10
-              size-24
-              rounded-full
-              bg-blue-100/40
-              blur-2xl
-            "
-          />
+          <span className="pointer-events-none absolute -right-8 -top-10 size-24 rounded-full bg-blue-500/10 blur-2xl" />
 
           <span className="relative flex items-center gap-2">
 
@@ -407,24 +260,11 @@ export default function CreateSavingForm({
                   Add savings
                 </span>
 
-                <span
-                  className="
-                    flex size-6
-                    items-center justify-center
-                    rounded-full
-                    bg-neutral-900/[0.06]
-                  "
-                >
+                <span className="flex size-6 items-center justify-center rounded-full bg-white/[0.08]">
                   <ArrowUpRight
                     size={12}
                     strokeWidth={2.5}
-                    className="
-                      transition-transform
-                      duration-200
-                      group-hover:translate-x-0.5
-                      group-hover:-translate-y-0.5
-                      sm:size-[13px]
-                    "
+                    className="transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 sm:size-[13px]"
                   />
                 </span>
               </>
@@ -438,15 +278,7 @@ export default function CreateSavingForm({
         {/* FOOTER */}
         {/* ================================================= */}
 
-        <p className="
-          px-3
-          text-center
-          text-[8px]
-          leading-relaxed
-          text-white/20
-          sm:px-0
-          sm:text-[9px]
-        ">
+        <p className="px-3 text-center text-[8px] leading-relaxed text-description sm:px-0 sm:text-[9px]">
           Every contribution brings you two
           a little closer.
         </p>

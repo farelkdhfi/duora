@@ -34,46 +34,46 @@ const moodInfo: Record<
   happy: {
     image: happyEmot,
     label: 'Happy',
-    background: 'bg-pink-50/80',
-    border: 'border-pink-200/50',
+    background: 'bg-pink-500/10',
+    border: 'border-pink-400/20',
     glow: 'bg-pink-300/[0.12]',
-    text: 'text-pink-700',
+    text: 'text-pink-400',
     accent: 'bg-pink-400',
   },
   neutral: {
     image: neutralEmot,
     label: 'Neutral',
-    background: 'bg-neutral-100/80',
-    border: 'border-neutral-200/70',
+    background: 'bg-subprimary/80',
+    border: 'border-white/[0.08]',
     glow: 'bg-neutral-300/[0.12]',
-    text: 'text-neutral-600',
+    text: 'text-description',
     accent: 'bg-neutral-500',
   },
   sad: {
     image: sadEmot,
     label: 'Sad',
-    background: 'bg-blue-50/80',
-    border: 'border-blue-200/50',
+    background: 'bg-blue-500/10',
+    border: 'border-blue-400/20',
     glow: 'bg-blue-400/[0.10]',
-    text: 'text-blue-700',
+    text: 'text-blue-400',
     accent: 'bg-blue-500',
   },
   tired: {
     image: tiredEmot,
     label: 'Tired',
-    background: 'bg-violet-50/80',
-    border: 'border-violet-200/50',
+    background: 'bg-violet-500/10',
+    border: 'border-violet-400/20',
     glow: 'bg-violet-400/[0.10]',
-    text: 'text-violet-700',
+    text: 'text-violet-400',
     accent: 'bg-violet-500',
   },
   stressed: {
     image: stressedEmot,
     label: 'Stressed',
-    background: 'bg-red-50/80',
-    border: 'border-red-200/50',
+    background: 'bg-red-500/10',
+    border: 'border-red-400/20',
     glow: 'bg-red-400/[0.10]',
-    text: 'text-red-700',
+    text: 'text-red-400',
     accent: 'bg-red-500',
   },
 }
@@ -156,10 +156,8 @@ export default function CheckinCard({
 
   return (
     <>
-      <article className="relative w-full overflow-hidden rounded-[1.75rem] border border-black/[0.05] bg-white shadow-[0_25px_70px_-40px_rgba(0,0,0,0.22)] transition-shadow duration-300 hover:shadow-[0_30px_80px_-40px_rgba(0,0,0,0.28)] sm:rounded-[2rem]">
-        <div
-          className={`pointer-events-none absolute -right-24 -top-24 size-64 rounded-full blur-[110px] ${mood.glow}`}
-        />
+      <article className="relative w-full overflow-hidden rounded-[1.75rem] border border-white/[0.06] bg-primary shadow-[0_25px_70px_-40px_rgba(0,0,0,0.22)] transition-shadow duration-300 hover:shadow-[0_30px_80px_-40px_rgba(0,0,0,0.28)] sm:rounded-[2rem]">
+        <div className={`pointer-events-none absolute -right-24 -top-24 size-64 rounded-full blur-[110px] ${mood.glow}`} />
 
         <div className="relative p-5 sm:p-7 lg:p-8">
           {/* COLLAPSED HEADER */}
@@ -174,7 +172,7 @@ export default function CheckinCard({
               {/* Loading */}
               {!imageLoaded && (
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="size-4 animate-spin rounded-full border-2 border-neutral-200 border-t-neutral-600" />
+                  <div className="size-4 animate-spin rounded-full border-2 border-white/[0.12] border-t-description" />
                 </div>
               )}
 
@@ -184,31 +182,25 @@ export default function CheckinCard({
                 alt=""
                 draggable={false}
                 onLoad={() => setImageLoaded(true)}
-                className={`size-20 object-contain brightness-110 transition-all duration-300 sm:size-9 ${
-                  imageLoaded
-                    ? 'scale-100 opacity-100'
-                    : 'scale-95 opacity-0'
-                }`}
+                className={`size-20 object-contain brightness-110 transition-all duration-300 sm:size-9 ${imageLoaded ? 'scale-100 opacity-100' : 'scale-95 opacity-0'}`}
               />
             </div>
 
             {/* Name + date */}
             <div className="min-w-0 flex-1">
               <div className="flex items-center gap-2">
-                <h2 className="truncate text-[14px] font-semibold tracking-[-0.03em] text-neutral-900 sm:text-[15px]">
+                <h2 className="truncate text-[14px] font-semibold tracking-[-0.03em] text-secondary sm:text-[15px]">
                   {name}
                 </h2>
 
-                <span
-                  className={`shrink-0 text-[9px] font-semibold ${mood.text}`}
-                >
+                <span className={`shrink-0 text-[9px] font-semibold ${mood.text}`}>
                   {mood.label}
                 </span>
               </div>
 
               <time
                 dateTime={checkin.checkin_date}
-                className="mt-1 block text-[10px] font-medium text-neutral-400 sm:text-[11px]"
+                className="mt-1 block text-[10px] font-medium text-description sm:text-[11px]"
               >
                 {date.toLocaleDateString('id-ID', {
                   day: 'numeric',
@@ -220,16 +212,14 @@ export default function CheckinCard({
 
             {/* Expand */}
             <div className="flex shrink-0 items-center gap-2">
-              <span className="hidden text-[10px] font-medium text-neutral-400 transition-colors group-hover:text-neutral-600 sm:block">
+              <span className="hidden text-[10px] font-medium text-description transition-colors group-hover:text-secondary sm:block">
                 {isExpanded ? 'Tutup' : 'Lihat selengkapnya'}
               </span>
 
-              <div className="flex size-8 items-center justify-center rounded-full border border-black/20 bg-neutral-50 text-neutral-700 transition-all duration-300 group-hover:bg-neutral-100 group-hover:text-neutral-600">
+              <div className="flex size-8 items-center justify-center rounded-full border border-white/20 bg-subprimary text-secondary transition-all duration-300 group-hover:bg-subprimary/80 group-hover:text-description">
                 <ChevronDown
                   size={14}
-                  className={`transition-transform duration-300 ${
-                    isExpanded ? 'rotate-180' : ''
-                  }`}
+                  className={`transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`}
                 />
               </div>
             </div>
@@ -237,11 +227,7 @@ export default function CheckinCard({
 
           {/* EXPANDED CONTENT */}
           <div
-            className={`grid transition-[grid-template-rows,opacity,margin] duration-300 ease-out ${
-              isExpanded
-                ? 'mt-7 grid-rows-[1fr] opacity-100'
-                : 'mt-0 grid-rows-[0fr] opacity-0'
-            }`}
+            className={`grid transition-[grid-template-rows,opacity,margin] duration-300 ease-out ${isExpanded ? 'mt-7 grid-rows-[1fr] opacity-100' : 'mt-0 grid-rows-[0fr] opacity-0'}`}
           >
             <div className="min-h-0 overflow-hidden">
               {/* Stats */}
@@ -249,41 +235,41 @@ export default function CheckinCard({
                 <StatCard
                   label="Energy"
                   value={checkin.energy}
-                  progressClass="bg-neutral-900"
+                  progressClass="bg-secondary"
                 />
 
                 <StatCard
                   label="Stress"
                   value={checkin.stress}
-                  progressClass="bg-neutral-400"
+                  progressClass="bg-description"
                 />
               </div>
 
               {/* Reflections */}
               {details.length > 0 && (
                 <section className="mt-8">
-                  <div className="flex items-center justify-between border-b border-black/[0.05] pb-3">
-                    <p className="text-[11px] font-semibold tracking-[-0.01em] text-neutral-700">
+                  <div className="flex items-center justify-between border-b border-white/[0.06] pb-3">
+                    <p className="text-[11px] font-semibold tracking-[-0.01em] text-secondary">
                       Reflection
                     </p>
 
-                    <span className="text-[9px] uppercase tracking-[0.14em] text-neutral-300">
+                    <span className="text-[9px] uppercase tracking-[0.14em] text-description">
                       {details.length}{' '}
                       {details.length === 1 ? 'entry' : 'entries'}
                     </span>
                   </div>
 
-                  <div className="divide-y divide-black/[0.045]">
+                  <div className="divide-y divide-white/[0.05]">
                     {details.map((detail) => (
                       <div
                         key={detail.key}
                         className="py-4 first:pt-4 last:pb-1 sm:py-5"
                       >
-                        <p className="text-[9px] font-semibold uppercase tracking-[0.14em] text-neutral-300">
+                        <p className="text-[9px] font-semibold uppercase tracking-[0.14em] text-description">
                           {detail.label}
                         </p>
 
-                        <p className="mt-2 break-words text-[12.5px] leading-[1.7] text-neutral-600 sm:text-[13px]">
+                        <p className="mt-2 break-words text-[12.5px] leading-[1.7] text-description sm:text-[13px]">
                           {String(detail.value)}
                         </p>
                       </div>
@@ -298,7 +284,7 @@ export default function CheckinCard({
                   <button
                     type="button"
                     onClick={() => setIsHistoryOpen(true)}
-                    className="flex w-full items-center justify-center gap-2 rounded-full border border-black/[0.06] bg-neutral-100 py-3 text-sm text-black transition"
+                    className="flex w-full items-center justify-center gap-2 rounded-full border border-white/[0.06] bg-subprimary py-3 text-sm text-secondary transition"
                   >
                     Lihat riwayat ({historyCount}x)
                   </button>
@@ -336,21 +322,21 @@ function StatCard({
   const percentage = Math.min(Math.max(value, 0), 10) * 10
 
   return (
-    <div className="rounded-[1.25rem] border border-black/[0.045] bg-neutral-50/70 px-4 py-4 sm:px-5 sm:py-[18px]">
+    <div className="rounded-[1.25rem] border border-white/[0.06] bg-subprimary/70 px-4 py-4 sm:px-5 sm:py-[18px]">
       <div className="flex items-center justify-between gap-4">
-        <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-neutral-400">
+        <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-description">
           {label}
         </p>
 
-        <p className="text-[13px] font-semibold tabular-nums tracking-[-0.02em] text-neutral-700">
+        <p className="text-[13px] font-semibold tabular-nums tracking-[-0.02em] text-secondary">
           {value}
-          <span className="ml-0.5 text-[10px] font-medium text-neutral-300">
+          <span className="ml-0.5 text-[10px] font-medium text-description">
             /10
           </span>
         </p>
       </div>
 
-      <div className="mt-3 h-1 overflow-hidden rounded-full bg-neutral-200/80">
+      <div className="mt-3 h-1 overflow-hidden rounded-full bg-primary">
         <div
           className={`h-full rounded-full transition-all duration-500 ${progressClass}`}
           style={{ width: `${percentage}%` }}

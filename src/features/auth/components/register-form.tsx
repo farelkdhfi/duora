@@ -297,7 +297,7 @@ export default function RegisterForm() {
             type="button"
             onClick={handleNext}
             disabled={isGoogleLoading}
-            className="flex h-12 w-full items-center justify-center gap-x-2 overflow-hidden rounded-full border border-white/5 bg-black text-sm font-semibold text-white shadow-lg disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex h-12 w-full items-center justify-center gap-x-2 overflow-hidden rounded-full border border-white/5 bg-subprimary text-sm font-semibold text-white shadow-lg disabled:cursor-not-allowed disabled:opacity-50"
           >
             <span>
               Sign up with email

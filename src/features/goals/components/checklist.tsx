@@ -5,7 +5,6 @@ import {
   Check,
   ListChecks,
   Plus,
-  Sparkles,
   Trash2,
 } from 'lucide-react'
 
@@ -71,7 +70,7 @@ export default function Checklist({
 
   if (isLoading) {
     return (
-      <section className="overflow-hidden rounded-[1.5rem] border border-black/[0.06] bg-white sm:rounded-[2rem]">
+      <section className="overflow-hidden rounded-[1.5rem] border border-white/[0.06] bg-primary sm:rounded-[2rem]">
 
         <div className="animate-pulse p-4 xs:p-5 sm:p-6 lg:p-7">
 
@@ -81,22 +80,22 @@ export default function Checklist({
 
             <div className="flex min-w-0 items-center gap-2.5 sm:gap-3">
 
-              <div className="size-9 shrink-0 rounded-[12px] bg-neutral-100 sm:size-10 sm:rounded-[14px]" />
+              <div className="size-9 shrink-0 rounded-[12px] bg-subprimary sm:size-10 sm:rounded-[14px]" />
 
               <div className="min-w-0 space-y-2">
-                <div className="h-2 w-16 rounded-full bg-neutral-100" />
-                <div className="h-3.5 w-28 rounded-full bg-neutral-100 sm:h-4 sm:w-32" />
+                <div className="h-2 w-16 rounded-full bg-subprimary" />
+                <div className="h-3.5 w-28 rounded-full bg-subprimary sm:h-4 sm:w-32" />
               </div>
 
             </div>
 
-            <div className="h-7 w-11 shrink-0 rounded-full bg-neutral-100" />
+            <div className="h-7 w-11 shrink-0 rounded-full bg-subprimary" />
 
           </div>
 
           {/* Progress */}
 
-          <div className="mt-7 h-1.5 rounded-full bg-neutral-100 sm:mt-8" />
+          <div className="mt-7 h-1.5 rounded-full bg-subprimary sm:mt-8" />
 
           {/* Items */}
 
@@ -107,9 +106,9 @@ export default function Checklist({
                 key={item}
                 className="flex items-center gap-2.5 sm:gap-3"
               >
-                <div className="size-5 shrink-0 rounded-md bg-neutral-100" />
+                <div className="size-5 shrink-0 rounded-md bg-subprimary" />
 
-                <div className="h-3 w-32 rounded-full bg-neutral-100 sm:w-40" />
+                <div className="h-3 w-32 rounded-full bg-subprimary sm:w-40" />
               </div>
             ))}
 
@@ -117,7 +116,7 @@ export default function Checklist({
 
           {/* Add */}
 
-          <div className="mt-6 h-11 rounded-[12px] bg-neutral-100 sm:mt-7 sm:h-12 sm:rounded-[14px]" />
+          <div className="mt-6 h-11 rounded-[12px] bg-subprimary sm:mt-7 sm:h-12 sm:rounded-[14px]" />
 
         </div>
 
@@ -149,7 +148,7 @@ export default function Checklist({
     completedCount === totalCount
 
   return (
-    <section className="overflow-hidden rounded-[1.5rem] border border-black/[0.06] bg-white sm:rounded-[2rem]">
+    <section className="overflow-hidden rounded-[1.5rem] border border-white/[0.06] bg-primary sm:rounded-[2rem]">
 
       {/* ===================================================== */}
       {/* HEADER */}
@@ -161,17 +160,7 @@ export default function Checklist({
 
           <div className="flex min-w-0 items-center gap-2.5 sm:gap-3">
 
-            <div
-              className="
-                flex size-9 shrink-0
-                items-center justify-center
-                rounded-[12px]
-                bg-neutral-900
-                text-white
-                sm:size-10
-                sm:rounded-[14px]
-              "
-            >
+            <div className="flex size-9 shrink-0 items-center justify-center rounded-[12px] bg-subprimary text-secondary sm:size-10 sm:rounded-[14px]">
               <ListChecks
                 size={15}
                 strokeWidth={2}
@@ -181,11 +170,11 @@ export default function Checklist({
 
             <div className="min-w-0">
 
-              <p className="truncate text-[9px] font-semibold uppercase tracking-[0.14em] text-neutral-300 sm:text-[10px] sm:tracking-[0.16em]">
+              <p className="truncate text-[9px] font-semibold uppercase tracking-[0.14em] text-description sm:text-[10px] sm:tracking-[0.16em]">
                 Together
               </p>
 
-              <h2 className="mt-1 truncate text-[14px] font-semibold tracking-[-0.025em] text-neutral-900 sm:text-[15px]">
+              <h2 className="mt-1 truncate text-[14px] font-semibold tracking-[-0.025em] text-secondary sm:text-[15px]">
                 Checklist
               </h2>
 
@@ -196,23 +185,7 @@ export default function Checklist({
           {/* COUNT */}
 
           {totalCount > 0 && (
-            <div
-              className={`
-                shrink-0
-                rounded-full
-                px-2.5
-                py-1.5
-                text-[10px]
-                font-semibold
-                tabular-nums
-                sm:px-3
-                sm:text-[11px]
-                ${isCompleted
-                  ? 'bg-emerald-50 text-emerald-600'
-                  : 'bg-neutral-100 text-neutral-500'
-                }
-              `}
-            >
+            <div className={`shrink-0 rounded-full px-2.5 py-1.5 text-[10px] font-semibold tabular-nums sm:px-3 sm:text-[11px] ${isCompleted ? 'bg-emerald-500/10 text-emerald-500' : 'bg-subprimary text-description'}`}>
               {completedCount}/{totalCount}
             </div>
           )}
@@ -228,7 +201,7 @@ export default function Checklist({
 
             <div className="flex items-center justify-between gap-3">
 
-              <span className="min-w-0 truncate text-[9px] text-neutral-400 sm:text-[10px]">
+              <span className="min-w-0 truncate text-[9px] text-description sm:text-[10px]">
                 {isCompleted
                   ? 'Everything is complete'
                   : `${progress}% completed`}
@@ -246,20 +219,10 @@ export default function Checklist({
 
             </div>
 
-            <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-neutral-100">
+            <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-subprimary">
 
               <div
-                className={`
-                  h-full
-                  rounded-full
-                  transition-all
-                  duration-500
-                  ease-out
-                  ${isCompleted
-                    ? 'bg-emerald-500'
-                    : 'bg-neutral-900'
-                  }
-                `}
+                className={`h-full rounded-full transition-all duration-500 ease-out ${isCompleted ? 'bg-emerald-500' : 'bg-secondary'}`}
                 style={{
                   width: `${progress}%`,
                 }}
@@ -276,7 +239,7 @@ export default function Checklist({
       {/* ITEMS */}
       {/* ===================================================== */}
 
-      <div className="border-t border-black/[0.05]">
+      <div className="border-t border-white/[0.06]">
 
         {items?.length ? (
 
@@ -286,22 +249,7 @@ export default function Checklist({
 
               <div
                 key={item.id}
-                className="
-                  group
-                  flex
-                  items-center
-                  gap-2.5
-                  border-b
-                  border-black/[0.04]
-                  px-3.5
-                  py-3
-                  transition-colors
-                  hover:bg-neutral-50/60
-                  sm:gap-3
-                  sm:px-5
-                  sm:py-3.5
-                  lg:px-6
-                "
+                className="group flex items-center gap-2.5 border-b border-white/[0.05] px-3.5 py-3 transition-colors hover:bg-subprimary/60 sm:gap-3 sm:px-5 sm:py-3.5 lg:px-6"
               >
 
                 {/* CHECK */}
@@ -323,29 +271,7 @@ export default function Checklist({
                   disabled={
                     toggleMutation.isPending
                   }
-                  className={`
-                    flex
-                    size-5
-                    shrink-0
-                    items-center
-                    justify-center
-                    rounded-md
-                    border
-                    transition-all
-                    duration-200
-                    ${item.is_completed
-                      ? `
-                          border-neutral-900
-                          bg-neutral-900
-                          text-white
-                        `
-                      : `
-                          border-neutral-200
-                          bg-white
-                          hover:border-neutral-400
-                        `
-                    }
-                  `}
+                  className={`flex size-5 shrink-0 items-center justify-center rounded-md border transition-all duration-200 ${item.is_completed ? 'border-secondary bg-secondary text-primary' : 'border-white/[0.12] bg-primary hover:border-white/30'}`}
                 >
 
                   {item.is_completed && (
@@ -359,69 +285,21 @@ export default function Checklist({
 
                 {/* TITLE */}
 
-                <span
-                  className={`
-                    min-w-0
-                    flex-1
-                    truncate
-                    text-[12px]
-                    leading-5
-                    transition-all
-                    duration-200
-                    sm:text-[13px]
-                    ${item.is_completed
-                      ? 'text-neutral-300 line-through'
-                      : 'text-neutral-700'
-                    }
-                  `}
-                >
+                <span className={`min-w-0 flex-1 truncate text-[12px] leading-5 transition-all duration-200 sm:text-[13px] ${item.is_completed ? 'text-description line-through' : 'text-secondary'}`}>
                   {item.title}
                 </span>
 
                 {/* DELETE */}
 
                 {confirmingDeleteId === item.id ? (
-                  <div
-                    className="
-      flex
-      shrink-0
-      items-center
-      gap-1
-      rounded-full
-      border
-      border-red-100
-      bg-white
-      p-1
-      shadow-[0_3px_12px_rgba(239,68,68,0.08)]
-    "
-                  >
+                  <div className="flex shrink-0 items-center gap-1 rounded-full border border-red-500/20 bg-primary p-1 shadow-[0_3px_12px_rgba(239,68,68,0.08)]">
                     <button
                       type="button"
                       onClick={() =>
                         handleDeleteClick(item.id)
                       }
                       disabled={deleteMutation.isPending}
-                      className="
-        inline-flex
-        min-h-7
-        items-center
-        justify-center
-        gap-1
-        rounded-full
-        bg-red-500
-        px-2.5
-        text-[9px]
-        font-semibold
-        text-white
-        transition-all
-        duration-200
-        hover:bg-red-600
-        active:scale-95
-        disabled:cursor-not-allowed
-        disabled:opacity-50
-        sm:min-h-7.5
-        sm:px-3
-      "
+                      className="inline-flex min-h-7 items-center justify-center gap-1 rounded-full bg-red-500 px-2.5 text-[9px] font-semibold text-secondary transition-all duration-200 hover:bg-red-600 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 sm:min-h-7.5 sm:px-3"
                     >
                       {deleteMutation.isPending ? (
                         <span className="size-2.5 animate-spin rounded-full border-2 border-white/30 border-t-white" />
@@ -443,26 +321,7 @@ export default function Checklist({
                       type="button"
                       onClick={handleCancelDelete}
                       disabled={deleteMutation.isPending}
-                      className="
-        inline-flex
-        min-h-7
-        items-center
-        justify-center
-        rounded-full
-        px-2.5
-        text-[9px]
-        font-semibold
-        text-neutral-500
-        transition-all
-        duration-200
-        hover:bg-neutral-100
-        hover:text-neutral-700
-        active:scale-95
-        disabled:cursor-not-allowed
-        disabled:opacity-50
-        sm:min-h-7.5
-        sm:px-3
-      "
+                      className="inline-flex min-h-7 items-center justify-center rounded-full px-2.5 text-[9px] font-semibold text-description transition-all duration-200 hover:bg-subprimary hover:text-secondary active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 sm:min-h-7.5 sm:px-3"
                     >
                       Cancel
                     </button>
@@ -475,43 +334,12 @@ export default function Checklist({
                       handleDeleteClick(item.id)
                     }
                     disabled={deleteMutation.isPending}
-                    className="
-      group/delete
-      flex
-      size-7
-      shrink-0
-      items-center
-      justify-center
-      rounded-full
-      border
-      border-neutral-200/80
-      bg-white
-      text-neutral-300
-      shadow-[0_2px_7px_rgba(0,0,0,0.035)]
-      transition-all
-      duration-200
-
-      hover:border-red-100
-      hover:bg-red-50
-      hover:text-red-500
-      active:scale-95
-
-      sm:size-6.5
-      sm:border-transparent
-      sm:bg-neutral-50/70
-      sm:opacity-70
-      sm:group-hover:opacity-100
-      sm:focus:opacity-100
-    "
+                    className="group/delete flex size-7 shrink-0 items-center justify-center rounded-full border border-white/[0.08] bg-subprimary text-description shadow-[0_2px_7px_rgba(0,0,0,0.035)] transition-all duration-200 hover:border-red-500/20 hover:bg-red-500/10 hover:text-red-500 active:scale-95 sm:size-6.5 sm:border-transparent sm:bg-subprimary sm:opacity-70 sm:group-hover:opacity-100 sm:focus:opacity-100"
                   >
                     <Trash2
                       size={11}
                       strokeWidth={2}
-                      className="
-        transition-transform
-        duration-200
-        group-hover/delete:scale-105
-      "
+                      className="transition-transform duration-200 group-hover/delete:scale-105"
                     />
                   </button>
                 )}
@@ -530,21 +358,11 @@ export default function Checklist({
 
           <div className="px-4 py-9 text-center xs:px-5 sm:px-6 sm:py-10 lg:px-7">
 
-            <div className="mx-auto flex size-9 items-center justify-center rounded-[12px] bg-neutral-50 sm:size-10 sm:rounded-xl">
-
-              <Sparkles
-                size={15}
-                strokeWidth={1.8}
-                className="text-neutral-300 sm:size-4"
-              />
-
-            </div>
-
-            <h3 className="mt-3 text-[12px] font-semibold text-neutral-600 sm:text-[13px]">
+            <h3 className="mt-3 text-[12px] font-semibold text-secondary sm:text-[13px]">
               Nothing to check off yet
             </h3>
 
-            <p className="mx-auto mt-1 max-w-xs text-[10px] leading-5 text-neutral-400 sm:text-[11px]">
+            <p className="mx-auto mt-1 max-w-xs text-[10px] leading-5 text-description sm:text-[11px]">
               Add a small step and work toward
               this goal together.
             </p>
@@ -559,7 +377,7 @@ export default function Checklist({
       {/* ADD ITEM */}
       {/* ===================================================== */}
 
-      <div className="border-t border-black/[0.05] bg-neutral-50/50 p-3.5 xs:p-4 sm:px-5 sm:py-4 lg:px-6">
+      <div className="border-t border-white/[0.06] bg-subprimary/50 p-3.5 xs:p-4 sm:px-5 sm:py-4 lg:px-6">
 
         <div className="flex items-center gap-2">
 
@@ -575,27 +393,7 @@ export default function Checklist({
               }
             }}
             placeholder="Add a small step..."
-            className="
-              h-11
-              min-w-0
-              flex-1
-              rounded-[12px]
-              border
-              border-black/[0.06]
-              bg-white
-              px-3.5
-              text-[12px]
-              text-neutral-700
-              outline-none
-              transition
-              placeholder:text-neutral-300
-              focus:border-neutral-300
-              focus:ring-4
-              focus:ring-black/[0.025]
-              sm:h-12
-              sm:rounded-[14px]
-              sm:px-4
-            "
+            className="h-11 min-w-0 flex-1 rounded-[12px] border border-white/[0.06] bg-primary px-3.5 text-[12px] text-secondary outline-none transition placeholder:text-description focus:border-white/20 focus:ring-4 focus:ring-white/[0.05] sm:h-12 sm:rounded-[14px] sm:px-4"
           />
 
           <button
@@ -605,23 +403,7 @@ export default function Checklist({
               createMutation.isPending ||
               !title.trim()
             }
-            className="
-              flex
-              size-11
-              shrink-0
-              items-center
-              justify-center
-              rounded-[12px]
-              bg-neutral-900
-              text-white
-              transition-all
-              hover:bg-neutral-800
-              active:scale-95
-              disabled:cursor-not-allowed
-              disabled:opacity-20
-              sm:size-12
-              sm:rounded-[14px]
-            "
+            className="flex size-11 shrink-0 items-center justify-center rounded-[12px] bg-subprimary text-secondary transition-all hover:bg-subprimary/80 active:scale-95 disabled:cursor-not-allowed disabled:opacity-20 sm:size-12 sm:rounded-[14px]"
             aria-label="Add checklist item"
           >
 
@@ -634,7 +416,7 @@ export default function Checklist({
 
         </div>
 
-        <p className="mt-2 px-1 text-[8px] text-neutral-300 sm:text-[9px]">
+        <p className="mt-2 px-1 text-[8px] text-description sm:text-[9px]">
           Press Enter to add
         </p>
 

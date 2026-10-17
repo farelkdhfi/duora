@@ -92,29 +92,29 @@ export default function GoalDetail({
   if (isLoading) {
     return (
       <div className="animate-pulse pb-10">
-        <div className="h-4 w-28 rounded-full bg-neutral-100" />
+        <div className="h-4 w-28 rounded-full bg-subprimary" />
 
-        <div className="mt-6 overflow-hidden rounded-[2rem] border border-black/[0.04] bg-white p-6 sm:p-8">
-          <div className="h-2.5 w-20 rounded-full bg-neutral-100" />
+        <div className="mt-6 overflow-hidden rounded-[2rem] border border-white/[0.06] bg-primary p-6 sm:p-8">
+          <div className="h-2.5 w-20 rounded-full bg-subprimary" />
 
-          <div className="mt-5 h-10 w-80 max-w-full rounded-xl bg-neutral-100" />
+          <div className="mt-5 h-10 w-80 max-w-full rounded-xl bg-subprimary" />
 
-          <div className="mt-4 h-4 w-96 max-w-full rounded-full bg-neutral-100" />
+          <div className="mt-4 h-4 w-96 max-w-full rounded-full bg-subprimary" />
 
           <div className="mt-7 flex gap-2">
-            <div className="h-8 w-28 rounded-full bg-neutral-100" />
-            <div className="h-8 w-32 rounded-full bg-neutral-100" />
+            <div className="h-8 w-28 rounded-full bg-subprimary" />
+            <div className="h-8 w-32 rounded-full bg-subprimary" />
           </div>
         </div>
 
         <div className="mt-6 grid gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">
           <div className="space-y-6">
-            <div className="h-48 rounded-[2rem] bg-neutral-100" />
-            <div className="h-52 rounded-[2rem] bg-neutral-100" />
-            <div className="h-48 rounded-[2rem] bg-neutral-100" />
+            <div className="h-48 rounded-[2rem] bg-subprimary" />
+            <div className="h-52 rounded-[2rem] bg-subprimary" />
+            <div className="h-48 rounded-[2rem] bg-subprimary" />
           </div>
 
-          <div className="h-96 rounded-[2rem] bg-neutral-100" />
+          <div className="h-96 rounded-[2rem] bg-subprimary" />
         </div>
       </div>
     )
@@ -127,30 +127,30 @@ export default function GoalDetail({
   if (error || !goal) {
     return (
       <div className="relative flex min-h-[70vh] items-center justify-center px-4">
-        <div className="pointer-events-none absolute -left-32 top-20 size-80 rounded-full bg-blue-100/30 blur-[100px]" />
-        <div className="pointer-events-none absolute -right-32 bottom-20 size-80 rounded-full bg-pink-100/30 blur-[100px]" />
+        <div className="pointer-events-none absolute -left-32 top-20 size-80 rounded-full bg-blue-500/10 blur-[100px]" />
+        <div className="pointer-events-none absolute -right-32 bottom-20 size-80 rounded-full bg-pink-500/10 blur-[100px]" />
 
-        <div className="relative w-full max-w-md rounded-[2rem] border border-black/[0.05] bg-white p-8 text-center shadow-[0_25px_70px_-30px_rgba(0,0,0,0.2)]">
-          <div className="mx-auto flex size-12 items-center justify-center rounded-2xl bg-neutral-100">
+        <div className="relative w-full max-w-md rounded-[2rem] border border-white/[0.06] bg-primary p-8 text-center shadow-[0_25px_70px_-30px_rgba(0,0,0,0.2)]">
+          <div className="mx-auto flex size-12 items-center justify-center rounded-2xl bg-subprimary">
             <Target
               size={19}
               strokeWidth={1.8}
-              className="text-neutral-500"
+              className="text-description"
             />
           </div>
 
-          <h1 className="mt-5 text-lg font-semibold tracking-[-0.03em] text-neutral-900">
+          <h1 className="mt-5 text-lg font-semibold tracking-[-0.03em] text-secondary">
             Goal not found
           </h1>
 
-          <p className="mt-2 text-sm leading-6 text-neutral-400">
+          <p className="mt-2 text-sm leading-6 text-description">
             {error?.message ??
               'This goal may have been deleted or is no longer available.'}
           </p>
 
           <Link
             href="/goals"
-            className="mt-7 inline-flex items-center gap-2 rounded-full bg-neutral-900 px-5 py-2.5 text-sm font-medium text-white transition-all duration-200 hover:bg-black"
+            className="mt-7 inline-flex items-center gap-2 rounded-full bg-subprimary px-5 py-2.5 text-sm font-medium text-secondary transition-all duration-200 hover:bg-subprimary/80"
           >
             <ArrowLeft size={14} />
             Back to goals
@@ -169,7 +169,7 @@ export default function GoalDetail({
       <div className="flex items-center justify-between gap-3">
         <Link
           href="/goals"
-          className="group inline-flex items-center gap-2 text-[13px] font-medium text-neutral-400 transition-colors hover:text-neutral-900"
+          className="group inline-flex items-center gap-2 text-[13px] font-medium text-description transition-colors hover:text-secondary"
         >
           <ArrowLeft
             size={15}
@@ -182,29 +182,8 @@ export default function GoalDetail({
 
         {/* DELETE ACTION */}
         {isConfirmingDelete ? (
-          <div
-            className="
-      flex
-      items-center
-      gap-1
-      rounded-full
-      border
-      border-red-100
-      bg-white
-      p-1
-      shadow-[0_6px_20px_rgba(239,68,68,0.08)]
-    "
-          >
-            <span
-              className="
-        hidden
-        px-2
-        text-[11px]
-        font-medium
-        text-neutral-400
-        sm:block
-      "
-            >
+          <div className="flex items-center gap-1 rounded-full border border-red-500/20 bg-primary p-1 shadow-[0_6px_20px_rgba(239,68,68,0.08)]">
+            <span className="hidden px-2 text-[11px] font-medium text-description sm:block">
               Delete permanently?
             </span>
 
@@ -212,27 +191,7 @@ export default function GoalDetail({
               type="button"
               onClick={handleDelete}
               disabled={deleteGoalMutation.isPending}
-              className="
-        inline-flex
-        min-h-8
-        items-center
-        justify-center
-        gap-1.5
-        rounded-full
-        bg-red-500
-        px-3.5
-        text-[11px]
-        font-semibold
-        text-white
-        transition-all
-        duration-200
-        hover:bg-red-600
-        active:scale-95
-        disabled:cursor-not-allowed
-        disabled:opacity-50
-        sm:min-h-8.5
-        sm:px-4
-      "
+              className="inline-flex min-h-8 items-center justify-center gap-1.5 rounded-full bg-red-500 px-3.5 text-[11px] font-semibold text-secondary transition-all duration-200 hover:bg-red-600 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 sm:min-h-8.5 sm:px-4"
             >
               <Trash2
                 size={12}
@@ -248,26 +207,7 @@ export default function GoalDetail({
               type="button"
               onClick={handleCancelDelete}
               disabled={deleteGoalMutation.isPending}
-              className="
-        inline-flex
-        min-h-8
-        items-center
-        justify-center
-        rounded-full
-        px-3
-        text-[11px]
-        font-semibold
-        text-neutral-500
-        transition-all
-        duration-200
-        hover:bg-neutral-100
-        hover:text-neutral-700
-        active:scale-95
-        disabled:cursor-not-allowed
-        disabled:opacity-50
-        sm:min-h-8.5
-        sm:px-3.5
-      "
+              className="inline-flex min-h-8 items-center justify-center rounded-full px-3 text-[11px] font-semibold text-description transition-all duration-200 hover:bg-subprimary hover:text-secondary active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 sm:min-h-8.5 sm:px-3.5"
             >
               Cancel
             </button>
@@ -277,43 +217,12 @@ export default function GoalDetail({
             type="button"
             onClick={handleDelete}
             aria-label="Delete goal"
-            className="
-      group/delete
-      inline-flex
-      min-h-8.5
-      items-center
-      justify-center
-      gap-1.5
-      rounded-full
-      border
-      border-black/[0.06]
-      bg-white
-      px-3
-      text-[11px]
-      font-medium
-      text-neutral-400
-      shadow-[0_3px_12px_rgba(0,0,0,0.035)]
-      transition-all
-      duration-200
-
-      hover:border-red-100
-      hover:bg-red-50
-      hover:text-red-500
-      active:scale-95
-
-      sm:min-h-8
-      sm:bg-neutral-50/70
-      sm:px-3.5
-    "
+            className="group/delete inline-flex min-h-8.5 items-center justify-center gap-1.5 rounded-full border border-white/[0.06] bg-subprimary px-3 text-[11px] font-medium text-description shadow-[0_3px_12px_rgba(0,0,0,0.035)] transition-all duration-200 hover:border-red-500/20 hover:bg-red-500/10 hover:text-red-500 active:scale-95 sm:min-h-8 sm:bg-subprimary sm:px-3.5"
           >
             <Trash2
               size={13}
               strokeWidth={2}
-              className="
-        transition-transform
-        duration-200
-        group-hover/delete:scale-105
-      "
+              className="transition-transform duration-200 group-hover/delete:scale-105"
             />
 
             <span>Delete goal</span>
@@ -332,12 +241,12 @@ export default function GoalDetail({
         />
       ) : (
 
-        <section className="relative mt-5 overflow-hidden rounded-[2rem] border border-black/[0.05] bg-white shadow-[0_20px_70px_-35px_rgba(0,0,0,0.18)]">
+        <section className="relative mt-5 overflow-hidden rounded-[2rem] border border-white/[0.06] bg-primary shadow-[0_20px_70px_-35px_rgba(0,0,0,0.18)]">
           {/* Ambient */}
 
-          <div className="pointer-events-none absolute -right-24 -top-24 size-72 rounded-full bg-blue-100/40 blur-[90px]" />
+          <div className="pointer-events-none absolute -right-24 -top-24 size-72 rounded-full bg-blue-500/10 blur-[90px]" />
 
-          <div className="pointer-events-none absolute -bottom-24 -left-24 size-72 rounded-full bg-pink-100/30 blur-[90px]" />
+          <div className="pointer-events-none absolute -bottom-24 -left-24 size-72 rounded-full bg-pink-500/10 blur-[90px]" />
 
           {/* Accent */}
 
@@ -348,7 +257,7 @@ export default function GoalDetail({
           <Target
             size={360}
             strokeWidth={1}
-            className="pointer-events-none absolute -bottom-32 -right-24 text-neutral-900/[0.025] sm:size-[430px]"
+            className="pointer-events-none absolute -bottom-32 -right-24 text-secondary/[0.025] sm:size-[430px]"
           />
 
           <div className="relative p-6 sm:p-8 lg:p-10">
@@ -359,15 +268,15 @@ export default function GoalDetail({
                 {/* Category */}
 
                 <div className="flex items-center gap-2.5">
-                  <div className="flex size-8 items-center justify-center rounded-[11px] bg-neutral-100">
+                  <div className="flex size-8 items-center justify-center rounded-[11px] bg-subprimary">
                     <Target
                       size={14}
                       strokeWidth={2}
-                      className="text-neutral-500"
+                      className="text-description"
                     />
                   </div>
 
-                  <span className="text-[10px] font-semibold uppercase tracking-[0.17em] text-neutral-400">
+                  <span className="text-[10px] font-semibold uppercase tracking-[0.17em] text-description">
                     {categoryLabels[goal.category] ?? goal.category}
                   </span>
                 </div>
@@ -379,21 +288,21 @@ export default function GoalDetail({
                   onClick={() => setIsEditing(true)}
                   className="group mt-5 flex max-w-3xl items-start gap-2 text-left"
                 >
-                  <h1 className="break-words text-3xl font-semibold leading-[1.04] tracking-[-0.055em] text-neutral-900 sm:text-4xl lg:text-[46px]">
+                  <h1 className="break-words text-3xl font-semibold leading-[1.04] tracking-[-0.055em] text-secondary sm:text-4xl lg:text-[46px]">
                     {goal.title}
                   </h1>
 
                   <Pencil
                     size={16}
                     strokeWidth={2}
-                    className="mt-2 shrink-0 text-neutral-300 opacity-0 transition-opacity group-hover:opacity-100"
+                    className="mt-2 shrink-0 text-description opacity-0 transition-opacity group-hover:opacity-100"
                   />
                 </button>
 
                 {/* Description */}
 
                 {goal.description && (
-                  <p className="mt-4 max-w-2xl text-[13px] leading-6 text-neutral-400 sm:text-sm sm:leading-7">
+                  <p className="mt-4 max-w-2xl text-[13px] leading-6 text-description sm:text-sm sm:leading-7">
                     {goal.description}
                   </p>
                 )}
@@ -401,7 +310,7 @@ export default function GoalDetail({
 
               {/* Action */}
 
-              <div className="hidden size-10 shrink-0 items-center justify-center rounded-full border border-black/[0.05] bg-neutral-50 text-neutral-300 sm:flex">
+              <div className="hidden size-10 shrink-0 items-center justify-center rounded-full border border-white/[0.06] bg-subprimary text-description sm:flex">
                 <ArrowUpRight
                   size={16}
                   strokeWidth={2}
@@ -413,14 +322,14 @@ export default function GoalDetail({
 
             <div className="mt-8 flex flex-wrap gap-2">
               {goal.target_amount !== null && (
-                <div className="inline-flex items-center gap-2 rounded-full border border-black/[0.05] bg-neutral-50 px-3.5 py-2">
+                <div className="inline-flex items-center gap-2 rounded-full border border-white/[0.06] bg-subprimary px-3.5 py-2">
                   <Wallet
                     size={12}
                     strokeWidth={2}
-                    className="text-neutral-500"
+                    className="text-description"
                   />
 
-                  <span className="text-[11px] font-medium text-neutral-600">
+                  <span className="text-[11px] font-medium text-description">
                     Target Rp{' '}
                     {goal.target_amount.toLocaleString('id-ID')}
                   </span>
@@ -428,14 +337,14 @@ export default function GoalDetail({
               )}
 
               {goal.deadline && (
-                <div className="inline-flex items-center gap-2 rounded-full border border-black/[0.05] bg-neutral-50 px-3.5 py-2">
+                <div className="inline-flex items-center gap-2 rounded-full border border-white/[0.06] bg-subprimary px-3.5 py-2">
                   <CalendarDays
                     size={12}
                     strokeWidth={2}
-                    className="text-neutral-500"
+                    className="text-description"
                   />
 
-                  <span className="text-[11px] font-medium text-neutral-600">
+                  <span className="text-[11px] font-medium text-description">
                     {formatDate(goal.deadline)}
                   </span>
                 </div>
@@ -455,26 +364,6 @@ export default function GoalDetail({
         {/* ================================================= */}
 
         <main className="min-w-0 space-y-7">
-          {/* ================================================= */}
-          {/* CHECKLIST */}
-          {/* ================================================= */}
-
-          <section>
-            <div className="mb-3 px-1">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-neutral-300">
-                Progress
-              </p>
-
-              <h2 className="mt-1 text-lg font-semibold tracking-[-0.035em] text-neutral-900">
-                Things to accomplish
-              </h2>
-            </div>
-
-            <div className="overflow-hidden rounded-[2rem] border border-black/[0.05] bg-white shadow-[0_15px_50px_-30px_rgba(0,0,0,0.15)]">
-              <Checklist goalId={goal.id} />
-            </div>
-          </section>
-
           {relationship && (
             <>
               {/* ================================================= */}
@@ -483,16 +372,16 @@ export default function GoalDetail({
 
               <section>
                 <div className="mb-3 px-1">
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-neutral-300">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-description">
                     Shared savings
                   </p>
 
-                  <h2 className="mt-1 text-lg font-semibold tracking-[-0.035em] text-neutral-900">
+                  <h2 className="mt-1 text-lg font-semibold tracking-[-0.035em] text-secondary">
                     Growing together
                   </h2>
                 </div>
 
-                <div className="overflow-hidden rounded-[2rem] border border-black/[0.05] bg-white shadow-[0_15px_50px_-30px_rgba(0,0,0,0.15)]">
+                <div className="overflow-hidden rounded-[2rem] border border-white/[0.06] bg-primary shadow-[0_15px_50px_-30px_rgba(0,0,0,0.15)]">
                   <SavingsProgress
                     goalId={goal.id}
                     targetAmount={goal.target_amount}
@@ -504,67 +393,14 @@ export default function GoalDetail({
               {/* CONTRIBUTE */}
               {/* ================================================= */}
 
-              <section
-                className="
-    relative
-    overflow-hidden
-    rounded-[1.5rem]
-    border border-black/[0.06]
-    bg-neutral-950
-    p-4
-    text-white
-    shadow-[0_25px_70px_-35px_rgba(0,0,0,0.35)]
-    xs:p-5
-    sm:rounded-[2rem]
-    sm:p-6
-    lg:p-7
-  "
-              >
+              <section className="relative overflow-hidden rounded-[1.5rem] border border-white/[0.06] bg-subprimary p-4 text-secondary shadow-[0_25px_70px_-35px_rgba(0,0,0,0.35)] xs:p-5 sm:rounded-[2rem] sm:p-6 lg:p-7">
                 {/* ===================================================== */}
                 {/* AMBIENT */}
                 {/* ===================================================== */}
 
-                <div
-                  className="
-      pointer-events-none
-      absolute
-      -right-16
-      -top-16
-      size-32
-      rounded-full
-      bg-blue-500/10
-      blur-[60px]
-      sm:-right-20
-      sm:-top-20
-      sm:size-40
-      sm:blur-[70px]
-      lg:-right-24
-      lg:-top-24
-      lg:size-64
-      lg:blur-[90px]
-    "
-                />
+                <div className="pointer-events-none absolute -right-16 -top-16 size-32 rounded-full bg-blue-500/10 blur-[60px] sm:-right-20 sm:-top-20 sm:size-40 sm:blur-[70px] lg:-right-24 lg:-top-24 lg:size-64 lg:blur-[90px]" />
 
-                <div
-                  className="
-      pointer-events-none
-      absolute
-      -bottom-16
-      -left-16
-      size-32
-      rounded-full
-      bg-pink-500/10
-      blur-[60px]
-      sm:-bottom-20
-      sm:-left-20
-      sm:size-40
-      sm:blur-[70px]
-      lg:-bottom-24
-      lg:-left-24
-      lg:size-64
-      lg:blur-[90px]
-    "
-                />
+                <div className="pointer-events-none absolute -bottom-16 -left-16 size-32 rounded-full bg-pink-500/10 blur-[60px] sm:-bottom-20 sm:-left-20 sm:size-40 sm:blur-[70px] lg:-bottom-24 lg:-left-24 lg:size-64 lg:blur-[90px]" />
 
                 <div className="relative">
 
@@ -574,29 +410,17 @@ export default function GoalDetail({
 
                   <div className="flex items-start gap-2.5 sm:gap-3">
 
-                    <div
-                      className="
-          flex
-          size-9
-          shrink-0
-          items-center
-          justify-center
-          rounded-[12px]
-          bg-white/[0.08]
-          sm:size-10
-          sm:rounded-[14px]
-        "
-                    >
+                    <div className="flex size-9 shrink-0 items-center justify-center rounded-[12px] bg-white/[0.08] sm:size-10 sm:rounded-[14px]">
                       <Wallet
                         size={15}
                         strokeWidth={1.9}
-                        className="text-white/80 sm:size-[17px]"
+                        className="text-secondary/80 sm:size-[17px]"
                       />
                     </div>
 
                     <div className="min-w-0">
 
-                      <p className="truncate text-[9px] font-semibold uppercase tracking-[0.14em] text-white/35 sm:text-[10px] sm:tracking-[0.16em]">
+                      <p className="truncate text-[9px] font-semibold uppercase tracking-[0.14em] text-description sm:text-[10px] sm:tracking-[0.16em]">
                         Contribute
                       </p>
 
@@ -612,16 +436,7 @@ export default function GoalDetail({
                   {/* DESCRIPTION */}
                   {/* ================================================= */}
 
-                  <p className="
-      mt-3.5
-      max-w-md
-      text-[11px]
-      leading-5
-      text-white/40
-      sm:mt-4
-      sm:text-[13px]
-      sm:leading-6
-    ">
+                  <p className="mt-3.5 max-w-md text-[11px] leading-5 text-description sm:mt-4 sm:text-[13px] sm:leading-6">
                     Every contribution brings you both
                     one step closer to this goal.
                   </p>
@@ -643,6 +458,26 @@ export default function GoalDetail({
               </section>
             </>
           )}
+
+          {/* ================================================= */}
+          {/* CHECKLIST */}
+          {/* ================================================= */}
+
+          <section>
+            <div className="mb-3 px-1">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-description">
+                Progress
+              </p>
+
+              <h2 className="mt-1 text-lg font-semibold tracking-[-0.035em] text-secondary">
+                Things to accomplish
+              </h2>
+            </div>
+
+            <div className="overflow-hidden rounded-[2rem] border border-white/[0.06] bg-primary shadow-[0_15px_50px_-30px_rgba(0,0,0,0.15)]">
+              <Checklist goalId={goal.id} />
+            </div>
+          </section>
         </main>
 
         {/* ================================================= */}
@@ -652,26 +487,26 @@ export default function GoalDetail({
         {relationship && (
           <aside className="min-w-0 lg:sticky lg:top-6">
             <div className="mb-3 px-1">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-neutral-300">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-description">
                 Activity
               </p>
 
               <div className="mt-1 flex items-center justify-between gap-3">
-                <h2 className="text-lg font-semibold tracking-[-0.035em] text-neutral-900">
+                <h2 className="text-lg font-semibold tracking-[-0.035em] text-secondary">
                   Savings history
                 </h2>
 
-                <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-neutral-50">
+                <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-subprimary">
                   <Wallet
                     size={13}
                     strokeWidth={1.9}
-                    className="text-neutral-400"
+                    className="text-description"
                   />
                 </div>
               </div>
             </div>
 
-            <div className="overflow-hidden rounded-[2rem] border border-black/[0.05] bg-white shadow-[0_15px_50px_-30px_rgba(0,0,0,0.15)]">
+            <div className="overflow-hidden rounded-[2rem] border border-white/[0.06] bg-primary shadow-[0_15px_50px_-30px_rgba(0,0,0,0.15)]">
               <div className="lg:max-h-[calc(100vh-8rem)] lg:overflow-y-auto">
                 <SavingsHistory
                   goalId={goal.id}

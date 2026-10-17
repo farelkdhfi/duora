@@ -224,7 +224,7 @@ export default function LoginForm() {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="flex justify-center items-center gap-x-2 w-full overflow-hidden rounded-full bg-black border border-white/5 shadow-lg h-12 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
+          className="flex justify-center items-center gap-x-2 w-full overflow-hidden rounded-full bg-subprimary border border-white/5 shadow-lg h-12 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
         >
           {isSubmitting ? (
             <>

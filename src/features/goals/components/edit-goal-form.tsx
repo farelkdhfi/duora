@@ -36,7 +36,7 @@ const categories = [
 ] as const
 
 const inputClass =
-  'mt-2 w-full rounded-[1rem] border border-black/[0.06] bg-[#f8f8f7] px-4 py-3.5 text-[13px] text-neutral-900 outline-none transition placeholder:text-neutral-400 focus:border-black/[0.12] focus:bg-white focus:ring-4 focus:ring-black/[0.03] disabled:cursor-not-allowed disabled:bg-neutral-100 disabled:text-neutral-400'
+  'mt-2 w-full rounded-[1rem] border border-white/[0.06] bg-subprimary px-4 py-3.5 text-[13px] text-secondary outline-none transition placeholder:text-description focus:border-white/20 focus:bg-subprimary focus:ring-4 focus:ring-white/[0.05] disabled:cursor-not-allowed disabled:bg-subprimary/50 disabled:text-description'
 
 const errorClass =
   'mt-2 text-[11px] font-medium text-rose-500'
@@ -50,11 +50,11 @@ function FieldLabel({
 }) {
   return (
     <div className="flex items-center gap-2">
-      <div className="flex size-7 items-center justify-center rounded-full bg-white shadow-sm">
+      <div className="flex size-7 items-center justify-center rounded-full bg-subprimary shadow-sm">
         {icon}
       </div>
 
-      <label className="text-[11px] font-medium uppercase tracking-[0.14em] text-neutral-400">
+      <label className="text-[11px] font-medium uppercase tracking-[0.14em] text-description">
         {children}
       </label>
     </div>
@@ -100,10 +100,10 @@ export default function EditGoalForm({
   }
 
   return (
-    <div className="relative overflow-hidden rounded-[2rem] border border-black/[0.05] bg-white shadow-[0_20px_70px_-35px_rgba(0,0,0,0.18)]">
-      <div className="pointer-events-none absolute -right-24 -top-24 size-72 rounded-full bg-blue-100/40 blur-[90px]" />
+    <div className="relative overflow-hidden rounded-[2rem] border border-white/[0.06] bg-primary shadow-[0_20px_70px_-35px_rgba(0,0,0,0.18)]">
+      <div className="pointer-events-none absolute -right-24 -top-24 size-72 rounded-full bg-blue-500/10 blur-[90px]" />
 
-      <div className="pointer-events-none absolute -bottom-24 -left-24 size-72 rounded-full bg-pink-100/30 blur-[90px]" />
+      <div className="pointer-events-none absolute -bottom-24 -left-24 size-72 rounded-full bg-pink-500/10 blur-[90px]" />
 
       <div className="absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-[#FFD166] via-[#FF6B8A] to-[#007AFF]" />
 
@@ -112,11 +112,11 @@ export default function EditGoalForm({
 
         <div className="flex items-start justify-between gap-5">
           <div>
-            <p className="text-[10px] font-semibold uppercase tracking-[0.17em] text-neutral-400">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.17em] text-description">
               Editing goal
             </p>
 
-            <h2 className="mt-3 text-2xl font-semibold tracking-[-0.045em] text-neutral-900 sm:text-3xl">
+            <h2 className="mt-3 text-2xl font-semibold tracking-[-0.045em] text-secondary sm:text-3xl">
               Update the details
             </h2>
           </div>
@@ -124,7 +124,7 @@ export default function EditGoalForm({
           <button
             type="button"
             onClick={onClose}
-            className="flex size-9 shrink-0 items-center justify-center rounded-full bg-[#f8f8f7] text-neutral-400 transition hover:bg-neutral-900 hover:text-white"
+            className="flex size-9 shrink-0 items-center justify-center rounded-full bg-subprimary text-description transition hover:bg-secondary hover:text-primary"
           >
             <X size={15} />
           </button>
@@ -141,11 +141,11 @@ export default function EditGoalForm({
 
             <div>
               <div className="mb-4 flex items-center gap-2">
-                <span className="text-[10px] font-medium uppercase tracking-[0.18em] text-neutral-300">
+                <span className="text-[10px] font-medium uppercase tracking-[0.18em] text-description">
                   Details
                 </span>
 
-                <div className="h-px flex-1 bg-black/[0.05]" />
+                <div className="h-px flex-1 bg-white/[0.06]" />
               </div>
 
               <div className="grid gap-5 sm:grid-cols-2">
@@ -183,7 +183,7 @@ export default function EditGoalForm({
                     icon={
                       <Tag
                         size={13}
-                        className="text-neutral-500"
+                        className="text-description"
                       />
                     }
                   >
@@ -215,7 +215,7 @@ export default function EditGoalForm({
                     icon={
                       <Tag
                         size={13}
-                        className="text-neutral-500"
+                        className="text-description"
                       />
                     }
                   >
@@ -241,11 +241,11 @@ export default function EditGoalForm({
 
             <div>
               <div className="mb-4 flex items-center gap-2">
-                <span className="text-[10px] font-medium uppercase tracking-[0.18em] text-neutral-300">
+                <span className="text-[10px] font-medium uppercase tracking-[0.18em] text-description">
                   Target
                 </span>
 
-                <div className="h-px flex-1 bg-black/[0.05]" />
+                <div className="h-px flex-1 bg-white/[0.06]" />
               </div>
 
               <div className="grid gap-5 sm:grid-cols-2">
@@ -264,7 +264,7 @@ export default function EditGoalForm({
                   </FieldLabel>
 
                   <div className="relative">
-                    <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[12px] font-medium text-neutral-400">
+                    <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[12px] font-medium text-description">
                       Rp
                     </span>
 
@@ -341,12 +341,12 @@ export default function EditGoalForm({
 
             {/* FOOTER */}
 
-            <div className="flex flex-col gap-3 border-t border-black/[0.06] pt-5 sm:flex-row sm:items-center sm:justify-end">
+            <div className="flex flex-col gap-3 border-t border-white/[0.06] pt-5 sm:flex-row sm:items-center sm:justify-end">
               <button
                 type="button"
                 onClick={onClose}
                 disabled={mutation.isPending}
-                className="flex h-11 items-center justify-center rounded-full border border-black/[0.08] px-6 text-[12px] font-medium text-neutral-500 transition hover:bg-neutral-50 disabled:opacity-50"
+                className="flex h-11 items-center justify-center rounded-full border border-white/[0.08] px-6 text-[12px] font-medium text-description transition hover:bg-subprimary hover:text-secondary disabled:opacity-50"
               >
                 Cancel
               </button>
@@ -354,7 +354,7 @@ export default function EditGoalForm({
               <button
                 type="submit"
                 disabled={mutation.isPending}
-                className="flex h-11 items-center justify-center gap-2 rounded-full bg-black px-7 text-[12px] font-medium text-white transition hover:bg-neutral-800 disabled:cursor-not-allowed disabled:opacity-50"
+                className="flex h-11 items-center justify-center gap-2 rounded-full bg-subprimary px-7 text-[12px] font-medium text-secondary transition hover:bg-subprimary/80 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {mutation.isPending ? (
                   <>

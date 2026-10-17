@@ -1,13 +1,19 @@
 'use client'
 
-import { memo, useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Image, { type StaticImageData } from 'next/image'
 import { AnimatePresence, motion, type Variants } from 'framer-motion'
-import { ArrowRight, X } from 'lucide-react'
+import { X } from 'lucide-react'
 
 import { useCreateDebate } from '../queries'
 import { AiPersona } from '../types'
+import StudioBackdrop, {
+  CONTACT_SHADOW,
+  SOFT_SHADOW,
+  floorTint,
+  getPersonaTheme,
+} from '@/components/ui/studio-backdrop-debate'
 
 import lembutAi from '@/assets/ai-persona/lembut-ai.png'
 import formalAi from '@/assets/ai-persona/formal-ai.png'
@@ -27,14 +33,17 @@ interface CreateDebateModalProps {
 const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1]
 const IMAGE_SIZES = '(max-width: 640px) 84vw, 480px'
 
+/* Posisi garis lantai backdrop (% tinggi layar) */
+const HORIZON = 60
+
 const STEP_TITLE: Record<1 | 2, string> = {
   1: 'Apa topik yang ingin dibahas?',
   2: 'Choose your mediator',
 }
 
-// Sama dengan textareaClass di check-in form, disesuaikan buat <input>
+// Input versi dark theme
 const inputClass =
-  'h-14 w-full rounded-[1.15rem] border border-black/[0.045] bg-white/80 px-4 text-[15px] font-medium tracking-[-0.02em] text-neutral-800 outline-none backdrop-blur-sm transition-all duration-200 placeholder:text-neutral-300 hover:border-black/[0.08] focus:border-black/[0.10] focus:ring-4 focus:ring-black/[0.025]'
+  'h-14 w-full rounded-[1.15rem] border border-white/10 bg-white/[0.04] px-4 text-[15px] font-medium tracking-[-0.02em] text-secondary outline-none backdrop-blur-sm transition-all duration-200 placeholder:text-description/50 hover:border-white/20 focus:border-white/25 focus:ring-4 focus:ring-white/[0.05]'
 
 const personaOptions: {
   value: AiPersona
@@ -71,123 +80,6 @@ const personaOptions: {
 const wrapIndex = (index: number) =>
   ((index % personaOptions.length) + personaOptions.length) %
   personaOptions.length
-
-/* -------------------------------------------------------------------------- */
-/*  Studio backdrop                                                           */
-/* -------------------------------------------------------------------------- */
-
-const HORIZON = 60
-
-// wall  = warna kertas backdrop (atas)
-// shade = hue yang sama tapi lebih gelap, buat falloff cahaya & cove
-const personaTheme: Record<AiPersona, { wall: string; shade: string }> = {
-  formal: { wall: '208, 212, 218', shade: '118, 124, 134' }, // putih → abu
-  lembut: { wall: '255, 208, 226', shade: '226, 120, 168' }, // putih → pink
-  kasar: { wall: '255, 196, 192', shade: '214, 84, 84' }, // putih → merah
-  lebay: { wall: '192, 218, 255', shade: '84, 140, 214' }, // putih → biru
-}
-
-const PERSONA_KEYS = Object.keys(personaTheme) as AiPersona[]
-
-type Stop = [position: number, alpha: number]
-
-const rgba = (rgb: string, alpha: number) => `rgba(${rgb}, ${alpha})`
-
-const vertical = (rgb: string, stops: Stop[], offset = 0) =>
-  `linear-gradient(to bottom, ${stops
-    .map(([position, alpha]) => `${rgba(rgb, alpha)} ${position + offset}%`)
-    .join(', ')})`
-
-// Warna dinding yang memudar pelan ke lantai (hampir putih), tanpa garis potong.
-const WALL_TO_FLOOR: Stop[] = [
-  [0, 0.92], [12, 0.9], [24, 0.84], [36, 0.7], [47, 0.5],
-  [57, 0.32], [67, 0.18], [78, 0.08], [90, 0.02], [100, 0],
-]
-
-// Cahaya meredup ke arah langit-langit.
-const CEILING_FALLOFF: Stop[] = [[0, 0.12], [8, 0.08], [16, 0.045], [26, 0.015], [34, 0]]
-
-// Cove: pita shade lembut tempat dinding "melengkung" ke lantai.
-const COVE: Stop[] = [[-26, 0], [-18, 0.025], [-10, 0.065], [-3, 0.1], [3, 0.11], [10, 0.08], [18, 0.04], [27, 0]]
-
-// Bloom key light di dinding.
-const KEY_LIGHT = 'radial-gradient(ellipse 72% 42% at 50% 30%, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.34) 28%, rgba(255,255,255,0.15) 55%, rgba(255,255,255,0.04) 80%, rgba(255,255,255,0) 100%)'
-
-// Bayangan lantai berwarna di bawah persona.
-const floorShade = (rgb: string) =>
-  `radial-gradient(ellipse 520px 120px at 50% ${HORIZON + 3}%, ${rgba(rgb, 0.2)} 0%, ${rgba(rgb, 0.1)} 40%, ${rgba(rgb, 0.03)} 75%, ${rgba(rgb, 0)} 100%)`
-
-const buildBackdrop = ({ wall, shade }: { wall: string; shade: string }) =>
-  [
-    floorShade(shade),
-    vertical(shade, COVE, HORIZON),
-    vertical(shade, CEILING_FALLOFF),
-    KEY_LIGHT,
-    vertical(wall, WALL_TO_FLOOR),
-  ].join(', ')
-
-// Lampu studio dari kiri atas: side-light lebar + cone tipis.
-const SIDE_LIGHT = 'linear-gradient(112deg, rgba(255,255,255,0.42) 0%, rgba(255,255,255,0.2) 26%, rgba(255,255,255,0.06) 50%, rgba(255,255,255,0) 68%)'
-
-const LIGHT_CONE = 'conic-gradient(from 0deg at -10% -16%, rgba(255,255,255,0) 104deg, rgba(255,255,255,0.05) 114deg, rgba(255,255,255,0.13) 124deg, rgba(255,255,255,0.22) 134deg, rgba(255,255,255,0.26) 141deg, rgba(255,255,255,0.21) 149deg, rgba(255,255,255,0.11) 160deg, rgba(255,255,255,0.04) 171deg, rgba(255,255,255,0) 182deg)'
-
-const FADE_BEFORE_FLOOR = 'linear-gradient(to bottom, #000 0%, #000 40%, transparent 80%)'
-
-const LIGHT_FALLOFF = 'linear-gradient(292deg, rgba(24,24,32,0.05) 0%, rgba(24,24,32,0.022) 30%, rgba(24,24,32,0) 55%)'
-const VIGNETTE = 'radial-gradient(ellipse 85% 75% at 50% 44%, rgba(24,24,32,0) 50%, rgba(24,24,32,0.026) 78%, rgba(24,24,32,0.052) 100%)'
-
-const SOFT_SHADOW = 'radial-gradient(ellipse closest-side, rgba(24,24,32,0.075) 0%, rgba(24,24,32,0.04) 45%, rgba(24,24,32,0.012) 78%, rgba(24,24,32,0) 100%)'
-const CONTACT_SHADOW = 'radial-gradient(ellipse closest-side, rgba(24,24,32,0.15) 0%, rgba(24,24,32,0.07) 48%, rgba(24,24,32,0.015) 80%, rgba(24,24,32,0) 100%)'
-
-// Film grain: nyembunyiin banding gradient + feel matte/fotografis.
-const GRAIN = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E")`
-
-const StudioBackdrop = memo(function StudioBackdrop({
-  persona,
-}: {
-  persona: AiPersona
-}) {
-  return (
-    <div
-      aria-hidden
-      className="pointer-events-none absolute inset-0 overflow-hidden bg-[#fafaf9]"
-    >
-      {/* WALL + COVE + FLOOR: satu permukaan, cross-fade antar persona */}
-      {PERSONA_KEYS.map((key) => (
-        <div
-          key={key}
-          className="absolute inset-0 transition-opacity duration-700 ease-out"
-          style={{
-            background: buildBackdrop(personaTheme[key]),
-            opacity: key === persona ? 1 : 0,
-          }}
-        />
-      ))}
-
-      {/* ANGLED STUDIO LIGHT (fade out sebelum lantai) */}
-      <div
-        className="absolute inset-0"
-        style={{
-          background: `${LIGHT_CONE}, ${SIDE_LIGHT}`,
-          maskImage: FADE_BEFORE_FLOOR,
-          WebkitMaskImage: FADE_BEFORE_FLOOR,
-        }}
-      />
-
-      {/* LIGHT FALLOFF + VIGNETTE */}
-      <div
-        className="absolute inset-0"
-        style={{ background: `${VIGNETTE}, ${LIGHT_FALLOFF}` }}
-      />
-
-      {/* FILM GRAIN */}
-      <div
-        className="absolute inset-0 opacity-[0.05]"
-        style={{ backgroundImage: GRAIN }}
-      />
-    </div>
-  )
-})
 
 /* -------------------------------------------------------------------------- */
 /*  Motion variants                                                           */
@@ -252,6 +144,7 @@ function PersonaStage({
   onSelectIndex: (index: number) => void
 }) {
   const persona = personaOptions[index]
+  const theme = getPersonaTheme(persona.value)
 
   return (
     <div className="w-full">
@@ -259,13 +152,29 @@ function PersonaStage({
       <div className="relative h-[360px] w-full select-none sm:h-[410px]">
         {/* Bayangan lantai (diam, biar kerasa persona "berdiri" di studio) */}
         <div
-          className="pointer-events-none absolute bottom-[3%] left-1/2 h-24 w-[min(88vw,560px)] -translate-x-1/2 translate-y-1/2"
-          style={{ background: SOFT_SHADOW }}
-        />
-        <div
-          className="pointer-events-none absolute bottom-[3%] left-1/2 h-9 w-[min(52vw,300px)] -translate-x-1/2 translate-y-1/2"
-          style={{ background: CONTACT_SHADOW }}
-        />
+          aria-hidden
+          className="pointer-events-none absolute inset-0"
+        >
+          {/* tint warna persona: fade saat persona berganti */}
+          <motion.div
+            key={persona.value}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, ease: 'easeOut' }}
+            className="absolute bottom-[3%] left-1/2 h-24 w-[min(120vw,560px)] -translate-x-1/2 translate-y-1/2"
+            style={{ background: floorTint(theme.shade) }}
+          />
+
+          <div
+            className="absolute bottom-[3%] left-1/2 h-24 w-[min(88vw,560px)] -translate-x-1/2 translate-y-1/2"
+            style={{ background: SOFT_SHADOW }}
+          />
+
+          <div
+            className="absolute bottom-[3%] left-1/2 h-9 w-[min(52vw,300px)] -translate-x-1/2 translate-y-1/2"
+            style={{ background: CONTACT_SHADOW }}
+          />
+        </div>
 
         <AnimatePresence custom={direction} initial={false} mode="popLayout">
           <motion.div
@@ -322,10 +231,10 @@ function PersonaStage({
               exit={{ opacity: 0, y: -10, filter: 'blur(4px)' }}
               transition={{ duration: 0.25, ease: EASE }}
             >
-              <p className="text-[24px] font-medium leading-tight tracking-[-0.045em] text-neutral-950 sm:text-[28px]">
+              <p className="text-[24px] font-medium leading-tight tracking-[-0.045em] text-secondary sm:text-[28px]">
                 {persona.label}
               </p>
-              <p className="mt-1 text-[12px] text-neutral-500">
+              <p className="mt-1 text-[12px] text-description">
                 {persona.description}
               </p>
             </motion.div>
@@ -348,8 +257,8 @@ function PersonaStage({
                 transition={{ duration: 0.4, ease: EASE }}
                 className={`block h-1.5 rounded-full transition-colors duration-300 ${
                   i === index
-                    ? 'bg-neutral-900'
-                    : 'bg-neutral-900/20 hover:bg-neutral-900/40'
+                    ? 'bg-secondary'
+                    : 'bg-white/20 hover:bg-white/40'
                 }`}
               />
             </button>
@@ -474,7 +383,7 @@ export default function CreateDebateModal({
           role="dialog"
           aria-modal="true"
           aria-label="Create debate"
-          className="fixed inset-0 z-[100] isolate overflow-hidden bg-[#fafaf9]"
+          className="fixed inset-0 z-[100] isolate overflow-hidden bg-primary"
           initial={{ opacity: 0, scale: 1.015 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 1.01 }}
@@ -489,7 +398,10 @@ export default function CreateDebateModal({
             animate={{ opacity: step === 2 ? 1 : 0 }}
             transition={{ duration: 0.9, ease: EASE }}
           >
-            <StudioBackdrop persona={activePersona.value} />
+            <StudioBackdrop
+              persona={activePersona.value}
+              horizon={HORIZON}
+            />
           </motion.div>
 
           {/* Preload semua gambar persona biar pas swipe nggak pop-in */}
@@ -516,7 +428,7 @@ export default function CreateDebateModal({
               {/* Header */}
               <header className="flex items-start justify-between gap-4">
                 <div>
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-neutral-400">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-description">
                     New debate
                   </p>
 
@@ -528,7 +440,7 @@ export default function CreateDebateModal({
                       animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
                       exit={{ opacity: 0, y: -10, filter: 'blur(4px)' }}
                       transition={{ duration: 0.25, ease: EASE }}
-                      className="mt-2 text-[25px] font-medium leading-tight tracking-[-0.045em] text-neutral-950 sm:text-[29px]"
+                      className="mt-2 text-[25px] font-medium leading-tight tracking-[-0.045em] text-secondary sm:text-[29px]"
                     >
                       {STEP_TITLE[step]}
                     </motion.h1>
@@ -540,13 +452,13 @@ export default function CreateDebateModal({
                   onClick={closeModal}
                   disabled={isPending}
                   aria-label="Close create debate modal"
-                  className="flex size-9 shrink-0 items-center justify-center rounded-full border border-black/[0.05] bg-neutral-800 text-white shadow-sm transition-all duration-200 hover:bg-white hover:text-neutral-900 active:scale-95 disabled:pointer-events-none disabled:opacity-40"
+                  className="flex size-9 shrink-0 items-center justify-center rounded-full border border-white/10 bg-primary/80 text-description shadow-[0_8px_25px_rgba(0,0,0,0.35)] backdrop-blur-xl transition-all duration-200 hover:bg-white hover:text-neutral-900 active:scale-95 disabled:pointer-events-none disabled:opacity-40"
                 >
                   <X className="size-4" strokeWidth={1.8} />
                 </button>
               </header>
 
-              {/* Caption (gaya "Unlimited mood changes today" di check-in) */}
+              {/* Caption */}
               <div className="mt-5 min-h-[15px] px-1">
                 <AnimatePresence mode="wait" initial={false}>
                   {step === 2 && (
@@ -556,7 +468,7 @@ export default function CreateDebateModal({
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
                       transition={{ duration: 0.25 }}
-                      className="text-[10px] font-medium text-neutral-400"
+                      className="text-[10px] font-medium text-description"
                     >
                       Geser untuk mengubah persona
                     </motion.p>
@@ -631,7 +543,7 @@ export default function CreateDebateModal({
                   type="button"
                   onClick={step === 1 ? goNext : handleCreate}
                   disabled={step === 1 ? !hasTitle : isPending}
-                  className="flex h-13 w-full items-center justify-center rounded-full bg-neutral-800 px-5 text-sm font-semibold tracking-[-0.01em] text-white shadow-[0_16px_35px_-18px_rgba(0,0,0,0.45)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-neutral-800 active:translate-y-0 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="flex h-12 w-full items-center justify-center rounded-full bg-subprimary px-5 text-sm font-semibold tracking-[-0.01em] text-secondary shadow-[0_16px_35px_-18px_rgba(0,0,0,0.6)] transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   <AnimatePresence mode="wait" initial={false}>
                     <motion.span
@@ -643,12 +555,10 @@ export default function CreateDebateModal({
                       className="flex items-center gap-2"
                     >
                       {step === 1 ? (
-                        <>
-                          Continue
-                        </>
+                        'Continue'
                       ) : isPending ? (
                         <>
-                          <span className="size-3.5 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                          <span className="size-3.5 animate-spin rounded-full border-2 border-neutral-900/25 border-t-neutral-900" />
                           Creating...
                         </>
                       ) : (

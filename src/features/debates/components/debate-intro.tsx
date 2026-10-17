@@ -1,6 +1,6 @@
 'use client'
 
-import { memo, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Image, { type StaticImageData } from 'next/image'
 import {
   AnimatePresence,
@@ -12,6 +12,12 @@ import {
 import happyEmot from '@/assets/emoticon/happy-emot.png'
 import neutralEmot from '@/assets/emoticon/neutral-emot.png'
 import type { AiPersona } from '../types'
+import StudioBackdrop, {
+  CONTACT_SHADOW,
+  SOFT_SHADOW,
+  floorTint,
+  getPersonaTheme,
+} from '@/components/ui/studio-backdrop-debate'
 
 interface DebateIntroProps {
   title: string
@@ -53,139 +59,10 @@ const sideAccent: Record<Side, { ring: string; dot: string }> = {
 const eyebrow =
   'text-[9px] font-semibold uppercase tracking-[0.24em] text-description'
 
-/* ===================================================== */
-/* STUDIO BACKDROP (mengikuti check-in form)             */
-/* ===================================================== */
-
-/* Titik pertemuan dinding dan lantai (% tinggi layar) */
+/* Titik pertemuan dinding dan lantai (% tinggi layar).
+   Dipakai untuk posisi gambar persona + diteruskan ke StudioBackdrop
+   supaya glow cove sejajar dengan garis lantai. */
 const HORIZON = 58
-
-/* wall = warna kertas backdrop, shade = versi lebih gelap untuk cove & bayangan */
-const personaTheme: Record<
-  AiPersona,
-  { wall: string; shade: string }
-> = {
-  formal: { wall: '244, 245, 244', shade: '165, 170, 168' },
-  lembut: { wall: '255, 220, 235', shade: '225, 130, 175' },
-  kasar: { wall: '255, 195, 195', shade: '210, 100, 100' },
-  lebay: { wall: '190, 220, 255', shade: '90, 145, 210' },
-}
-
-type Stop = [position: number, alpha: number]
-
-const rgba = (rgb: string, alpha: number) =>
-  `rgba(${rgb}, ${alpha})`
-
-const vertical = (rgb: string, stops: Stop[], offset = 0) =>
-  `linear-gradient(to bottom, ${stops
-    .map(
-      ([position, alpha]) =>
-        `${rgba(rgb, alpha)} ${position + offset}%`,
-    )
-    .join(', ')})`
-
-const WALL_TO_FLOOR: Stop[] = [
-  [0, 0.92], [12, 0.9], [24, 0.84], [36, 0.7], [47, 0.5],
-  [57, 0.32], [67, 0.18], [78, 0.08], [90, 0.02], [100, 0],
-]
-
-const CEILING_FALLOFF: Stop[] = [
-  [0, 0.12], [8, 0.08], [16, 0.045], [26, 0.015], [34, 0],
-]
-
-const COVE: Stop[] = [
-  [-26, 0], [-18, 0.025], [-10, 0.065], [-3, 0.1],
-  [3, 0.11], [10, 0.08], [18, 0.04], [27, 0],
-]
-
-const KEY_LIGHT =
-  'radial-gradient(ellipse 72% 42% at 50% 30%, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.34) 28%, rgba(255,255,255,0.15) 55%, rgba(255,255,255,0.04) 80%, rgba(255,255,255,0) 100%)'
-
-const floorShade = (rgb: string) =>
-  `radial-gradient(ellipse 340px 86px at 50% ${HORIZON + 3}%, ${rgba(rgb, 0.2)} 0%, ${rgba(rgb, 0.1)} 40%, ${rgba(rgb, 0.03)} 75%, ${rgba(rgb, 0)} 100%)`
-
-const buildBackdrop = ({
-  wall,
-  shade,
-}: {
-  wall: string
-  shade: string
-}) =>
-  [
-    floorShade(shade),
-    vertical(shade, COVE, HORIZON),
-    vertical(shade, CEILING_FALLOFF),
-    KEY_LIGHT,
-    vertical(wall, WALL_TO_FLOOR),
-  ].join(', ')
-
-const SIDE_LIGHT =
-  'linear-gradient(112deg, rgba(255,255,255,0.42) 0%, rgba(255,255,255,0.2) 26%, rgba(255,255,255,0.06) 50%, rgba(255,255,255,0) 68%)'
-
-const LIGHT_CONE =
-  'conic-gradient(from 0deg at -10% -16%, rgba(255,255,255,0) 104deg, rgba(255,255,255,0.05) 114deg, rgba(255,255,255,0.13) 124deg, rgba(255,255,255,0.22) 134deg, rgba(255,255,255,0.26) 141deg, rgba(255,255,255,0.21) 149deg, rgba(255,255,255,0.11) 160deg, rgba(255,255,255,0.04) 171deg, rgba(255,255,255,0) 182deg)'
-
-const FADE_BEFORE_FLOOR =
-  'linear-gradient(to bottom, #000 0%, #000 40%, transparent 80%)'
-
-const LIGHT_FALLOFF =
-  'linear-gradient(292deg, rgba(24,24,32,0.05) 0%, rgba(24,24,32,0.022) 30%, rgba(24,24,32,0) 55%)'
-
-const VIGNETTE =
-  'radial-gradient(ellipse 85% 75% at 50% 44%, rgba(24,24,32,0) 50%, rgba(24,24,32,0.026) 78%, rgba(24,24,32,0.052) 100%)'
-
-const SOFT_SHADOW =
-  'radial-gradient(ellipse closest-side, rgba(24,24,32,0.075) 0%, rgba(24,24,32,0.04) 45%, rgba(24,24,32,0.012) 78%, rgba(24,24,32,0) 100%)'
-
-const CONTACT_SHADOW =
-  'radial-gradient(ellipse closest-side, rgba(24,24,32,0.15) 0%, rgba(24,24,32,0.07) 48%, rgba(24,24,32,0.015) 80%, rgba(24,24,32,0) 100%)'
-
-const GRAIN = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E")`
-
-const StudioBackdrop = memo(function StudioBackdrop({
-  persona,
-}: {
-  persona: AiPersona
-}) {
-  const theme = personaTheme[persona] ?? personaTheme.formal
-
-  return (
-    <div
-      aria-hidden
-      className="pointer-events-none absolute inset-0 overflow-hidden bg-primary"
-    >
-      {/* dinding + cove + lantai */}
-      <div
-        className="absolute inset-0"
-        style={{ background: buildBackdrop(theme) }}
-      />
-
-      {/* cahaya studio dari kiri atas */}
-      <div
-        className="absolute inset-0"
-        style={{
-          background: `${LIGHT_CONE}, ${SIDE_LIGHT}`,
-          maskImage: FADE_BEFORE_FLOOR,
-          WebkitMaskImage: FADE_BEFORE_FLOOR,
-        }}
-      />
-
-      {/* vignette */}
-      <div
-        className="absolute inset-0"
-        style={{
-          background: `${VIGNETTE}, ${LIGHT_FALLOFF}`,
-        }}
-      />
-
-      {/* film grain */}
-      <div
-        className="absolute inset-0 opacity-[0.05]"
-        style={{ backgroundImage: GRAIN }}
-      />
-    </div>
-  )
-})
 
 /* ===================================================== */
 /* VARIANTS */
@@ -391,9 +268,15 @@ function PartnersSection({
 /* ===================================================== */
 
 function MediatorSection({
+  persona,
   personaName,
   personaImage,
-}: Pick<DebateIntroProps, 'personaName' | 'personaImage'>) {
+}: Pick<
+  DebateIntroProps,
+  'persona' | 'personaName' | 'personaImage'
+>) {
+  const theme = getPersonaTheme(persona)
+
   return (
     <motion.section
       variants={sectionVariants}
@@ -402,12 +285,20 @@ function MediatorSection({
       exit="exit"
       className="absolute inset-0"
     >
-      {/* bayangan lantai di bawah gambar */}
+      {/* bayangan lantai di bawah gambar (sama seperti AI overlay) */}
       <motion.div
         aria-hidden
         variants={fade}
         className="pointer-events-none absolute inset-0"
       >
+        <div
+          className="absolute left-1/2 h-24 w-[min(120vw,560px)] -translate-x-1/2 -translate-y-1/2"
+          style={{
+            top: `${HORIZON + 1}%`,
+            background: floorTint(theme.shade),
+          }}
+        />
+
         <div
           className="absolute left-1/2 h-28 w-[min(86vw,460px)] -translate-x-1/2 -translate-y-1/2"
           style={{
@@ -578,7 +469,7 @@ export default function DebateIntro({
           transition={{ duration: 0.9, ease: 'easeInOut' }}
           className="pointer-events-none absolute inset-0"
         >
-          <StudioBackdrop persona={persona} />
+          <StudioBackdrop persona={persona} horizon={HORIZON} />
         </motion.div>
 
         {/* WORDMARK */}
@@ -607,6 +498,7 @@ export default function DebateIntro({
           ) : (
             <MediatorSection
               key="mediator"
+              persona={persona}
               personaName={personaName}
               personaImage={personaImage}
             />
