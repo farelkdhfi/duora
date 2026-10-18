@@ -1,0 +1,105 @@
+﻿
+
+===== src\app =====
+Folder PATH listing
+Volume serial number is 000000C9 C85E:6D66
+D:\DUORA\SRC\APP
+|   globals.css
+|   icon.svg
+|   layout.tsx
+|   loading.tsx
+|   page.tsx
+|   
++---(app)
+|   |   layout.tsx
+|   |   loading.tsx
+|   |   
+|   +---(shell)
+|   |   |   layout.tsx
+|   |   |   loading.tsx
+|   |   |   
+|   |   +---(padded)
+|   |   |   |   layout.tsx
+|   |   |   |   
+|   |   |   +---activities
+|   |   |   |       page.tsx
+|   |   |   |       
+|   |   |   +---goals
+|   |   |   |   |   page.tsx
+|   |   |   |   |   
+|   |   |   |   \---[id]
+|   |   |   |           page.tsx
+|   |   |   |           
+|   |   |   +---notes
+|   |   |   |       page.tsx
+|   |   |   |       
+|   |   |   +---planner
+|   |   |   |       page.tsx
+|   |   |   |       
+|   |   |   +---profile
+|   |   |   |       page.tsx
+|   |   |   |       
+|   |   |   \---subscription
+|   |   |           page.tsx
+|   |   |           
+|   |   \---dashboard
+|   |           layout.tsx
+|   |           page.tsx
+|   |           
+|   +---ai-assistant
+|   |   |   page.tsx
+|   |   |   
+|   |   \---[conversationId]
+|   |           page.tsx
+|   |           
+|   +---check-in
+|   |   |   loading.tsx
+|   |   |   page.tsx
+|   |   |   
+|   |   \---history
+|   |           loading.tsx
+|   |           page.tsx
+|   |           
+|   +---countdown
+|   |       page.tsx
+|   |       
+|   +---debates
+|   |   |   page.tsx
+|   |   |   
+|   |   \---[debateId]
+|   |           loading.tsx
+|   |           page.tsx
+|   |           
+|   +---onboarding
+|   |       page.tsx
+|   |       
+|   +---qna
+|   |   |   page.tsx
+|   |   |   
+|   |   \---session
+|   |           page.tsx
+|   |           
+|   +---subscription
+|   |   \---plan
+|   |           page.tsx
+|   |           
+|   \---wrapped
+|           page.tsx
+|           
++---(auth)
+|   |   loading.tsx
+|   |   
+|   +---login
+|   |       page.tsx
+|   |       
+|   \---register
+|           page.tsx
+|           
++---auth
+|   \---callback
+|           route.ts
+|           
+\---dev
+    \---overlay-preview
+            page.tsx
+            
