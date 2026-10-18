@@ -12,8 +12,12 @@ import {
   Trash2,
   Wallet,
 } from 'lucide-react'
+import { useFormatter, useTranslations } from 'next-intl'
 
 import { useGoal, useDeleteGoal } from '@/features/goals/queries'
+import { getGoalErrorKey } from '@/features/goals/errors'
+import { useRupiah } from '@/lib/use-rupiah'
+import { parseDateOnly, UTC } from '@/lib/date'
 
 import CreateSavingForm from '@/features/savings/components/create-saving-form'
 import SavingsProgress from '@/features/savings/components/savings-progress'
@@ -27,28 +31,16 @@ interface GoalDetailProps {
   goalId: string
 }
 
-const categoryLabels: Record<string, string> = {
-  wedding: 'Wedding',
-  house: 'House',
-  vacation: 'Vacation',
-  education: 'Education',
-  business: 'Business',
-  savings: 'Shared Goal',
-  personal: 'Personal',
-  other: 'Goal',
-}
-
-function formatDate(date: string) {
-  return new Date(`${date}T00:00:00`).toLocaleDateString('id-ID', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-  })
-}
-
 export default function GoalDetail({
   goalId,
 }: GoalDetailProps) {
+  const t = useTranslations('goals.detail')
+  const tCat = useTranslations('goals.detail.categoryLabels')
+  const te = useTranslations('goals.errors')
+  const tCommon = useTranslations('common')
+  const format = useFormatter()
+  const { rupiah } = useRupiah()
+
   const router = useRouter()
 
   const [isConfirmingDelete, setIsConfirmingDelete] =
@@ -67,6 +59,14 @@ export default function GoalDetail({
   const deleteGoalMutation = useDeleteGoal(
     goal?.relationship_id ?? '',
   )
+
+  const formatDate = (date: string) =>
+    format.dateTime(parseDateOnly(date), {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+      ...UTC,
+    })
 
   const handleDelete = () => {
     if (!isConfirmingDelete) {
@@ -140,12 +140,13 @@ export default function GoalDetail({
           </div>
 
           <h1 className="mt-5 text-lg font-semibold tracking-[-0.03em] text-secondary">
-            Goal not found
+            {t('notFoundTitle')}
           </h1>
 
           <p className="mt-2 text-sm leading-6 text-description">
-            {error?.message ??
-              'This goal may have been deleted or is no longer available.'}
+            {error
+              ? te(getGoalErrorKey(error))
+              : t('notFoundDescription')}
           </p>
 
           <Link
@@ -153,12 +154,16 @@ export default function GoalDetail({
             className="mt-7 inline-flex items-center gap-2 rounded-full bg-subprimary px-5 py-2.5 text-sm font-medium text-secondary transition-all duration-200 hover:bg-subprimary/80"
           >
             <ArrowLeft size={14} />
-            Back to goals
+            {t('backToGoals')}
           </Link>
         </div>
       </div>
     )
   }
+
+  const categoryLabel = tCat.has(goal.category)
+    ? tCat(goal.category)
+    : goal.category
 
   return (
     <div className="pb-12">
@@ -177,14 +182,14 @@ export default function GoalDetail({
             className="transition-transform duration-200 group-hover:-translate-x-0.5"
           />
 
-          Back to goals
+          {t('backToGoals')}
         </Link>
 
         {/* DELETE ACTION */}
         {isConfirmingDelete ? (
           <div className="flex items-center gap-1 rounded-full border border-red-500/20 bg-primary p-1 shadow-[0_6px_20px_rgba(239,68,68,0.08)]">
             <span className="hidden px-2 text-[11px] font-medium text-description sm:block">
-              Delete permanently?
+              {t('deleteConfirm')}
             </span>
 
             <button
@@ -199,8 +204,8 @@ export default function GoalDetail({
               />
 
               {deleteGoalMutation.isPending
-                ? 'Deleting...'
-                : 'Delete'}
+                ? t('deleting')
+                : tCommon('delete')}
             </button>
 
             <button
@@ -209,14 +214,14 @@ export default function GoalDetail({
               disabled={deleteGoalMutation.isPending}
               className="inline-flex min-h-8 items-center justify-center rounded-full px-3 text-[11px] font-semibold text-description transition-all duration-200 hover:bg-subprimary hover:text-secondary active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 sm:min-h-8.5 sm:px-3.5"
             >
-              Cancel
+              {tCommon('cancel')}
             </button>
           </div>
         ) : (
           <button
             type="button"
             onClick={handleDelete}
-            aria-label="Delete goal"
+            aria-label={t('deleteGoal')}
             className="group/delete inline-flex min-h-8.5 items-center justify-center gap-1.5 rounded-full border border-white/[0.06] bg-subprimary px-3 text-[11px] font-medium text-description shadow-[0_3px_12px_rgba(0,0,0,0.035)] transition-all duration-200 hover:border-red-500/20 hover:bg-red-500/10 hover:text-red-500 active:scale-95 sm:min-h-8 sm:bg-subprimary sm:px-3.5"
           >
             <Trash2
@@ -225,7 +230,7 @@ export default function GoalDetail({
               className="transition-transform duration-200 group-hover/delete:scale-105"
             />
 
-            <span>Delete goal</span>
+            <span>{t('deleteGoal')}</span>
           </button>
         )}
       </div>
@@ -277,7 +282,7 @@ export default function GoalDetail({
                   </div>
 
                   <span className="text-[10px] font-semibold uppercase tracking-[0.17em] text-description">
-                    {categoryLabels[goal.category] ?? goal.category}
+                    {categoryLabel}
                   </span>
                 </div>
 
@@ -330,8 +335,9 @@ export default function GoalDetail({
                   />
 
                   <span className="text-[11px] font-medium text-description">
-                    Target Rp{' '}
-                    {goal.target_amount.toLocaleString('id-ID')}
+                    {t('targetPill', {
+                      amount: rupiah(goal.target_amount),
+                    })}
                   </span>
                 </div>
               )}
@@ -373,11 +379,11 @@ export default function GoalDetail({
               <section>
                 <div className="mb-3 px-1">
                   <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-description">
-                    Shared savings
+                    {t('savingsEyebrow')}
                   </p>
 
                   <h2 className="mt-1 text-lg font-semibold tracking-[-0.035em] text-secondary">
-                    Growing together
+                    {t('savingsTitle')}
                   </h2>
                 </div>
 
@@ -421,11 +427,11 @@ export default function GoalDetail({
                     <div className="min-w-0">
 
                       <p className="truncate text-[9px] font-semibold uppercase tracking-[0.14em] text-description sm:text-[10px] sm:tracking-[0.16em]">
-                        Contribute
+                        {t('contributeEyebrow')}
                       </p>
 
                       <h2 className="mt-1 text-[15px] font-semibold tracking-[-0.03em] sm:text-[17px] sm:tracking-[-0.035em]">
-                        Add to shared savings
+                        {t('contributeTitle')}
                       </h2>
 
                     </div>
@@ -437,8 +443,7 @@ export default function GoalDetail({
                   {/* ================================================= */}
 
                   <p className="mt-3.5 max-w-md text-[11px] leading-5 text-description sm:mt-4 sm:text-[13px] sm:leading-6">
-                    Every contribution brings you both
-                    one step closer to this goal.
+                    {t('contributeDescription')}
                   </p>
 
                   {/* ================================================= */}
@@ -466,11 +471,11 @@ export default function GoalDetail({
           <section>
             <div className="mb-3 px-1">
               <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-description">
-                Progress
+                {t('checklistEyebrow')}
               </p>
 
               <h2 className="mt-1 text-lg font-semibold tracking-[-0.035em] text-secondary">
-                Things to accomplish
+                {t('checklistTitle')}
               </h2>
             </div>
 
@@ -488,12 +493,12 @@ export default function GoalDetail({
           <aside className="min-w-0 lg:sticky lg:top-6">
             <div className="mb-3 px-1">
               <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-description">
-                Activity
+                {t('activityEyebrow')}
               </p>
 
               <div className="mt-1 flex items-center justify-between gap-3">
                 <h2 className="text-lg font-semibold tracking-[-0.035em] text-secondary">
-                  Savings history
+                  {t('historyTitle')}
                 </h2>
 
                 <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-subprimary">

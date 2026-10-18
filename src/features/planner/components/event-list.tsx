@@ -2,16 +2,19 @@
 
 import { useMemo, useState } from 'react'
 import { CalendarDays } from 'lucide-react'
+import { useFormatter, useTimeZone, useTranslations } from 'next-intl'
+
+import { parseDateOnly, UTC, zonedNow } from '@/lib/date'
+
 
 import { useGetMyProfile } from '@/features/profiles/queries'
 import { useGetPartnerName } from '@/features/checkins/queries'
 
 import { usePlannerEvents } from '../queries'
+import { getPlannerErrorKey } from '../errors'
+
 import type { PlannerEvent } from '../types'
-import EventCalendar, {
-  EventCalendarSkeleton,
-  formatDateKey,
-} from './event-calendar'
+import EventCalendar, { EventCalendarSkeleton } from './event-calendar'
 import EventTimeline from './event-timeline'
 
 interface EventListProps {
@@ -19,8 +22,14 @@ interface EventListProps {
 }
 
 export default function EventList({ relationshipId }: EventListProps) {
-  const [selectedDate, setSelectedDate] = useState(() =>
-    formatDateKey(new Date()),
+  const t = useTranslations('planner')
+  const te = useTranslations('planner.errors')
+
+  const format = useFormatter()
+  const timeZone = useTimeZone()
+
+  const [selectedDate, setSelectedDate] = useState(
+    () => zonedNow(timeZone).dateKey,
   )
 
   const { data, isLoading, error } = usePlannerEvents(relationshipId)
@@ -49,15 +58,15 @@ export default function EventList({ relationshipId }: EventListProps) {
     () => [
       {
         id: user?.id,
-        name: user?.display_name ?? 'You',
+        name: user?.display_name ?? t('people.you'),
         avatarUrl: user?.avatar_url,
       },
       {
-        name: partner?.display_name ?? 'Partner',
+        name: partner?.display_name ?? t('people.partner'),
         avatarUrl: partner?.avatar_url,
       },
     ],
-    [user, partner],
+    [user, partner, t],
   )
 
   /* =========================================================
@@ -117,15 +126,15 @@ export default function EventList({ relationshipId }: EventListProps) {
 
           <div className="min-w-0">
             <p className="text-[10px] uppercase tracking-[0.18em] text-neutral-500">
-              Error
+              {t('list.errorLabel')}
             </p>
 
             <p className="mt-1 text-sm font-semibold tracking-[-0.02em] text-neutral-50">
-              Couldn&apos;t load your plans
+              {t('list.errorTitle')}
             </p>
 
             <p className="mt-1 text-xs leading-relaxed text-neutral-400">
-              {error.message}
+              {te(getPlannerErrorKey(error))}
             </p>
           </div>
         </div>
@@ -156,11 +165,11 @@ export default function EventList({ relationshipId }: EventListProps) {
             </div>
 
             <p className="mt-5 text-[10px] uppercase tracking-[0.18em] text-neutral-500">
-              Nothing planned yet
+              {t('list.emptyLabel')}
             </p>
 
             <h3 className="mt-2 text-[16px] font-semibold tracking-[-0.025em] text-neutral-50">
-              Give yourselves something to look forward to.
+              {t('list.emptyTitle')}
             </h3>
           </div>
         </div>
@@ -199,10 +208,12 @@ export default function EventList({ relationshipId }: EventListProps) {
               onClick={() => setSelectedDate(nextDate)}
               className="inline-flex h-8 items-center rounded-full border border-white/[0.08] bg-white/10 px-4 text-[11px] font-medium text-neutral-200 transition hover:bg-white hover:text-neutral-900"
             >
-              Go to next plan ·{' '}
-              {new Date(`${nextDate}T00:00:00`).toLocaleDateString('en-US', {
-                month: 'short',
-                day: 'numeric',
+              {t('list.nextPlan', {
+                date: format.dateTime(parseDateOnly(nextDate), {
+                  month: 'short',
+                  day: 'numeric',
+                  ...UTC,
+                }),
               })}
             </button>
           </div>

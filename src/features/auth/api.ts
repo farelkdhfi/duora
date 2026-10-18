@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/client'
 
+import { AuthApiError, toAuthError } from './errors'
 import type {
   LoginFormValues,
   RegisterFormValues,
@@ -18,7 +19,7 @@ export async function login({
     })
 
   if (error) {
-    throw new Error(error.message)
+    throw toAuthError(error)
   }
 
   return data
@@ -46,7 +47,14 @@ export async function register({
     })
 
   if (error) {
-    throw new Error(error.message)
+    throw toAuthError(error)
+  }
+
+  // Kalau email confirmation aktif, Supabase nggak ngasih error untuk
+  // email yang sudah terdaftar (anti user-enumeration). Tandanya:
+  // user ada tapi identities kosong.
+  if (data.user && data.user.identities?.length === 0) {
+    throw new AuthApiError('emailTaken')
   }
 
   return data
@@ -59,6 +67,6 @@ export async function logout() {
     await supabase.auth.signOut()
 
   if (error) {
-    throw new Error(error.message)
+    throw toAuthError(error)
   }
 }

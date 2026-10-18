@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/client'
 import { SavingTransactionWithProfile } from './types'
 import { Goal } from '../goals/types'
+import { SavingApiError, toSavingError } from './errors'
 
 export interface SavingWithProfile {
   id: string
@@ -22,10 +23,7 @@ export async function getGoalSavings(
 ): Promise<SavingWithProfile[]> {
   const supabase = createClient()
 
-  const {
-    data,
-    error,
-  } = await supabase
+  const { data, error, status } = await supabase
     .from('savings')
     .select(`
       id,
@@ -47,7 +45,7 @@ export async function getGoalSavings(
     })
 
   if (error) {
-    throw new Error(error.message)
+    throw toSavingError(error, status)
   }
 
   return (data ?? []).map((row) => ({
@@ -70,6 +68,7 @@ export async function getGoalsWithSavingsSummary(
   const {
     data: goals,
     error: goalsError,
+    status: goalsStatus,
   } = await supabase
     .from('goals')
     .select('*')
@@ -77,7 +76,7 @@ export async function getGoalsWithSavingsSummary(
     .order('created_at', { ascending: false })
 
   if (goalsError) {
-    throw new Error(goalsError.message)
+    throw toSavingError(goalsError, goalsStatus)
   }
 
   if (goals.length === 0) {
@@ -89,6 +88,7 @@ export async function getGoalsWithSavingsSummary(
   const {
     data: savings,
     error: savingsError,
+    status: savingsStatus,
   } = await supabase
     .from('savings')
     .select(`
@@ -108,7 +108,7 @@ export async function getGoalsWithSavingsSummary(
     .in('goal_id', goalIds)
 
   if (savingsError) {
-    throw new Error(savingsError.message)
+    throw toSavingError(savingsError, savingsStatus)
   }
 
   const normalizedSavings = savings.map((s) => ({
@@ -138,19 +138,14 @@ export async function createSaving({
   const supabase = createClient()
 
   const {
-    data: {
-      user,
-    },
+    data: { user },
   } = await supabase.auth.getUser()
 
   if (!user) {
-    throw new Error('Not authenticated')
+    throw new SavingApiError('notAuthenticated')
   }
 
-  const {
-    data,
-    error,
-  } = await supabase
+  const { data, error, status } = await supabase
     .from('savings')
     .insert({
       relationship_id: relationshipId,
@@ -163,26 +158,22 @@ export async function createSaving({
     .single()
 
   if (error) {
-    throw new Error(error.message)
+    throw toSavingError(error, status)
   }
 
   return data
 }
 
-export async function deleteSaving(
-  savingId: string,
-) {
+export async function deleteSaving(savingId: string) {
   const supabase = createClient()
 
-  const {
-    error,
-  } = await supabase
+  const { error, status } = await supabase
     .from('savings')
     .delete()
     .eq('id', savingId)
 
   if (error) {
-    throw new Error(error.message)
+    throw toSavingError(error, status)
   }
 
   return savingId

@@ -8,6 +8,9 @@ import {
   Trash2,
   Wallet,
 } from 'lucide-react'
+import { useFormatter, useTranslations } from 'next-intl'
+
+import { useRupiah } from '@/lib/use-rupiah'
 
 import {
   useDeleteSaving,
@@ -19,31 +22,15 @@ interface SavingsHistoryProps {
   relationshipId: string
 }
 
-function formatDate(date: string) {
-  return new Date(date).toLocaleDateString(
-    'id-ID',
-    {
-      day: 'numeric',
-      month: 'short',
-      year: 'numeric',
-    },
-  )
-}
-
-function formatTime(date: string) {
-  return new Date(date).toLocaleTimeString(
-    'id-ID',
-    {
-      hour: '2-digit',
-      minute: '2-digit',
-    },
-  )
-}
-
 export default function SavingsHistory({
   goalId,
   relationshipId,
 }: SavingsHistoryProps) {
+  const t = useTranslations('savings.history')
+  const tCommon = useTranslations('common')
+  const format = useFormatter()
+  const { rupiah } = useRupiah()
+
   const {
     data: savings,
     isLoading,
@@ -56,6 +43,19 @@ export default function SavingsHistory({
     goalId,
     relationshipId,
   })
+
+  const formatDate = (date: string) =>
+    format.dateTime(new Date(date), {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+    })
+
+  const formatTime = (date: string) =>
+    format.dateTime(new Date(date), {
+      hour: '2-digit',
+      minute: '2-digit',
+    })
 
   const handleDeleteClick = (
     savingId: string,
@@ -123,12 +123,11 @@ export default function SavingsHistory({
           </div>
 
           <h3 className="mt-4 text-sm font-semibold tracking-[-0.02em] text-secondary">
-            Nothing here yet
+            {t('emptyTitle')}
           </h3>
 
           <p className="mt-2 max-w-[220px] text-[11px] leading-5 text-description sm:text-[12px]">
-            Contributions will appear here as
-            you start saving together.
+            {t('emptyDescription')}
           </p>
         </div>
       </div>
@@ -146,7 +145,9 @@ export default function SavingsHistory({
           const name =
             saving.profile?.display_name ??
             saving.profile?.username ??
-            'Unknown'
+            t('unknown')
+
+          const amountLabel = rupiah(Number(saving.amount))
 
           const isLast =
             index === savings.length - 1
@@ -183,15 +184,14 @@ export default function SavingsHistory({
 
                       <div className="min-w-0">
                         <p className="text-[12px] font-semibold tracking-[-0.01em] text-secondary sm:text-[13px]">
-                          Delete this contribution?
+                          {t('deleteTitle')}
                         </p>
 
                         <p className="mt-0.5 truncate text-[10px] text-description sm:text-[11px]">
-                          + Rp{' '}
-                          {Number(
-                            saving.amount,
-                          ).toLocaleString('id-ID')}{' '}
-                          from {name}
+                          {t('deleteDetail', {
+                            amount: amountLabel,
+                            name,
+                          })}
                         </p>
                       </div>
                     </div>
@@ -217,8 +217,8 @@ export default function SavingsHistory({
                         )}
 
                         {isDeletingThis
-                          ? 'Deleting...'
-                          : 'Delete'}
+                          ? t('deleting')
+                          : tCommon('delete')}
                       </button>
 
                       <button
@@ -229,7 +229,7 @@ export default function SavingsHistory({
                         disabled={isDeletingThis}
                         className="inline-flex h-9 flex-1 items-center justify-center rounded-full bg-subprimary px-4 text-[10px] font-semibold text-description shadow-[0_2px_8px_rgba(0,0,0,0.035)] transition-all duration-200 hover:bg-subprimary/80 hover:text-secondary active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 sm:h-8 sm:flex-none"
                       >
-                        Cancel
+                        {tCommon('cancel')}
                       </button>
                     </div>
                   </div>
@@ -300,22 +300,19 @@ export default function SavingsHistory({
                       {/* AMOUNT + DELETE */}
 
                       <div className="flex flex-col shrink-0 items-end  gap-1.5 sm:gap-2">
-                       
+
 
                         {/* AMOUNT */}
 
                         <p className="text-[11px] font-semibold tabular-nums tracking-[-0.01em] text-secondary sm:text-[13px]">
-                          + Rp{' '}
-                          {Number(
-                            saving.amount,
-                          ).toLocaleString('id-ID')}
+                          + {amountLabel}
                         </p>
 
-                         {/* DELETE BUTTON */}
+                        {/* DELETE BUTTON */}
 
                         <button
                           type="button"
-                          aria-label={`Delete contribution from ${name}`}
+                          aria-label={t('deleteAria', { name })}
                           onClick={() =>
                             handleDeleteClick(
                               saving.id,
@@ -350,7 +347,7 @@ export default function SavingsHistory({
                         strokeWidth={0}
                       />
 
-                      Together
+                      {t('together')}
                     </div>
                   </div>
                 </div>

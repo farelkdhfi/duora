@@ -3,6 +3,7 @@
 import { useMemo, useState } from 'react'
 import { ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
+import { useTranslations } from 'next-intl'
 
 import { useMyRelationshipDetails } from '@/features/relationship/queries'
 import { useGetMyProfile } from '@/features/profiles/queries'
@@ -14,6 +15,8 @@ import CheckinHistorySkeleton from '@/features/checkins/components/checkin-histo
 type Filter = 'all' | 'you' | 'partner'
 
 export default function CheckinHistoryPage() {
+  const t = useTranslations('checkins.history')
+
   const [filter, setFilter] = useState<Filter>('all')
 
   const { data, isLoading } = useMyRelationshipDetails()
@@ -40,28 +43,28 @@ export default function CheckinHistoryPage() {
 
   const getDisplayName = (userId: string) => {
     if (userId === myProfile?.id) {
-      return myProfile?.display_name ?? 'You'
+      return myProfile?.display_name ?? t('fallbackYou')
     }
 
     const member = members.find((m: { user_id: string }) => m.user_id === userId)
 
-    return member?.display_name ?? 'Your partner'
+    return member?.display_name ?? t('fallbackPartner')
   }
 
   const filterOptions: { value: Filter; label: string; count: number }[] = [
     {
       value: 'all',
-      label: 'All',
+      label: t('filters.all'),
       count: allCheckins.length,
     },
     {
       value: 'you',
-      label: 'You',
+      label: t('filters.you'),
       count: myCheckins.length,
     },
     {
       value: 'partner',
-      label: 'Partner',
+      label: t('filters.partner'),
       count: partnerCheckins.length,
     },
   ]
@@ -74,9 +77,9 @@ export default function CheckinHistoryPage() {
     return (
       <div className="flex min-h-[70vh] items-center justify-center px-5">
         <div className="text-center">
-          <p className="text-sm font-medium text-description">Connect with your partner first.</p>
+          <p className="text-sm font-medium text-description">{t('noRelationship')}</p>
           <Link href="/check-in" className="mt-4 inline-flex text-xs font-semibold text-secondary underline underline-offset-4">
-            Back to check-in
+            {t('backToCheckin')}
           </Link>
         </div>
       </div>
@@ -88,15 +91,15 @@ export default function CheckinHistoryPage() {
       <div className="mb-7 sm:mb-9">
         <Link href="/check-in" className="mb-6 inline-flex items-center gap-2 text-[11px] font-semibold text-description transition-colors hover:text-secondary">
           <ArrowLeft size={14} strokeWidth={1.8} />
-          Back to check-in
+          {t('backToCheckin')}
         </Link>
 
         <h1 className=" text-[26px] font-medium tracking-[-0.045em] text-secondary sm:text-[32px]">
-          Check-in history
+          {t('title')}
         </h1>
 
         <p className="mt-2 max-w-md text-[13px] leading-6 text-description sm:text-sm">
-          A quiet look at how you and your partner have been feeling.
+          {t('description')}
         </p>
       </div>
 
@@ -128,21 +131,21 @@ export default function CheckinHistoryPage() {
         <div className="flex items-center justify-center py-16">
           <div className="flex items-center gap-3 text-sm text-description">
             <span className="size-4 animate-spin rounded-full border-2 border-white/[0.12] border-t-description" />
-            Loading history...
+            {t('loading')}
           </div>
         </div>
       ) : allCheckins.length === 0 ? (
         <div className="relative overflow-hidden rounded-[1.5rem] border border-dashed border-white/[0.08] bg-primary/60 p-8 text-center backdrop-blur-xl sm:rounded-[1.75rem] sm:p-12">
-          <p className="text-sm text-description">No check-ins yet.</p>
+          <p className="text-sm text-description">{t('emptyTitle')}</p>
 
           <Link href="/check-in" className="mt-4 inline-flex rounded-full bg-subprimary px-5 py-2.5 text-[11px] font-semibold text-secondary transition-colors hover:bg-subprimary/80">
-            Create your first check-in
+            {t('emptyCta')}
           </Link>
         </div>
       ) : filteredCheckins.length === 0 ? (
         <div className="rounded-[1.5rem] border border-white/[0.06] bg-primary/60 px-6 py-12 text-center backdrop-blur-xl sm:rounded-[1.75rem]">
           <p className="text-sm text-description">
-            No check-ins from {filter === 'you' ? 'you' : 'your partner'} yet.
+            {filter === 'you' ? t('emptyFilter.you') : t('emptyFilter.partner')}
           </p>
         </div>
       ) : (

@@ -3,21 +3,23 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { ArrowUpRight, Trash2, Target } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 
 import type { Goal } from '../types'
 import type { SavingTransactionWithProfile } from '@/features/savings/types'
 import { useDeleteGoal } from '../queries'
+import { useRupiah } from '@/lib/use-rupiah'
 
 interface GoalCardProps {
   goal: Goal
   savings?: SavingTransactionWithProfile[]
 }
 
-function formatRupiah(amount: number) {
-  return `Rp ${amount.toLocaleString('id-ID')}`
-}
-
 export default function GoalCard({ goal, savings = [] }: GoalCardProps) {
+  const t = useTranslations('goals.card')
+  const tCommon = useTranslations('common')
+  const { rupiah } = useRupiah()
+
   const [isConfirming, setIsConfirming] = useState(false)
 
   const deleteGoalMutation = useDeleteGoal(goal.relationship_id)
@@ -55,11 +57,11 @@ export default function GoalCard({ goal, savings = [] }: GoalCardProps) {
           </div>
 
           <h3 className="mt-3 max-w-[240px] truncate text-[15px] font-semibold tracking-[-0.03em] text-white sm:text-[16px]">
-            Delete “{goal.title}”?
+            {t('deleteTitle', { title: goal.title })}
           </h3>
 
           <p className="mt-1 text-[10px] text-white/50 sm:text-[11px]">
-            This action cannot be undone.
+            {t('deleteWarning')}
           </p>
 
           <div className="mt-4 flex w-full max-w-[260px] gap-2">
@@ -69,7 +71,7 @@ export default function GoalCard({ goal, savings = [] }: GoalCardProps) {
               disabled={deleteGoalMutation.isPending}
               className="flex h-9 flex-1 items-center justify-center rounded-full border border-white/10 bg-white/5 px-4 text-[10px] font-semibold text-white/70 transition hover:bg-white/10 hover:text-white active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-50 sm:h-10 sm:text-[11px]"
             >
-              Cancel
+              {tCommon('cancel')}
             </button>
 
             <button
@@ -79,7 +81,7 @@ export default function GoalCard({ goal, savings = [] }: GoalCardProps) {
               className="flex h-9 flex-1 items-center justify-center gap-1.5 rounded-full bg-red-500 px-4 text-[10px] font-semibold text-white transition hover:bg-red-400 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-50 sm:h-10 sm:text-[11px]"
             >
               <Trash2 size={11} strokeWidth={2} />
-              {deleteGoalMutation.isPending ? 'Deleting...' : 'Delete'}
+              {deleteGoalMutation.isPending ? t('deleting') : tCommon('delete')}
             </button>
           </div>
         </div>
@@ -101,7 +103,7 @@ export default function GoalCard({ goal, savings = [] }: GoalCardProps) {
           <div className="flex shrink-0 items-center gap-1.5">
             <button
               type="button"
-              aria-label="Delete goal"
+              aria-label={t('deleteAria')}
               onClick={handleDeleteClick}
               className="flex size-7 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white/50 transition hover:bg-red-400/15 hover:text-red-300 active:scale-95 sm:opacity-60 sm:group-hover:opacity-100"
             >
@@ -124,7 +126,7 @@ export default function GoalCard({ goal, savings = [] }: GoalCardProps) {
               <div className="flex items-end justify-between gap-3">
                 <div className="min-w-0">
                   <p className="truncate text-sm font-semibold leading-none text-white sm:text-[24px]">
-                    {formatRupiah(totalSaved)}
+                    {rupiah(totalSaved)}
                   </p>
                 </div>
 
@@ -150,10 +152,10 @@ export default function GoalCard({ goal, savings = [] }: GoalCardProps) {
 
               <div className="min-w-0">
                 <p className="truncate text-[9px] font-medium text-white/70">
-                  No target set yet
+                  {t('noTarget')}
                 </p>
                 <p className="truncate text-[8px] text-white/40">
-                  Add a target to start tracking
+                  {t('noTargetHint')}
                 </p>
               </div>
             </div>

@@ -1,0 +1,874 @@
+{
+    "metadata": {
+        "title": "Duora — Teman AI untuk Pasangan Long Distance",
+        "description": "Duora adalah teman AI untuk pasangan LDR. AI Assistant-nya kenal tujuan, check-in, rencana, dan catatan kalian, jadi setiap jawabannya terasa personal.",
+        "ogTitle": "Duora — Asisten AI Pribadi untuk Hubungan Long Distance Kamu",
+        "ogDescription": "Tanya apa aja soal hubungan kalian dan dapat jawaban berdasarkan tujuan, check-in harian, rencana, dan catatan kalian sendiri. Selesaikan perbedaan pendapat dengan AI Debate, dan makin dekat lewat tujuan bersama, Q&A, dan lainnya."
+    },
+    "common": {
+        "save": "Simpan",
+        "cancel": "Batal",
+        "delete": "Hapus",
+        "edit": "Ubah",
+        "create": "Buat",
+        "loading": "Memuat...",
+        "back": "Kembali",
+        "confirm": "Konfirmasi",
+        "close": "Tutup",
+        "search": "Cari",
+        "error": "Terjadi kesalahan",
+        "tryAgain": "Coba lagi",
+        "language": "Bahasa",
+        "relative": {
+            "today": "Hari ini",
+            "tomorrow": "Besok",
+            "yesterday": "Kemarin",
+            "inDays": "{count} hari lagi",
+            "daysAgo": "{count} hari lalu"
+        }
+    },
+    "landing": {
+        "homeLabel": "Beranda Duora",
+        "cta": "Mulai LDR kamu",
+        "slideOf": "{current} dari {total}",
+        "pageOf": "Halaman {current} dari {total}",
+        "goToPage": "Ke halaman {page}",
+        "slides": {
+            "loveLivesHere": {
+                "alt": "Dua karakter kucing berbulu yang tetap terhubung lewat Duora",
+                "line1": "Love",
+                "line2": "lives <accent>here.</accent>",
+                "description": "Tempat nyaman untuk tetap dekat dan saling terhubung, meski terpisah jarak."
+            },
+            "assistant": {
+                "alt": "Asisten AI Duora membantu pasangan dalam hubungan mereka",
+                "line1": "Assistant",
+                "line2": "your <accent>relationship</accent>",
+                "description": "Tanya apa pun tentang hubungan kalian, Duora AI memahami konteksnya."
+            }
+        }
+    },
+    "auth": {
+        "common": {
+            "tagline": "satu untuk berdua",
+            "or": "atau",
+            "email": "Email",
+            "password": "Password",
+            "showPassword": "Tampilkan password",
+            "hidePassword": "Sembunyikan password",
+            "continueWithGoogle": "Lanjutkan dengan Google",
+            "connecting": "Menghubungkan…"
+        },
+        "login": {
+            "title": "selamat datang kembali",
+            "headline": "<line>Biar jarak</line><line><accent>tetap dekat.</accent></line>",
+            "subtitle": "Ruang privat untuk dua orang agar tetap terhubung, berbagi momen kecil, dan membuat jarak terasa lebih dekat.",
+            "legal": "Dengan melanjutkan, kamu menyetujui <terms>Ketentuan Layanan</terms> dan <privacy>Kebijakan Privasi</privacy> Duora. Belum punya akun? <signup>Daftar</signup>.",
+            "signIn": "Masuk",
+            "signingIn": "Sedang masuk"
+        },
+        "register": {
+            "title": "buat ruangmu.",
+            "headline": "<line>Bikin</line><line><accent>jarak</accent></line><line><accent>terasa lebih dekat.</accent></line>",
+            "subtitle": "Buat ruang privat untuk kalian berdua agar tetap terhubung, berbagi momen kecil, dan membuat jarak terasa lebih dekat.",
+            "legal": "Dengan melanjutkan, kamu menyetujui <terms>Ketentuan Layanan</terms> dan <privacy>Kebijakan Privasi</privacy> Duora. Sudah punya akun? <signin>Masuk</signin>.",
+            "signUpWithEmail": "Daftar dengan email",
+            "continue": "Lanjut",
+            "createAccount": "Buat akun",
+            "creatingAccount": "Membuat akun",
+            "goBack": "Kembali",
+            "showConfirmPassword": "Tampilkan konfirmasi password",
+            "hideConfirmPassword": "Sembunyikan konfirmasi password",
+            "emailConfirmation": "Akun berhasil dibuat. Cek email kamu untuk konfirmasi, lalu login.",
+            "steps": {
+                "method": {
+                    "title": "Mau gabung lewat mana?",
+                    "description": "Pilih cara termudah untuk membuat ruang Duora kamu."
+                },
+                "username": {
+                    "title": "Pilih username kamu.",
+                    "description": "Ini nama yang akan dikenali di dalam Duora."
+                },
+                "displayName": {
+                    "title": "Mau dipanggil apa?",
+                    "description": "Pakai nama kamu atau apa pun yang ingin dilihat pasanganmu."
+                },
+                "email": {
+                    "title": "Apa email kamu?",
+                    "description": "Email ini dipakai untuk mengamankan akunmu."
+                },
+                "password": {
+                    "title": "Buat password kamu.",
+                    "description": "Pilih yang aman dan mudah kamu ingat."
+                },
+                "confirmPassword": {
+                    "title": "Satu langkah lagi.",
+                    "description": "Konfirmasi password kamu dan akun Duora kamu siap."
+                }
+            }
+        },
+        "validation": {
+            "invalidEmail": "Alamat email tidak valid",
+            "passwordMin": "Password minimal {min} karakter",
+            "usernameMin": "Username minimal {min} karakter",
+            "usernameMax": "Username maksimal {max} karakter",
+            "usernameFormat": "Username hanya boleh berisi huruf, angka, dan underscore",
+            "displayNameMin": "Nama tampilan minimal {min} karakter",
+            "displayNameMax": "Nama tampilan maksimal {max} karakter",
+            "passwordMismatch": "Password tidak sama"
+        },
+        "errors": {
+            "invalidCredentials": "Email atau password salah",
+            "emailNotConfirmed": "Email kamu belum dikonfirmasi. Cek inbox dulu ya.",
+            "emailTaken": "Email ini sudah terdaftar. Coba masuk aja.",
+            "weakPassword": "Password terlalu lemah. Coba yang lebih kuat.",
+            "rateLimited": "Terlalu banyak percobaan. Tunggu sebentar lalu coba lagi.",
+            "invalidEmail": "Alamat email tidak valid",
+            "signupDisabled": "Pendaftaran sedang dinonaktifkan",
+            "userBanned": "Akun ini sedang dinonaktifkan",
+            "network": "Koneksi bermasalah. Cek internet kamu lalu coba lagi.",
+            "unknown": "Terjadi kesalahan. Coba lagi."
+        }
+    },
+    "nav": {
+        "items": {
+            "overview": "Ringkasan",
+            "debates": "Debat",
+            "goals": "Tujuan",
+            "planner": "Planner",
+            "checkin": "Check-in Harian",
+            "notes": "Catatan",
+            "wrapped": "Wrapped",
+            "countdown": "Hitung Mundur",
+            "profile": "Profil",
+            "activities": "Aktivitas",
+            "qna": "Q&A"
+        },
+        "brandTagline": "Tumbuh bersama.",
+        "workspace": "Ruang Kerja",
+        "subscription": "Langganan",
+        "locked": "Terkunci",
+        "managePlan": "Kelola paket",
+        "waitingForPartner": "Menunggu pasangan",
+        "lockedHint": "Ruang kalian akan terbuka setelah pasangan bergabung menggunakan kode undangan.",
+        "yourRelationship": "Hubungan kalian",
+        "relationshipQuote": "Setiap momen kecil yang kalian bagi jadi bagian dari cerita kalian.",
+        "growingTogether": "Tumbuh bersama",
+        "youInitial": "K",
+        "partnerInitial": "P",
+        "closeMenu": "Tutup menu",
+        "logout": "Keluar",
+        "loggingOut": "Sedang keluar...",
+        "footer": "Tumbuh bersama DUORA"
+    },
+    "checkins": {
+        "moods": {
+            "happy": "Senang",
+            "neutral": "Biasa aja",
+            "sad": "Sedih",
+            "tired": "Capek",
+            "stressed": "Stres"
+        },
+        "details": {
+            "liked_today": "Yang disukai hari ini",
+            "disliked_today": "Yang tidak disukai hari ini",
+            "needs_from_partner": "Butuh dari pasangan",
+            "note": "Catatan"
+        },
+        "validation": {
+            "moodInvalid": "Pilih mood dulu ya",
+            "scoreRange": "Pilih nilai antara {min} dan {max}",
+            "textMax": "Maksimal {max} karakter"
+        },
+        "errors": {
+            "notAuthenticated": "Sesi kamu sudah berakhir. Silakan masuk lagi.",
+            "forbidden": "Kamu tidak punya izin untuk melakukan ini.",
+            "invalidInput": "Ada data yang tidak valid. Cek lagi lalu coba lagi.",
+            "network": "Koneksi bermasalah. Cek internet kamu lalu coba lagi.",
+            "unknown": "Terjadi kesalahan. Coba lagi."
+        },
+        "page": {
+            "noRelationshipTitle": "Terhubung dengan pasanganmu",
+            "noRelationshipDescription": "Sambungkan relationship kamu dulu supaya bisa mulai check-in satu sama lain."
+        },
+        "form": {
+            "eyebrow": "Check-in harian",
+            "title": "Gimana perasaan kamu hari ini?",
+            "updated": "Diperbarui",
+            "backToDashboard": "Kembali ke dashboard",
+            "unlimited": "Perubahan mood tanpa batas hari ini",
+            "limitReached": "Batas perubahan mood harian tercapai",
+            "editCount": "{used}/{max} perubahan mood hari ini",
+            "saving": "Menyimpan...",
+            "submitLimit": "Batas harian tercapai",
+            "update": "Perbarui check-in",
+            "save": "Simpan check-in",
+            "actions": {
+                "history": "Lihat riwayat",
+                "wellbeing": "Gimana kondisimu?",
+                "reflection": "Refleksi"
+            },
+            "wellbeing": {
+                "title": "Gimana kondisimu?",
+                "description": "Luangkan sejenak untuk mengecek energi dan stresmu.",
+                "energy": "Energi",
+                "energyMin": "Lemas",
+                "energyMax": "Berenergi",
+                "stress": "Stres",
+                "stressMin": "Santai",
+                "stressMax": "Sangat stres"
+            },
+            "reflection": {
+                "title": "Sedikit refleksi",
+                "description": "Beberapa catatan kecil bisa bantu kamu dan pasanganmu saling memahami.",
+                "liked": "Apa yang kamu suka hari ini?",
+                "likedPlaceholder": "Sesuatu yang dilakukan pasanganmu, hal yang bikin kamu tersenyum...",
+                "disliked": "Apa yang kurang kamu suka hari ini?",
+                "dislikedPlaceholder": "Sesuatu yang mengganggu atau terasa sulit...",
+                "needs": "Apa yang kamu butuhkan dari pasanganmu?",
+                "needsPlaceholder": "Mungkin kamu butuh ruang, perhatian, semangat...",
+                "note": "Ada lagi?",
+                "notePlaceholder": "Tulis apa pun yang ada di pikiranmu..."
+            }
+        },
+        "selector": {
+            "groupLabel": "Pemilih mood",
+            "swipeHint": "Geser untuk mengganti",
+            "select": "Pilih {mood}"
+        },
+        "slider": {
+            "hint": "Beri nilai dari {min} sampai {max}"
+        },
+        "history": {
+            "backToCheckin": "Kembali ke check-in",
+            "title": "Riwayat check-in",
+            "description": "Sekilas tentang perasaan kamu dan pasanganmu belakangan ini.",
+            "noRelationship": "Hubungkan dulu dengan pasanganmu.",
+            "filters": {
+                "all": "Semua",
+                "you": "Kamu",
+                "partner": "Pasangan"
+            },
+            "fallbackYou": "Kamu",
+            "fallbackPartner": "Pasanganmu",
+            "loading": "Memuat riwayat...",
+            "emptyTitle": "Belum ada check-in.",
+            "emptyCta": "Buat check-in pertama kamu",
+            "emptyFilter": {
+                "you": "Kamu belum check-in.",
+                "partner": "Pasanganmu belum check-in."
+            }
+        },
+        "card": {
+            "expand": "Lihat selengkapnya",
+            "collapse": "Tutup",
+            "reflection": "Refleksi",
+            "entries": "{count} isian",
+            "energy": "Energi",
+            "stress": "Stres",
+            "viewHistory": "Lihat riwayat ({count}x)"
+        },
+        "historyModal": {
+            "eyebrow": "Riwayat check-in",
+            "title": "Perjalanan mood {name}",
+            "subtitle": "Lihat perubahan check-in yang tersimpan hari ini.",
+            "changes": "{count} perubahan",
+            "today": "Hari ini",
+            "loading": "Memuat riwayat...",
+            "emptyTitle": "Belum ada riwayat",
+            "emptyDescription": "Perubahan pada check-in ini akan muncul di sini.",
+            "latest": "Terbaru",
+            "energy": "Energi {value}/{max}",
+            "stress": "Stres {value}/{max}",
+            "noExtraNotes": "Tidak ada catatan tambahan",
+            "footer": "Riwayat perubahan check-in hari ini"
+        }
+    },
+    "dashboard": {
+        "people": {
+            "you": "Kamu",
+            "partner": "Pasangan"
+        },
+        "page": {
+            "checkinTitle": "Gimana kabar kalian berdua?",
+            "openCheckin": "Buka check-in",
+            "planningTitle": "Rencana kalian",
+            "workspaceTitle": "Ruang kerja kalian"
+        },
+        "header": {
+            "notifications": "Notifikasi",
+            "notificationsUnread": "Notifikasi, {count} belum dibaca",
+            "daysTogether": "hari bersama",
+            "since": "Sejak {date}"
+        },
+        "waiting": {
+            "imageAlt": "Sepasang kekasih yang saling menunggu",
+            "instruction": "Bagikan kode undangan ini ke pasanganmu untuk mulai membangun ruang bersama di Duora.",
+            "copy": "Salin kode undangan",
+            "copied": "Kode berhasil disalin",
+            "wrongPick": "Salah pilih? Hapus relationship ini untuk bergabung dengan kode pasanganmu.",
+            "deleteRelationship": "Hapus relationship ini",
+            "confirmDelete": "Hapus \"{name}\" beserta kode undangannya? Setelah ini kamu bisa membuat yang baru atau bergabung dengan kode pasanganmu.",
+            "partnerAlreadyJoined": "Pasanganmu sudah bergabung, relationship tidak bisa dibatalkan dari sini.",
+            "deleteFailed": "Gagal menghapus relationship. Coba lagi.",
+            "deleting": "Menghapus...",
+            "confirmYes": "Ya, hapus"
+        },
+        "checkin": {
+            "now": "Sekarang",
+            "stats": {
+                "energy": "energi",
+                "stress": "stres"
+            },
+            "moodAlt": "Mood {mood}",
+            "checkInCta": "Check-in",
+            "noCheckin": "Tidak ada",
+            "notYet": "Belum",
+            "sliderLabel": "Riwayat check-in, 7 hari terakhir"
+        },
+        "planner": {
+            "plansLabel": "Daftar plan",
+            "tabLabel": "Plan {number}: {title}",
+            "tabEmptyLabel": "Plan {number}: belum ada",
+            "noPlan": "Belum ada plan",
+            "past": "Riwayat",
+            "pastPlans": "Riwayat plan",
+            "noHistory": "Belum ada riwayat",
+            "allDay": "Seharian",
+            "open": "Buka planner",
+            "emptyUpcomingTitle": "Belum ada plan mendatang",
+            "emptyTitle": "Planner masih kosong",
+            "emptyUpcomingDescription": "Lihat riwayat atau buat plan baru.",
+            "emptyDescription": "Tambah date night atau trip dulu.",
+            "addPlan": "Plan"
+        },
+        "goals": {
+            "title": "Tujuan kalian",
+            "open": "Buka tujuan",
+            "loadError": "Gagal memuat tujuan",
+            "emptyTitle": "Belum ada apa-apa.",
+            "emptyDescription": "Buat tujuan bersama pertama kalian.",
+            "totalSavings": "Total tabungan",
+            "acrossGoals": "dari {count} tujuan"
+        },
+        "debates": {
+            "title": "Debat terbaru",
+            "open": "Buka debat",
+            "loadError": "Gagal memuat debat",
+            "emptyTitle": "Belum ada debat.",
+            "emptyDescription": "Mulai AI Debate pertama kalian.",
+            "status": {
+                "active": "Berlangsung",
+                "pending_verdict": "Menunggu putusan",
+                "resolved": "Selesai"
+            }
+        },
+        "qna": {
+            "title": "Pertanyaan terbaru",
+            "open": "Buka Q&A",
+            "loadError": "Gagal memuat Q&A",
+            "emptyTitle": "Belum ada pertanyaan.",
+            "emptyDescription": "Jawab pertanyaan pertama kalian bersama."
+        }
+    },
+    "planner": {
+        "page": {
+            "title": "planner",
+            "description": "Rencanakan momen yang ingin kalian kenang.",
+            "createEvent": "Buat plan",
+            "noRelationshipTitle": "Terhubung dengan pasanganmu",
+            "noRelationshipDescription": "Sambungkan relationship kamu dulu supaya bisa mulai merencanakan momen berarti bersama."
+        },
+        "people": {
+            "you": "Kamu",
+            "partner": "Pasangan"
+        },
+        "calendar": {
+            "toggleMonthView": "Buka atau tutup tampilan bulan",
+            "today": "Hari ini",
+            "previousMonth": "Bulan sebelumnya",
+            "nextMonth": "Bulan berikutnya",
+            "previousWeek": "Minggu sebelumnya",
+            "nextWeek": "Minggu berikutnya",
+            "dayLabel": "{date}",
+            "dayLabelWithPlans": "{date}, ada plan"
+        },
+        "list": {
+            "errorLabel": "Kesalahan",
+            "errorTitle": "Gagal memuat plan kalian",
+            "emptyLabel": "Belum ada rencana",
+            "emptyTitle": "Beri diri kalian sesuatu untuk dinantikan.",
+            "nextPlan": "Ke plan berikutnya · {date}"
+        },
+        "timeline": {
+            "ariaLabel": "Plan untuk {date}",
+            "count": "{count} plan",
+            "allDay": "Seharian",
+            "emptyDayTitle": "Tidak ada plan di tanggal ini",
+            "emptyDayDescription": "Pilih tanggal lain atau tambah plan baru."
+        },
+        "card": {
+            "status": {
+                "inProgress": "Berlangsung",
+                "upcoming": "Akan datang",
+                "done": "Selesai"
+            },
+            "allDay": "Seharian",
+            "options": "Opsi plan",
+            "deleteTitle": "Hapus plan ini?",
+            "deleteWarning": "Tindakan ini tidak bisa dibatalkan.",
+            "deleting": "Menghapus...",
+            "confirmYes": "Ya, hapus",
+            "noDescription": "Belum ada deskripsi."
+        },
+        "categories": {
+            "relationship": "Hubungan",
+            "finance": "Keuangan",
+            "birthday": "Ulang tahun",
+            "anniversary": "Anniversary",
+            "travel": "Perjalanan",
+            "health": "Kesehatan",
+            "work": "Pekerjaan",
+            "other": "Lainnya"
+        },
+        "form": {
+            "eyebrow": "Planner pasangan",
+            "title": "Buat momen.",
+            "description": "Tambahkan sesuatu yang layak dikenang ke kalender bersama kalian.",
+            "sections": {
+                "details": "Detail",
+                "when": "Kapan"
+            },
+            "fields": {
+                "title": "Nama plan",
+                "category": "Kategori",
+                "description": "Deskripsi",
+                "date": "Tanggal",
+                "schedule": "Jadwal",
+                "allDay": "Seharian",
+                "allDayHint": "Tanpa jam tertentu",
+                "startTime": "Jam mulai",
+                "endTime": "Jam selesai"
+            },
+            "placeholders": {
+                "title": "Makan malam anniversary",
+                "description": "Makan malam di restoran favorit kita..."
+            },
+            "footerNote": "Ciptakan kenangan bersama.",
+            "submit": "Buat momen",
+            "submitting": "Membuat..."
+        },
+        "validation": {
+            "titleMin": "Nama plan minimal {min} karakter",
+            "titleMax": "Nama plan maksimal {max} karakter",
+            "descriptionMax": "Deskripsi maksimal {max} karakter",
+            "dateRequired": "Pilih tanggalnya dulu ya",
+            "endBeforeStart": "Jam selesai tidak boleh lebih awal dari jam mulai"
+        },
+        "errors": {
+            "notAuthenticated": "Sesi kamu sudah berakhir. Silakan masuk lagi.",
+            "forbidden": "Kamu tidak punya izin untuk melakukan ini.",
+            "invalidInput": "Ada data yang tidak valid. Cek lagi lalu coba lagi.",
+            "notFound": "Plan ini tidak ditemukan. Mungkin sudah dihapus.",
+            "network": "Koneksi bermasalah. Cek internet kamu lalu coba lagi.",
+            "unknown": "Terjadi kesalahan. Coba lagi."
+        }
+    },
+    "goals": {
+        "page": {
+            "title": "Tujuan Bersama",
+            "description": "Bangun sesuatu bersama.",
+            "noRelationshipTitle": "Terhubung dengan pasanganmu",
+            "noRelationshipDescription": "Sambungkan relationship kamu dulu sebelum membuat tujuan bersama."
+        },
+        "list": {
+            "filters": {
+                "all": "Semua",
+                "newest": "Terbaru",
+                "under": "< {amount}",
+                "over": "> {amount}"
+            },
+            "createGoal": "Buat tujuan baru",
+            "emptyUnder": "Tidak ada tujuan di bawah {amount}.",
+            "emptyOver": "Tidak ada tujuan di atas {amount}.",
+            "emptyDefault": "Tidak ada tujuan yang cocok.",
+            "emptyHint": "Coba filter lain atau buat tujuan baru ya!",
+            "count": "{count} tujuan"
+        },
+        "card": {
+            "deleteTitle": "Hapus “{title}”?",
+            "deleteWarning": "Tindakan ini tidak bisa dibatalkan.",
+            "deleting": "Menghapus...",
+            "deleteAria": "Hapus tujuan",
+            "noTarget": "Belum ada target",
+            "noTargetHint": "Tambahkan target untuk mulai melacak"
+        },
+        "empty": {
+            "title": "Bangun sesuatu bersama.",
+            "description": "Buat tujuan pertama kalian dan capai semuanya bersama!"
+        },
+        "detail": {
+            "notFoundTitle": "Tujuan tidak ditemukan",
+            "notFoundDescription": "Tujuan ini mungkin sudah dihapus atau tidak tersedia lagi.",
+            "backToGoals": "Kembali ke tujuan",
+            "deleteGoal": "Hapus tujuan",
+            "deleteConfirm": "Hapus permanen?",
+            "deleting": "Menghapus...",
+            "targetPill": "Target {amount}",
+            "categoryLabels": {
+                "wedding": "Pernikahan",
+                "house": "Rumah",
+                "vacation": "Liburan",
+                "education": "Pendidikan",
+                "business": "Bisnis",
+                "savings": "Tujuan Bersama",
+                "personal": "Pribadi",
+                "other": "Tujuan"
+            },
+            "savingsEyebrow": "Tabungan bersama",
+            "savingsTitle": "Tumbuh bersama",
+            "contributeEyebrow": "Kontribusi",
+            "contributeTitle": "Tambah ke tabungan bersama",
+            "contributeDescription": "Setiap kontribusi membawa kalian berdua selangkah lebih dekat ke tujuan ini.",
+            "checklistEyebrow": "Progres",
+            "checklistTitle": "Hal yang ingin dicapai",
+            "activityEyebrow": "Aktivitas",
+            "historyTitle": "Riwayat tabungan"
+        },
+        "checklist": {
+            "eyebrow": "Bersama",
+            "title": "Checklist",
+            "markIncomplete": "Tandai belum selesai",
+            "markComplete": "Tandai selesai",
+            "percentCompleted": "{progress}% selesai",
+            "allComplete": "Semuanya selesai",
+            "allDone": "Selesai semua",
+            "deleting": "Menghapus...",
+            "deleteAria": "Hapus item checklist: {title}",
+            "emptyTitle": "Belum ada yang dicentang",
+            "emptyDescription": "Tambahkan langkah kecil dan capai tujuan ini bersama.",
+            "placeholder": "Tambah langkah kecil...",
+            "addAria": "Tambah item checklist",
+            "hint": "Tekan Enter untuk menambah"
+        },
+        "editForm": {
+            "eyebrow": "Mengubah tujuan",
+            "title": "Perbarui detailnya",
+            "save": "Simpan perubahan",
+            "saving": "Menyimpan..."
+        },
+        "summary": {
+            "label": "Total tabungan",
+            "description": "Ditabung bersama untuk semua tujuan"
+        },
+        "form": {
+            "eyebrow": "Tujuan bersama",
+            "title": "Bangun sesuatu bersama.",
+            "description": "Ubah sesuatu yang kalian berdua inginkan jadi tujuan yang layak diperjuangkan.",
+            "sections": {
+                "details": "Detail",
+                "target": "Target"
+            },
+            "fields": {
+                "title": "Nama tujuan",
+                "category": "Kategori",
+                "description": "Deskripsi",
+                "targetAmount": "Jumlah target",
+                "deadline": "Tenggat"
+            },
+            "placeholders": {
+                "title": "Liburan impian kita",
+                "description": "Menabung bersama untuk perjalanan kita...",
+                "targetAmount": "10.000.000"
+            },
+            "footerNote": "Langkah kecil. Mimpi bersama.",
+            "submit": "Buat tujuan",
+            "submitting": "Membuat..."
+        },
+        "categories": {
+            "personal": "Pribadi",
+            "vacation": "Liburan",
+            "wedding": "Pernikahan",
+            "house": "Rumah",
+            "education": "Pendidikan",
+            "business": "Bisnis",
+            "savings": "Tabungan",
+            "other": "Lainnya"
+        },
+        "validation": {
+            "titleMin": "Nama tujuan minimal {min} karakter",
+            "titleMax": "Nama tujuan maksimal {max} karakter",
+            "descriptionMax": "Deskripsi maksimal {max} karakter",
+            "targetAmountPositive": "Jumlah target harus lebih dari 0"
+        },
+        "errors": {
+            "notAuthenticated": "Sesi kamu sudah berakhir. Silakan masuk lagi.",
+            "forbidden": "Kamu tidak punya izin untuk melakukan ini.",
+            "invalidInput": "Ada data yang tidak valid. Cek lagi lalu coba lagi.",
+            "notFound": "Tujuan ini tidak ditemukan. Mungkin sudah dihapus.",
+            "network": "Koneksi bermasalah. Cek internet kamu lalu coba lagi.",
+            "unknown": "Terjadi kesalahan. Coba lagi."
+        }
+    },
+    "savings": {
+        "form": {
+            "amount": "Jumlah",
+            "required": "Wajib",
+            "note": "Catatan",
+            "optional": "Opsional",
+            "placeholders": {
+                "amount": "500.000",
+                "note": "Tabungan minggu ini..."
+            },
+            "successTitle": "Tabungan ditambahkan",
+            "successHint": "Satu langkah kecil lagi menuju tujuan kalian.",
+            "submit": "Tambah tabungan",
+            "submitting": "Menambahkan tabungan...",
+            "footerNote": "Setiap kontribusi membuat kalian berdua selangkah lebih dekat."
+        },
+        "history": {
+            "emptyTitle": "Belum ada apa-apa",
+            "emptyDescription": "Kontribusi akan muncul di sini saat kalian mulai menabung bersama.",
+            "unknown": "Tanpa nama",
+            "deleteTitle": "Hapus kontribusi ini?",
+            "deleteDetail": "+ {amount} dari {name}",
+            "deleting": "Menghapus...",
+            "deleteAria": "Hapus kontribusi dari {name}",
+            "together": "Bersama"
+        },
+        "progress": {
+            "eyebrow": "Tabungan bersama",
+            "title": "Progres kalian bersama",
+            "savedTogether": "Ditabung bersama",
+            "target": "Target",
+            "completedTitle": "Tujuan tercapai",
+            "completedHint": "Kalian berhasil bersama. ❤️",
+            "remaining": "{amount} lagi",
+            "keepGrowing": "Terus tumbuh bersama.",
+            "noTarget": "Terus menabung bersama. Tentukan target untuk melihat progres kalian."
+        },
+        "validation": {
+            "amountRequired": "Isi jumlahnya dulu ya",
+            "amountPositive": "Jumlah harus lebih dari 0",
+            "noteMax": "Catatan maksimal {max} karakter"
+        },
+        "errors": {
+            "notAuthenticated": "Sesi kamu sudah berakhir. Silakan masuk lagi.",
+            "forbidden": "Kamu tidak punya izin untuk melakukan ini.",
+            "invalidInput": "Ada data yang tidak valid. Cek lagi lalu coba lagi.",
+            "notFound": "Kontribusi ini tidak ditemukan. Mungkin sudah dihapus.",
+            "network": "Koneksi bermasalah. Cek internet kamu lalu coba lagi.",
+            "unknown": "Terjadi kesalahan. Coba lagi."
+        }
+    },
+    "notes": {
+        "page": {
+            "title": "catatan",
+            "description": "Simpan hal-hal kecil dan momen yang ingin kalian kenang bersama.",
+            "noRelationship": "Kamu perlu terhubung dengan pasangan dulu."
+        },
+        "board": {
+            "emptyTitle": "Belum ada catatan",
+            "emptyDescription": "Simpan ide, rencana, pengingat, atau pesan kecil untuk pasanganmu.",
+            "newEyebrow": "Catatan baru",
+            "newTitle": "Tulis sesuatu",
+            "titlePlaceholder": "Judul catatan",
+            "contentPlaceholder": "Tulis catatan, ide, atau pesan untuk pasanganmu...",
+            "categoryPlaceholder": "kategori",
+            "footerNote": "Catatan ini akan tersimpan untuk kalian berdua.",
+            "saving": "Menyimpan...",
+            "save": "Simpan catatan",
+            "writeNew": "Tulis catatan baru"
+        },
+        "card": {
+            "noteLabel": "Catatan",
+            "someone": "Seseorang",
+            "favoriteAdd": "Tambah ke favorit",
+            "favoriteRemove": "Hapus dari favorit",
+            "pinAdd": "Sematkan catatan",
+            "pinRemove": "Lepas sematan",
+            "titlePlaceholder": "Judul catatan",
+            "contentPlaceholder": "Tulis catatan...",
+            "categoryPlaceholder": "Kategori (opsional)",
+            "addChecklistPlaceholder": "Tambah checklist...",
+            "addItemAria": "Tambah item checklist",
+            "markComplete": "Tandai selesai",
+            "markIncomplete": "Tandai belum selesai",
+            "deleteItemAria": "Hapus item checklist: {content}",
+            "deleting": "Menghapus...",
+            "deleteConfirm": "Yakin?",
+            "moreItems": "+{count} lainnya"
+        },
+        "time": {
+            "justNow": "Baru saja",
+            "minutesAgo": "{count} mnt lalu",
+            "hoursAgo": "{count} jam lalu",
+            "daysAgo": "{count} hari lalu"
+        },
+        "validation": {
+            "titleRequired": "Judul catatan wajib diisi",
+            "titleMax": "Judul catatan maksimal {max} karakter",
+            "contentMax": "Isi catatan maksimal {max} karakter",
+            "categoryMax": "Kategori maksimal {max} karakter",
+            "checklistItemRequired": "Item checklist tidak boleh kosong"
+        },
+        "errors": {
+            "notAuthenticated": "Sesi kamu sudah berakhir. Silakan masuk lagi.",
+            "forbidden": "Kamu tidak punya izin untuk melakukan ini.",
+            "invalidInput": "Ada data yang tidak valid. Cek lagi lalu coba lagi.",
+            "notFound": "Catatan ini tidak ditemukan. Mungkin sudah dihapus.",
+            "network": "Koneksi bermasalah. Cek internet kamu lalu coba lagi.",
+            "unknown": "Terjadi kesalahan. Coba lagi."
+        }
+    },
+    "profile": {
+        "page": {
+            "title": "Profil",
+            "description": "Atur profil dan relationship kamu"
+        },
+        "form": {
+            "avatarAlt": "Avatar",
+            "yourName": "Nama kamu",
+            "changePhoto": "Ganti foto",
+            "uploading": "Mengunggah",
+            "photoHint": "PNG, JPG, atau WEBP · Maks. {max}MB",
+            "displayName": "Nama tampilan",
+            "saving": "Menyimpan",
+            "nameSaved": "Nama berhasil diperbarui.",
+            "avatarErrors": {
+                "invalidType": "Gunakan PNG, JPG, atau WEBP.",
+                "tooLarge": "Ukuran file maksimal {max}MB."
+            }
+        },
+        "errors": {
+            "notAuthenticated": "Sesi kamu sudah berakhir. Silakan masuk lagi.",
+            "forbidden": "Kamu tidak punya izin untuk melakukan ini.",
+            "invalidInput": "Ada data yang tidak valid. Cek lagi lalu coba lagi.",
+            "network": "Koneksi bermasalah. Cek internet kamu lalu coba lagi.",
+            "unknown": "Terjadi kesalahan. Coba lagi."
+        }
+    },
+    "relationship": {
+        "form": {
+            "title": "Relationship",
+            "description": "Detail ruang bersama kalian.",
+            "nameLabel": "Nama relationship",
+            "namePlaceholder": "mis. Tika & Farel",
+            "startedAtLabel": "Bersama sejak",
+            "saving": "Menyimpan",
+            "save": "Simpan perubahan",
+            "saved": "Relationship berhasil diperbarui."
+        },
+        "onboarding": {
+            "choose": {
+                "title": "Mau mulai dari mana?",
+                "description": "Duora hanya bisa digunakan jika kamu dan pasanganmu sudah terhubung.",
+                "groupLabel": "Pengaturan hubungan"
+            },
+            "choices": {
+                "create": {
+                    "title": "Buat hubungan baru",
+                    "description": "Mulai ruang baru dan undang pasanganmu."
+                },
+                "join": {
+                    "title": "Gabung dengan kode",
+                    "description": "Masukkan kode dari pasanganmu."
+                }
+            },
+            "name": {
+                "title": "Apa nama hubungan kalian?",
+                "description": "Pilih nama yang kalian berdua suka. Bisa diubah nanti.",
+                "label": "Nama hubungan",
+                "hint": "Minimal {min} karakter, maksimal {max} karakter."
+            },
+            "date": {
+                "title": "Kapan kalian mulai hubungan?",
+                "description": "Tanggal ini dipakai untuk menghitung hari kalian bersama.",
+                "label": "Tanggal jadian"
+            },
+            "join": {
+                "title": "Masukkan kode undangan",
+                "description": "Minta pasanganmu kode 8 karakter dari akun Duora miliknya.",
+                "label": "Kode undangan"
+            },
+            "next": "Lanjut",
+            "submit": "Selesai"
+        },
+        "delete": {
+            "title": "Hapus relationship",
+            "warning": "Menghapus relationship akan menghapus permanen semua data kalian berdua (goals, check-in, Q&A, planner, countdown, debat, dan langganan). Pasanganmu tidak perlu menyetujui dan tindakan ini tidak bisa dibatalkan.",
+            "open": "Hapus relationship",
+            "confirmPrompt": "Ketik <name>{relationshipName}</name> untuk mengonfirmasi",
+            "deleting": "Menghapus...",
+            "confirm": "Hapus permanen"
+        },
+        "validation": {
+            "nameRequired": "Nama hubungan wajib diisi",
+            "nameMin": "Nama hubungan minimal {min} karakter",
+            "nameMax": "Nama hubungan maksimal {max} karakter",
+            "startedAtRequired": "Tanggal jadian wajib diisi",
+            "startedAtInvalid": "Tanggal tidak valid",
+            "startedAtTooOld": "Tanggal tidak boleh lebih dari {years} tahun lalu",
+            "startedAtFuture": "Tanggal tidak boleh di masa depan",
+            "inviteCodeRequired": "Kode undangan wajib diisi",
+            "inviteCodeInvalid": "Kode undangan tidak valid"
+        },
+        "errors": {
+            "notAuthenticated": "Sesi kamu sudah berakhir. Silakan masuk lagi.",
+            "forbidden": "Kamu tidak punya izin untuk melakukan ini.",
+            "invalidInput": "Ada data yang tidak valid. Cek lagi lalu coba lagi.",
+            "notFound": "Relationship ini tidak ditemukan. Mungkin sudah dihapus.",
+            "confirmationMismatch": "Nama tidak cocok.",
+            "partnerAlreadyJoined": "Pasanganmu sudah bergabung, relationship tidak bisa dibatalkan dari sini.",
+            "noRelationship": "Kamu belum tergabung di relationship mana pun.",
+            "alreadyInRelationship": "Kamu sudah punya relationship. Muat ulang halaman untuk lanjut.",
+            "invalidInviteCode": "Kode undangan tidak valid. Cek lagi ke pasanganmu ya.",
+            "relationshipFull": "Relationship ini sudah punya dua anggota.",
+            "network": "Koneksi bermasalah. Cek internet kamu lalu coba lagi.",
+            "unknown": "Terjadi kesalahan. Coba lagi."
+        }
+    },
+    "activities": {
+        "page": {
+            "title": "Aktivitas",
+            "description": "Lihat momen-momen kecil dan aktivitas yang kalian bagi bersama.",
+            "noRelationship": "Kamu perlu terhubung dengan pasangan dulu."
+        },
+        "feed": {
+            "someone": "Seseorang",
+            "emptyTitle": "Belum ada aktivitas",
+            "emptyDescription": "Semua aktivitas kamu dan pasanganmu akan muncul di sini.",
+            "loadMore": "Muat lebih banyak",
+            "loadingMore": "Memuat aktivitas..."
+        },
+        "time": {
+            "justNow": "Baru saja",
+            "minutesAgo": "{count} mnt lalu",
+            "hoursAgo": "{count} jam lalu",
+            "daysAgo": "{count} hari lalu"
+        },
+        "types": {
+            "goal_created": "membuat tujuan baru “{goal}”",
+            "goal_updated": "memperbarui tujuan “{goal}”",
+            "goal_deleted": "menghapus tujuan “{goal}”",
+            "saving_added": "menabung {amount} untuk “{goal}”",
+            "saving_deleted": "menghapus tabungan {amount} dari “{goal}”",
+            "checkin_added": "menyelesaikan check-in mood hari ini",
+            "checkin_updated": "memperbarui check-in mood-nya",
+            "plan_created": "membuat plan “{plan}”",
+            "plan_updated": "memperbarui plan “{plan}”",
+            "plan_deleted": "menghapus plan “{plan}”",
+            "checklist_completed": "menyelesaikan “{item}” di tujuan “{goal}”",
+            "checklist_uncompleted": "membatalkan centang “{item}” di tujuan “{goal}”",
+            "note_created": "membuat catatan “{note}”",
+            "note_updated": "memperbarui catatan “{note}”",
+            "note_deleted": "menghapus catatan “{note}”"
+        },
+        "errors": {
+            "notAuthenticated": "Sesi kamu sudah berakhir. Silakan masuk lagi.",
+            "forbidden": "Kamu tidak punya izin untuk melakukan ini.",
+            "network": "Koneksi bermasalah. Cek internet kamu lalu coba lagi.",
+            "unknown": "Gagal memuat aktivitas. Coba lagi."
+        }
+    }
+}

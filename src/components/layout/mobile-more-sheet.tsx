@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 
 import {
   Loader2,
@@ -15,6 +16,8 @@ import Image from 'next/image'
 import { createClient } from '@/lib/supabase/client'
 import { useMyRelationshipDetails } from '@/features/relationship/queries'
 import { PlanBadge } from '@/features/subscription/components/plan-badge'
+import { LanguageSwitcher } from '@/components/language-switcher'
+import { moreNavigation } from './nav-config'
 import logo from '@/assets/logo-white.png'
 
 interface MobileMoreSheetProps {
@@ -22,53 +25,13 @@ interface MobileMoreSheetProps {
   onClose: () => void
 }
 
-const moreNavigation = [
-  {
-    label: 'Notes',
-    description: 'Keep little things worth remembering',
-    href: '/notes',
-  },
-  {
-    label: 'Check-in',
-    description: 'Share how you feel today',
-    href: '/check-in',
-  },
-  {
-    label: 'Debates',
-    description: 'Talk things through together',
-    href: '/debates',
-  },
-  {
-    label: 'Q&A',
-    description: 'Discover more about each other',
-    href: '/qna',
-  },
-  {
-    label: 'Countdown',
-    description: 'Count down to your next moment',
-    href: '/countdown',
-  },
-  {
-    label: 'Wrapped',
-    description: 'Look back at your relationship',
-    href: '/wrapped',
-  },
-  {
-    label: 'Activities',
-    description: 'Everything that happened recently',
-    href: '/activities',
-  },
-  {
-    label: 'Profile',
-    description: 'Your account and relationship',
-    href: '/profile',
-  },
-]
-
 export default function MobileMoreSheet({
   open,
   onClose,
 }: MobileMoreSheetProps) {
+  const t = useTranslations('nav')
+  const tc = useTranslations('common')
+
   const pathname = usePathname()
   const router = useRouter()
   const [isLoggingOut, setIsLoggingOut] = useState(false)
@@ -135,7 +98,7 @@ export default function MobileMoreSheet({
     <div className="fixed inset-0 z-52 md:hidden">
       <button
         type="button"
-        aria-label="Close menu"
+        aria-label={t('closeMenu')}
         onClick={onClose}
         className="absolute inset-0 bg-black/40 backdrop-blur-[6px]"
       />
@@ -150,7 +113,7 @@ export default function MobileMoreSheet({
                 src={logo}
                 height={20}
                 width={20}
-                alt="logo"
+                alt="Duora"
               />
 
               <p className="text-[16px] font-semibold uppercase text-white">
@@ -161,7 +124,7 @@ export default function MobileMoreSheet({
             <button
               type="button"
               onClick={onClose}
-              aria-label="Close menu"
+              aria-label={t('closeMenu')}
               className="flex size-9 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-white/40 transition hover:bg-white/10 hover:text-white/80 active:scale-95"
             >
               <X size={16} strokeWidth={1.7} />
@@ -172,11 +135,11 @@ export default function MobileMoreSheet({
         <div className="px-5 pb-5">
           <div className="mb-3 flex items-center justify-between">
             <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-white/30">
-              Subscription
+              {t('subscription')}
             </p>
 
             <span className="text-[9px] text-white/25">
-              {locked ? 'Locked' : 'Manage plan'}
+              {locked ? t('locked') : t('managePlan')}
             </span>
           </div>
 
@@ -207,12 +170,12 @@ export default function MobileMoreSheet({
         <div className="px-5">
           <div className="mb-3 flex items-center justify-between">
             <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-white/30">
-              Workspace
+              {t('workspace')}
             </p>
 
             {locked && (
               <span className="text-[9px] text-white/30">
-                Waiting for partner
+                {t('waitingForPartner')}
               </span>
             )}
           </div>
@@ -221,6 +184,7 @@ export default function MobileMoreSheet({
             {moreNavigation.map((item, index) => {
               const active = isActive(item.href)
               const disabled = locked
+              const label = t(`items.${item.key}`)
 
               if (disabled) {
                 return (
@@ -234,7 +198,7 @@ export default function MobileMoreSheet({
                   >
                     <div className="min-w-0 flex-1">
                       <p className="text-[12px] font-medium text-white/65">
-                        {item.label}
+                        {label}
                       </p>
                     </div>
 
@@ -267,7 +231,7 @@ export default function MobileMoreSheet({
                             : 'text-neutral-400'
                         }`}
                       >
-                        {item.label}
+                        {label}
                       </p>
                     </div>
                   </div>
@@ -289,14 +253,25 @@ export default function MobileMoreSheet({
           <div className="px-5 pt-4">
             <div className="rounded-[1.25rem] border border-white/[0.06] bg-white/[0.04] px-4 py-3.5">
               <p className="text-xs flex items-center gap-3 leading-5 text-white/50">
-              <Lock width={20} height={20} />
-                Ruang kalian akan terbuka setelah pasangan bergabung menggunakan kode undangan.
+                <Lock width={20} height={20} className="shrink-0" />
+                {t('lockedHint')}
               </p>
             </div>
           </div>
         )}
 
-        <div className="px-5 pb-[max(1rem,env(safe-area-inset-bottom))] pt-5">
+        {/* LANGUAGE */}
+        <div className="px-5 pt-5">
+          <div className="flex items-center justify-between rounded-[1.2rem] border border-white/[0.08] bg-white/[0.04] px-4 py-2.5">
+            <span className="text-[11px] font-medium text-white/40">
+              {tc('language')}
+            </span>
+
+            <LanguageSwitcher />
+          </div>
+        </div>
+
+        <div className="px-5 pb-[max(1rem,env(safe-area-inset-bottom))] pt-3">
           <button
             type="button"
             onClick={handleLogout}
@@ -310,18 +285,18 @@ export default function MobileMoreSheet({
                   strokeWidth={1.7}
                   className="animate-spin"
                 />
-                <span>Logging out...</span>
+                <span>{t('loggingOut')}</span>
               </>
             ) : (
               <>
                 <LogOut size={14} strokeWidth={1.7} />
-                <span>Log out</span>
+                <span>{t('logout')}</span>
               </>
             )}
           </button>
 
-          <p className="mt-4 text-center text-[9px] tracking-[0.12em] text-white/20">
-            GROW TOGETHER WITH DUORA
+          <p className="mt-4 text-center text-[9px] uppercase tracking-[0.12em] text-white/20">
+            {t('footer')}
           </p>
         </div>
       </div>

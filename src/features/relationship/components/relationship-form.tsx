@@ -9,12 +9,15 @@ import {
   Loader2,
 } from 'lucide-react'
 
-import {
-  useMyRelationshipDetails,
-  useUpdateRelationship,
-} from '../queries'
+import { useTranslations } from 'next-intl'
+import { getRelationshipErrorKey } from '../errors'
+import { useMyRelationshipDetails, useUpdateRelationship } from '../queries'
+import { getMaxStartedAt, NAME_MAX_LENGTH } from '../schemas'
 
 export default function RelationshipForm() {
+  const t = useTranslations('relationship.form')
+  const te = useTranslations('relationship.errors')
+
   const {
     data,
     isLoading,
@@ -106,11 +109,11 @@ export default function RelationshipForm() {
     <div>
       <div>
         <h2 className="text-lg font-semibold tracking-[-0.03em] text-secondary sm:text-xl">
-          Relationship
+          {t('title')}
         </h2>
 
         <p className="mt-1 text-sm leading-6 text-description">
-          The details of your shared space.
+          {t('description')}
         </p>
       </div>
 
@@ -120,7 +123,7 @@ export default function RelationshipForm() {
             htmlFor="relationship_name"
             className="block text-[13px] font-semibold text-secondary"
           >
-            Relationship name
+            {t('nameLabel')}
           </label>
 
           <input
@@ -128,8 +131,8 @@ export default function RelationshipForm() {
             type="text"
             value={name}
             onChange={(e) => handleNameChange(e.target.value)}
-            placeholder="e.g. Tika & Farel"
-            maxLength={50}
+            placeholder={t('namePlaceholder')}
+            maxLength={NAME_MAX_LENGTH}
             className="mt-2.5 min-h-12 w-full rounded-[14px] border border-white/[0.08] bg-subprimary/40 px-4 py-3 text-sm text-secondary outline-none transition-all duration-200 placeholder:text-description focus:border-white/20 focus:bg-primary focus:ring-4 focus:ring-white/[0.04]"
           />
         </div>
@@ -139,7 +142,7 @@ export default function RelationshipForm() {
             htmlFor="started_at"
             className="block text-[13px] font-semibold text-secondary"
           >
-            Together since
+            {t('startedAtLabel')}
           </label>
 
           <input
@@ -147,7 +150,7 @@ export default function RelationshipForm() {
             type="date"
             value={startedAt}
             onChange={(e) => handleDateChange(e.target.value)}
-            max={new Date().toISOString().split('T')[0]}
+            max={getMaxStartedAt()}
             className="mt-2.5 min-h-12 w-full rounded-[14px] border border-white/[0.08] bg-subprimary/40 px-4 py-3 text-sm text-secondary outline-none transition-all duration-200 focus:border-white/20 focus:bg-primary focus:ring-4 focus:ring-white/[0.04] [color-scheme:dark]"
           />
         </div>
@@ -168,22 +171,22 @@ export default function RelationshipForm() {
                   size={14}
                   className="animate-spin"
                 />
-                Saving
+                {t('saving')}
               </span>
             ) : (
-              'Save changes'
+              t('save')
             )}
           </button>
 
           {saved && (
             <p className="text-xs font-medium text-emerald-500">
-              Relationship updated.
+              {t('saved')}
             </p>
           )}
 
           {updateRelationship.isError && (
             <p className="text-xs font-medium text-red-500">
-              Failed to update. Try again.
+              {te(getRelationshipErrorKey(updateRelationship.error))}
             </p>
           )}
         </div>

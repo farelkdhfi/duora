@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { ChevronDown, X } from 'lucide-react'
+import { useFormatter, useTranslations } from 'next-intl'
 
 import happyEmot from '@/assets/emoticon/happy-fluffy.webp'
 import neutralEmot from '@/assets/emoticon/neutral-fluffy.webp'
@@ -10,6 +11,7 @@ import tiredEmot from '@/assets/emoticon/tired-fluffy.webp'
 import stressedEmot from '@/assets/emoticon/stressed-fluffy.webp'
 
 import { useCheckinHistoryEntries } from '../queries'
+import { SCORE_MAX } from '../schemas'
 import type { Mood } from '../types'
 
 interface CheckinHistoryModalProps {
@@ -18,10 +20,10 @@ interface CheckinHistoryModalProps {
   onClose: () => void
 }
 
-const moodInfo: Record<Mood, { image: typeof happyEmot; label: string; background: string; border: string; text: string; glow: string }> = {
+// Label mood diambil dari messages: tm(mood)
+const moodInfo: Record<Mood, { image: typeof happyEmot; background: string; border: string; text: string; glow: string }> = {
   happy: {
     image: happyEmot,
-    label: 'Bahagia',
     background: 'bg-pink-500/10',
     border: 'border-pink-400/20',
     text: 'text-pink-400',
@@ -29,7 +31,6 @@ const moodInfo: Record<Mood, { image: typeof happyEmot; label: string; backgroun
   },
   neutral: {
     image: neutralEmot,
-    label: 'Biasa aja',
     background: 'bg-subprimary/80',
     border: 'border-white/[0.08]',
     text: 'text-description',
@@ -37,7 +38,6 @@ const moodInfo: Record<Mood, { image: typeof happyEmot; label: string; backgroun
   },
   sad: {
     image: sadEmot,
-    label: 'Sedih',
     background: 'bg-blue-500/10',
     border: 'border-blue-400/20',
     text: 'text-blue-400',
@@ -45,7 +45,6 @@ const moodInfo: Record<Mood, { image: typeof happyEmot; label: string; backgroun
   },
   tired: {
     image: tiredEmot,
-    label: 'Capek',
     background: 'bg-violet-500/10',
     border: 'border-violet-400/20',
     text: 'text-violet-400',
@@ -53,7 +52,6 @@ const moodInfo: Record<Mood, { image: typeof happyEmot; label: string; backgroun
   },
   stressed: {
     image: stressedEmot,
-    label: 'Stres',
     background: 'bg-rose-500/10',
     border: 'border-rose-400/20',
     text: 'text-rose-400',
@@ -61,11 +59,12 @@ const moodInfo: Record<Mood, { image: typeof happyEmot; label: string; backgroun
   },
 }
 
-const detailConfig = [
-  { key: 'liked_today', label: 'Yang disukai hari ini' },
-  { key: 'disliked_today', label: 'Yang tidak disukai hari ini' },
-  { key: 'needs_from_partner', label: 'Butuh dari pasangan' },
-  { key: 'note', label: 'Catatan' },
+// Label tiap kolom ada di messages: td(key)
+const detailKeys = [
+  'liked_today',
+  'disliked_today',
+  'needs_from_partner',
+  'note',
 ] as const
 
 export function CheckinHistoryModal({
@@ -73,8 +72,16 @@ export function CheckinHistoryModal({
   displayName,
   onClose,
 }: CheckinHistoryModalProps) {
+  const t = useTranslations('checkins.historyModal')
+  const td = useTranslations('checkins.details')
+  const tm = useTranslations('checkins.moods')
+  const tc = useTranslations('common')
+  const format = useFormatter()
+
   const { data: entries, isLoading } = useCheckinHistoryEntries(checkinId)
   const [expandedId, setExpandedId] = useState<string | null>(null)
+
+
 
   function toggleExpand(id: string) {
     setExpandedId((prev) => (prev === id ? null : id))
@@ -91,15 +98,15 @@ export function CheckinHistoryModal({
           <div className="flex items-start justify-between gap-4">
             <div>
               <p className="text-[9px] font-semibold uppercase tracking-[0.18em] text-description">
-                Check-in history
+                {t('eyebrow')}
               </p>
 
               <h3 className="mt-1.5 text-[20px] font-semibold tracking-[-0.045em] text-secondary sm:text-[22px]">
-                Perjalanan mood {displayName}
+                {t('title', { name: displayName })}
               </h3>
 
               <p className="mt-1 text-[11px] leading-relaxed text-description">
-                Lihat perubahan check-in yang tersimpan hari ini.
+                {t('subtitle')}
               </p>
             </div>
 
@@ -107,7 +114,7 @@ export function CheckinHistoryModal({
               type="button"
               onClick={onClose}
               className="flex size-9 shrink-0 items-center justify-center rounded-full border border-white/[0.06] bg-subprimary text-description shadow-[0_5px_20px_-12px_rgba(0,0,0,0.25)] transition-all hover:bg-subprimary/80 hover:text-secondary"
-              aria-label="Tutup"
+              aria-label={tc('close')}
             >
               <X size={15} strokeWidth={1.8} />
             </button>
@@ -116,7 +123,7 @@ export function CheckinHistoryModal({
           {entries && entries.length > 0 && (
             <div className="mt-5 flex items-center gap-2">
               <span className="rounded-full border border-white/[0.06] bg-subprimary px-3 py-1.5 text-[9px] font-semibold text-description shadow-[0_5px_20px_-15px_rgba(0,0,0,0.25)]">
-                {entries.length} perubahan
+                {t('changes', { count: entries.length })}
               </span>
 
               <span className="text-[9px] text-description">
@@ -124,7 +131,7 @@ export function CheckinHistoryModal({
               </span>
 
               <span className="text-[9px] font-medium text-description">
-                Hari ini
+                {t('today')}
               </span>
             </div>
           )}
@@ -136,7 +143,7 @@ export function CheckinHistoryModal({
             <div className="flex min-h-48 flex-col items-center justify-center">
               <span className="size-7 animate-spin rounded-full border-2 border-white/[0.12] border-t-secondary" />
               <p className="mt-3 text-[11px] font-medium text-description">
-                Memuat riwayat...
+                {t('loading')}
               </p>
             </div>
           ) : !entries || entries.length === 0 ? (
@@ -146,11 +153,11 @@ export function CheckinHistoryModal({
               </div>
 
               <p className="mt-4 text-[12px] font-semibold text-secondary">
-                Belum ada riwayat
+                {t('emptyTitle')}
               </p>
 
               <p className="mt-1 max-w-[240px] text-[10px] leading-relaxed text-description">
-                Perubahan pada check-in ini akan muncul di sini.
+                {t('emptyDescription')}
               </p>
             </div>
           ) : (
@@ -162,22 +169,21 @@ export function CheckinHistoryModal({
                   const isLatest = index === entries.length - 1
                   const isExpanded = expandedId === entry.id
 
-                  const date = new Date(entry.changed_at)
-
-                  const time = date.toLocaleTimeString('id-ID', {
+                  const time = format.dateTime(new Date(entry.changed_at), {
                     hour: '2-digit',
                     minute: '2-digit',
                   })
 
-                  const details = detailConfig
-                    .map((detail) => ({
-                      ...detail,
-                      value: entry[detail.key as keyof typeof entry],
+                  const details = detailKeys
+                    .map((key) => ({
+                      key,
+                      value: entry[key],
                     }))
                     .filter((detail) => Boolean(detail.value))
 
                   const hasDetails = details.length > 0
-                  const mood = moodInfo[entry.mood] ?? moodInfo.neutral
+                  const moodKey: Mood = entry.mood in moodInfo ? entry.mood : 'neutral'
+                  const mood = moodInfo[moodKey]
 
                   return (
                     <div key={entry.id} className="relative pl-10">
@@ -202,12 +208,12 @@ export function CheckinHistoryModal({
                           <div className="min-w-0 flex-1">
                             <div className="flex items-center gap-2">
                               <p className={`text-[12px] font-semibold ${mood.text}`}>
-                                {mood.label}
+                                {tm(moodKey)}
                               </p>
 
                               {isLatest && (
                                 <span className="rounded-full bg-secondary px-2 py-0.5 text-[8px] font-semibold text-primary">
-                                  Terbaru
+                                  {t('latest')}
                                 </span>
                               )}
                             </div>
@@ -222,7 +228,7 @@ export function CheckinHistoryModal({
                               </span>
 
                               <span className="text-[9px] font-medium text-description">
-                                Energi {entry.energy}/10
+                                {t('energy', { value: entry.energy, max: SCORE_MAX })}
                               </span>
 
                               <span className="hidden text-[9px] text-description/50 sm:inline">
@@ -230,7 +236,7 @@ export function CheckinHistoryModal({
                               </span>
 
                               <span className="hidden text-[9px] font-medium text-description sm:inline">
-                                Stres {entry.stress}/10
+                                {t('stress', { value: entry.stress, max: SCORE_MAX })}
                               </span>
                             </div>
                           </div>
@@ -251,7 +257,7 @@ export function CheckinHistoryModal({
                               {details.map((detail) => (
                                 <div key={detail.key} className="py-3 first:pt-3 last:pb-0">
                                   <p className="text-[8px] font-semibold uppercase tracking-[0.16em] text-description">
-                                    {detail.label}
+                                    {td(detail.key)}
                                   </p>
 
                                   <p className="mt-1.5 break-words text-[11.5px] leading-[1.7] text-description">
@@ -266,7 +272,7 @@ export function CheckinHistoryModal({
                         {!hasDetails && (
                           <div className="px-4 pb-4 sm:px-5">
                             <p className="text-[9px] text-description">
-                              Tidak ada catatan tambahan
+                              {t('noExtraNotes')}
                             </p>
                           </div>
                         )}
@@ -283,7 +289,7 @@ export function CheckinHistoryModal({
         {!isLoading && entries && entries.length > 0 && (
           <div className="relative shrink-0 border-t border-white/[0.05] px-5 py-4 sm:px-7">
             <p className="text-center text-[9px] font-medium tracking-wide text-description">
-              Riwayat perubahan check-in hari ini
+              {t('footer')}
             </p>
           </div>
         )}

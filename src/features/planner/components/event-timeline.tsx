@@ -2,6 +2,9 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import { CalendarDays } from 'lucide-react'
+import { useFormatter, useTimeZone, useTranslations } from 'next-intl'
+
+import { parseDateOnly, UTC, wallClock, zonedNow } from '@/lib/date'
 
 import type { PlannerEvent } from '../types'
 import EventCard from './event-card'
@@ -17,26 +20,18 @@ interface EventTimelineProps {
 /** Plan tanpa jam selesai dianggap berlangsung 1 jam. */
 const DEFAULT_DURATION_MIN = 60
 
-function toDateKey(date: Date) {
-  const y = date.getFullYear()
-  const m = String(date.getMonth() + 1).padStart(2, '0')
-  const d = String(date.getDate()).padStart(2, '0')
-  return `${y}-${m}-${d}`
-}
-
 function toMinutes(time: string) {
   const [h, m] = time.split(':').map(Number)
   return h * 60 + (m || 0)
 }
 
-/** "13:30:00" -> "1 PM" */
-function hourLabel(time: string) {
-  const h = Number(time.split(':')[0])
-  return `${h % 12 || 12} ${h >= 12 ? 'PM' : 'AM'}`
-}
-
-function getStatus(event: PlannerEvent, now: Date): EventStatus {
-  const todayKey = toDateKey(now)
+function getStatus(
+  event: PlannerEvent,
+  now: Date,
+  timeZone?: string,
+): EventStatus {
+  // "Sekarang" menurut timezone user, bukan timezone mesin
+  const { dateKey: todayKey, minutes: nowMin } = zonedNow(timeZone, now)
 
   if (event.event_date > todayKey) return 'upcoming'
   if (event.event_date < todayKey) return 'done'
@@ -44,7 +39,6 @@ function getStatus(event: PlannerEvent, now: Date): EventStatus {
   // hari ini
   if (event.is_all_day || !event.start_time) return 'in-progress'
 
-  const nowMin = now.getHours() * 60 + now.getMinutes()
   const start = toMinutes(event.start_time)
   const end = event.end_time
     ? toMinutes(event.end_time)
@@ -60,6 +54,10 @@ export default function EventTimeline({
   selectedDate,
   participants,
 }: EventTimelineProps) {
+  const t = useTranslations('planner.timeline')
+  const format = useFormatter()
+  const timeZone = useTimeZone()
+
   const [expandedId, setExpandedId] = useState<string | null>(null)
   const [now, setNow] = useState(() => new Date())
 
@@ -79,20 +77,27 @@ export default function EventTimeline({
       .sort((a, b) => sortKey(a).localeCompare(sortKey(b)))
   }, [events, selectedDate])
 
-  const date = new Date(`${selectedDate}T00:00:00`)
-  const dateLabel = date.toLocaleDateString('en-US', {
+  /** "13:30:00" -> "1 PM" (en) / "13.00" (id) */
+  const hourLabel = (time: string) =>
+    format.dateTime(wallClock(Number(time.split(':')[0])), {
+      hour: 'numeric',
+      ...UTC,
+    })
+
+  const dateLabel = format.dateTime(parseDateOnly(selectedDate), {
     weekday: 'long',
     month: 'long',
     day: 'numeric',
+    ...UTC,
   })
 
   return (
-    <section aria-label={`Plans for ${dateLabel}`}>
+    <section aria-label={t('ariaLabel', { date: dateLabel })}>
       <div className="flex items-baseline justify-between gap-3 px-1">
         <h3 className="text-[13px] font-medium text-neutral-200">{dateLabel}</h3>
 
         <span className="text-[11px] text-neutral-500">
-          {dayEvents.length} {dayEvents.length === 1 ? 'plan' : 'plans'}
+          {t('count', { count: dayEvents.length })}
         </span>
       </div>
 
@@ -103,10 +108,10 @@ export default function EventTimeline({
           </div>
 
           <p className="mt-3 text-[14px] font-medium text-neutral-100">
-            No plans on this day
+            {t('emptyDayTitle')}
           </p>
           <p className="mt-1 text-[12px] text-neutral-500">
-            Pick another date or add a new plan.
+            {t('emptyDayDescription')}
           </p>
         </div>
       ) : (
@@ -115,7 +120,7 @@ export default function EventTimeline({
             const expanded = expandedId === event.id
             const label =
               event.is_all_day || !event.start_time
-                ? 'All day'
+                ? t('allDay')
                 : hourLabel(event.start_time)
 
             return (
@@ -136,7 +141,7 @@ export default function EventTimeline({
                 <div className="min-w-0 flex-1">
                   <EventCard
                     event={event}
-                    status={getStatus(event, now)}
+                    status={getStatus(event, now, timeZone)}
                     expanded={expanded}
                     onToggle={() =>
                       setExpandedId((current) =>

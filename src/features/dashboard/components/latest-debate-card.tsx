@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { useFormatter, useTranslations } from 'next-intl'
 import { ArrowUpRight, Scale } from 'lucide-react'
 
 import DarkCardShell from '@/components/ui/dark-card-shell'
@@ -16,31 +17,26 @@ const openButtonClass =
 const panelClass =
   'relative mt-4 flex-1 px-3'
 
-const statusLabels: Record<string, string> = {
-  active: 'Ongoing',
-  pending_verdict: 'Awaiting verdict',
-  resolved: 'Resolved',
-}
+const STATUS_KEYS = ['active', 'pending_verdict', 'resolved'] as const
+type StatusKey = (typeof STATUS_KEYS)[number]
 
-function formatDate(value: string) {
-  return new Date(value).toLocaleDateString('id-ID', {
-    day: 'numeric',
-    month: 'short',
-  })
-}
+const isStatusKey = (value: string): value is StatusKey =>
+  (STATUS_KEYS as readonly string[]).includes(value)
 
 function CardHeader() {
+  const t = useTranslations('dashboard.debates')
+
   return (
     <div className="flex items-start justify-between gap-2">
       <div className="min-w-0 flex-1">
         <h2 className="break-words text-sm font-medium text-neutral-50">
-          Latest debate
+          {t('title')}
         </h2>
       </div>
 
       <Link
         href="/debates"
-        aria-label="Open debates"
+        aria-label={t('open')}
         className={openButtonClass}
       >
         <ArrowUpRight size={14} strokeWidth={2.2} />
@@ -52,6 +48,9 @@ function CardHeader() {
 export default function LatestDebateCard({
   relationshipId,
 }: LatestDebateCardProps) {
+  const t = useTranslations('dashboard.debates')
+  const format = useFormatter()
+
   const { data: debates, isLoading, error } = useDebates(relationshipId)
 
   if (isLoading) {
@@ -75,10 +74,11 @@ export default function LatestDebateCard({
   }
 
   if (error) {
+    // TODO i18n: error.message masih mentah, diganti error bertipe di Fase 6 (debates/api.ts)
     return (
       <DarkCardShell variant="white" compact>
         <h3 className="break-words text-sm font-medium leading-snug tracking-[-0.04em] text-neutral-50">
-          Couldn't load debates
+          {t('loadError')}
         </h3>
 
         <p className="mt-1 text-[11px] leading-relaxed text-neutral-400">
@@ -106,11 +106,11 @@ export default function LatestDebateCard({
           />
 
           <h3 className="mt-3 text-[13px] font-medium tracking-[-0.03em] text-neutral-50">
-            No debates yet.
+            {t('emptyTitle')}
           </h3>
 
           <p className="mt-1 text-[11px] leading-relaxed text-neutral-400">
-            Start your first AI debate.
+            {t('emptyDescription')}
           </p>
         </div>
       </DarkCardShell>
@@ -135,11 +135,16 @@ export default function LatestDebateCard({
 
         <div className="mt-3 flex items-center justify-between gap-2">
           <span className="rounded-full border border-white/[0.08] bg-white/[0.06] px-2 py-0.5 text-[10px] font-medium text-emerald-300">
-            {statusLabels[latest.status] ?? latest.status}
+            {isStatusKey(latest.status)
+              ? t(`status.${latest.status}`)
+              : latest.status}
           </span>
 
           <span className="text-[10px] tabular-nums text-neutral-500">
-            {formatDate(latest.created_at)}
+            {format.dateTime(new Date(latest.created_at), {
+              day: 'numeric',
+              month: 'short',
+            })}
           </span>
         </div>
       </Link>

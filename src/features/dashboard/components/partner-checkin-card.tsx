@@ -6,6 +6,7 @@ import type {
   PointerEvent as ReactPointerEvent,
 } from 'react'
 import Link from 'next/link'
+import { useFormatter, useTranslations } from 'next-intl'
 import { ArrowUpRight, Heart } from 'lucide-react'
 
 import happyEmot1 from '@/assets/emoticon/happy-fluffy.webp'
@@ -47,13 +48,6 @@ const emotVariants: Record<Mood, (typeof happyEmot1)[]> = {
   stressed: [stressedEmot1, stressedEmot2, stressedEmot3],
 }
 
-const moodLabel: Record<Mood, string> = {
-  happy: 'Happy',
-  neutral: 'Neutral',
-  sad: 'Sad',
-  tired: 'Tired',
-  stressed: 'Stressed',
-}
 
 /** Warna per mood: accent dipakai bar & ring, glow dipakai di belakang avatar. */
 const moodTheme: Record<Mood, { accent: string; glow: string }> = {
@@ -91,12 +85,6 @@ const LABEL_RADIUS = RADIUS + 14
 const DOT_RADIUS = RADIUS - RING / 2
 const GRADIENT_HALF = 180 // setengah lebar bagian ring yang kelihatan
 
-const weekdayShort = new Intl.DateTimeFormat('en-US', { weekday: 'short' })
-const dateLong = new Intl.DateTimeFormat('en-US', {
-  weekday: 'long',
-  month: 'short',
-  day: 'numeric',
-})
 
 const clamp = (value: number, min: number, max: number) =>
   Math.min(max, Math.max(min, value))
@@ -160,15 +148,20 @@ function Stats({
   checkin: DailyCheckin | null
   color: string
 }) {
+
+  const t = useTranslations('dashboard.checkin')
+
   return (
     <div className="flex h-[4.5rem] flex-col justify-center gap-4 sm:h-24">
-      <StatBar label="energy" value={checkin?.energy ?? null} color={color} />
-      <StatBar label="stressed" value={checkin?.stress ?? null} color={color} />
+      <StatBar label={t('stats.energy')} value={checkin?.energy ?? null} color={color} />
+      <StatBar label={t('stats.stress')} value={checkin?.stress ?? null} color={color} />
     </div>
   )
 }
 
 function MoodAvatar({ mood }: { mood: Mood }) {
+  const t = useTranslations('dashboard.checkin')
+  const tm = useTranslations('checkins.moods')
   const variants = emotVariants[mood]
   const [index, setIndex] = useState(0)
   const [fading, setFading] = useState(false)
@@ -207,11 +200,10 @@ function MoodAvatar({ mood }: { mood: Mood }) {
   return (
     <img
       src={emot.src}
-      alt={`${moodLabel[mood]} mood`}
+      alt={t('moodAlt', { mood: tm(mood) })}
       draggable={false}
-      className={`relative z-10 size-[4.5rem] object-contain drop-shadow-[0_6px_8px_rgba(0,0,0,0.4)] transition-all duration-300 sm:size-24 ${
-        visible ? 'scale-100 opacity-100' : 'scale-90 opacity-0'
-      }`}
+      className={`relative z-10 size-[4.5rem] object-contain drop-shadow-[0_6px_8px_rgba(0,0,0,0.4)] transition-all duration-300 sm:size-24 ${visible ? 'scale-100 opacity-100' : 'scale-90 opacity-0'
+        }`}
     />
   )
 }
@@ -260,6 +252,7 @@ function PersonColumn({
   href?: string
   emptyLabel: string
 }) {
+  const tm = useTranslations('checkins.moods')
   const theme = getTheme(checkin?.mood)
 
   return (
@@ -283,7 +276,7 @@ function PersonColumn({
       </p>
 
       <p className="h-3 text-[9px] leading-3 text-neutral-500">
-        {checkin ? moodLabel[checkin.mood] : ''}
+        {checkin ? tm(checkin.mood) : ''}
       </p>
     </div>
   )
@@ -297,6 +290,11 @@ export default function PartnerCheckinCard({
   checkins,
   userId,
 }: PartnerCheckinCardProps) {
+  const t = useTranslations('dashboard.checkin')
+  const tp = useTranslations('dashboard.people')
+  const tc = useTranslations('common')
+  const format = useFormatter()
+
   // position: 0 = Now, 6 = 6 hari lalu. Float saat di-drag, integer saat snap.
   const [position, setPosition] = useState(0)
   const [dragging, setDragging] = useState(false)
@@ -320,15 +318,15 @@ export default function PartnerCheckinCard({
 
       return {
         key,
-        label: i === 0 ? 'Now' : weekdayShort.format(date).toLowerCase(),
-        fullLabel: dateLong.format(date),
+        label: i === 0 ? t('now') : format.dateTime(date, { weekday: 'short' }).toLowerCase(),
+        fullLabel: format.dateTime(date, { weekday: 'long', month: 'short', day: 'numeric' }),
         user: userId ? (ofDay.find((c) => c.user_id === userId) ?? null) : null,
         partner: userId
           ? (ofDay.find((c) => c.user_id !== userId) ?? null)
           : null,
       }
     })
-  }, [checkins, userId])
+  }, [checkins, userId, format, t])
 
   const selectedIndex = Math.round(position)
   const selected = days[selectedIndex]
@@ -410,10 +408,10 @@ export default function PartnerCheckinCard({
 
   const subtitle =
     selectedIndex === 0
-      ? 'Today'
+      ? tc('relative.today')
       : selectedIndex === 1
-        ? 'Yesterday'
-        : `${selectedIndex} days ago`
+        ? tc('relative.yesterday')
+        : tc('relative.daysAgo', { count: selectedIndex })
 
   const itemTransition = dragging
     ? ''
@@ -426,16 +424,16 @@ export default function PartnerCheckinCard({
         <Stats checkin={selected.user} color={userTheme.accent} />
 
         <PersonColumn
-          role="You"
+          role={tp('you')}
           checkin={selected.user}
           href={selectedIndex === 0 ? '/check-in' : undefined}
-          emptyLabel={selectedIndex === 0 ? 'Check in' : 'No check-in'}
+          emptyLabel={selectedIndex === 0 ? t('checkInCta') : t('noCheckin')}
         />
 
         <PersonColumn
-          role="Partner"
+          role={tp('partner')}
           checkin={selected.partner}
-          emptyLabel={selectedIndex === 0 ? 'Not yet' : 'No check-in'}
+          emptyLabel={selectedIndex === 0 ? t('notYet') : t('noCheckin')}
         />
 
         <Stats checkin={selected.partner} color={partnerTheme.accent} />
@@ -445,7 +443,7 @@ export default function PartnerCheckinCard({
       <div
         role="slider"
         tabIndex={0}
-        aria-label="Check-in history, last 7 days"
+        aria-label={t('sliderLabel')}
         aria-orientation="horizontal"
         aria-valuemin={0}
         aria-valuemax={MAX_INDEX}
@@ -453,9 +451,8 @@ export default function PartnerCheckinCard({
         aria-valuetext={selected.fullLabel}
         onPointerDown={handlePointerDown}
         onKeyDown={handleKeyDown}
-        className={`relative mt-1 w-full touch-pan-y select-none overflow-hidden outline-none focus-visible:ring-1 focus-visible:ring-white/20 ${
-          dragging ? 'cursor-grabbing' : 'cursor-grab'
-        }`}
+        className={`relative mt-1 w-full touch-pan-y select-none overflow-hidden outline-none focus-visible:ring-1 focus-visible:ring-white/20 ${dragging ? 'cursor-grabbing' : 'cursor-grab'
+          }`}
         style={{ height: VIEW_HEIGHT }}
       >
         {/* ring statis: gradient dari warna mood kamu -> warna mood partner */}
@@ -540,11 +537,10 @@ export default function PartnerCheckinCard({
 
         {/* lapisan yang berputar: titik hari + label */}
         <div
-          className={`absolute ${
-            dragging
-              ? ''
-              : 'transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]'
-          }`}
+          className={`absolute ${dragging
+            ? ''
+            : 'transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]'
+            }`}
           style={{
             left: '50%',
             marginLeft: -RADIUS,
@@ -579,11 +575,10 @@ export default function PartnerCheckinCard({
                   type="button"
                   tabIndex={-1}
                   onClick={() => handleSelect(i)}
-                  className={`absolute left-1/2 top-1/2 whitespace-nowrap px-2 py-1 transition-colors ${
-                    isActive
-                      ? 'text-[13px] font-medium text-white'
-                      : 'text-[11px] text-neutral-400 hover:text-neutral-200'
-                  }`}
+                  className={`absolute left-1/2 top-1/2 whitespace-nowrap px-2 py-1 transition-colors ${isActive
+                    ? 'text-[13px] font-medium text-white'
+                    : 'text-[11px] text-neutral-400 hover:text-neutral-200'
+                    }`}
                   style={{
                     opacity: Math.max(0.25, 1 - dist * 0.28),
                     transform: `translate(-50%, -50%) rotate(${base}deg) translateY(-${LABEL_RADIUS}px)`,

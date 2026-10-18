@@ -1,48 +1,35 @@
 import { createClient } from '@/lib/supabase/client'
 
-import type {
-  CreateGoalFormValues,
-} from './schemas'
+import { GoalApiError, toGoalError } from './errors'
+import type { CreateGoalFormValues } from './schemas'
 
-export async function getGoals(
-  relationshipId: string,
-) {
+export async function getGoals(relationshipId: string) {
   const supabase = createClient()
 
-  const {
-    data,
-    error,
-  } = await supabase
+  const { data, error, status } = await supabase
     .from('goals')
     .select('*')
     .eq('relationship_id', relationshipId)
-    .order('created_at', {
-      ascending: false,
-    })
+    .order('created_at', { ascending: false })
 
   if (error) {
-    throw new Error(error.message)
+    throw toGoalError(error, status)
   }
 
   return data
 }
 
-export async function getGoal(
-  goalId: string,
-) {
+export async function getGoal(goalId: string) {
   const supabase = createClient()
 
-  const {
-    data,
-    error,
-  } = await supabase
+  const { data, error, status } = await supabase
     .from('goals')
     .select('*')
     .eq('id', goalId)
     .single()
 
   if (error) {
-    throw new Error(error.message)
+    throw toGoalError(error, status)
   }
 
   return data
@@ -58,41 +45,33 @@ export async function createGoal({
   const supabase = createClient()
 
   const {
-    data: {
-      user,
-    },
+    data: { user },
   } = await supabase.auth.getUser()
 
   if (!user) {
-    throw new Error('Not authenticated')
+    throw new GoalApiError('notAuthenticated')
   }
 
-  const {
-    data,
-    error,
-  } = await supabase
+  const { data, error, status } = await supabase
     .from('goals')
     .insert({
       relationship_id: relationshipId,
       created_by: user.id,
 
       title: values.title,
-      description:
-        values.description || null,
+      description: values.description || null,
 
       category: values.category,
 
-      target_amount:
-        values.targetAmount ?? null,
+      target_amount: values.targetAmount ?? null,
 
-      deadline:
-        values.deadline || null,
+      deadline: values.deadline || null,
     })
     .select()
     .single()
 
   if (error) {
-    throw new Error(error.message)
+    throw toGoalError(error, status)
   }
 
   return data
@@ -107,49 +86,39 @@ export async function updateGoal({
 }) {
   const supabase = createClient()
 
-  const {
-    data,
-    error,
-  } = await supabase
+  const { data, error, status } = await supabase
     .from('goals')
     .update({
       title: values.title,
-      description:
-        values.description || null,
+      description: values.description || null,
 
       category: values.category,
 
-      target_amount:
-        values.targetAmount ?? null,
+      target_amount: values.targetAmount ?? null,
 
-      deadline:
-        values.deadline || null,
+      deadline: values.deadline || null,
     })
     .eq('id', goalId)
     .select()
     .single()
 
   if (error) {
-    throw new Error(error.message)
+    throw toGoalError(error, status)
   }
 
   return data
 }
 
-export async function deleteGoal(
-  goalId: string,
-) {
+export async function deleteGoal(goalId: string) {
   const supabase = createClient()
 
-  const {
-    error,
-  } = await supabase
+  const { error, status } = await supabase
     .from('goals')
     .delete()
     .eq('id', goalId)
 
   if (error) {
-    throw new Error(error.message)
+    throw toGoalError(error, status)
   }
 
   return goalId

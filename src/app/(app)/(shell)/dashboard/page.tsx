@@ -3,6 +3,7 @@
 import { useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 import { ArrowUpRight } from 'lucide-react'
 
 import {
@@ -69,6 +70,8 @@ function SectionHeader({
 
 export default function DashboardPage() {
   const router = useRouter()
+  const t = useTranslations('dashboard.page')
+  const tp = useTranslations('dashboard.people')
 
   const { data, isLoading } = useMyRelationshipDetails()
 
@@ -110,6 +113,8 @@ export default function DashboardPage() {
   }
 
   if (relationshipError) {
+    // TODO i18n: message masih mentah dari api.ts relationship.
+    // Diganti error bertipe (pola #5) pas relationship/api.ts dimigrasi.
     return (
       <main className="flex min-h-screen items-center justify-center p-6">
         <div className="max-w-md rounded-3xl border border-rose-100 bg-rose-50/60 p-6 text-center">
@@ -131,7 +136,7 @@ export default function DashboardPage() {
       <WaitingForPartner
         relationshipName={data.relationship.name}
         inviteCode={data.relationship.invite_code}
-        userName={user?.display_name ?? 'there'}
+        userName={user?.display_name ?? ''}
       />
     )
   }
@@ -145,8 +150,8 @@ export default function DashboardPage() {
       <div className="relative mx-auto">
         <section>
           <RelationshipHeader
-            userName={user?.display_name ?? 'You'}
-            partnerName={partner?.display_name ?? 'Partner'}
+            userName={user?.display_name ?? tp('you')}
+            partnerName={partner?.display_name ?? tp('partner')}
             userAvatarUrl={user?.avatar_url}
             partnerAvatarUrl={partner?.avatar_url}
             connectedAt={data?.relationship?.started_at}
@@ -157,28 +162,26 @@ export default function DashboardPage() {
           {/* Check-in: header + tombol panah ada di sini (parent) */}
           <section className="mt-5">
             <SectionHeader
-              title="How are you two?"
+              title={t('checkinTitle')}
               href="/check-in"
-              linkLabel="Open check-in"
+              linkLabel={t('openCheckin')}
             />
-
 
             <PartnerCheckinCard
               checkins={checkins}
               userId={user?.id}
             />
-
           </section>
 
           {/* planner */}
           <section className="mt-10">
-            <SectionHeader title="Your planning" divider />
+            <SectionHeader title={t('planningTitle')} divider />
             <PlannerSummaryCard events={events} />
           </section>
 
           {/* workspace */}
-          <section className='mt-10'>
-            <SectionHeader title="Your Workspace" divider />
+          <section className="mt-10">
+            <SectionHeader title={t('workspaceTitle')} divider />
             <div className="grid grid-cols-2 gap-2 sm:gap-5">
               {/* Goals jadi full width juga supaya grid tidak bolong */}
               <div className="col-span-2">

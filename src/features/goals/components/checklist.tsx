@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useTranslations } from 'next-intl'
 import {
   Check,
   ListChecks,
@@ -22,6 +23,8 @@ interface ChecklistProps {
 export default function Checklist({
   goalId,
 }: ChecklistProps) {
+  const t = useTranslations('goals.checklist')
+  const tCommon = useTranslations('common')
   const [title, setTitle] = useState('')
   const [confirmingDeleteId, setConfirmingDeleteId] = useState<string | null>(null)
 
@@ -171,11 +174,11 @@ export default function Checklist({
             <div className="min-w-0">
 
               <p className="truncate text-[9px] font-semibold uppercase tracking-[0.14em] text-description sm:text-[10px] sm:tracking-[0.16em]">
-                Together
+                {t('eyebrow')}
               </p>
 
               <h2 className="mt-1 truncate text-[14px] font-semibold tracking-[-0.025em] text-secondary sm:text-[15px]">
-                Checklist
+                	{t('title')}
               </h2>
 
             </div>
@@ -202,9 +205,7 @@ export default function Checklist({
             <div className="flex items-center justify-between gap-3">
 
               <span className="min-w-0 truncate text-[9px] text-description sm:text-[10px]">
-                {isCompleted
-                  ? 'Everything is complete'
-                  : `${progress}% completed`}
+                {isCompleted ? t('allComplete') : t('percentCompleted', { progress })}
               </span>
 
               {isCompleted && (
@@ -213,7 +214,7 @@ export default function Checklist({
                     size={11}
                     strokeWidth={2.8}
                   />
-                  All done
+                  	{t('allDone')}
                 </span>
               )}
 
@@ -258,8 +259,8 @@ export default function Checklist({
                   type="button"
                   aria-label={
                     item.is_completed
-                      ? 'Mark as incomplete'
-                      : 'Mark as completed'
+                      ? t('markIncomplete')
+                      : t('markComplete')
                   }
                   onClick={() =>
                     toggleMutation.mutate({
@@ -311,9 +312,7 @@ export default function Checklist({
                       )}
 
                       <span>
-                        {deleteMutation.isPending
-                          ? 'Deleting...'
-                          : 'Delete'}
+                        {deleteMutation.isPending ? t('deleting') : tCommon('delete')}
                       </span>
                     </button>
 
@@ -323,13 +322,13 @@ export default function Checklist({
                       disabled={deleteMutation.isPending}
                       className="inline-flex min-h-7 items-center justify-center rounded-full px-2.5 text-[9px] font-semibold text-description transition-all duration-200 hover:bg-subprimary hover:text-secondary active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 sm:min-h-7.5 sm:px-3"
                     >
-                      Cancel
+                      {tCommon('cancel')}
                     </button>
                   </div>
                 ) : (
                   <button
                     type="button"
-                    aria-label={`Delete checklist item: ${item.title}`}
+                    aria-label={t('deleteAria', { title: item.title })}
                     onClick={() =>
                       handleDeleteClick(item.id)
                     }
@@ -359,12 +358,11 @@ export default function Checklist({
           <div className="px-4 py-9 text-center xs:px-5 sm:px-6 sm:py-10 lg:px-7">
 
             <h3 className="mt-3 text-[12px] font-semibold text-secondary sm:text-[13px]">
-              Nothing to check off yet
+              {t('emptyTitle')}
             </h3>
 
             <p className="mx-auto mt-1 max-w-xs text-[10px] leading-5 text-description sm:text-[11px]">
-              Add a small step and work toward
-              this goal together.
+              {t('emptyDescription')}
             </p>
 
           </div>
@@ -392,7 +390,7 @@ export default function Checklist({
                 handleCreate()
               }
             }}
-            placeholder="Add a small step..."
+            placeholder={t('placeholder')}
             className="h-11 min-w-0 flex-1 rounded-[12px] border border-white/[0.06] bg-primary px-3.5 text-[12px] text-secondary outline-none transition placeholder:text-description focus:border-white/20 focus:ring-4 focus:ring-white/[0.05] sm:h-12 sm:rounded-[14px] sm:px-4"
           />
 
@@ -404,7 +402,7 @@ export default function Checklist({
               !title.trim()
             }
             className="flex size-11 shrink-0 items-center justify-center rounded-[12px] bg-subprimary text-secondary transition-all hover:bg-subprimary/80 active:scale-95 disabled:cursor-not-allowed disabled:opacity-20 sm:size-12 sm:rounded-[14px]"
-            aria-label="Add checklist item"
+            aria-label={t('addAria')}
           >
 
             <Plus
@@ -417,7 +415,7 @@ export default function Checklist({
         </div>
 
         <p className="mt-2 px-1 text-[8px] text-description sm:text-[9px]">
-          Press Enter to add
+          {t('hint')}
         </p>
 
       </div>

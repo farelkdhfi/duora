@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { Plus, CalendarDays } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 
 import { useMyRelationshipDetails } from '@/features/relationship/queries'
 import EventList from '@/features/planner/components/event-list'
@@ -11,6 +12,7 @@ import Header from '@/components/layout/header'
 import PlannerSkeleton from '@/features/planner/components/planner-skeleton'
 
 export default function PlannerPage() {
+  const t = useTranslations('planner.page')
   const [showCreate, setShowCreate] = useState(false)
 
   const { data, isLoading } = useMyRelationshipDetails()
@@ -41,11 +43,11 @@ export default function PlannerPage() {
             </div>
 
             <h2 className="mt-5 text-lg font-semibold tracking-[-0.03em] text-neutral-800 sm:text-xl">
-              Connect with your partner
+              {t('noRelationshipTitle')}
             </h2>
 
             <p className="mx-auto mt-2 max-w-sm text-[13px] leading-6 text-neutral-400 sm:text-sm">
-              Connect your relationship first to start planning meaningful moments together.
+              {t('noRelationshipDescription')}
             </p>
           </div>
         </div>
@@ -56,15 +58,12 @@ export default function PlannerPage() {
   return (
     <div className="relative">
       <div className="relative">
-        <Header
-          title="planner"
-          description="Plan the moments you want to remember."
-        />
+        <Header title={t('title')} description={t('description')} />
 
         <button
           type="button"
           onClick={() => setShowCreate(true)}
-          aria-label="Create event"
+          aria-label={t('createEvent')}
           className="absolute right-0 top-1/2 flex size-9 -translate-y-1/2 items-center justify-center rounded-full bg-neutral-800 text-white shadow-sm transition-all hover:border-black/[0.1] hover:bg-neutral-50 hover:text-black active:scale-95 sm:size-10 sm:rounded-[13px]"
         >
           <Plus size={18} strokeWidth={1.8} />

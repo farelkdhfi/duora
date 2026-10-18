@@ -3,6 +3,7 @@
 import { Fragment, useEffect, useMemo, useRef, useState } from 'react'
 import type { KeyboardEvent } from 'react'
 import Link from 'next/link'
+import { useFormatter, useTranslations } from 'next-intl'
 import { ArrowUpRight, CalendarDays, History, Plus } from 'lucide-react'
 
 /**
@@ -34,7 +35,7 @@ const MAX_PAST = 3
 type View = number | 'past'
 
 /* ========================================================= */
-/* HELPER */
+/* HELPER (murni, tanpa teks) */
 /* ========================================================= */
 
 /** YYYY-MM-DD memakai tanggal lokal (bukan UTC) supaya tidak geser hari di WIB. */
@@ -56,29 +57,44 @@ function daysUntil(dateKey: string) {
   return Math.round((target.getTime() - now.getTime()) / 86_400_000)
 }
 
-function relativeLabel(dateKey: string) {
-  const diff = daysUntil(dateKey)
-  if (diff === 0) return 'Today'
-  if (diff === 1) return 'Tomorrow'
-  if (diff > 1) return `In ${diff} days`
-  return `${-diff} days ago`
-}
+/** Helper yang butuh teks/format locale dikumpulkan di sini. */
+function usePlannerFormat() {
+  const t = useTranslations('dashboard.planner')
+  const tc = useTranslations('common')
+  const format = useFormatter()
 
-/** "oct 10", atau "oct 10 '25" kalau beda tahun dengan sekarang. */
-function shortDate(dateKey: string) {
-  const date = new Date(`${dateKey}T00:00:00`)
-  const month = date.toLocaleDateString('en-US', { month: 'short' }).toLowerCase()
-  const sameYear = date.getFullYear() === new Date().getFullYear()
-  const year = sameYear ? '' : ` '${String(date.getFullYear()).slice(2)}`
+  /** "oct" / "okt" */
+  const monthShort = (date: Date) =>
+    format.dateTime(date, { month: 'short' }).toLowerCase()
 
-  return `${month} ${date.getDate()}${year}`
-}
+  const relativeLabel = (dateKey: string) => {
+    const diff = daysUntil(dateKey)
+    if (diff === 0) return tc('relative.today')
+    if (diff === 1) return tc('relative.tomorrow')
+    if (diff === -1) return tc('relative.yesterday')
+    if (diff > 1) return tc('relative.inDays', { count: diff })
+    return tc('relative.daysAgo', { count: -diff })
+  }
 
-function timeLabel(event: PlannerEvent) {
-  if (event.is_all_day || !event.start_time) return 'All day'
+  /** "oct 10" / "10 okt", plus " '25" kalau beda tahun dengan sekarang. */
+  const shortDate = (dateKey: string) => {
+    const date = new Date(`${dateKey}T00:00:00`)
+    const label = format
+      .dateTime(date, { day: 'numeric', month: 'short' })
+      .toLowerCase()
+    const sameYear = date.getFullYear() === new Date().getFullYear()
 
-  const start = formatTime(event.start_time)
-  return event.end_time ? `${start} – ${formatTime(event.end_time)}` : start
+    return sameYear ? label : `${label} '${String(date.getFullYear()).slice(2)}`
+  }
+
+  const timeLabel = (event: PlannerEvent) => {
+    if (event.is_all_day || !event.start_time) return t('allDay')
+
+    const start = formatTime(event.start_time)
+    return event.end_time ? `${start} – ${formatTime(event.end_time)}` : start
+  }
+
+  return { monthShort, relativeLabel, shortDate, timeLabel }
 }
 
 /** true setelah komponen mount, dipakai untuk efek fade-in. */
@@ -98,10 +114,13 @@ function useMounted() {
 /* ========================================================= */
 
 function EventDetail({ event }: { event: PlannerEvent }) {
+  const t = useTranslations('dashboard.planner')
+  const { monthShort, relativeLabel, timeLabel } = usePlannerFormat()
   const ready = useMounted()
 
   const date = new Date(`${event.event_date}T00:00:00`)
-  const month = date.toLocaleDateString('en-US', { month: 'short' }).toLowerCase()
+  const month = monthShort(date)
+  // TODO Fase 3: category masih nilai mentah dari DB, nanti lewat label planner
   const category = event.category?.replace(/[_-]+/g, ' ')
 
   return (
@@ -143,7 +162,7 @@ function EventDetail({ event }: { event: PlannerEvent }) {
       <div className="flex shrink-0 flex-col items-end justify-between">
         <Link
           href="/planner"
-          aria-label="Open planner"
+          aria-label={t('open')}
           className="flex size-7 items-center justify-center rounded-full border border-white/[0.08] text-neutral-300 transition-all duration-300 hover:bg-white hover:text-neutral-900"
         >
           <ArrowUpRight size={13} strokeWidth={2} />
@@ -162,6 +181,7 @@ function EventDetail({ event }: { event: PlannerEvent }) {
 /* ========================================================= */
 
 function PastList({ events }: { events: PlannerEvent[] }) {
+  const { shortDate } = usePlannerFormat()
   const ready = useMounted()
 
   return (
@@ -194,6 +214,8 @@ function PastList({ events }: { events: PlannerEvent[] }) {
 /* ========================================================= */
 
 function EmptyState({ hasAny }: { hasAny: boolean }) {
+  const t = useTranslations('dashboard.planner')
+
   return (
     <div className="flex items-center gap-3">
       <div className="relative flex size-16 shrink-0 items-center justify-center">
@@ -225,12 +247,10 @@ function EmptyState({ hasAny }: { hasAny: boolean }) {
 
       <div className="min-w-0 flex-1">
         <h3 className="text-sm  text-neutral-50">
-          {hasAny ? 'Belum ada plan mendatang' : 'Planner belum dibikin'}
+          {hasAny ? t('emptyUpcomingTitle') : t('emptyTitle')}
         </h3>
         <p className="mt-0.5 text-[11px] text-neutral-400">
-          {hasAny
-            ? 'Lihat riwayat atau buat plan baru.'
-            : 'Tambah date night atau trip dulu.'}
+          {hasAny ? t('emptyUpcomingDescription') : t('emptyDescription')}
         </p>
       </div>
 
@@ -239,7 +259,7 @@ function EmptyState({ hasAny }: { hasAny: boolean }) {
         className="inline-flex h-7 shrink-0 items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.06] px-3 text-[10px] font-semibold text-neutral-200 transition-all duration-300 hover:bg-white hover:text-neutral-900"
       >
         <Plus size={11} strokeWidth={2.2} />
-        Plan
+        {t('addPlan')}
       </Link>
     </div>
   )
@@ -253,6 +273,8 @@ const activeClass =
   'bg-pink-200 text-black shadow-[0_0_14px_rgba(168,85,247,0.45)]'
 
 export default function PlannerSummaryCard({ events }: PlannerSummaryCardProps) {
+  const t = useTranslations('dashboard.planner')
+
   const [view, setView] = useState<View>(0)
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([])
 
@@ -318,7 +340,7 @@ export default function PlannerSummaryCard({ events }: PlannerSummaryCardProps) 
       {/* ===== Selector: bulet 1..5 + filter Past, satu baris ===== */}
       <div
         role="tablist"
-        aria-label="Plans"
+        aria-label={t('plansLabel')}
         onKeyDown={handleKeyDown}
         className="flex items-center"
       >
@@ -335,7 +357,7 @@ export default function PlannerSummaryCard({ events }: PlannerSummaryCardProps) 
                   type="button"
                   role="tab"
                   aria-selected={isActive}
-                  aria-label={`Plan ${i + 1}: ${event.title}`}
+                  aria-label={t('tabLabel', { number: i + 1, title: event.title })}
                   title={event.title}
                   tabIndex={isActive ? 0 : -1}
                   onClick={() => setView(i)}
@@ -353,8 +375,8 @@ export default function PlannerSummaryCard({ events }: PlannerSummaryCardProps) 
                   role="tab"
                   disabled
                   aria-selected={false}
-                  aria-label={`Plan ${i + 1}: belum ada`}
-                  title="Belum ada plan"
+                  aria-label={t('tabEmptyLabel', { number: i + 1 })}
+                  title={t('noPlan')}
                   tabIndex={-1}
                   className="relative z-10 flex size-7 shrink-0 cursor-default items-center justify-center rounded-full border border-dashed border-white/[0.08] bg-black text-xs font-medium text-neutral-600"
                 >
@@ -387,8 +409,8 @@ export default function PlannerSummaryCard({ events }: PlannerSummaryCardProps) 
           role="tab"
           disabled={past.length === 0}
           aria-selected={pastActive}
-          aria-label="Past plans"
-          title={past.length > 0 ? 'Past plans' : 'Belum ada riwayat'}
+          aria-label={t('pastPlans')}
+          title={past.length > 0 ? t('pastPlans') : t('noHistory')}
           tabIndex={pastActive ? 0 : -1}
           onClick={() => setView('past')}
           className={`relative z-10 inline-flex h-7 shrink-0 items-center gap-1 rounded-full px-2.5 text-[11px] font-medium outline-none transition-all duration-300 focus-visible:ring-2 focus-visible:ring-white/30 ${
@@ -400,7 +422,7 @@ export default function PlannerSummaryCard({ events }: PlannerSummaryCardProps) 
           }`}
         >
           <History size={11} strokeWidth={2} />
-          Past
+          {t('past')}
         </button>
       </div>
 

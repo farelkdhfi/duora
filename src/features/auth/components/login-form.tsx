@@ -6,20 +6,28 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
 import { ArrowRight, Eye, EyeOff, Loader2, LockKeyhole, Mail } from 'lucide-react'
-import { useState, useTransition } from 'react'
-import {
-  loginSchema,
-  type LoginFormValues,
-} from '../schemas'
+import { useMemo, useState, useTransition } from 'react'
+import { createLoginSchema, type LoginFormValues } from '../schemas'
 
 import { login } from '../api'
-
+import { useTranslations } from 'next-intl'
+import { getAuthErrorKey } from '../errors'
 
 const inputClass =
   'mt-2 h-12 w-full rounded-full bg-neutral-800 px-4 pl-11 text-[14px] border border-white/10 text-white placeholder:text-neutral-400 outline-none'
 
 
 export default function LoginForm() {
+
+  const t = useTranslations('auth.login')
+  const te = useTranslations('auth.errors')
+  const tc = useTranslations('auth.common')
+  const tv = useTranslations('auth.validation')
+  const schema = useMemo(() => createLoginSchema(tv), [tv])
+
+  const { register, handleSubmit, formState: { errors } } = useForm<LoginFormValues>({
+    resolver: zodResolver(schema),
+  })
 
   const router = useRouter()
   const supabase = createClient()
@@ -30,15 +38,6 @@ export default function LoginForm() {
 
   const [isGoogleLoading, setIsGoogleLoading] =
     useState(false)
-
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<LoginFormValues>({
-    resolver: zodResolver(loginSchema),
-  })
 
 
   const loginMutation = useMutation({
@@ -97,7 +96,7 @@ export default function LoginForm() {
             htmlFor="email"
             className="block text-[13px] font-medium text-description"
           >
-            Email
+            {tc('email')}
           </label>
 
 
@@ -140,7 +139,7 @@ export default function LoginForm() {
               htmlFor="password"
               className="block text-[13px] font-medium text-description"
             >
-              Password
+              {tc('password')}
             </label>
 
           </div>
@@ -177,8 +176,8 @@ export default function LoginForm() {
               className="absolute right-3 top-1/2 mt-[4px] flex size-8 -translate-y-1/2 items-center justify-center rounded-xl text-neutral-400 transition hover:bg-neutral-100 hover:text-neutral-700"
               aria-label={
                 showPassword
-                  ? 'Hide password'
-                  : 'Show password'
+                  ? tc('hidePassword')
+                  : tc('showPassword')
               }
             >
 
@@ -210,7 +209,7 @@ export default function LoginForm() {
           <div className="rounded-2xl border border-rose-100 bg-rose-50/70 px-4 py-3">
 
             <p className="text-[13px] font-medium leading-5 text-rose-600">
-              {loginMutation.error.message}
+              {te(getAuthErrorKey(loginMutation.error))}
             </p>
 
           </div>
@@ -229,11 +228,11 @@ export default function LoginForm() {
           {isSubmitting ? (
             <>
               <Loader2 size={15} className="animate-spin" />
-              <span>Signing in</span>
+              <span>{t('signingIn')}</span>
             </>
           ) : (
             <>
-              <span>Sign in</span>
+              <span>{t('signIn')}</span>
               <span className="flex size-4.5 items-center justify-center text-white sm:size-5">
                 <ArrowRight size={10} />
               </span>
@@ -251,7 +250,7 @@ export default function LoginForm() {
       <div className="flex items-center gap-3">
         <div className="h-px flex-1 bg-neutral-600" />
         <span className="text-[12px] font-medium text-neutral-400">
-          or
+          {tc('or')}
         </span>
         <div className="h-px flex-1 bg-neutral-600" />
       </div>
@@ -288,8 +287,9 @@ export default function LoginForm() {
 
         <span>
           {isGoogleLoading
-            ? 'Connecting…'
-            : 'Continue with Google'}
+            ? tc('connecting')
+            : tc('continueWithGoogle')
+          }
         </span>
       </button>
 

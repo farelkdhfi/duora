@@ -2,11 +2,13 @@
 
 import { useState } from 'react'
 import { Plus, Target } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 
 import GoalCard from './goal-card'
-import TotalSavingsCard, { TotalSavingsCardSkeleton } from './total-savings-card'
+import TotalSavingsCard from './total-savings-card'
 
 import { useGoalsWithSavingsSummary } from '@/features/savings/queries'
+import { useRupiah } from '@/lib/use-rupiah'
 import EmptyGoals from './empty-goals'
 import GoalSkeleton from './goal-skeleton'
 
@@ -20,6 +22,8 @@ type GoalFilter =
   | 'newest'
   | 'under_1m'
   | 'over_1m'
+
+const ONE_MILLION = 1_000_000
 
 function getGoalSavings(goal: any) {
   return (
@@ -35,6 +39,9 @@ export default function GoalList({
   relationshipId,
   onCreate,
 }: GoalListProps) {
+  const t = useTranslations('goals.list')
+  const { rupiahCompact } = useRupiah()
+
   const {
     data: goals,
     isLoading,
@@ -43,6 +50,18 @@ export default function GoalList({
 
   const [activeFilter, setActiveFilter] =
     useState<GoalFilter>('all')
+
+  const threshold = rupiahCompact(ONE_MILLION)
+
+  const filterOptions: {
+    value: GoalFilter
+    label: string
+  }[] = [
+    { value: 'all', label: t('filters.all') },
+    { value: 'newest', label: t('filters.newest') },
+    { value: 'under_1m', label: t('filters.under', { amount: threshold }) },
+    { value: 'over_1m', label: t('filters.over', { amount: threshold }) },
+  ]
 
   /* ========================================================= */
   /* LOADING SKELETON */
@@ -81,11 +100,11 @@ export default function GoalList({
       }
 
       if (activeFilter === 'under_1m') {
-        return savings < 1_000_000
+        return savings < ONE_MILLION
       }
 
       if (activeFilter === 'over_1m') {
-        return savings > 1_000_000
+        return savings > ONE_MILLION
       }
 
       return true
@@ -100,28 +119,6 @@ export default function GoalList({
 
       return 0
     })
-
-  const filterOptions: {
-    value: GoalFilter
-    label: string
-  }[] = [
-    {
-      value: 'all',
-      label: 'All',
-    },
-    {
-      value: 'newest',
-      label: 'Newest',
-    },
-    {
-      value: 'under_1m',
-      label: '< Rp1jt',
-    },
-    {
-      value: 'over_1m',
-      label: '> Rp1jt',
-    },
-  ]
 
   /* ========================================================= */
   /* UI */
@@ -162,7 +159,7 @@ export default function GoalList({
         <button
           type="button"
           onClick={onCreate}
-          aria-label="Create a new goal"
+          aria-label={t('createGoal')}
           className="flex size-9 shrink-0 items-center justify-center rounded-full bg-neutral-800 text-secondary transition-all duration-200 hover:scale-105 hover:bg-black active:scale-95"
         >
           <Plus
@@ -191,14 +188,14 @@ export default function GoalList({
 
             <h3 className="mt-4 text-[16px] font-semibold tracking-[-0.03em] text-description">
               {activeFilter === 'under_1m'
-                ? 'No goals under Rp1jt.'
+                ? t('emptyUnder', { amount: threshold })
                 : activeFilter === 'over_1m'
-                  ? 'No goals over Rp1jt.'
-                  : 'No goals found.'}
+                  ? t('emptyOver', { amount: threshold })
+                  : t('emptyDefault')}
             </h3>
 
             <p className="mx-auto mt-1.5 max-w-xs text-sm leading-5 text-neutral-400">
-              Coba filter lain atau buat goal baru ya!.
+              {t('emptyHint')}
             </p>
           </div>
         </div>
@@ -206,10 +203,7 @@ export default function GoalList({
         <div>
           <div className="mb-3 flex items-center justify-between px-1">
             <p className="text-xs text-neutral-400">
-              {filteredGoals.length}{' '}
-              {filteredGoals.length === 1
-                ? 'goal'
-                : 'goals'}
+              {t('count', { count: filteredGoals.length })}
             </p>
           </div>
 

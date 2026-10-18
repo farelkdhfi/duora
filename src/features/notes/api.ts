@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/client'
 import type { NoteWithDetails } from './types'
 import type { CreateNoteFormValues } from './schemas'
+import { NoteApiError, toNoteError } from './errors'
 
 export async function getNotes(
   relationshipId: string,
@@ -10,6 +11,7 @@ export async function getNotes(
   const {
     data,
     error,
+    status,
   } = await supabase.rpc(
     'get_relationship_notes',
     {
@@ -18,7 +20,7 @@ export async function getNotes(
   )
 
   if (error) {
-    throw new Error(error.message)
+    throw toNoteError(error, status)
   }
 
   return (data as NoteWithDetails[]) ?? []
@@ -38,12 +40,13 @@ export async function createNote({
   } = await supabase.auth.getUser()
 
   if (!user) {
-    throw new Error('Not authenticated')
+    throw new NoteApiError('notAuthenticated')
   }
 
   const {
     data: note,
     error,
+    status,
   } = await supabase
     .from('notes')
     .insert({
@@ -58,12 +61,13 @@ export async function createNote({
     .single()
 
   if (error) {
-    throw new Error(error.message)
+    throw toNoteError(error, status)
   }
 
   if (values.checklistItems?.length) {
     const {
       error: checklistError,
+      status: checklistStatus,
     } = await supabase
       .from('note_checklist_items')
       .insert(
@@ -77,7 +81,7 @@ export async function createNote({
       )
 
     if (checklistError) {
-      throw new Error(checklistError.message)
+      throw toNoteError(checklistError, checklistStatus)
     }
   }
 
@@ -101,12 +105,13 @@ export async function updateNote({
   } = await supabase.auth.getUser()
 
   if (!user) {
-    throw new Error('Not authenticated')
+    throw new NoteApiError('notAuthenticated')
   }
 
   const {
     data,
     error,
+    status,
   } = await supabase
     .from('notes')
     .update({
@@ -120,7 +125,7 @@ export async function updateNote({
     .single()
 
   if (error) {
-    throw new Error(error.message)
+    throw toNoteError(error, status)
   }
 
   return data
@@ -129,13 +134,13 @@ export async function updateNote({
 export async function deleteNote(noteId: string) {
   const supabase = createClient()
 
-  const { error } = await supabase
+  const { error, status } = await supabase
     .from('notes')
     .delete()
     .eq('id', noteId)
 
   if (error) {
-    throw new Error(error.message)
+    throw toNoteError(error, status)
   }
 
   return noteId
@@ -150,13 +155,13 @@ export async function toggleNotePin({
 }) {
   const supabase = createClient()
 
-  const { error } = await supabase
+  const { error, status } = await supabase
     .from('notes')
     .update({ is_pinned: isPinned })
     .eq('id', noteId)
 
   if (error) {
-    throw new Error(error.message)
+    throw toNoteError(error, status)
   }
 
   return noteId
@@ -171,13 +176,13 @@ export async function toggleNoteFavorite({
 }) {
   const supabase = createClient()
 
-  const { error } = await supabase
+  const { error, status } = await supabase
     .from('notes')
     .update({ is_favorite: isFavorite })
     .eq('id', noteId)
 
   if (error) {
-    throw new Error(error.message)
+    throw toNoteError(error, status)
   }
 
   return noteId
@@ -197,6 +202,7 @@ export async function addChecklistItem({
   const {
     data,
     error,
+    status,
   } = await supabase
     .from('note_checklist_items')
     .insert({
@@ -208,7 +214,7 @@ export async function addChecklistItem({
     .single()
 
   if (error) {
-    throw new Error(error.message)
+    throw toNoteError(error, status)
   }
 
   return data
@@ -230,6 +236,7 @@ export async function toggleChecklistItem({
   const {
     data,
     error,
+    status,
   } = await supabase
     .from('note_checklist_items')
     .update({
@@ -246,7 +253,7 @@ export async function toggleChecklistItem({
     .single()
 
   if (error) {
-    throw new Error(error.message)
+    throw toNoteError(error, status)
   }
 
   return data
@@ -257,13 +264,13 @@ export async function deleteChecklistItem(
 ) {
   const supabase = createClient()
 
-  const { error } = await supabase
+  const { error, status } = await supabase
     .from('note_checklist_items')
     .delete()
     .eq('id', itemId)
 
   if (error) {
-    throw new Error(error.message)
+    throw toNoteError(error, status)
   }
 
   return itemId

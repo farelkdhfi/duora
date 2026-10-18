@@ -1,4 +1,6 @@
 import { createClient } from '@/lib/supabase/client'
+
+import { toActivityError } from './errors'
 import type { Activity } from './types'
 
 export async function getRelationshipActivities({
@@ -25,7 +27,7 @@ export async function getRelationshipActivities({
   )
 
   if (error) {
-    throw new Error(error.message)
+    throw toActivityError(error)
   }
 
   return (data as Activity[]) ?? []

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { ChevronDown } from 'lucide-react'
+import { useFormatter, useTranslations } from 'next-intl'
 
 import happyEmot from '@/assets/emoticon/happy-fluffy.webp'
 import neutralEmot from '@/assets/emoticon/neutral-fluffy.webp'
@@ -19,11 +20,11 @@ interface CheckinCardProps {
   name: string
 }
 
+// Label mood diambil dari messages: tm(mood)
 const moodInfo: Record<
   Mood,
   {
     image: typeof happyEmot
-    label: string
     background: string
     border: string
     glow: string
@@ -33,7 +34,6 @@ const moodInfo: Record<
 > = {
   happy: {
     image: happyEmot,
-    label: 'Happy',
     background: 'bg-pink-500/10',
     border: 'border-pink-400/20',
     glow: 'bg-pink-300/[0.12]',
@@ -42,7 +42,6 @@ const moodInfo: Record<
   },
   neutral: {
     image: neutralEmot,
-    label: 'Neutral',
     background: 'bg-subprimary/80',
     border: 'border-white/[0.08]',
     glow: 'bg-neutral-300/[0.12]',
@@ -51,7 +50,6 @@ const moodInfo: Record<
   },
   sad: {
     image: sadEmot,
-    label: 'Sad',
     background: 'bg-blue-500/10',
     border: 'border-blue-400/20',
     glow: 'bg-blue-400/[0.10]',
@@ -60,7 +58,6 @@ const moodInfo: Record<
   },
   tired: {
     image: tiredEmot,
-    label: 'Tired',
     background: 'bg-violet-500/10',
     border: 'border-violet-400/20',
     glow: 'bg-violet-400/[0.10]',
@@ -69,7 +66,6 @@ const moodInfo: Record<
   },
   stressed: {
     image: stressedEmot,
-    label: 'Stressed',
     background: 'bg-red-500/10',
     border: 'border-red-400/20',
     glow: 'bg-red-400/[0.10]',
@@ -78,29 +74,23 @@ const moodInfo: Record<
   },
 }
 
-const detailConfig = [
-  {
-    key: 'liked_today',
-    label: 'Liked today',
-  },
-  {
-    key: 'disliked_today',
-    label: "Didn't like today",
-  },
-  {
-    key: 'needs_from_partner',
-    label: 'Needs from partner',
-  },
-  {
-    key: 'note',
-    label: 'Note',
-  },
+// Label tiap kolom ada di messages: td(key)
+const detailKeys = [
+  'liked_today',
+  'disliked_today',
+  'needs_from_partner',
+  'note',
 ] as const
 
 export default function CheckinCard({
   checkin,
   name,
 }: CheckinCardProps) {
+  const t = useTranslations('checkins.card')
+  const td = useTranslations('checkins.details')
+  const tm = useTranslations('checkins.moods')
+  const format = useFormatter()
+
   const [isExpanded, setIsExpanded] = useState(false)
   const [isHistoryOpen, setIsHistoryOpen] = useState(false)
   const [imageLoaded, setImageLoaded] = useState(false)
@@ -110,7 +100,8 @@ export default function CheckinCard({
   const historyCount = historyEntries?.length ?? 0
   const hasMultipleChanges = historyCount > 1
 
-  const mood = moodInfo[checkin.mood] ?? moodInfo.neutral
+  const moodKey: Mood = checkin.mood in moodInfo ? checkin.mood : 'neutral'
+  const mood = moodInfo[moodKey]
 
   /*
    * Reset loading state whenever the mood changes.
@@ -141,17 +132,23 @@ export default function CheckinCard({
     }
   }, [mood.image.src])
 
-  const date = new Date(`${checkin.checkin_date}T00:00:00`)
+  // checkin_date itu tanggal murni (YYYY-MM-DD): parse & format sebagai UTC
+  // supaya tanggalnya nggak geser karena timezone.
+  const dateLabel = format.dateTime(
+    new Date(`${checkin.checkin_date}T00:00:00Z`),
+    {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+      timeZone: 'UTC',
+    },
+  )
 
-  const details = detailConfig
-    .map((detail) => {
-      const value = checkin[detail.key as keyof DailyCheckin]
-
-      return {
-        ...detail,
-        value,
-      }
-    })
+  const details = detailKeys
+    .map((key) => ({
+      key,
+      value: checkin[key],
+    }))
     .filter((detail) => Boolean(detail.value))
 
   return (
@@ -166,6 +163,7 @@ export default function CheckinCard({
             onClick={() => setIsExpanded((prev) => !prev)}
             className="group flex w-full items-center gap-4 text-left"
             aria-expanded={isExpanded}
+            aria-label={isExpanded ? t('collapse') : t('expand')}
           >
             {/* Mood */}
             <div className="relative flex size-20 shrink-0 items-center justify-center sm:size-9">
@@ -194,7 +192,7 @@ export default function CheckinCard({
                 </h2>
 
                 <span className={`shrink-0 text-[9px] font-semibold ${mood.text}`}>
-                  {mood.label}
+                  {tm(moodKey)}
                 </span>
               </div>
 
@@ -202,18 +200,14 @@ export default function CheckinCard({
                 dateTime={checkin.checkin_date}
                 className="mt-1 block text-[10px] font-medium text-description sm:text-[11px]"
               >
-                {date.toLocaleDateString('id-ID', {
-                  day: 'numeric',
-                  month: 'short',
-                  year: 'numeric',
-                })}
+                {dateLabel}
               </time>
             </div>
 
             {/* Expand */}
             <div className="flex shrink-0 items-center gap-2">
               <span className="hidden text-[10px] font-medium text-description transition-colors group-hover:text-secondary sm:block">
-                {isExpanded ? 'Tutup' : 'Lihat selengkapnya'}
+                {isExpanded ? t('collapse') : t('expand')}
               </span>
 
               <div className="flex size-8 items-center justify-center rounded-full border border-white/20 bg-subprimary text-secondary transition-all duration-300 group-hover:bg-subprimary/80 group-hover:text-description">
@@ -233,13 +227,13 @@ export default function CheckinCard({
               {/* Stats */}
               <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
                 <StatCard
-                  label="Energy"
+                  label={t('energy')}
                   value={checkin.energy}
                   progressClass="bg-secondary"
                 />
 
                 <StatCard
-                  label="Stress"
+                  label={t('stress')}
                   value={checkin.stress}
                   progressClass="bg-description"
                 />
@@ -250,12 +244,11 @@ export default function CheckinCard({
                 <section className="mt-8">
                   <div className="flex items-center justify-between border-b border-white/[0.06] pb-3">
                     <p className="text-[11px] font-semibold tracking-[-0.01em] text-secondary">
-                      Reflection
+                      {t('reflection')}
                     </p>
 
                     <span className="text-[9px] uppercase tracking-[0.14em] text-description">
-                      {details.length}{' '}
-                      {details.length === 1 ? 'entry' : 'entries'}
+                      {t('entries', { count: details.length })}
                     </span>
                   </div>
 
@@ -266,7 +259,7 @@ export default function CheckinCard({
                         className="py-4 first:pt-4 last:pb-1 sm:py-5"
                       >
                         <p className="text-[9px] font-semibold uppercase tracking-[0.14em] text-description">
-                          {detail.label}
+                          {td(detail.key)}
                         </p>
 
                         <p className="mt-2 break-words text-[12.5px] leading-[1.7] text-description sm:text-[13px]">
@@ -286,7 +279,7 @@ export default function CheckinCard({
                     onClick={() => setIsHistoryOpen(true)}
                     className="flex w-full items-center justify-center gap-2 rounded-full border border-white/[0.06] bg-subprimary py-3 text-sm text-secondary transition"
                   >
-                    Lihat riwayat ({historyCount}x)
+                    {t('viewHistory', { count: historyCount })}
                   </button>
                 </div>
               )}

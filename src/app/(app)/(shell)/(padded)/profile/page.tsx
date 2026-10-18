@@ -1,16 +1,20 @@
 'use client'
 
+import { useTranslations } from 'next-intl'
+
 import Header from '@/components/layout/header'
 import ProfileForm from '@/features/profiles/components/profile-form'
 import DeleteRelationshipSection from '@/features/relationship/components/delete-relationship-section'
 import RelationshipForm from '@/features/relationship/components/relationship-form'
 
 export default function ProfilePage() {
+  const t = useTranslations('profile.page')
+
   return (
     <div>
       <Header
-        title="Profile"
-        description="Manage your profile and relationship"
+        title={t('title')}
+        description={t('description')}
       />
 
       <div className="mt-6 max-w-2xl sm:mt-8">
@@ -24,8 +28,9 @@ export default function ProfilePage() {
             <div className="my-8 h-px bg-white/[0.06] sm:my-9" />
 
             <RelationshipForm />
-            <div className='mt-8'>
-            <DeleteRelationshipSection />
+
+            <div className="mt-8">
+              <DeleteRelationshipSection />
             </div>
           </div>
         </section>

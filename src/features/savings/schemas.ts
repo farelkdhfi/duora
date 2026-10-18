@@ -1,17 +1,23 @@
 import { z } from 'zod'
+import type { useTranslations } from 'next-intl'
 
-export const createSavingSchema = z.object({
-  amount: z
-    .number()
-    .positive(
-      'Amount must be greater than 0',
-    ),
+type ValidationT = ReturnType<typeof useTranslations<'savings.validation'>>
 
-  note: z
-    .string()
-    .max(200)
-    .optional(),
-})
+const NOTE_MAX = 200
 
-export type CreateSavingFormValues =
-  z.infer<typeof createSavingSchema>
+export function createSavingSchema(t: ValidationT) {
+  return z.object({
+    amount: z
+      .number({ message: t('amountRequired') })
+      .positive(t('amountPositive')),
+
+    note: z
+      .string()
+      .max(NOTE_MAX, t('noteMax', { max: NOTE_MAX }))
+      .optional(),
+  })
+}
+
+export type CreateSavingFormValues = z.infer<
+  ReturnType<typeof createSavingSchema>
+>

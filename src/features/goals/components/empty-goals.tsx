@@ -1,10 +1,23 @@
-import { Plus, Target } from "lucide-react";
+'use client'
+
+import { Plus, Target } from 'lucide-react'
+import { useTranslations } from 'next-intl'
+
+import { useRupiah } from '@/lib/use-rupiah'
 
 interface Prop {
     onCreate: () => void
 }
 
-export default function EmptyGoals({onCreate}: Prop) {
+const ONE_MILLION = 1_000_000
+
+export default function EmptyGoals({ onCreate }: Prop) {
+    const t = useTranslations('goals.list')
+    const te = useTranslations('goals.empty')
+    const { rupiahCompact } = useRupiah()
+
+    const threshold = rupiahCompact(ONE_MILLION)
+
     return (
         <div className="space-y-4">
             <div className="flex items-center justify-between gap-2">
@@ -13,7 +26,7 @@ export default function EmptyGoals({onCreate}: Prop) {
                         type="button"
                         className="whitespace-nowrap rounded-full bg-subprimary px-3 py-1.5 text-sm font-semibold text-secondary shadow-[0_2px_8px_-4px_rgba(0,0,0,0.2)] sm:px-3.5 sm:text-xs"
                     >
-                        All
+                        {t('filters.all')}
                     </button>
 
                     <button
@@ -21,7 +34,7 @@ export default function EmptyGoals({onCreate}: Prop) {
                         disabled
                         className="whitespace-nowrap rounded-full px-3 py-1.5 text-sm font-semibold text-neutral-300 sm:px-3.5 sm:text-xs"
                     >
-                        Newest
+                        {t('filters.newest')}
                     </button>
 
                     <button
@@ -29,7 +42,7 @@ export default function EmptyGoals({onCreate}: Prop) {
                         disabled
                         className="whitespace-nowrap rounded-full px-3 py-1.5 text-sm font-semibold text-neutral-300 sm:px-3.5 sm:text-xs"
                     >
-                        &lt; Rp1jt
+                        {t('filters.under', { amount: threshold })}
                     </button>
 
                     <button
@@ -37,14 +50,14 @@ export default function EmptyGoals({onCreate}: Prop) {
                         disabled
                         className="whitespace-nowrap rounded-full px-3 py-1.5 text-sm font-semibold text-neutral-300 sm:px-3.5 sm:text-xs"
                     >
-                        &gt; Rp1jt
+                        {t('filters.over', { amount: threshold })}
                     </button>
                 </div>
 
                 <button
                     type="button"
                     onClick={onCreate}
-                    aria-label="Create a new goal"
+                    aria-label={t('createGoal')}
                     className="flex size-9 shrink-0 items-center justify-center rounded-full bg-neutral-800 text-secondary transition-all duration-200 hover:scale-105 hover:bg-black active:scale-95"
                 >
                     <Plus size={15} strokeWidth={1.8} />
@@ -66,11 +79,11 @@ export default function EmptyGoals({onCreate}: Prop) {
                         </div>
 
                         <h3 className="mt-2 text-[16px] font-semibold tracking-[-0.02em] text-secondary">
-                            Build something together.
+                            {te('title')}
                         </h3>
 
                         <p className="mx-auto mt-1.5 max-w-xs text-[13px] leading-relaxed text-neutral-400">
-                            Buat goal pertama kalian dan capai semua bersama!
+                            {te('description')}
                         </p>
                     </div>
                 </div>

@@ -2,8 +2,10 @@
 
 import { useState } from 'react'
 import Image from 'next/image'
-import { Check, Copy, Loader2, Lock } from 'lucide-react'
+import { useTranslations } from 'next-intl'
+import { Check, Copy, Loader2 } from 'lucide-react'
 
+import { getRelationshipErrorKey } from '@/features/relationship/errors'
 import { useCancelPendingRelationship } from '@/features/relationship/queries'
 
 import waitingImg from '@/assets/waiting/waiting-couple.png'
@@ -17,6 +19,10 @@ export default function WaitingForPartner({
   inviteCode: string
   userName: string
 }) {
+  const t = useTranslations('dashboard.waiting')
+  const te = useTranslations('relationship.errors')
+  const tc = useTranslations('common')
+
   const [copied, setCopied] = useState(false)
   const [isConfirming, setIsConfirming] = useState(false)
 
@@ -29,17 +35,15 @@ export default function WaitingForPartner({
   }
 
   function handleCancel() {
-    cancelRelationship.mutate(undefined, {
-      onError: () => setIsConfirming(false),
-    })
-  }
+  cancelRelationship.mutate()
+}
 
   return (
     <main className="relative min-h-screen overflow-hidden px-6 py-10 bg-primary">
       <div className="relative mx-auto max-w-2xl">
         <div className="overflow-hidden rounded-[2rem] bg-primary p-8 text-center  sm:p-10">
           <div className="mx-auto mb-6 flex w-[80%] items-center justify-center">
-            <Image src={waitingImg} alt='waiting-image' />
+            <Image src={waitingImg} alt={t('imageAlt')} />
           </div>
 
           <h2 className="text-xl font-semibold tracking-[-0.04em] text-white">
@@ -47,7 +51,7 @@ export default function WaitingForPartner({
           </h2>
 
           <p className="mx-auto mt-3 max-w-md text-xs text-description">
-            Bagikan kode undangan ini kepada pasanganmu untuk mulai membangun ruang bersama di Duora.
+            {t('instruction')}
           </p>
 
           <div className="mx-auto mt-7 flex max-w-xs items-center justify-center gap-2 rounded-full bg-black px-4 py-3">
@@ -58,7 +62,7 @@ export default function WaitingForPartner({
             <button
               type="button"
               onClick={handleCopy}
-              aria-label={copied ? 'Kode berhasil disalin' : 'Salin kode undangan'}
+              aria-label={copied ? t('copied') : t('copy')}
               className="ml-2 flex size-8 items-center justify-center rounded-lg text-white"
             >
               {copied ? (
@@ -73,31 +77,25 @@ export default function WaitingForPartner({
           <div className="mt-8 border-t border-white/30 pt-6">
             {!isConfirming ? (
               <>
-                <p className="text-xs text-description">
-                  Salah pilih? Hapus relationship ini untuk bergabung dengan kode pasanganmu.
-                </p>
+                <p className="text-xs text-description">{t('wrongPick')}</p>
 
                 <button
                   type="button"
                   onClick={() => setIsConfirming(true)}
                   className="mt-3 text-xs font-medium text-red-500 underline-offset-2 hover:underline"
                 >
-                  Hapus relationship ini
+                  {t('deleteRelationship')}
                 </button>
               </>
             ) : (
               <div>
                 <p className="text-xs text-white">
-                  Hapus &quot;{relationshipName}&quot; dan kode undangannya?
-                  Kamu bisa membuat baru atau bergabung dengan kode pasanganmu
-                  setelah ini.
+                  {t('confirmDelete', { name: relationshipName })}
                 </p>
 
                 {cancelRelationship.isError && (
                   <p className="mt-2 text-xs font-medium text-red-500">
-                    {cancelRelationship.error.message.includes('PARTNER_ALREADY_JOINED')
-                      ? 'Pasanganmu sudah bergabung, relationship tidak bisa dibatalkan dari sini.'
-                      : 'Gagal menghapus relationship. Coba lagi.'}
+                    {te(getRelationshipErrorKey(cancelRelationship.error))}
                   </p>
                 )}
 
@@ -111,10 +109,10 @@ export default function WaitingForPartner({
                     {cancelRelationship.isPending ? (
                       <>
                         <Loader2 size={13} className="animate-spin" />
-                        Menghapus...
+                        {t('deleting')}
                       </>
                     ) : (
-                      'Ya, hapus'
+                      t('confirmYes')
                     )}
                   </button>
 
@@ -124,7 +122,7 @@ export default function WaitingForPartner({
                     disabled={cancelRelationship.isPending}
                     className="min-h-10 rounded-xl border border-black/[0.06] px-4 text-xs font-medium text-neutral-500 hover:bg-neutral-50"
                   >
-                    Batal
+                    {tc('cancel')}
                   </button>
                 </div>
               </div>

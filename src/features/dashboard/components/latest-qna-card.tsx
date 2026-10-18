@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { useFormatter, useTranslations } from 'next-intl'
 import { ArrowUpRight, MessagesSquare } from 'lucide-react'
 
 import DarkCardShell from '@/components/ui/dark-card-shell'
@@ -12,23 +13,18 @@ const openButtonClass =
 const panelClass =
   'relative mt-4 flex-1 px-3'
 
-function formatDate(value: string) {
-  return new Date(value).toLocaleDateString('id-ID', {
-    day: 'numeric',
-    month: 'short',
-  })
-}
-
 function CardHeader() {
+  const t = useTranslations('dashboard.qna')
+
   return (
     <div className="flex items-start justify-between gap-2">
       <div className="min-w-0 flex-1">
         <h2 className="break-words text-sm font-medium text-neutral-50">
-          Latest question
+          {t('title')}
         </h2>
       </div>
 
-      <Link href="/qna" aria-label="Open Q&A" className={openButtonClass}>
+      <Link href="/qna" aria-label={t('open')} className={openButtonClass}>
         <ArrowUpRight size={14} strokeWidth={2.2} />
       </Link>
     </div>
@@ -36,6 +32,9 @@ function CardHeader() {
 }
 
 export default function LatestQnaCard() {
+  const t = useTranslations('dashboard.qna')
+  const format = useFormatter()
+
   const { data: history, isLoading, error } = useQnaHistory()
 
   if (isLoading) {
@@ -59,10 +58,11 @@ export default function LatestQnaCard() {
   }
 
   if (error) {
+    // TODO i18n: error.message masih mentah, diganti error bertipe di Fase 6 (qna/api.ts)
     return (
       <DarkCardShell variant="violet" compact>
         <h3 className="break-words text-sm font-medium leading-snug tracking-[-0.04em] text-neutral-50">
-          Couldn't load Q&A
+          {t('loadError')}
         </h3>
 
         <p className="mt-1 text-[11px] leading-relaxed text-neutral-400">
@@ -90,11 +90,11 @@ export default function LatestQnaCard() {
           />
 
           <h3 className="mt-3 text-[13px] font-medium tracking-[-0.03em] text-neutral-50">
-            No questions yet.
+            {t('emptyTitle')}
           </h3>
 
           <p className="mt-1 text-[11px] leading-relaxed text-neutral-400">
-            Answer your first question together.
+            {t('emptyDescription')}
           </p>
         </div>
       </DarkCardShell>
@@ -116,12 +116,16 @@ export default function LatestQnaCard() {
         </div>
 
         <div className="mt-3 flex items-center justify-between gap-2">
+          {/* TODO Fase 4: category masih nilai mentah dari DB, nanti lewat category-info */}
           <span className="rounded-full border border-white/[0.08] bg-white/[0.06] px-2 py-0.5 text-[10px] font-medium capitalize text-violet-300">
             {latest.category}
           </span>
 
           <span className="text-[10px] tabular-nums text-neutral-500">
-            {formatDate(latest.created_at)}
+            {format.dateTime(new Date(latest.created_at), {
+              day: 'numeric',
+              month: 'short',
+            })}
           </span>
         </div>
       </Link>

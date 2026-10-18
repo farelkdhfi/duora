@@ -1,11 +1,11 @@
 import { createClient } from '@/lib/supabase/client'
 
-export async function getChecklist(
-  goalId: string,
-) {
+import { GoalApiError, toGoalError } from './errors'
+
+export async function getChecklist(goalId: string) {
   const supabase = createClient()
 
-  const { data, error } = await supabase
+  const { data, error, status } = await supabase
     .from('goal_checklists')
     .select('*')
     .eq('goal_id', goalId)
@@ -14,7 +14,7 @@ export async function getChecklist(
     })
 
   if (error) {
-    throw new Error(error.message)
+    throw toGoalError(error, status)
   }
 
   return data
@@ -29,7 +29,7 @@ export async function createChecklistItem({
 }) {
   const supabase = createClient()
 
-  const { data, error } = await supabase
+  const { data, error, status } = await supabase
     .from('goal_checklists')
     .insert({
       goal_id: goalId,
@@ -39,7 +39,7 @@ export async function createChecklistItem({
     .single()
 
   if (error) {
-    throw new Error(error.message)
+    throw toGoalError(error, status)
   }
 
   return data
@@ -55,48 +55,40 @@ export async function toggleChecklistItem({
   const supabase = createClient()
 
   const {
-    data: {
-      user,
-    },
+    data: { user },
   } = await supabase.auth.getUser()
 
   if (!user) {
-    throw new Error('Not authenticated')
+    throw new GoalApiError('notAuthenticated')
   }
 
-  const { data, error } = await supabase
+  const { data, error, status } = await supabase
     .from('goal_checklists')
     .update({
       is_completed: isCompleted,
-      completed_by: isCompleted
-        ? user.id
-        : null,
-      completed_at: isCompleted
-        ? new Date().toISOString()
-        : null,
+      completed_by: isCompleted ? user.id : null,
+      completed_at: isCompleted ? new Date().toISOString() : null,
     })
     .eq('id', id)
     .select()
     .single()
 
   if (error) {
-    throw new Error(error.message)
+    throw toGoalError(error, status)
   }
 
   return data
 }
 
-export async function deleteChecklistItem(
-  id: string,
-) {
+export async function deleteChecklistItem(id: string) {
   const supabase = createClient()
 
-  const { error } = await supabase
+  const { error, status } = await supabase
     .from('goal_checklists')
     .delete()
     .eq('id', id)
 
   if (error) {
-    throw new Error(error.message)
+    throw toGoalError(error, status)
   }
 }

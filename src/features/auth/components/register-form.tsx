@@ -16,14 +16,12 @@ import {
   User,
   UserRound,
 } from 'lucide-react'
-import { useState, useTransition } from 'react'
-
-import {
-  registerSchema,
-  type RegisterFormValues,
-} from '../schemas'
+import { useMemo, useState, useTransition } from 'react'
+import { useTranslations } from 'next-intl'
+import { createRegisterSchema, type RegisterFormValues } from '../schemas'
 
 import { register as registerUser } from '../api'
+import { getAuthErrorKey } from '../errors'
 
 const inputClass =
   'mt-2 h-12 w-full rounded-full bg-neutral-800 px-4 pl-11 text-[14px] border border-white/10 text-white placeholder:text-neutral-400 outline-none'
@@ -33,6 +31,12 @@ type Step = 1 | 2 | 3 | 4 | 5 | 6
 const totalSteps = 6
 
 export default function RegisterForm() {
+  const t = useTranslations('auth.register')
+  const te = useTranslations('auth.errors')
+  const tc = useTranslations('auth.common')
+  const tv = useTranslations('auth.validation')
+  const schema = useMemo(() => createRegisterSchema(tv), [tv])
+
   const router = useRouter()
   const supabase = createClient()
 
@@ -56,7 +60,7 @@ export default function RegisterForm() {
     handleSubmit,
     formState: { errors },
   } = useForm<RegisterFormValues>({
-    resolver: zodResolver(registerSchema),
+    resolver: zodResolver(schema),
     mode: 'onTouched',
   })
 
@@ -142,45 +146,14 @@ export default function RegisterForm() {
     }
   }
 
-  const stepTitles = {
-    1: {
-      title: 'How do you want to join?',
-      description:
-        'Choose the easiest way to create your Duora space.',
-    },
-
-    2: {
-      title: 'Choose your username.',
-      description:
-        'This is how you will be recognized inside Duora.',
-    },
-
-    3: {
-      title: 'What should we call you?',
-      description:
-        'Use your name or anything you want your partner to see.',
-    },
-
-    4: {
-      title: 'What’s your email?',
-      description:
-        'We’ll use this email to secure your account.',
-    },
-
-    5: {
-      title: 'Create your password.',
-      description:
-        'Choose something secure that you can remember.',
-    },
-
-    6: {
-      title: 'One last thing.',
-      description:
-        'Confirm your password and your Duora account is ready.',
-    },
-  }
-
-  const currentTitle = stepTitles[step]
+  const stepKeys = {
+    1: 'method',
+    2: 'username',
+    3: 'displayName',
+    4: 'email',
+    5: 'password',
+    6: 'confirmPassword',
+  } as const
 
   return (
     <div className="space-y-6">
@@ -215,13 +188,12 @@ export default function RegisterForm() {
 
       <div className='mt-30'>
         <h3 className="mt-2 text-sm font-semibold leading-[1] tracking-[-0.055em] text-white md:text-[28px]">
-          {currentTitle.title}
+          {t(`steps.${stepKeys[step]}.title`)}
         </h3>
 
         <p className="mt-3 max-w-sm text-[13px] leading-5 text-neutral-400">
-          {currentTitle.description}
+          {t(`steps.${stepKeys[step]}.description`)}
         </p>
-
       </div>
 
       {/* ===================================================== */}
@@ -271,8 +243,9 @@ export default function RegisterForm() {
 
             <span>
               {isGoogleLoading
-                ? 'Connecting…'
-                : 'Continue with Google'}
+                ? tc('connecting')
+                : tc('continueWithGoogle')
+              }
             </span>
 
           </button>
@@ -284,7 +257,7 @@ export default function RegisterForm() {
             <div className="h-px flex-1 bg-neutral-600" />
 
             <span className="text-[12px] font-medium text-neutral-400">
-              or
+              {tc('or')}
             </span>
 
             <div className="h-px flex-1 bg-neutral-600" />
@@ -300,7 +273,7 @@ export default function RegisterForm() {
             className="flex h-12 w-full items-center justify-center gap-x-2 overflow-hidden rounded-full border border-white/5 bg-subprimary text-sm font-semibold text-white shadow-lg disabled:cursor-not-allowed disabled:opacity-50"
           >
             <span>
-              Sign up with email
+              {t('signUpWithEmail')}
             </span>
 
             <ArrowRight size={14} />
@@ -453,8 +426,8 @@ export default function RegisterForm() {
                   className="absolute right-3 top-1/2 mt-[4px] flex size-8 -translate-y-1/2 items-center justify-center rounded-xl text-neutral-400 transition hover:bg-white/10 hover:text-white"
                   aria-label={
                     showPassword
-                      ? 'Hide password'
-                      : 'Show password'
+                      ? tc('hidePassword')
+                      : tc('showPassword')
                   }
                 >
 
@@ -514,8 +487,8 @@ export default function RegisterForm() {
                   className="absolute right-3 top-1/2 mt-[4px] flex size-8 -translate-y-1/2 items-center justify-center rounded-xl text-neutral-400 transition hover:bg-white/10 hover:text-white"
                   aria-label={
                     showConfirmPassword
-                      ? 'Hide confirm password'
-                      : 'Show confirm password'
+                      ? t('hideConfirmPassword')
+                      : t('showConfirmPassword')
                   }
                 >
 
@@ -546,7 +519,7 @@ export default function RegisterForm() {
             <div className="rounded-2xl border border-rose-500/20 bg-rose-500/10 px-4 py-3">
 
               <p className="text-[13px] font-medium leading-5 text-rose-400">
-                {registerMutation.error.message}
+                {te(getAuthErrorKey(registerMutation.error))}
               </p>
 
             </div>
@@ -555,7 +528,7 @@ export default function RegisterForm() {
           {needsEmailConfirmation && (
             <div className="rounded-2xl border border-blue-400/20 bg-blue-400/10 px-4 py-3">
               <p className="text-[13px] font-medium leading-5 text-blue-300">
-                Akun berhasil dibuat. Cek email kamu untuk konfirmasi, lalu login.
+                {t('emailConfirmation')}
               </p>
             </div>
           )}
@@ -573,7 +546,7 @@ export default function RegisterForm() {
               onClick={handleBack}
               disabled={registerMutation.isPending}
               className="flex size-12 shrink-0 items-center justify-center rounded-full border border-white/10 bg-neutral-800 text-neutral-400 shadow-lg transition hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
-              aria-label="Go back"
+              aria-label={t('goBack')}
             >
 
               <ArrowLeft size={16} />
@@ -591,7 +564,7 @@ export default function RegisterForm() {
               >
 
                 <span>
-                  Continue
+                 {t('continue')}
                 </span>
 
                 <ArrowRight size={14} />
@@ -609,11 +582,11 @@ export default function RegisterForm() {
                 {isSubmitting ? (
                   <>
                     <Loader2 size={15} className="animate-spin" />
-                    <span>Creating account</span>
+                    <span>	{t('creatingAccount')}</span>
                   </>
                 ) : (
                   <>
-                    <span>Create account</span>
+                    <span>	{t('createAccount')}</span>
                     <ArrowRight size={14} />
                   </>
                 )}

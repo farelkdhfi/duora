@@ -6,6 +6,9 @@ import {
   Sparkles,
   Wallet,
 } from 'lucide-react'
+import { useTranslations } from 'next-intl'
+
+import { useRupiah } from '@/lib/use-rupiah'
 
 import { useGoalSavings } from '../queries'
 import { useSavingsRealtime } from '../use-savings-realtime'
@@ -15,14 +18,13 @@ interface SavingsProgressProps {
   targetAmount: number | null
 }
 
-function formatRupiah(amount: number) {
-  return `Rp ${amount.toLocaleString('id-ID')}`
-}
-
 export default function SavingsProgress({
   goalId,
   targetAmount,
 }: SavingsProgressProps) {
+  const t = useTranslations('savings.progress')
+  const { rupiah } = useRupiah()
+
   useSavingsRealtime({
     goalId,
   })
@@ -141,11 +143,11 @@ export default function SavingsProgress({
             <div className="min-w-0">
 
               <p className="truncate text-[9px] font-semibold uppercase tracking-[0.14em] text-description sm:text-[10px] sm:tracking-[0.16em]">
-                Shared savings
+                {t('eyebrow')}
               </p>
 
               <h2 className="mt-1 truncate text-[14px] font-semibold tracking-[-0.025em] text-secondary sm:text-[15px]">
-                Your progress together
+                {t('title')}
               </h2>
 
             </div>
@@ -171,7 +173,7 @@ export default function SavingsProgress({
         <div className="mt-7 sm:mt-9">
 
           <p className="text-[9px] font-semibold uppercase tracking-[0.13em] text-description sm:text-[10px] sm:tracking-[0.14em]">
-            Saved together
+            {t('savedTogether')}
           </p>
 
           <div className="mt-2.5 flex flex-col gap-3 xs:flex-row xs:items-end xs:justify-between xs:gap-4">
@@ -179,7 +181,7 @@ export default function SavingsProgress({
             {/* Total */}
 
             <p className="min-w-0 overflow-hidden text-[clamp(1.65rem,7vw,2.125rem)] font-semibold leading-none tracking-[-0.055em] text-secondary">
-              {formatRupiah(total)}
+              {rupiah(total)}
             </p>
 
             {/* Target */}
@@ -188,11 +190,11 @@ export default function SavingsProgress({
               <div className="shrink-0 xs:pb-0.5 xs:text-right">
 
                 <p className="text-[8px] font-medium uppercase tracking-[0.12em] text-description sm:text-[9px]">
-                  Target
+                  {t('target')}
                 </p>
 
                 <p className="mt-1 text-[11px] font-semibold tabular-nums text-description sm:text-[12px]">
-                  {formatRupiah(targetAmount)}
+                  {rupiah(targetAmount)}
                 </p>
 
               </div>
@@ -224,11 +226,11 @@ export default function SavingsProgress({
             <div className="mt-2.5 flex items-center justify-between gap-3">
 
               <span className="min-w-0 truncate text-[8px] font-medium text-description sm:text-[9px]">
-                Rp 0
+                {rupiah(0)}
               </span>
 
               <span className="min-w-0 truncate text-right text-[8px] font-medium text-description sm:text-[9px]">
-                {formatRupiah(targetAmount)}
+                {rupiah(targetAmount)}
               </span>
 
             </div>
@@ -261,11 +263,11 @@ export default function SavingsProgress({
                 <div className="min-w-0">
 
                   <p className="text-[11px] font-semibold text-emerald-400 sm:text-[12px]">
-                    Goal completed
+                    {t('completedTitle')}
                   </p>
 
                   <p className="mt-0.5 truncate text-[10px] text-emerald-400/60 sm:text-[11px]">
-                    You made it together. ❤️
+                    {t('completedHint')}
                   </p>
 
                 </div>
@@ -287,11 +289,11 @@ export default function SavingsProgress({
                 <div className="min-w-0">
 
                   <p className="truncate text-[11px] font-semibold text-secondary sm:text-[12px]">
-                    {formatRupiah(remaining ?? 0)} to go
+                    {t('remaining', { amount: rupiah(remaining ?? 0) })}
                   </p>
 
                   <p className="mt-0.5 truncate text-[10px] text-description sm:text-[11px]">
-                    Keep growing together.
+                    {t('keepGrowing')}
                   </p>
 
                 </div>
@@ -319,8 +321,7 @@ export default function SavingsProgress({
             </div>
 
             <p className="text-[10px] leading-relaxed text-description sm:text-[11px]">
-              Keep saving together. Set a target
-              to see your progress.
+              {t('noTarget')}
             </p>
 
           </div>

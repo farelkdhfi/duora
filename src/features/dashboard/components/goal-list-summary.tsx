@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { useTranslations } from 'next-intl'
 import { ArrowUpRight, Target } from 'lucide-react'
 
 import DarkCardShell from '@/components/ui/dark-card-shell'
@@ -16,6 +17,7 @@ const openButtonClass =
 const panelClass =
   'relative mt-4 flex-1  px-3'
 
+// TODO Fase 5: diganti helper format angka yang ikut locale
 function formatRupiah(amount: number) {
   if (amount >= 1_000_000) {
     return `Rp ${(amount / 1_000_000).toFixed(1).replace(/\.0$/, '')}M`
@@ -29,16 +31,18 @@ function formatRupiah(amount: number) {
 }
 
 function CardHeader({ withLink = false }: { withLink?: boolean }) {
+  const t = useTranslations('dashboard.goals')
+
   return (
     <div className="flex items-start justify-between gap-2">
       <div className="min-w-0 flex-1">
         <h2 className="break-words text-sm font-medium text-neutral-50">
-          Building goals
+          {t('title')}
         </h2>
       </div>
 
       {withLink && (
-        <Link href="/goals" aria-label="Open goals" className={openButtonClass}>
+        <Link href="/goals" aria-label={t('open')} className={openButtonClass}>
           <ArrowUpRight size={14} strokeWidth={2.2} />
         </Link>
       )}
@@ -47,6 +51,8 @@ function CardHeader({ withLink = false }: { withLink?: boolean }) {
 }
 
 export default function GoalListSummary({ relationshipId }: GoalListProps) {
+  const t = useTranslations('dashboard.goals')
+
   const {
     data: goals,
     isLoading,
@@ -74,10 +80,11 @@ export default function GoalListSummary({ relationshipId }: GoalListProps) {
   }
 
   if (error) {
+    // TODO i18n: error.message masih mentah, diganti error bertipe di Fase 3 (savings/api.ts)
     return (
       <DarkCardShell variant="sky" compact>
         <h3 className="break-words text-sm font-medium leading-snug tracking-[-0.04em] text-neutral-50">
-          Couldn't load goals
+          {t('loadError')}
         </h3>
 
         <p className="mt-1 text-[11px] leading-relaxed text-neutral-400">
@@ -123,11 +130,11 @@ export default function GoalListSummary({ relationshipId }: GoalListProps) {
           </div>
 
           <h3 className="mt-3 text-[13px] font-medium tracking-[-0.03em] text-neutral-50">
-            Nothing here yet.
+            {t('emptyTitle')}
           </h3>
 
           <p className="mt-1 text-[11px] leading-relaxed text-neutral-400">
-            Create your first shared goal.
+            {t('emptyDescription')}
           </p>
         </div>
       </DarkCardShell>
@@ -147,7 +154,7 @@ export default function GoalListSummary({ relationshipId }: GoalListProps) {
 
       <div className={`${panelClass} flex flex-col justify-center py-4`}>
         <p className="text-[10px] font-medium uppercase tracking-[0.08em] text-neutral-500">
-          Total savings
+          {t('totalSavings')}
         </p>
 
         <p className="mt-1.5 break-words text-xl font-semibold tracking-[-0.04em] text-neutral-50">
@@ -155,7 +162,7 @@ export default function GoalListSummary({ relationshipId }: GoalListProps) {
         </p>
 
         <p className="mt-1.5 text-[10px] text-neutral-500">
-          across {goals.length} {goals.length === 1 ? 'goal' : 'goals'}
+          {t('acrossGoals', { count: goals.length })}
         </p>
       </div>
     </DarkCardShell>

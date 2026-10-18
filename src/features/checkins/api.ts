@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/client'
 
+import { CheckinApiError, toCheckinError } from './errors'
 import type {
   DailyCheckin,
   DailyCheckinHistoryEntry,
@@ -31,7 +32,7 @@ export async function getTodayCheckin(
     )
 
   if (error) {
-    throw new Error(error.message)
+    throw toCheckinError(error)
   }
 
   return data as DailyCheckin[]
@@ -58,7 +59,7 @@ export async function getCheckinHistory(
     .limit(30)
 
   if (error) {
-    throw new Error(error.message)
+    throw toCheckinError(error)
   }
 
   return data as DailyCheckin[]
@@ -82,9 +83,7 @@ export async function upsertCheckin({
   } = await supabase.auth.getUser()
 
   if (!user) {
-    throw new Error(
-      'Not authenticated',
-    )
+    throw new CheckinApiError('notAuthenticated')
   }
 
   const {
@@ -132,7 +131,7 @@ export async function upsertCheckin({
     .single()
 
   if (error) {
-    throw new Error(error.message)
+    throw toCheckinError(error)
   }
 
   return data as DailyCheckin
@@ -150,7 +149,7 @@ export async function getCheckinEditCountToday(
   })
 
   if (error) {
-    throw new Error(error.message)
+    throw toCheckinError(error)
   }
 
   return data as number
@@ -171,7 +170,7 @@ export async function getCheckinHistoryEntries(
     .order('changed_at', { ascending: true })
 
   if (error) {
-    throw new Error(error.message)
+    throw toCheckinError(error)
   }
 
   return data as DailyCheckinHistoryEntry[]

@@ -1,5 +1,6 @@
 'use client'
 
+import { useMemo } from 'react'
 import {
   CalendarDays,
   Loader2,
@@ -10,6 +11,7 @@ import {
 } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useTranslations } from 'next-intl'
 
 import {
   createGoalSchema,
@@ -17,6 +19,7 @@ import {
 } from '../schemas'
 
 import { useUpdateGoal } from '../queries'
+import { getGoalErrorKey } from '../errors'
 import type { Goal } from '../types'
 
 interface EditGoalFormProps {
@@ -24,15 +27,15 @@ interface EditGoalFormProps {
   onClose: () => void
 }
 
-const categories = [
-  { value: 'personal', label: 'Personal' },
-  { value: 'vacation', label: 'Vacation' },
-  { value: 'wedding', label: 'Wedding' },
-  { value: 'house', label: 'House' },
-  { value: 'education', label: 'Education' },
-  { value: 'business', label: 'Business' },
-  { value: 'savings', label: 'Savings' },
-  { value: 'other', label: 'Other' },
+const categoryValues = [
+  'personal',
+  'vacation',
+  'wedding',
+  'house',
+  'education',
+  'business',
+  'savings',
+  'other',
 ] as const
 
 const inputClass =
@@ -65,6 +68,15 @@ export default function EditGoalForm({
   goal,
   onClose,
 }: EditGoalFormProps) {
+  const t = useTranslations('goals.editForm')
+  const tf = useTranslations('goals.form')
+  const tv = useTranslations('goals.validation')
+  const tc = useTranslations('goals.categories')
+  const te = useTranslations('goals.errors')
+  const tCommon = useTranslations('common')
+
+  const schema = useMemo(() => createGoalSchema(tv), [tv])
+
   const mutation = useUpdateGoal(
     goal.relationship_id,
   )
@@ -74,7 +86,7 @@ export default function EditGoalForm({
     handleSubmit,
     formState: { errors },
   } = useForm<CreateGoalFormValues>({
-    resolver: zodResolver(createGoalSchema),
+    resolver: zodResolver(schema),
 
     defaultValues: {
       title: goal.title,
@@ -113,17 +125,18 @@ export default function EditGoalForm({
         <div className="flex items-start justify-between gap-5">
           <div>
             <p className="text-[10px] font-semibold uppercase tracking-[0.17em] text-description">
-              Editing goal
+              {t('eyebrow')}
             </p>
 
             <h2 className="mt-3 text-2xl font-semibold tracking-[-0.045em] text-secondary sm:text-3xl">
-              Update the details
+              {t('title')}
             </h2>
           </div>
 
           <button
             type="button"
             onClick={onClose}
+            aria-label={tCommon('close')}
             className="flex size-9 shrink-0 items-center justify-center rounded-full bg-subprimary text-description transition hover:bg-secondary hover:text-primary"
           >
             <X size={15} />
@@ -142,7 +155,7 @@ export default function EditGoalForm({
             <div>
               <div className="mb-4 flex items-center gap-2">
                 <span className="text-[10px] font-medium uppercase tracking-[0.18em] text-description">
-                  Details
+                  {tf('sections.details')}
                 </span>
 
                 <div className="h-px flex-1 bg-white/[0.06]" />
@@ -160,7 +173,7 @@ export default function EditGoalForm({
                       />
                     }
                   >
-                    Goal name
+                    {tf('fields.title')}
                   </FieldLabel>
 
                   <input
@@ -187,7 +200,7 @@ export default function EditGoalForm({
                       />
                     }
                   >
-                    Category
+                    {tf('fields.category')}
                   </FieldLabel>
 
                   <select
@@ -195,16 +208,14 @@ export default function EditGoalForm({
                     {...register('category')}
                     className={`${inputClass} cursor-pointer appearance-none`}
                   >
-                    {categories.map(
-                      (category) => (
-                        <option
-                          key={category.value}
-                          value={category.value}
-                        >
-                          {category.label}
-                        </option>
-                      ),
-                    )}
+                    {categoryValues.map((value) => (
+                      <option
+                        key={value}
+                        value={value}
+                      >
+                        {tc(value)}
+                      </option>
+                    ))}
                   </select>
                 </div>
 
@@ -219,7 +230,7 @@ export default function EditGoalForm({
                       />
                     }
                   >
-                    Description
+                    {tf('fields.description')}
                   </FieldLabel>
 
                   <textarea
@@ -242,7 +253,7 @@ export default function EditGoalForm({
             <div>
               <div className="mb-4 flex items-center gap-2">
                 <span className="text-[10px] font-medium uppercase tracking-[0.18em] text-description">
-                  Target
+                  {tf('sections.target')}
                 </span>
 
                 <div className="h-px flex-1 bg-white/[0.06]" />
@@ -260,7 +271,7 @@ export default function EditGoalForm({
                       />
                     }
                   >
-                    Target amount
+                    {tf('fields.targetAmount')}
                   </FieldLabel>
 
                   <div className="relative">
@@ -310,7 +321,7 @@ export default function EditGoalForm({
                       />
                     }
                   >
-                    Deadline
+                    {tf('fields.deadline')}
                   </FieldLabel>
 
                   <input
@@ -334,7 +345,7 @@ export default function EditGoalForm({
             {mutation.error && (
               <div className="rounded-[1.25rem] border border-rose-500/10 bg-rose-500/[0.04] px-4 py-3">
                 <p className="text-[11px] font-medium text-rose-500">
-                  {mutation.error.message}
+                  {te(getGoalErrorKey(mutation.error))}
                 </p>
               </div>
             )}
@@ -348,7 +359,7 @@ export default function EditGoalForm({
                 disabled={mutation.isPending}
                 className="flex h-11 items-center justify-center rounded-full border border-white/[0.08] px-6 text-[12px] font-medium text-description transition hover:bg-subprimary hover:text-secondary disabled:opacity-50"
               >
-                Cancel
+                {tCommon('cancel')}
               </button>
 
               <button
@@ -362,10 +373,10 @@ export default function EditGoalForm({
                       size={14}
                       className="animate-spin"
                     />
-                    Saving...
+                    {t('saving')}
                   </>
                 ) : (
-                  'Save changes'
+                  t('save')
                 )}
               </button>
             </div>

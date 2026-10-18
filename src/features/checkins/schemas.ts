@@ -1,49 +1,41 @@
 import { z } from 'zod'
+import type { useTranslations } from 'next-intl'
 
-export const dailyCheckinSchema =
-    z.object({
-        mood: z.enum([
-            'happy',
-            'neutral',
-            'sad',
-            'tired',
-            'stressed'
-        ]),
+type ValidationT = ReturnType<typeof useTranslations<'checkins.validation'>>
 
-        energy: z
-            .number()
-            .int()
-            .min(1)
-            .max(10),
+export const SCORE_MIN = 1
+export const SCORE_MAX = 10
+export const TEXT_MAX = 500
 
-        stress: z
-            .number()
-            .int()
-            .min(1)
-            .max(10),
+export function createDailyCheckinSchema(t: ValidationT) {
+  const rangeMessage = t('scoreRange', { min: SCORE_MIN, max: SCORE_MAX })
 
-        likedToday: z
-            .string()
-            .max(500)
-            .optional(),
+  const score = z
+    .number()
+    .int(rangeMessage)
+    .min(SCORE_MIN, rangeMessage)
+    .max(SCORE_MAX, rangeMessage)
 
-        dislikedToday: z
-            .string()
-            .max(500)
-            .optional(),
+  const text = z
+    .string()
+    .max(TEXT_MAX, t('textMax', { max: TEXT_MAX }))
+    .optional()
 
-        needsFromPartner: z
-            .string()
-            .max(500)
-            .optional(),
+  return z.object({
+    mood: z.enum(['happy', 'neutral', 'sad', 'tired', 'stressed'], {
+      message: t('moodInvalid'),
+    }),
 
-        note: z
-            .string()
-            .max(500)
-            .optional(),
-    })
+    energy: score,
+    stress: score,
 
-export type DailyCheckinFormValues =
-    z.infer<
-        typeof dailyCheckinSchema
-    >
+    likedToday: text,
+    dislikedToday: text,
+    needsFromPartner: text,
+    note: text,
+  })
+}
+
+export type DailyCheckinFormValues = z.infer<
+  ReturnType<typeof createDailyCheckinSchema>
+>

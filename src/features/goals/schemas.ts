@@ -1,46 +1,44 @@
 import { z } from 'zod'
+import type { useTranslations } from 'next-intl'
 
-export const createGoalSchema = z.object({
-  title: z
-    .string()
-    .min(2, 'Goal title is required')
-    .max(100),
+type ValidationT = ReturnType<typeof useTranslations<'goals.validation'>>
 
-  description: z
-    .string()
-    .max(500)
-    .optional(),
+const TITLE_MIN = 2
+const TITLE_MAX = 100
+const DESCRIPTION_MAX = 500
 
-  category: z.enum([
-    'wedding',
-    'house',
-    'vacation',
-    'education',
-    'business',
-    'savings',
-    'personal',
-    'other',
-  ]),
+export function createGoalSchema(t: ValidationT) {
+  return z.object({
+    title: z
+      .string()
+      .min(TITLE_MIN, t('titleMin', { min: TITLE_MIN }))
+      .max(TITLE_MAX, t('titleMax', { max: TITLE_MAX })),
 
-  targetAmount: z
-    .number()
-    .positive('Target amount must be greater than 0')
-    .optional(),
+    description: z
+      .string()
+      .max(DESCRIPTION_MAX, t('descriptionMax', { max: DESCRIPTION_MAX }))
+      .optional(),
 
-  deadline: z
-    .string()
-    .optional(),
-})
+    category: z.enum([
+      'wedding',
+      'house',
+      'vacation',
+      'education',
+      'business',
+      'savings',
+      'personal',
+      'other',
+    ]),
 
-export type CreateGoalFormValues =
-  z.infer<typeof createGoalSchema>
+    targetAmount: z
+      .number()
+      .positive(t('targetAmountPositive'))
+      .optional(),
 
-export const createChecklistSchema = z.object({
-  title: z
-    .string()
-    .min(1, 'Checklist title is required')
-    .max(150),
-})
+    deadline: z.string().optional(),
+  })
+}
 
-export type CreateChecklistFormValues =
-  z.infer<typeof createChecklistSchema>
+export type CreateGoalFormValues = z.infer<
+  ReturnType<typeof createGoalSchema>
+>

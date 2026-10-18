@@ -1,105 +1,362 @@
-﻿
-
-===== src\app =====
-Folder PATH listing
-Volume serial number is 000000C9 C85E:6D66
-D:\DUORA\SRC\APP
-|   globals.css
-|   icon.svg
-|   layout.tsx
-|   loading.tsx
-|   page.tsx
-|   
-+---(app)
-|   |   layout.tsx
-|   |   loading.tsx
-|   |   
-|   +---(shell)
-|   |   |   layout.tsx
-|   |   |   loading.tsx
-|   |   |   
-|   |   +---(padded)
-|   |   |   |   layout.tsx
-|   |   |   |   
-|   |   |   +---activities
-|   |   |   |       page.tsx
-|   |   |   |       
-|   |   |   +---goals
-|   |   |   |   |   page.tsx
-|   |   |   |   |   
-|   |   |   |   \---[id]
-|   |   |   |           page.tsx
-|   |   |   |           
-|   |   |   +---notes
-|   |   |   |       page.tsx
-|   |   |   |       
-|   |   |   +---planner
-|   |   |   |       page.tsx
-|   |   |   |       
-|   |   |   +---profile
-|   |   |   |       page.tsx
-|   |   |   |       
-|   |   |   \---subscription
-|   |   |           page.tsx
-|   |   |           
-|   |   \---dashboard
-|   |           layout.tsx
-|   |           page.tsx
-|   |           
-|   +---ai-assistant
-|   |   |   page.tsx
-|   |   |   
-|   |   \---[conversationId]
-|   |           page.tsx
-|   |           
-|   +---check-in
-|   |   |   loading.tsx
-|   |   |   page.tsx
-|   |   |   
-|   |   \---history
-|   |           loading.tsx
-|   |           page.tsx
-|   |           
-|   +---countdown
-|   |       page.tsx
-|   |       
-|   +---debates
-|   |   |   page.tsx
-|   |   |   
-|   |   \---[debateId]
-|   |           loading.tsx
-|   |           page.tsx
-|   |           
-|   +---onboarding
-|   |       page.tsx
-|   |       
-|   +---qna
-|   |   |   page.tsx
-|   |   |   
-|   |   \---session
-|   |           page.tsx
-|   |           
-|   +---subscription
-|   |   \---plan
-|   |           page.tsx
-|   |           
-|   \---wrapped
-|           page.tsx
-|           
-+---(auth)
-|   |   loading.tsx
-|   |   
-|   +---login
-|   |       page.tsx
-|   |       
-|   \---register
-|           page.tsx
-|           
-+---auth
-|   \---callback
-|           route.ts
-|           
-\---dev
-    \---overlay-preview
-            page.tsx
-            
+﻿src
++-- app
+|   +-- (app)
+|   |   +-- (shell)
+|   |   |   +-- (padded)
+|   |   |   |   +-- activities
+|   |   |   |   |   \-- page.tsx
+|   |   |   |   +-- goals
+|   |   |   |   |   +-- [id]
+|   |   |   |   |   |   \-- page.tsx
+|   |   |   |   |   +-- loading.tsx
+|   |   |   |   |   \-- page.tsx
+|   |   |   |   +-- notes
+|   |   |   |   |   \-- page.tsx
+|   |   |   |   +-- planner
+|   |   |   |   |   \-- page.tsx
+|   |   |   |   +-- profile
+|   |   |   |   |   \-- page.tsx
+|   |   |   |   +-- subscription
+|   |   |   |   |   \-- page.tsx
+|   |   |   |   +-- layout.tsx
+|   |   |   |   \-- loading.tsx
+|   |   |   +-- dashboard
+|   |   |   |   +-- layout.tsx
+|   |   |   |   \-- page.tsx
+|   |   |   +-- layout.tsx
+|   |   |   \-- loading.tsx
+|   |   +-- ai-assistant
+|   |   |   +-- [conversationId]
+|   |   |   |   \-- page.tsx
+|   |   |   +-- loading.tsx
+|   |   |   \-- page.tsx
+|   |   +-- check-in
+|   |   |   +-- history
+|   |   |   |   +-- loading.tsx
+|   |   |   |   \-- page.tsx
+|   |   |   +-- loading.tsx
+|   |   |   \-- page.tsx
+|   |   +-- countdown
+|   |   |   \-- page.tsx
+|   |   +-- debates
+|   |   |   +-- [debateId]
+|   |   |   |   \-- page.tsx
+|   |   |   +-- loading.tsx
+|   |   |   \-- page.tsx
+|   |   +-- onboarding
+|   |   |   \-- page.tsx
+|   |   +-- qna
+|   |   |   +-- session
+|   |   |   |   \-- page.tsx
+|   |   |   \-- page.tsx
+|   |   +-- subscription
+|   |   |   \-- plan
+|   |   |       \-- page.tsx
+|   |   +-- wrapped
+|   |   |   \-- page.tsx
+|   |   +-- layout.tsx
+|   |   \-- loading.tsx
+|   +-- (auth)
+|   |   +-- login
+|   |   |   \-- page.tsx
+|   |   +-- register
+|   |   |   \-- page.tsx
+|   |   \-- loading.tsx
+|   +-- auth
+|   |   \-- callback
+|   |       \-- route.ts
+|   +-- dev
+|   |   \-- overlay-preview
+|   |       \-- page.tsx
+|   +-- favicon.ico
+|   +-- globals.css
+|   +-- icon.svg
+|   +-- layout.tsx
+|   +-- loading.tsx
+|   \-- page.tsx
++-- assets
+|   +-- ai-persona
+|   |   +-- formal-ai.png
+|   |   +-- lebay-ai.png
+|   |   +-- lebay-ai-2.png
+|   |   +-- lembut-ai.png
+|   |   \-- nyeletuk-ai.png
+|   +-- emoticon
+|   |   +-- happy-emot.png
+|   |   +-- happy-emot-2.png
+|   |   +-- happy-emot-3.png
+|   |   +-- happy-fluffy.webp
+|   |   +-- happy-fluffy-2.webp
+|   |   +-- happy-fluffy-3.webp
+|   |   +-- neutral-emot.png
+|   |   +-- neutral-fluffy.png
+|   |   +-- neutral-fluffy.webp
+|   |   +-- neutral-fluffy-2.webp
+|   |   +-- neutral-fluffy-3.webp
+|   |   +-- sad-emot.png
+|   |   +-- sad-fluffy.png
+|   |   +-- sad-fluffy.webp
+|   |   +-- sad-fluffy-2.webp
+|   |   +-- sad-fluffy-3.webp
+|   |   +-- stressed-emot.png
+|   |   +-- stressed-emot-2.png
+|   |   +-- stressed-emot-3.png
+|   |   +-- stressed-fluffy.png
+|   |   +-- stressed-fluffy.webp
+|   |   +-- stressed-fluffy-2.webp
+|   |   +-- stressed-fluffy-3.webp
+|   |   +-- tired-emot.png
+|   |   +-- tired-emot-2.png
+|   |   +-- tired-emot-3.png
+|   |   +-- tired-fluffy.png
+|   |   +-- tired-fluffy.webp
+|   |   +-- tired-fluffy-2.webp
+|   |   \-- tired-fluffy-3.webp
+|   +-- landingpage
+|   |   +-- hero-bg-mobile.png
+|   |   +-- hero-bg-mobile-2.png
+|   |   +-- hero-desktop.png
+|   |   +-- hero-desktop-1.png
+|   |   +-- hero-desktop-2.png
+|   |   +-- hero-mobile.png
+|   |   +-- hero-mobile-1.png
+|   |   +-- hero-mobile-1-2.png
+|   |   +-- hero-mobile-2.png
+|   |   \-- hero-mobile-2-2.png
+|   +-- waiting
+|   |   \-- waiting-couple.png
+|   +-- duora-logo.png
+|   +-- duora-logo2.png
+|   +-- duora-logo3.png
+|   +-- logo.png
+|   \-- logo-white.png
++-- components
+|   +-- layout
+|   |   +-- header.tsx
+|   |   \-- header-without-shell.tsx
+|   \-- ui
+|       +-- dark-card-shell.tsx
+|       +-- love-wave.tsx
+|       +-- studio-backdrop.tsx
+|       \-- studio-backdrop-debate.tsx
++-- constants
++-- features
+|   +-- activities
+|   |   +-- components
+|   |   |   \-- activity-feed.tsx
+|   |   +-- api.ts
+|   |   +-- queries.ts
+|   |   \-- types.ts
+|   +-- ai-assistant
+|   |   +-- components
+|   |   |   +-- ai-sidebar.tsx
+|   |   |   +-- chat-input.tsx
+|   |   |   +-- conversation-history.tsx
+|   |   |   +-- message-bubble.tsx
+|   |   |   \-- pending-message.tsx
+|   |   +-- api.ts
+|   |   +-- queries.ts
+|   |   \-- types.ts
+|   +-- auth
+|   |   +-- components
+|   |   |   +-- login-form.tsx
+|   |   |   \-- register-form.tsx
+|   |   +-- api.ts
+|   |   \-- schemas.ts
+|   +-- checkins
+|   |   +-- components
+|   |   |   +-- checkin-card.tsx
+|   |   |   +-- checkin-form.tsx
+|   |   |   +-- checkin-history-modal.tsx
+|   |   |   +-- checkin-history-skeleton.tsx
+|   |   |   +-- checkin-skeleton.tsx
+|   |   |   +-- mood-selector.tsx
+|   |   |   \-- slider-section.tsx
+|   |   +-- api.ts
+|   |   +-- queries.ts
+|   |   +-- schemas.ts
+|   |   +-- types.ts
+|   |   \-- use-checkin-realtime.ts
+|   +-- countdown
+|   |   +-- components
+|   |   |   +-- countdown-card.tsx
+|   |   |   +-- countdown-list.tsx
+|   |   |   +-- countdown-share-card.tsx
+|   |   |   +-- create-countdown-form.tsx
+|   |   |   \-- share-button.tsx
+|   |   +-- api.ts
+|   |   +-- queries.ts
+|   |   +-- types.ts
+|   |   \-- utils.ts
+|   +-- dashboard
+|   |   \-- components
+|   |       +-- dashboard-shell.tsx
+|   |       +-- dashboard-skeleton.tsx
+|   |       +-- goal-list-summary.tsx
+|   |       +-- latest-debate-card.tsx
+|   |       +-- latest-qna-card.tsx
+|   |       +-- mobile-bottom-nav.tsx
+|   |       +-- mobile-more-sheet.tsx
+|   |       +-- partner-checkin-card.tsx
+|   |       +-- planner-summary-card.tsx
+|   |       +-- relationship-card.tsx
+|   |       +-- relationship-header.tsx
+|   |       +-- relationship-summary.tsx
+|   |       +-- sidebar.tsx
+|   |       +-- sidebar-desktop.tsx
+|   |       +-- sidebar-nav.tsx
+|   |       \-- waiting-for-partner.tsx
+|   +-- debates
+|   |   +-- components
+|   |   |   +-- ai-memory-pocket.tsx
+|   |   |   +-- ai-response-overlay.tsx
+|   |   |   +-- ai-typing-indicator.tsx
+|   |   |   +-- create-debate-modal.tsx
+|   |   |   +-- date-separator.tsx
+|   |   |   +-- debate-composer.tsx
+|   |   |   +-- debate-intro.tsx
+|   |   |   +-- debate-list.tsx
+|   |   |   +-- debate-message-bubble.tsx
+|   |   |   \-- debate-room.tsx
+|   |   +-- api.ts
+|   |   +-- queries.ts
+|   |   \-- types.ts
+|   +-- goals
+|   |   +-- components
+|   |   |   +-- checklist.tsx
+|   |   |   +-- create-goal-form-modal.tsx
+|   |   |   +-- edit-goal-form.tsx
+|   |   |   +-- empty-goals.tsx
+|   |   |   +-- goal-card.tsx
+|   |   |   +-- goal-detail.tsx
+|   |   |   +-- goal-list.tsx
+|   |   |   +-- goal-skeleton.tsx
+|   |   |   \-- total-savings-card.tsx
+|   |   +-- api.ts
+|   |   +-- checklist-api.ts
+|   |   +-- checklist-queries.ts
+|   |   +-- queries.ts
+|   |   +-- schemas.ts
+|   |   \-- types.ts
+|   +-- notes
+|   |   +-- components
+|   |   |   +-- note-board.tsx
+|   |   |   \-- note-card.tsx
+|   |   +-- api.ts
+|   |   +-- queries.ts
+|   |   +-- schemas.ts
+|   |   +-- types.ts
+|   |   \-- utils.ts
+|   +-- notifications
+|   |   +-- api.ts
+|   |   +-- queries.ts
+|   |   \-- types.ts
+|   +-- planner
+|   |   +-- components
+|   |   |   +-- create-event-form-modal.tsx
+|   |   |   +-- event-calendar.tsx
+|   |   |   +-- event-card.tsx
+|   |   |   +-- event-list.tsx
+|   |   |   +-- event-timeline.tsx
+|   |   |   \-- planner-skeleton.tsx
+|   |   +-- api.ts
+|   |   +-- queries.ts
+|   |   +-- schemas.ts
+|   |   +-- types.ts
+|   |   \-- use-planner-realtime.ts
+|   +-- profiles
+|   |   +-- components
+|   |   |   +-- profile-form.tsx
+|   |   |   \-- profile-skeleton.tsx
+|   |   +-- api.ts
+|   |   \-- queries.ts
+|   +-- qna
+|   |   +-- components
+|   |   |   +-- answer-input.tsx
+|   |   |   +-- category-picker.tsx
+|   |   |   +-- qna-history.tsx
+|   |   |   +-- qna-reveal.tsx
+|   |   |   \-- question-card.tsx
+|   |   +-- api.ts
+|   |   +-- category-info.ts
+|   |   +-- queries.ts
+|   |   +-- types.ts
+|   |   \-- use-qna-realtime.ts
+|   +-- relationship
+|   |   +-- components
+|   |   |   +-- create-relationship-form.tsx
+|   |   |   +-- delete-relationship-section.tsx
+|   |   |   +-- join-relationship-form.tsx
+|   |   |   +-- relationship-form.tsx
+|   |   |   \-- relationship-onboarding.tsx
+|   |   +-- api.ts
+|   |   +-- queries.ts
+|   |   +-- schemas.ts
+|   |   \-- types.ts
+|   +-- savings
+|   |   +-- components
+|   |   |   +-- create-saving-form.tsx
+|   |   |   +-- savings-history.tsx
+|   |   |   \-- savings-progress.tsx
+|   |   +-- api.ts
+|   |   +-- queries.ts
+|   |   +-- schemas.ts
+|   |   +-- types.ts
+|   |   \-- use-savings-realtime.ts
+|   +-- screen-time
+|   |   +-- components
+|   |   |   +-- icon-customizer.tsx
+|   |   |   +-- icon-customizer-section.tsx
+|   |   |   +-- screen-time-tracker.tsx
+|   |   |   \-- tier-icon.tsx
+|   |   +-- api.ts
+|   |   +-- icon-themes.ts
+|   |   +-- queries.ts
+|   |   +-- tiers.ts
+|   |   +-- types.ts
+|   |   \-- use-icon-style.ts
+|   +-- share-template
+|   |   +-- components
+|   |   |   \-- template-picker.tsx
+|   |   +-- api.ts
+|   |   +-- presets.ts
+|   |   +-- queries.ts
+|   |   +-- types.ts
+|   |   \-- utils.ts
+|   +-- subscription
+|   |   +-- components
+|   |   |   +-- expiry-warning-modal.tsx
+|   |   |   +-- plan-badge.tsx
+|   |   |   \-- trial-active-modal.tsx
+|   |   +-- api.ts
+|   |   +-- queries.ts
+|   |   +-- types.ts
+|   |   \-- utils.ts
+|   \-- wrapped
+|       +-- components
+|       |   +-- templates
+|       |   |   +-- wrapped-card-bloom.tsx
+|       |   |   +-- wrapped-card-bold.tsx
+|       |   |   +-- wrapped-card-minimal.tsx
+|       |   |   +-- wrapped-card-night.tsx
+|       |   |   +-- wrapped-card-noir.tsx
+|       |   |   \-- wrapped-card-soft.tsx
+|       |   +-- wrapped-card.tsx
+|       |   +-- wrapped-card-switcher.tsx
+|       |   +-- wrapped-generator.tsx
+|       |   \-- wrapped-preference-picker.tsx
+|       +-- api.ts
+|       +-- queries.ts
+|       +-- template-registry.ts
+|       +-- types.ts
+|       \-- utils.ts
++-- lib
+|   +-- supabase
+|   |   +-- client.ts
+|   |   \-- server.ts
+|   \-- utils.ts
++-- providers
+|   \-- query-provider.tsx
++-- schemas
++-- types
+\-- proxy.ts

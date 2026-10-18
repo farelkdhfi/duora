@@ -2,6 +2,9 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import { Bell, Search } from 'lucide-react'
+import { useFormatter, useTimeZone, useTranslations } from 'next-intl'
+import { parseDateOnly, UTC, zonedNow } from '@/lib/date'
+
 import {
   AnimatePresence,
   animate,
@@ -47,28 +50,38 @@ export default function RelationshipHeader({
   unreadCount = 0,
 }: RelationshipHeaderProps) {
   const reduced = useReducedMotion()
+
+  const t = useTranslations('dashboard.header')
+  const tc = useTranslations('common')
+  const format = useFormatter()
+  const timeZone = useTimeZone()
+
   const [index, setIndex] = useState(0)
 
   const userFirst = firstName(userName)
   const partnerFirst = firstName(partnerName)
 
-  const daysTogether = useMemo(() => {
-    if (!connectedAt) return null
-    const start = new Date(connectedAt).getTime()
-    if (Number.isNaN(start)) return null
-    return Math.max(1, Math.floor((Date.now() - start) / 86_400_000))
-  }, [connectedAt])
+ const daysTogether = useMemo(() => {
+  if (!connectedAt) return null
+  const start = parseDateOnly(connectedAt).getTime()
+  if (Number.isNaN(start)) return null
+
+  // selisih tanggal kalender, "hari ini" menurut timezone user
+  const today = parseDateOnly(zonedNow(timeZone).dateKey).getTime()
+  return Math.max(1, Math.round((today - start) / 86_400_000))
+}, [connectedAt, timeZone])
 
   const sinceLabel = useMemo(() => {
-    if (!connectedAt) return null
-    const date = new Date(connectedAt)
-    if (Number.isNaN(date.getTime())) return null
-    return date.toLocaleDateString('en-US', {
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric',
-    })
-  }, [connectedAt])
+  if (!connectedAt) return null
+  const date = parseDateOnly(connectedAt)
+  if (Number.isNaN(date.getTime())) return null
+  return format.dateTime(date, {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+    ...UTC,
+  })
+}, [connectedAt, format])
 
   const slides = useMemo<SlideKey[]>(
     () => (daysTogether ? ['names', 'days'] : ['names']),
@@ -152,12 +165,12 @@ export default function RelationshipHeader({
                       <CountUp value={daysTogether ?? 0} />
                     </span>
                     <span className="text-[10px] font-medium uppercase tracking-[0.2em] text-neutral-400">
-                      days together
+                      {t('daysTogether', { count: daysTogether ?? 0 })}
                     </span>
                   </p>
                   {sinceLabel && (
                     <p className="mt-0.5 whitespace-nowrap text-[10px] leading-none text-neutral-500">
-                      Since {sinceLabel}
+                      {t('since', { date: sinceLabel })}
                     </p>
                   )}
                 </>
@@ -172,7 +185,7 @@ export default function RelationshipHeader({
         <button
           type="button"
           onClick={onSearchClick}
-          aria-label="Search"
+          aria-label={tc('search')}
           className="flex size-9 items-center justify-center rounded-full border border-white/10 text-neutral-200 transition-colors hover:bg-white/10 active:scale-95"
         >
           <Search className="size-[18px]" strokeWidth={1.75} />
@@ -181,11 +194,7 @@ export default function RelationshipHeader({
         <button
           type="button"
           onClick={onNotificationClick}
-          aria-label={
-            unreadCount > 0
-              ? `Notifikasi, ${unreadCount} belum dibaca`
-              : 'Notifikasi'
-          }
+          aria-label={unreadCount > 0 ? t('notificationsUnread', { count: unreadCount }) : t('notifications')}
           className="relative flex size-9 items-center justify-center rounded-full border border-white/10 text-neutral-200 transition-colors hover:bg-white/10 active:scale-95"
         >
           <Bell className="size-[18px]" strokeWidth={1.75} />
@@ -205,6 +214,7 @@ export default function RelationshipHeader({
 
 function CountUp({ value }: { value: number }) {
   const reduced = useReducedMotion()
+  const format = useFormatter()
   const [display, setDisplay] = useState(reduced ? value : 0)
 
   useEffect(() => {
@@ -223,7 +233,7 @@ function CountUp({ value }: { value: number }) {
     return () => controls.stop()
   }, [value, reduced])
 
-  return <>{display.toLocaleString('en-US')}</>
+  return <>{format.number(display)}</>
 }
 
 /* ============================================================= */
@@ -255,14 +265,12 @@ function Avatar({
 
   return (
     <div
-      className={`flex h-full w-full items-center justify-center bg-linear-to-br ${
-        isPink ? 'from-[#ffd6e5] to-[#f7b6d0]' : 'from-[#d4e5ff] to-[#a9c8f5]'
-      }`}
+      className={`flex h-full w-full items-center justify-center bg-linear-to-br ${isPink ? 'from-[#ffd6e5] to-[#f7b6d0]' : 'from-[#d4e5ff] to-[#a9c8f5]'
+        }`}
     >
       <span
-        className={`text-sm font-semibold tracking-[-0.05em] ${
-          isPink ? 'text-[#b8527d]' : 'text-[#4c78b8]'
-        }`}
+        className={`text-sm font-semibold tracking-[-0.05em] ${isPink ? 'text-[#b8527d]' : 'text-[#4c78b8]'
+          }`}
       >
         {initial}
       </span>

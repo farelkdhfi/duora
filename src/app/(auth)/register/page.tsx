@@ -1,10 +1,14 @@
 import Link from 'next/link'
 import Image from 'next/image'
+import { getTranslations } from 'next-intl/server'
 
 import RegisterForm from '@/features/auth/components/register-form'
 import duoraLogo from '@/assets/logo-white.png'
 
-export default function RegisterPage() {
+export default async function RegisterPage() {
+  const t = await getTranslations('auth.register')
+  const tc = await getTranslations('auth.common')
+
   return (
     <main className="relative min-h-screen overflow-hidden bg-primary text-secondary">
 
@@ -38,27 +42,20 @@ export default function RegisterPage() {
               <span className="h-px w-10 bg-gradient-to-r from-pink-300 to-blue-300" />
 
               <span className="text-[9px] font-medium uppercase tracking-[0.24em] text-neutral-400">
-                one for two
+                {tc('tagline')}
               </span>
 
             </div>
 
             <h1 className="mt-7 max-w-3xl text-[clamp(4rem,6vw,6.5rem)] font-semibold leading-[0.88] tracking-[-0.075em]">
-
-              Make the
-              <br />
-
-              <span className="text-[#6b9bc2]">distance</span>
-
-              <br />
-
-              <span className="text-[#6b9bc2]">feel closer.</span>
-
+              {t.rich('headline', {
+                line: (chunks) => <span className="block">{chunks}</span>,
+                accent: (chunks) => <span className="text-[#6b9bc2]">{chunks}</span>,
+              })}
             </h1>
 
             <p className="mt-8 max-w-md text-sm leading-7 text-[#8f8588]">
-              Create your private space for two people to stay connected,
-              share little moments, and make distance feel closer.
+              {t('subtitle')}
             </p>
 
             <div className="mt-8 flex items-center gap-3">
@@ -96,7 +93,7 @@ export default function RegisterPage() {
                 <span className="h-px w-6 bg-gradient-to-r from-transparent to-pink-300" />
 
                 <span className="text-[8px] font-medium uppercase tracking-[0.22em] text-neutral-400">
-                  one for two
+                  {tc('tagline')}
                 </span>
 
                 <span className="h-px w-6 bg-gradient-to-l from-transparent to-blue-300" />
@@ -104,7 +101,7 @@ export default function RegisterPage() {
               </div>
 
               <h2 className="mt-4 text-center text-3xl font-semibold leading-[0.95] tracking-[-0.065em] md:text-4xl">
-                <span>create your space.</span>
+                <span>{t('title')}</span>
               </h2>
 
             </div>
@@ -118,28 +115,22 @@ export default function RegisterPage() {
               </div>
 
               <p className="mt-4 text-center text-[12px] leading-5 text-description">
-                By continuing, you agree to Duora{' '}
-                <Link
-                  href="/terms"
-                  className="text-neutral-300"
-                >
-                  Terms of Service
-                </Link>{' '}
-                and{' '}
-                <Link
-                  href="/policy"
-                  className="text-neutral-300"
-                >
-                  Privacy Policy
-                </Link>
-                . Already have an account?{' '}
-                <Link
-                  href="/login"
-                  className="font-medium text-neutral-300 hover:text-blue-500 hover:decoration-blue-400"
-                >
-                  Sign in
-                </Link>
-                .
+                {t.rich('legal', {
+                  terms: (chunks) => (
+                    <Link href="/terms" className="text-neutral-300">{chunks}</Link>
+                  ),
+                  privacy: (chunks) => (
+                    <Link href="/policy" className="text-neutral-300">{chunks}</Link>
+                  ),
+                  signin: (chunks) => (
+                    <Link
+                      href="/login"
+                      className="font-medium text-neutral-300 hover:text-blue-500 hover:decoration-blue-400"
+                    >
+                      {chunks}
+                    </Link>
+                  ),
+                })}
               </p>
 
             </div>

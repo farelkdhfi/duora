@@ -11,7 +11,9 @@ import {
   Target,
   Wallet,
 } from 'lucide-react'
+import { useFormatter, useTranslations } from 'next-intl'
 
+import { getActivityErrorKey } from '../errors'
 import { useRelationshipActivities } from '../queries'
 import type { Activity, ActivityType } from '../types'
 
@@ -19,126 +21,34 @@ interface ActivityFeedProps {
   relationshipId: string
 }
 
+// Teks tiap aktivitas ada di messages: t(`types.${type}`)
 const activityConfig: Record<
   ActivityType,
   {
     icon: React.ElementType
     color: string
     bg: string
-    label: (metadata: Record<string, unknown>) => string
   }
 > = {
-  goal_created: {
-    icon: Target,
-    color: 'text-pink-500',
-    bg: 'bg-primary',
-    label: (m) => `created a new goal "${m.goal_title}"`,
-  },
-  goal_updated: {
-    icon: Target,
-    color: 'text-blue-500',
-    bg: 'bg-primary',
-    label: (m) => `updated the goal "${m.goal_title}"`,
-  },
-  goal_deleted: {
-    icon: Target,
-    color: 'text-description',
-    bg: 'bg-primary',
-    label: (m) => `deleted the goal "${m.goal_title}"`,
-  },
-  saving_added: {
-    icon: Wallet,
-    color: 'text-emerald-500',
-    bg: 'bg-primary',
-    label: (m) => `saved Rp ${Number(m.amount).toLocaleString('id-ID')} for "${m.goal_title}"`,
-  },
-  saving_deleted: {
-    icon: Wallet,
-    color: 'text-description',
-    bg: 'bg-primary',
-    label: (m) => `deleted savings of Rp ${Number(m.amount).toLocaleString('id-ID')} from "${m.goal_title}"`,
-  },
-  checkin_added: {
-    icon: Smile,
-    color: 'text-amber-500',
-    bg: 'bg-primary',
-    label: () => `completed today's mood check-in`,
-  },
-  checkin_updated: {
-    icon: Smile,
-    color: 'text-amber-400',
-    bg: 'bg-primary',
-    label: () => `updated their mood check-in`,
-  },
-  plan_created: {
-    icon: CalendarCheck,
-    color: 'text-blue-500',
-    bg: 'bg-primary',
-    label: (m) => `created a plan "${m.plan_title}"`,
-  },
-  plan_updated: {
-    icon: CalendarCheck,
-    color: 'text-blue-400',
-    bg: 'bg-primary',
-    label: (m) => `updated the plan "${m.plan_title}"`,
-  },
-  plan_deleted: {
-    icon: CalendarCheck,
-    color: 'text-description',
-    bg: 'bg-primary',
-    label: (m) => `deleted the plan "${m.plan_title}"`,
-  },
-  checklist_completed: {
-    icon: CheckCircle2,
-    color: 'text-emerald-500',
-    bg: 'bg-primary',
-    label: (m) => `completed "${m.checklist_title}" in the goal "${m.goal_title}"`,
-  },
-  checklist_uncompleted: {
-    icon: Circle,
-    color: 'text-description',
-    bg: 'bg-primary',
-    label: (m) => `unchecked "${m.checklist_title}" in the goal "${m.goal_title}"`,
-  },
-  note_created: {
-    icon: StickyNote,
-    color: 'text-pink-500',
-    bg: 'bg-primary',
-    label: (m) => `created a note "${m.note_title}"`,
-  },
-  note_updated: {
-    icon: StickyNote,
-    color: 'text-blue-500',
-    bg: 'bg-primary',
-    label: (m) => `updated the note "${m.note_title}"`,
-  },
-  note_deleted: {
-    icon: StickyNote,
-    color: 'text-description',
-    bg: 'bg-primary',
-    label: (m) => `deleted the note "${m.note_title}"`,
-  },
+  goal_created: { icon: Target, color: 'text-pink-500', bg: 'bg-primary' },
+  goal_updated: { icon: Target, color: 'text-blue-500', bg: 'bg-primary' },
+  goal_deleted: { icon: Target, color: 'text-description', bg: 'bg-primary' },
+  saving_added: { icon: Wallet, color: 'text-emerald-500', bg: 'bg-primary' },
+  saving_deleted: { icon: Wallet, color: 'text-description', bg: 'bg-primary' },
+  checkin_added: { icon: Smile, color: 'text-amber-500', bg: 'bg-primary' },
+  checkin_updated: { icon: Smile, color: 'text-amber-400', bg: 'bg-primary' },
+  plan_created: { icon: CalendarCheck, color: 'text-blue-500', bg: 'bg-primary' },
+  plan_updated: { icon: CalendarCheck, color: 'text-blue-400', bg: 'bg-primary' },
+  plan_deleted: { icon: CalendarCheck, color: 'text-description', bg: 'bg-primary' },
+  checklist_completed: { icon: CheckCircle2, color: 'text-emerald-500', bg: 'bg-primary' },
+  checklist_uncompleted: { icon: Circle, color: 'text-description', bg: 'bg-primary' },
+  note_created: { icon: StickyNote, color: 'text-pink-500', bg: 'bg-primary' },
+  note_updated: { icon: StickyNote, color: 'text-blue-500', bg: 'bg-primary' },
+  note_deleted: { icon: StickyNote, color: 'text-description', bg: 'bg-primary' },
 }
 
-function formatRelativeTime(dateString: string) {
-  const date = new Date(dateString)
-  const now = new Date()
-
-  const diffMs = now.getTime() - date.getTime()
-  const diffMinutes = Math.floor(diffMs / 60000)
-  const diffHours = Math.floor(diffMinutes / 60)
-  const diffDays = Math.floor(diffHours / 24)
-
-  if (diffMinutes < 1) return 'Just now'
-  if (diffMinutes < 60) return `${diffMinutes}m ago`
-  if (diffHours < 24) return `${diffHours}h ago`
-  if (diffDays < 7) return `${diffDays}d ago`
-
-  return date.toLocaleDateString('id-ID', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-  })
+function str(value: unknown) {
+  return value == null ? '' : String(value)
 }
 
 /* -------------------------------------------------------------------------- */
@@ -152,13 +62,53 @@ function ActivityItem({
   activity: Activity
   isLast: boolean
 }) {
+  const t = useTranslations('activities')
+  const format = useFormatter()
+
   const config = activityConfig[activity.type]
   const Icon = config.icon
 
   const actorName =
     activity.actor.display_name ??
     activity.actor.username ??
-    'Someone'
+    t('feed.someone')
+
+  const metadata = activity.metadata
+
+  // Semua placeholder disiapkan sekali, tiap pesan cuma pakai yang dibutuhkan
+  const values = {
+    goal: str(metadata.goal_title),
+    plan: str(metadata.plan_title),
+    note: str(metadata.note_title),
+    item: str(metadata.checklist_title),
+    amount:
+      metadata.amount == null
+        ? ''
+        : `Rp ${format.number(Number(metadata.amount), {
+          maximumFractionDigits: 0,
+        })}`,
+  }
+
+  function formatRelativeTime(dateString: string) {
+    const date = new Date(dateString)
+    const now = new Date()
+
+    const diffMs = now.getTime() - date.getTime()
+    const diffMinutes = Math.floor(diffMs / 60000)
+    const diffHours = Math.floor(diffMinutes / 60)
+    const diffDays = Math.floor(diffHours / 24)
+
+    if (diffMinutes < 1) return t('time.justNow')
+    if (diffMinutes < 60) return t('time.minutesAgo', { count: diffMinutes })
+    if (diffHours < 24) return t('time.hoursAgo', { count: diffHours })
+    if (diffDays < 7) return t('time.daysAgo', { count: diffDays })
+
+    return format.dateTime(date, {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+    })
+  }
 
   return (
     <div className="group relative flex gap-4">
@@ -181,7 +131,7 @@ function ActivityItem({
           <div className="flex items-start gap-4">
             <p className="min-w-0 flex-1 text-[12.5px] leading-[1.65] tracking-[-0.01em] text-secondary/70">
               <span className="font-semibold text-secondary">{actorName}</span>{' '}
-              {config.label(activity.metadata)}
+              {t(`types.${activity.type}`, values)}
             </p>
 
             <span className="shrink-0 pt-0.5 text-[10px] font-medium tracking-[-0.01em] text-description">
@@ -238,6 +188,8 @@ function ActivityFeedSkeleton() {
 /* -------------------------------------------------------------------------- */
 
 function ActivityEmptyState() {
+  const t = useTranslations('activities.feed')
+
   return (
     <div className="px-6 py-14">
       <div className="flex flex-col items-center text-center">
@@ -250,12 +202,11 @@ function ActivityEmptyState() {
         </div>
 
         <h3 className="mt-5 text-[13px] font-semibold tracking-[-0.025em] text-secondary">
-          No activity yet
+          {t('emptyTitle')}
         </h3>
 
         <p className="mt-2 max-w-[250px] text-[11.5px] leading-5 tracking-[-0.005em] text-description">
-          All activities from you and your partner
-          will appear here.
+          {t('emptyDescription')}
         </p>
       </div>
     </div>
@@ -269,6 +220,9 @@ function ActivityEmptyState() {
 export default function ActivityFeed({
   relationshipId,
 }: ActivityFeedProps) {
+  const t = useTranslations('activities.feed')
+  const te = useTranslations('activities.errors')
+
   const {
     data,
     isLoading,
@@ -296,7 +250,7 @@ export default function ActivityFeed({
         </div>
 
         <p className="mt-3 text-[12px] leading-5 text-description">
-          {error.message}
+          {te(getActivityErrorKey(error))}
         </p>
       </div>
     )
@@ -332,10 +286,10 @@ export default function ActivityFeed({
           {isFetchingNextPage ? (
             <>
               <Loader2 size={13} className="animate-spin" />
-              Loading activities...
+              {t('loadingMore')}
             </>
           ) : (
-            'Load more'
+            t('loadMore')
           )}
         </button>
       )}

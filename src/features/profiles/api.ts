@@ -1,5 +1,7 @@
 import { createClient } from '@/lib/supabase/client'
 
+import { ProfileApiError, toProfileError } from './errors'
+
 export async function getMyProfile() {
   const supabase = createClient()
 
@@ -8,7 +10,7 @@ export async function getMyProfile() {
   } = await supabase.auth.getUser()
 
   if (!user) {
-    throw new Error('User not authenticated')
+    throw new ProfileApiError('notAuthenticated')
   }
 
   const { data, error } = await supabase
@@ -18,7 +20,7 @@ export async function getMyProfile() {
     .single()
 
   if (error) {
-    throw error
+    throw toProfileError(error)
   }
 
   return data
@@ -35,7 +37,7 @@ export async function updateMyProfile(payload: {
   } = await supabase.auth.getUser()
 
   if (!user) {
-    throw new Error('User not authenticated')
+    throw new ProfileApiError('notAuthenticated')
   }
 
   const { data, error } = await supabase
@@ -49,7 +51,7 @@ export async function updateMyProfile(payload: {
     .single()
 
   if (error) {
-    throw error
+    throw toProfileError(error)
   }
 
   return data
@@ -63,7 +65,7 @@ export async function updateMyAvatar(file: File) {
   } = await supabase.auth.getUser()
 
   if (!user) {
-    throw new Error('User not authenticated')
+    throw new ProfileApiError('notAuthenticated')
   }
 
   const fileExt = file.name.split('.').pop()
@@ -77,7 +79,7 @@ export async function updateMyAvatar(file: File) {
     })
 
   if (uploadError) {
-    throw uploadError
+    throw toProfileError(uploadError)
   }
 
   const {
@@ -95,7 +97,7 @@ export async function updateMyAvatar(file: File) {
     .single()
 
   if (error) {
-    throw error
+    throw toProfileError(error)
   }
 
   return data

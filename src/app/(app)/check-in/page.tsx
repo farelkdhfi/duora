@@ -1,6 +1,7 @@
 'use client'
 
 import { Heart } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 
 import { useMyRelationshipDetails } from '@/features/relationship/queries'
 import { useGetMyProfile } from '@/features/profiles/queries'
@@ -9,6 +10,8 @@ import { useCheckinRealtime } from '@/features/checkins/use-checkin-realtime'
 import CheckinSkeleton from '@/features/checkins/components/checkin-skeleton'
 
 export default function CheckInPage() {
+  const t = useTranslations('checkins.page')
+
   const { data, isLoading } = useMyRelationshipDetails()
   const { isLoading: profileLoading } = useGetMyProfile()
 
@@ -46,11 +49,11 @@ export default function CheckInPage() {
             </div>
 
             <h2 className="mt-5 text-lg font-semibold tracking-[-0.03em] text-neutral-800 sm:text-xl">
-              Connect with your partner
+              {t('noRelationshipTitle')}
             </h2>
 
             <p className="mx-auto mt-2 max-w-sm text-[13px] leading-6 text-neutral-400 sm:text-sm">
-              Connect your relationship first to start checking in with each other.
+              {t('noRelationshipDescription')}
             </p>
           </div>
         </div>

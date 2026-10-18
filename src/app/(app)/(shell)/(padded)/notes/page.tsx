@@ -1,12 +1,13 @@
 'use client'
 
-import { StickyNote } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 
 import NoteBoard from '@/features/notes/components/note-board'
 import { useMyRelationshipDetails } from '@/features/relationship/queries'
 import Header from '@/components/layout/header'
 
 export default function NotesPage() {
+    const t = useTranslations('notes.page')
     const { data, isLoading } = useMyRelationshipDetails()
 
     if (isLoading) {
@@ -23,7 +24,7 @@ export default function NotesPage() {
         return (
             <div className="flex min-h-[50vh] items-center justify-center">
                 <p className="text-sm text-description">
-                    Kamu perlu terhubung dengan pasangan dulu.
+                    {t('noRelationship')}
                 </p>
             </div>
         )
@@ -33,9 +34,9 @@ export default function NotesPage() {
 
     return (
         <div>
-            <Header 
-            title='notes' 
-            description='Keep the little thoughts and moments you want to remember together.' 
+            <Header
+                title={t('title')}
+                description={t('description')}
             />
 
             <section className="mt-6 sm:mt-8">

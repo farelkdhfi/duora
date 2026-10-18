@@ -1,26 +1,36 @@
 import { z } from 'zod'
+import type { useTranslations } from 'next-intl'
 
-export const createNoteSchema = z.object({
-  title: z
-    .string()
-    .min(1, 'Judul catatan wajib diisi')
-    .max(200, 'Judul terlalu panjang'),
+type ValidationT = ReturnType<typeof useTranslations<'notes.validation'>>
 
-  content: z
-    .string()
-    .max(5000, 'Isi catatan terlalu panjang')
-    .optional(),
+const TITLE_MIN = 1
+const TITLE_MAX = 200
+const CONTENT_MAX = 5000
+const CATEGORY_MAX = 50
 
-  category: z
-    .string()
-    .max(50, 'Kategori terlalu panjang')
-    .optional(),
+export function createNoteSchema(t: ValidationT) {
+  return z.object({
+    title: z
+      .string()
+      .min(TITLE_MIN, t('titleRequired'))
+      .max(TITLE_MAX, t('titleMax', { max: TITLE_MAX })),
 
-  checklistItems: z
-    .array(z.string().min(1))
-    .optional(),
-})
+    content: z
+      .string()
+      .max(CONTENT_MAX, t('contentMax', { max: CONTENT_MAX }))
+      .optional(),
+
+    category: z
+      .string()
+      .max(CATEGORY_MAX, t('categoryMax', { max: CATEGORY_MAX }))
+      .optional(),
+
+    checklistItems: z
+      .array(z.string().min(1, t('checklistItemRequired')))
+      .optional(),
+  })
+}
 
 export type CreateNoteFormValues = z.infer<
-  typeof createNoteSchema
+  ReturnType<typeof createNoteSchema>
 >

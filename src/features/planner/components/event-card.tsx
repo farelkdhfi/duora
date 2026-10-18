@@ -2,6 +2,9 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { Clock, Trash2 } from 'lucide-react'
+import { useFormatter, useTranslations } from 'next-intl'
+
+import { UTC, wallClock } from '@/lib/date'
 
 import type { PlannerEvent } from '../types'
 import { useDeletePlannerEvent } from '../queries'
@@ -23,43 +26,25 @@ interface EventCardProps {
   participants?: Participant[]
 }
 
-const categoryLabels: Record<PlannerEvent['category'], string> = {
-  relationship: 'Relationship',
-  finance: 'Finance',
-  birthday: 'Birthday',
-  anniversary: 'Anniversary',
-  travel: 'Travel',
-  health: 'Health',
-  work: 'Work',
-  other: 'Other',
-}
-
 const statusMeta: Record<
   EventStatus,
-  { label: string; text: string; bar: string }
+  { labelKey: 'inProgress' | 'upcoming' | 'done'; text: string; bar: string }
 > = {
   'in-progress': {
-    label: 'In Progress',
+    labelKey: 'inProgress',
     text: 'text-pink-300',
     bar: 'bg-pink-400',
   },
   upcoming: {
-    label: 'Upcoming',
+    labelKey: 'upcoming',
     text: 'text-neutral-400',
     bar: 'bg-neutral-500',
   },
   done: {
-    label: 'Done',
+    labelKey: 'done',
     text: 'text-neutral-500',
     bar: 'bg-neutral-700',
   },
-}
-
-/** "13:30:00" -> "1:30 PM" */
-function formatTime(time: string) {
-  const [h, m] = time.split(':').map(Number)
-  const suffix = h >= 12 ? 'PM' : 'AM'
-  return `${h % 12 || 12}:${String(m).padStart(2, '0')} ${suffix}`
 }
 
 function AvatarStack({ participants }: { participants: Participant[] }) {
@@ -93,6 +78,11 @@ export default function EventCard({
   onToggle,
   participants,
 }: EventCardProps) {
+  const t = useTranslations('planner.card')
+  const tc = useTranslations('planner.categories')
+  const tCommon = useTranslations('common')
+  const format = useFormatter()
+
   const [menuOpen, setMenuOpen] = useState(false)
   const [isConfirmingDelete, setIsConfirmingDelete] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
@@ -127,6 +117,20 @@ export default function EventCard({
     setIsConfirmingDelete(false)
   }
 
+  /** "13:30:00" -> "1:30 PM" (en) / "13.30" (id) */
+  const formatTime = (time: string) => {
+  const [h, m] = time.split(':').map(Number)
+  return format.dateTime(wallClock(h, m || 0), {
+    hour: 'numeric',
+    minute: '2-digit',
+    ...UTC,
+  })
+}
+
+  const categoryLabel = tc.has(event.category)
+    ? tc(event.category)
+    : event.category
+
   const showTime = !event.is_all_day && event.start_time
 
   return (
@@ -141,12 +145,12 @@ export default function EventCard({
               </div>
 
               <p className="text-[13px] font-semibold tracking-[-0.02em] text-neutral-50">
-                Delete this event?
+                {t('deleteTitle')}
               </p>
             </div>
 
             <p className="mt-1 text-[10px] text-neutral-500 sm:ml-9">
-              This action cannot be undone.
+              {t('deleteWarning')}
             </p>
           </div>
 
@@ -157,7 +161,7 @@ export default function EventCard({
               disabled={deleteMutation.isPending}
               className="inline-flex min-h-8 items-center justify-center rounded-full border border-white/[0.08] bg-white/[0.06] px-4 text-[10px] font-semibold text-neutral-300 transition-all hover:bg-white/[0.12] hover:text-white active:scale-95 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              Cancel
+              {tCommon('cancel')}
             </button>
 
             <button
@@ -167,7 +171,7 @@ export default function EventCard({
               className="inline-flex min-h-8 items-center justify-center gap-1.5 rounded-full bg-white px-4 text-[10px] font-semibold text-neutral-900 transition-all hover:bg-neutral-200 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50"
             >
               <Trash2 size={11} strokeWidth={2} />
-              {deleteMutation.isPending ? 'Deleting...' : 'Yes, delete'}
+              {deleteMutation.isPending ? t('deleting') : t('confirmYes')}
             </button>
           </div>
         </div>
@@ -190,7 +194,9 @@ export default function EventCard({
               {event.title}
             </h4>
 
-            <p className={`mt-0.5 text-[12px] ${meta.text}`}>{meta.label}</p>
+            <p className={`mt-0.5 text-[12px] ${meta.text}`}>
+              {t(`status.${meta.labelKey}`)}
+            </p>
 
             <div className="mt-3 flex min-h-6 items-center justify-between gap-3">
               {participants && participants.length > 0 ? (
@@ -207,7 +213,7 @@ export default function EventCard({
                 </span>
               ) : (
                 <span className="shrink-0 rounded-full bg-white/[0.08] px-2.5 py-0.5 text-[10px] font-medium text-neutral-300">
-                  All day
+                  {t('allDay')}
                 </span>
               )}
             </div>
@@ -218,7 +224,7 @@ export default function EventCard({
             <button
               type="button"
               onClick={() => setMenuOpen((open) => !open)}
-              aria-label="Event options"
+              aria-label={t('options')}
               aria-haspopup="menu"
               aria-expanded={menuOpen}
               className="flex size-7 items-center justify-center rounded-full text-neutral-400 transition-colors hover:bg-white/[0.08] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
@@ -245,7 +251,7 @@ export default function EventCard({
                   className="flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-left text-[12px] font-medium text-red-400 transition-colors hover:bg-red-500/10"
                 >
                   <Trash2 size={12} strokeWidth={2} />
-                  Delete
+                  {tCommon('delete')}
                 </button>
               </div>
             )}
@@ -262,11 +268,11 @@ export default function EventCard({
               <div className="pb-4 pl-6 pr-4">
                 <div className="rounded-xl bg-white/[0.06] p-3">
                   <span className="inline-block rounded-full bg-white/[0.08] px-2 py-0.5 text-[9px] font-semibold uppercase tracking-[0.12em] text-neutral-400">
-                    {categoryLabels[event.category] ?? event.category}
+                    {categoryLabel}
                   </span>
 
                   <p className="mt-2 whitespace-pre-line text-[12px] leading-relaxed text-neutral-200">
-                    {event.description?.trim() || 'No description.'}
+                    {event.description?.trim() || t('noDescription')}
                   </p>
                 </div>
               </div>

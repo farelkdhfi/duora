@@ -1,0 +1,874 @@
+{
+    "metadata": {
+        "title": "Duora — AI Relationship Companion for Long-Distance Couples",
+        "description": "Duora is an AI relationship companion for long-distance couples. Its AI Assistant knows your goals, check-ins, plans, and notes, so every answer feels personal.",
+        "ogTitle": "Duora — A Personal AI Assistant for Your Long-Distance Relationship",
+        "ogDescription": "Ask anything about your relationship and get answers based on your own goals, daily check-ins, plans, and notes. Resolve disagreements with AI Debate, and grow closer with shared goals, Q&A, and more."
+    },
+    "common": {
+        "save": "Save",
+        "cancel": "Cancel",
+        "delete": "Delete",
+        "edit": "Edit",
+        "create": "Create",
+        "loading": "Loading...",
+        "back": "Back",
+        "confirm": "Confirm",
+        "close": "Close",
+        "search": "Search",
+        "error": "Something went wrong",
+        "tryAgain": "Try again",
+        "language": "Language",
+        "relative": {
+            "today": "Today",
+            "tomorrow": "Tomorrow",
+            "yesterday": "Yesterday",
+            "inDays": "In {count} days",
+            "daysAgo": "{count} days ago"
+        }
+    },
+    "landing": {
+        "homeLabel": "Duora home",
+        "cta": "Start your LDR",
+        "slideOf": "{current} of {total}",
+        "pageOf": "Page {current} of {total}",
+        "goToPage": "Go to page {page}",
+        "slides": {
+            "loveLivesHere": {
+                "alt": "Two fluffy cat characters staying connected through Duora",
+                "line1": "Love",
+                "line2": "lives <accent>here.</accent>",
+                "description": "A cozy place to stay close and connected, even when you're apart."
+            },
+            "assistant": {
+                "alt": "Duora AI assistant helping a couple with their relationship",
+                "line1": "Assistant",
+                "line2": "your <accent>relationship</accent>",
+                "description": "Ask anything about your relationship, Duora AI understands the context."
+            }
+        }
+    },
+    "auth": {
+        "common": {
+            "tagline": "one for two",
+            "or": "or",
+            "email": "Email",
+            "password": "Password",
+            "showPassword": "Show password",
+            "hidePassword": "Hide password",
+            "continueWithGoogle": "Continue with Google",
+            "connecting": "Connecting…"
+        },
+        "login": {
+            "title": "welcome back",
+            "headline": "<line>Keep the</line><line><accent>distance close.</accent></line>",
+            "subtitle": "A private space for two people to stay connected, share little moments, and make distance feel closer.",
+            "legal": "By continuing, you agree to Duora <terms>Terms of Service</terms> and <privacy>Privacy Policy</privacy>. Don't have an account? <signup>Sign up</signup>.",
+            "signIn": "Sign in",
+            "signingIn": "Signing in"
+        },
+        "register": {
+            "title": "create your space.",
+            "headline": "<line>Make the</line><line><accent>distance</accent></line><line><accent>feel closer.</accent></line>",
+            "subtitle": "Create your private space for two people to stay connected, share little moments, and make distance feel closer.",
+            "legal": "By continuing, you agree to Duora <terms>Terms of Service</terms> and <privacy>Privacy Policy</privacy>. Already have an account? <signin>Sign in</signin>.",
+            "signUpWithEmail": "Sign up with email",
+            "continue": "Continue",
+            "createAccount": "Create account",
+            "creatingAccount": "Creating account",
+            "goBack": "Go back",
+            "showConfirmPassword": "Show confirm password",
+            "hideConfirmPassword": "Hide confirm password",
+            "emailConfirmation": "Account created. Check your email to confirm, then sign in.",
+            "steps": {
+                "method": {
+                    "title": "How do you want to join?",
+                    "description": "Choose the easiest way to create your Duora space."
+                },
+                "username": {
+                    "title": "Choose your username.",
+                    "description": "This is how you will be recognized inside Duora."
+                },
+                "displayName": {
+                    "title": "What should we call you?",
+                    "description": "Use your name or anything you want your partner to see."
+                },
+                "email": {
+                    "title": "What’s your email?",
+                    "description": "We’ll use this email to secure your account."
+                },
+                "password": {
+                    "title": "Create your password.",
+                    "description": "Choose something secure that you can remember."
+                },
+                "confirmPassword": {
+                    "title": "One last thing.",
+                    "description": "Confirm your password and your Duora account is ready."
+                }
+            }
+        },
+        "validation": {
+            "invalidEmail": "Invalid email address",
+            "passwordMin": "Password must be at least {min} characters",
+            "usernameMin": "Username must be at least {min} characters",
+            "usernameMax": "Username must be less than {max} characters",
+            "usernameFormat": "Username can only contain letters, numbers, and underscores",
+            "displayNameMin": "Display name must be at least {min} characters",
+            "displayNameMax": "Display name must be at most {max} characters",
+            "passwordMismatch": "Passwords do not match"
+        },
+        "errors": {
+            "invalidCredentials": "Incorrect email or password",
+            "emailNotConfirmed": "Your email isn't confirmed yet. Check your inbox first.",
+            "emailTaken": "This email is already registered. Try signing in instead.",
+            "weakPassword": "That password is too weak. Try a stronger one.",
+            "rateLimited": "Too many attempts. Please wait a moment and try again.",
+            "invalidEmail": "Invalid email address",
+            "signupDisabled": "Sign up is currently disabled",
+            "userBanned": "This account has been disabled",
+            "network": "Connection problem. Check your internet and try again.",
+            "unknown": "Something went wrong. Please try again."
+        }
+    },
+    "nav": {
+        "items": {
+            "overview": "Overview",
+            "debates": "Debates",
+            "goals": "Goals",
+            "planner": "Planner",
+            "checkin": "Daily Check-in",
+            "notes": "Notes",
+            "wrapped": "Wrapped",
+            "countdown": "Countdown",
+            "profile": "Profile",
+            "activities": "Activities",
+            "qna": "Q&A"
+        },
+        "brandTagline": "Grow together.",
+        "workspace": "Workspace",
+        "subscription": "Subscription",
+        "locked": "Locked",
+        "managePlan": "Manage plan",
+        "waitingForPartner": "Waiting for partner",
+        "lockedHint": "Your space unlocks once your partner joins with the invite code.",
+        "yourRelationship": "Your relationship",
+        "relationshipQuote": "Every little moment you share becomes part of your story.",
+        "growingTogether": "Growing together",
+        "youInitial": "Y",
+        "partnerInitial": "P",
+        "closeMenu": "Close menu",
+        "logout": "Log out",
+        "loggingOut": "Logging out...",
+        "footer": "Grow together with DUORA"
+    },
+        "checkins": {
+        "moods": {
+            "happy": "Happy",
+            "neutral": "Neutral",
+            "sad": "Sad",
+            "tired": "Tired",
+            "stressed": "Stressed"
+        },
+        "details": {
+            "liked_today": "Liked today",
+            "disliked_today": "Didn't like today",
+            "needs_from_partner": "Needs from partner",
+            "note": "Note"
+        },
+        "validation": {
+            "moodInvalid": "Pick a mood",
+            "scoreRange": "Pick a value between {min} and {max}",
+            "textMax": "Must be at most {max} characters"
+        },
+        "errors": {
+            "notAuthenticated": "Your session has expired. Please sign in again.",
+            "forbidden": "You don't have permission to do that.",
+            "invalidInput": "Some details look invalid. Check them and try again.",
+            "network": "Connection problem. Check your internet and try again.",
+            "unknown": "Something went wrong. Please try again."
+        },
+        "page": {
+            "noRelationshipTitle": "Connect with your partner",
+            "noRelationshipDescription": "Connect your relationship first to start checking in with each other."
+        },
+        "form": {
+            "eyebrow": "Daily check-in",
+            "title": "How do you feel today?",
+            "updated": "Updated",
+            "backToDashboard": "Back to dashboard",
+            "unlimited": "Unlimited mood changes today",
+            "limitReached": "Daily mood limit reached",
+            "editCount": "{used}/{max} mood changes today",
+            "saving": "Saving...",
+            "submitLimit": "Daily limit reached",
+            "update": "Update check-in",
+            "save": "Save check-in",
+            "actions": {
+                "history": "View history",
+                "wellbeing": "How are you doing?",
+                "reflection": "Reflection"
+            },
+            "wellbeing": {
+                "title": "How are you doing?",
+                "description": "Take a moment to check in with your energy and stress.",
+                "energy": "Energy",
+                "energyMin": "Exhausted",
+                "energyMax": "Energetic",
+                "stress": "Stress",
+                "stressMin": "Relaxed",
+                "stressMax": "Very stressed"
+            },
+            "reflection": {
+                "title": "A little reflection",
+                "description": "A few thoughts can help you and your partner understand each other better.",
+                "liked": "What did you like today?",
+                "likedPlaceholder": "Something your partner did, something that made you smile...",
+                "disliked": "What didn't you like today?",
+                "dislikedPlaceholder": "Something that bothered you or felt difficult...",
+                "needs": "What do you need from your partner?",
+                "needsPlaceholder": "Maybe you need space, attention, encouragement...",
+                "note": "Anything else?",
+                "notePlaceholder": "Write anything else that's on your mind..."
+            }
+        },
+        "selector": {
+            "groupLabel": "Mood selector",
+            "swipeHint": "Swipe to change",
+            "select": "Select {mood}"
+        },
+        "slider": {
+            "hint": "Rate from {min} to {max}"
+        },
+        "history": {
+            "backToCheckin": "Back to check-in",
+            "title": "Check-in history",
+            "description": "A quiet look at how you and your partner have been feeling.",
+            "noRelationship": "Connect with your partner first.",
+            "filters": {
+                "all": "All",
+                "you": "You",
+                "partner": "Partner"
+            },
+            "fallbackYou": "You",
+            "fallbackPartner": "Your partner",
+            "loading": "Loading history...",
+            "emptyTitle": "No check-ins yet.",
+            "emptyCta": "Create your first check-in",
+            "emptyFilter": {
+                "you": "You haven't checked in yet.",
+                "partner": "Your partner hasn't checked in yet."
+            }
+        },
+        "card": {
+            "expand": "Show more",
+            "collapse": "Show less",
+            "reflection": "Reflection",
+            "entries": "{count, plural, one {# entry} other {# entries}}",
+            "energy": "Energy",
+            "stress": "Stress",
+            "viewHistory": "View history ({count}x)"
+        },
+        "historyModal": {
+            "eyebrow": "Check-in history",
+            "title": "{name}'s mood journey",
+            "subtitle": "See the check-in changes saved today.",
+            "changes": "{count, plural, one {# change} other {# changes}}",
+            "today": "Today",
+            "loading": "Loading history...",
+            "emptyTitle": "No history yet",
+            "emptyDescription": "Changes to this check-in will show up here.",
+            "latest": "Latest",
+            "energy": "Energy {value}/{max}",
+            "stress": "Stress {value}/{max}",
+            "noExtraNotes": "No additional notes",
+            "footer": "Today's check-in change history"
+        }
+    },
+    "dashboard": {
+        "people": {
+            "you": "You",
+            "partner": "Partner"
+        },
+        "page": {
+            "checkinTitle": "How are you two?",
+            "openCheckin": "Open check-in",
+            "planningTitle": "Your planning",
+            "workspaceTitle": "Your Workspace"
+        },
+        "header": {
+            "notifications": "Notifications",
+            "notificationsUnread": "Notifications, {count} unread",
+            "daysTogether": "{count, plural, one {day together} other {days together}}",
+            "since": "Since {date}"
+        },
+        "waiting": {
+            "imageAlt": "A couple waiting for each other",
+            "instruction": "Share this invite code with your partner to start building your shared space on Duora.",
+            "copy": "Copy invite code",
+            "copied": "Code copied",
+            "wrongPick": "Picked the wrong one? Delete this relationship to join with your partner's code.",
+            "deleteRelationship": "Delete this relationship",
+            "confirmDelete": "Delete \"{name}\" and its invite code? Afterwards you can create a new one or join with your partner's code.",
+            "partnerAlreadyJoined": "Your partner has already joined, so this relationship can't be cancelled from here.",
+            "deleteFailed": "Couldn't delete the relationship. Please try again.",
+            "deleting": "Deleting...",
+            "confirmYes": "Yes, delete"
+        },
+        "checkin": {
+            "now": "Now",
+            "stats": {
+                "energy": "energy",
+                "stress": "stressed"
+            },
+            "moodAlt": "{mood} mood",
+            "checkInCta": "Check in",
+            "noCheckin": "No check-in",
+            "notYet": "Not yet",
+            "sliderLabel": "Check-in history, last 7 days"
+        },
+        "planner": {
+            "plansLabel": "Plans",
+            "tabLabel": "Plan {number}: {title}",
+            "tabEmptyLabel": "Plan {number}: none yet",
+            "noPlan": "No plan yet",
+            "past": "Past",
+            "pastPlans": "Past plans",
+            "noHistory": "No past plans yet",
+            "allDay": "All day",
+            "open": "Open planner",
+            "emptyUpcomingTitle": "No upcoming plans",
+            "emptyTitle": "Your planner is empty",
+            "emptyUpcomingDescription": "Check your past plans or create a new one.",
+            "emptyDescription": "Add a date night or a trip first.",
+            "addPlan": "Plan"
+        },
+        "goals": {
+            "title": "Building goals",
+            "open": "Open goals",
+            "loadError": "Couldn't load goals",
+            "emptyTitle": "Nothing here yet.",
+            "emptyDescription": "Create your first shared goal.",
+            "totalSavings": "Total savings",
+            "acrossGoals": "across {count, plural, one {# goal} other {# goals}}"
+        },
+        "debates": {
+            "title": "Latest debate",
+            "open": "Open debates",
+            "loadError": "Couldn't load debates",
+            "emptyTitle": "No debates yet.",
+            "emptyDescription": "Start your first AI debate.",
+            "status": {
+                "active": "Ongoing",
+                "pending_verdict": "Awaiting verdict",
+                "resolved": "Resolved"
+            }
+        },
+        "qna": {
+            "title": "Latest question",
+            "open": "Open Q&A",
+            "loadError": "Couldn't load Q&A",
+            "emptyTitle": "No questions yet.",
+            "emptyDescription": "Answer your first question together."
+        }
+    },
+    "planner": {
+        "page": {
+            "title": "planner",
+            "description": "Plan the moments you want to remember.",
+            "createEvent": "Create event",
+            "noRelationshipTitle": "Connect with your partner",
+            "noRelationshipDescription": "Connect your relationship first to start planning meaningful moments together."
+        },
+        "people": {
+            "you": "You",
+            "partner": "Partner"
+        },
+        "calendar": {
+            "toggleMonthView": "Toggle month view",
+            "today": "Today",
+            "previousMonth": "Previous month",
+            "nextMonth": "Next month",
+            "previousWeek": "Previous week",
+            "nextWeek": "Next week",
+            "dayLabel": "{date}",
+            "dayLabelWithPlans": "{date}, has plans"
+        },
+        "list": {
+            "errorLabel": "Error",
+            "errorTitle": "Couldn't load your plans",
+            "emptyLabel": "Nothing planned yet",
+            "emptyTitle": "Give yourselves something to look forward to.",
+            "nextPlan": "Go to next plan · {date}"
+        },
+        "timeline": {
+            "ariaLabel": "Plans for {date}",
+            "count": "{count, plural, one {# plan} other {# plans}}",
+            "allDay": "All day",
+            "emptyDayTitle": "No plans on this day",
+            "emptyDayDescription": "Pick another date or add a new plan."
+        },
+        "card": {
+            "status": {
+                "inProgress": "In Progress",
+                "upcoming": "Upcoming",
+                "done": "Done"
+            },
+            "allDay": "All day",
+            "options": "Event options",
+            "deleteTitle": "Delete this event?",
+            "deleteWarning": "This action cannot be undone.",
+            "deleting": "Deleting...",
+            "confirmYes": "Yes, delete",
+            "noDescription": "No description."
+        },
+        "categories": {
+            "relationship": "Relationship",
+            "finance": "Finance",
+            "birthday": "Birthday",
+            "anniversary": "Anniversary",
+            "travel": "Travel",
+            "health": "Health",
+            "work": "Work",
+            "other": "Other"
+        },
+        "form": {
+            "eyebrow": "Couple planner",
+            "title": "Create a moment.",
+            "description": "Add something worth remembering to your shared calendar.",
+            "sections": {
+                "details": "Details",
+                "when": "When"
+            },
+            "fields": {
+                "title": "Event name",
+                "category": "Category",
+                "description": "Description",
+                "date": "Date",
+                "schedule": "Schedule",
+                "allDay": "All day",
+                "allDayHint": "No specific time",
+                "startTime": "Start time",
+                "endTime": "End time"
+            },
+            "placeholders": {
+                "title": "Anniversary dinner",
+                "description": "Dinner at our favorite restaurant..."
+            },
+            "footerNote": "Make memories together.",
+            "submit": "Create moment",
+            "submitting": "Creating..."
+        },
+        "validation": {
+            "titleMin": "Event name must be at least {min} characters",
+            "titleMax": "Event name must be at most {max} characters",
+            "descriptionMax": "Description must be at most {max} characters",
+            "dateRequired": "Please pick a date",
+            "endBeforeStart": "End time can't be earlier than start time"
+        },
+        "errors": {
+            "notAuthenticated": "Your session has expired. Please sign in again.",
+            "forbidden": "You don't have permission to do that.",
+            "invalidInput": "Some details look invalid. Check them and try again.",
+            "notFound": "This plan couldn't be found. It may have been deleted.",
+            "network": "Connection problem. Check your internet and try again.",
+            "unknown": "Something went wrong. Please try again."
+        }
+    },
+    "goals": {
+        "page": {
+            "title": "Shared Goals",
+            "description": "Build something together.",
+            "noRelationshipTitle": "Connect with your partner",
+            "noRelationshipDescription": "You need to connect your relationship before creating shared goals."
+        },
+        "list": {
+            "filters": {
+                "all": "All",
+                "newest": "Newest",
+                "under": "< {amount}",
+                "over": "> {amount}"
+            },
+            "createGoal": "Create a new goal",
+            "emptyUnder": "No goals under {amount}.",
+            "emptyOver": "No goals over {amount}.",
+            "emptyDefault": "No goals found.",
+            "emptyHint": "Try another filter or create a new goal!",
+            "count": "{count, plural, one {# goal} other {# goals}}"
+        },
+        "card": {
+            "deleteTitle": "Delete “{title}”?",
+            "deleteWarning": "This action cannot be undone.",
+            "deleting": "Deleting...",
+            "deleteAria": "Delete goal",
+            "noTarget": "No target set yet",
+            "noTargetHint": "Add a target to start tracking"
+        },
+        "empty": {
+            "title": "Build something together.",
+            "description": "Create your first goal and reach everything together!"
+        },
+        "detail": {
+            "notFoundTitle": "Goal not found",
+            "notFoundDescription": "This goal may have been deleted or is no longer available.",
+            "backToGoals": "Back to goals",
+            "deleteGoal": "Delete goal",
+            "deleteConfirm": "Delete permanently?",
+            "deleting": "Deleting...",
+            "targetPill": "Target {amount}",
+            "categoryLabels": {
+                "wedding": "Wedding",
+                "house": "House",
+                "vacation": "Vacation",
+                "education": "Education",
+                "business": "Business",
+                "savings": "Shared Goal",
+                "personal": "Personal",
+                "other": "Goal"
+            },
+            "savingsEyebrow": "Shared savings",
+            "savingsTitle": "Growing together",
+            "contributeEyebrow": "Contribute",
+            "contributeTitle": "Add to shared savings",
+            "contributeDescription": "Every contribution brings you both one step closer to this goal.",
+            "checklistEyebrow": "Progress",
+            "checklistTitle": "Things to accomplish",
+            "activityEyebrow": "Activity",
+            "historyTitle": "Savings history"
+        },
+        "checklist": {
+            "eyebrow": "Together",
+            "title": "Checklist",
+            "markIncomplete": "Mark as incomplete",
+            "markComplete": "Mark as completed",
+            "percentCompleted": "{progress}% completed",
+            "allComplete": "Everything is complete",
+            "allDone": "All done",
+            "deleting": "Deleting...",
+            "deleteAria": "Delete checklist item: {title}",
+            "emptyTitle": "Nothing to check off yet",
+            "emptyDescription": "Add a small step and work toward this goal together.",
+            "placeholder": "Add a small step...",
+            "addAria": "Add checklist item",
+            "hint": "Press Enter to add"
+        },
+        "editForm": {
+            "eyebrow": "Editing goal",
+            "title": "Update the details",
+            "save": "Save changes",
+            "saving": "Saving..."
+        },
+        "summary": {
+            "label": "Total savings",
+            "description": "Saved together across all goals"
+        },
+        "form": {
+            "eyebrow": "Shared goal",
+            "title": "Build something together.",
+            "description": "Turn something you both want into a goal worth working toward.",
+            "sections": {
+                "details": "Details",
+                "target": "Target"
+            },
+            "fields": {
+                "title": "Goal name",
+                "category": "Category",
+                "description": "Description",
+                "targetAmount": "Target amount",
+                "deadline": "Deadline"
+            },
+            "placeholders": {
+                "title": "Our dream vacation",
+                "description": "Save together for our trip...",
+                "targetAmount": "10,000,000"
+            },
+            "footerNote": "Small steps. Shared dreams.",
+            "submit": "Create goal",
+            "submitting": "Creating..."
+        },
+        "categories": {
+            "personal": "Personal",
+            "vacation": "Vacation",
+            "wedding": "Wedding",
+            "house": "House",
+            "education": "Education",
+            "business": "Business",
+            "savings": "Savings",
+            "other": "Other"
+        },
+        "validation": {
+            "titleMin": "Goal name must be at least {min} characters",
+            "titleMax": "Goal name must be at most {max} characters",
+            "descriptionMax": "Description must be at most {max} characters",
+            "targetAmountPositive": "Target amount must be greater than 0"
+        },
+        "errors": {
+            "notAuthenticated": "Your session has expired. Please sign in again.",
+            "forbidden": "You don't have permission to do that.",
+            "invalidInput": "Some details look invalid. Check them and try again.",
+            "notFound": "This goal couldn't be found. It may have been deleted.",
+            "network": "Connection problem. Check your internet and try again.",
+            "unknown": "Something went wrong. Please try again."
+        }
+    },
+    "savings": {
+        "form": {
+            "amount": "Amount",
+            "required": "Required",
+            "note": "Note",
+            "optional": "Optional",
+            "placeholders": {
+                "amount": "500,000",
+                "note": "This week's savings..."
+            },
+            "successTitle": "Savings added",
+            "successHint": "Another little step toward your goal.",
+            "submit": "Add savings",
+            "submitting": "Adding savings...",
+            "footerNote": "Every contribution brings you two a little closer."
+        },
+        "history": {
+            "emptyTitle": "Nothing here yet",
+            "emptyDescription": "Contributions will appear here as you start saving together.",
+            "unknown": "Unknown",
+            "deleteTitle": "Delete this contribution?",
+            "deleteDetail": "+ {amount} from {name}",
+            "deleting": "Deleting...",
+            "deleteAria": "Delete contribution from {name}",
+            "together": "Together"
+        },
+        "progress": {
+            "eyebrow": "Shared savings",
+            "title": "Your progress together",
+            "savedTogether": "Saved together",
+            "target": "Target",
+            "completedTitle": "Goal completed",
+            "completedHint": "You made it together. ❤️",
+            "remaining": "{amount} to go",
+            "keepGrowing": "Keep growing together.",
+            "noTarget": "Keep saving together. Set a target to see your progress."
+        },
+        "validation": {
+            "amountRequired": "Enter an amount",
+            "amountPositive": "Amount must be greater than 0",
+            "noteMax": "Note must be at most {max} characters"
+        },
+        "errors": {
+            "notAuthenticated": "Your session has expired. Please sign in again.",
+            "forbidden": "You don't have permission to do that.",
+            "invalidInput": "Some details look invalid. Check them and try again.",
+            "notFound": "This contribution couldn't be found. It may have been deleted.",
+            "network": "Connection problem. Check your internet and try again.",
+            "unknown": "Something went wrong. Please try again."
+        }
+    },
+    "notes": {
+        "page": {
+            "title": "notes",
+            "description": "Keep the little thoughts and moments you want to remember together.",
+            "noRelationship": "You need to connect with your partner first."
+        },
+        "board": {
+            "emptyTitle": "No notes yet",
+            "emptyDescription": "Save ideas, plans, reminders, or little messages for your partner.",
+            "newEyebrow": "New note",
+            "newTitle": "Write something",
+            "titlePlaceholder": "Note title",
+            "contentPlaceholder": "Write a note, idea, or message for your partner...",
+            "categoryPlaceholder": "category",
+            "footerNote": "This note will be saved for both of you.",
+            "saving": "Saving...",
+            "save": "Save note",
+            "writeNew": "Write a new note"
+        },
+        "card": {
+            "noteLabel": "Note",
+            "someone": "Someone",
+            "favoriteAdd": "Add to favorites",
+            "favoriteRemove": "Remove from favorites",
+            "pinAdd": "Pin note",
+            "pinRemove": "Unpin note",
+            "titlePlaceholder": "Note title",
+            "contentPlaceholder": "Write a note...",
+            "categoryPlaceholder": "Category (optional)",
+            "addChecklistPlaceholder": "Add checklist...",
+            "addItemAria": "Add checklist item",
+            "markComplete": "Mark as completed",
+            "markIncomplete": "Mark as incomplete",
+            "deleteItemAria": "Delete checklist item: {content}",
+            "deleting": "Deleting...",
+            "deleteConfirm": "Are you sure?",
+            "moreItems": "+{count} more"
+        },
+        "time": {
+            "justNow": "Just now",
+            "minutesAgo": "{count}m ago",
+            "hoursAgo": "{count}h ago",
+            "daysAgo": "{count}d ago"
+        },
+        "validation": {
+            "titleRequired": "Note title is required",
+            "titleMax": "Note title must be at most {max} characters",
+            "contentMax": "Note must be at most {max} characters",
+            "categoryMax": "Category must be at most {max} characters",
+            "checklistItemRequired": "Checklist item can't be empty"
+        },
+        "errors": {
+            "notAuthenticated": "Your session has expired. Please sign in again.",
+            "forbidden": "You don't have permission to do that.",
+            "invalidInput": "Some details look invalid. Check them and try again.",
+            "notFound": "This note couldn't be found. It may have been deleted.",
+            "network": "Connection problem. Check your internet and try again.",
+            "unknown": "Something went wrong. Please try again."
+        }
+    },
+    "profile": {
+        "page": {
+            "title": "Profile",
+            "description": "Manage your profile and relationship"
+        },
+        "form": {
+            "avatarAlt": "Avatar",
+            "yourName": "Your name",
+            "changePhoto": "Change photo",
+            "uploading": "Uploading",
+            "photoHint": "PNG, JPG, or WEBP · Max {max}MB",
+            "displayName": "Display name",
+            "saving": "Saving",
+            "nameSaved": "Name updated.",
+            "avatarErrors": {
+                "invalidType": "Use PNG, JPG, or WEBP.",
+                "tooLarge": "Max file size is {max}MB."
+            }
+        },
+        "errors": {
+            "notAuthenticated": "Your session has expired. Please sign in again.",
+            "forbidden": "You don't have permission to do that.",
+            "invalidInput": "Some details look invalid. Check them and try again.",
+            "network": "Connection problem. Check your internet and try again.",
+            "unknown": "Something went wrong. Please try again."
+        }
+    },
+    "relationship": {
+        "form": {
+            "title": "Relationship",
+            "description": "The details of your shared space.",
+            "nameLabel": "Relationship name",
+            "namePlaceholder": "e.g. Tika & Farel",
+            "startedAtLabel": "Together since",
+            "saving": "Saving",
+            "save": "Save changes",
+            "saved": "Relationship updated."
+        },
+        "onboarding": {
+            "choose": {
+                "title": "Where do you want to start?",
+                "description": "Duora only works once you and your partner are connected.",
+                "groupLabel": "Relationship setup"
+            },
+            "choices": {
+                "create": {
+                    "title": "Create a new relationship",
+                    "description": "Start a new space and invite your partner."
+                },
+                "join": {
+                    "title": "Join with a code",
+                    "description": "Enter the code from your partner."
+                }
+            },
+            "name": {
+                "title": "What's your relationship called?",
+                "description": "Pick a name you both like. You can change it later.",
+                "label": "Relationship name",
+                "hint": "At least {min} characters, at most {max}."
+            },
+            "date": {
+                "title": "When did your relationship start?",
+                "description": "We use this date to count your days together.",
+                "label": "Start date"
+            },
+            "join": {
+                "title": "Enter your invite code",
+                "description": "Ask your partner for the 8-character code from their Duora account.",
+                "label": "Invite code"
+            },
+            "next": "Continue",
+            "submit": "Finish"
+        },
+        "delete": {
+            "title": "Delete relationship",
+            "warning": "Deleting a relationship permanently erases all of your shared data (goals, check-ins, Q&A, planner, countdown, debates, and subscription). Your partner doesn't need to approve, and this can't be undone.",
+            "open": "Delete relationship",
+            "confirmPrompt": "Type <name>{relationshipName}</name> to confirm",
+            "deleting": "Deleting...",
+            "confirm": "Delete permanently"
+        },
+        "validation": {
+            "nameRequired": "Relationship name is required",
+            "nameMin": "Relationship name must be at least {min} characters",
+            "nameMax": "Relationship name must be at most {max} characters",
+            "startedAtRequired": "Please enter the date you got together",
+            "startedAtInvalid": "Invalid date",
+            "startedAtTooOld": "Date can't be more than {years} years ago",
+            "startedAtFuture": "Date can't be in the future",
+            "inviteCodeRequired": "Invite code is required",
+            "inviteCodeInvalid": "Invalid invite code"
+        },
+        "errors": {
+            "notAuthenticated": "Your session has expired. Please sign in again.",
+            "forbidden": "You don't have permission to do that.",
+            "invalidInput": "Some details look invalid. Check them and try again.",
+            "notFound": "This relationship couldn't be found. It may have been deleted.",
+            "confirmationMismatch": "Name doesn't match.",
+            "partnerAlreadyJoined": "Your partner has already joined, so this relationship can't be cancelled from here.",
+            "network": "Connection problem. Check your internet and try again.",
+            "noRelationship": "You're not part of a relationship yet.",
+            "alreadyInRelationship": "You're already in a relationship. Refresh the page to continue.",
+            "invalidInviteCode": "That invite code isn't valid. Double-check it with your partner.",
+            "relationshipFull": "This relationship already has two members.",
+            "unknown": "Something went wrong. Please try again."
+        }
+    },
+    "activities": {
+        "page": {
+            "title": "Activities",
+            "description": "See the little moments and activities you share together.",
+            "noRelationship": "You need to connect with your partner first."
+        },
+        "feed": {
+            "someone": "Someone",
+            "emptyTitle": "No activity yet",
+            "emptyDescription": "All activities from you and your partner will appear here.",
+            "loadMore": "Load more",
+            "loadingMore": "Loading activities..."
+        },
+        "time": {
+            "justNow": "Just now",
+            "minutesAgo": "{count}m ago",
+            "hoursAgo": "{count}h ago",
+            "daysAgo": "{count}d ago"
+        },
+        "types": {
+            "goal_created": "created a new goal “{goal}”",
+            "goal_updated": "updated the goal “{goal}”",
+            "goal_deleted": "deleted the goal “{goal}”",
+            "saving_added": "saved {amount} for “{goal}”",
+            "saving_deleted": "deleted savings of {amount} from “{goal}”",
+            "checkin_added": "completed today's mood check-in",
+            "checkin_updated": "updated their mood check-in",
+            "plan_created": "created a plan “{plan}”",
+            "plan_updated": "updated the plan “{plan}”",
+            "plan_deleted": "deleted the plan “{plan}”",
+            "checklist_completed": "completed “{item}” in the goal “{goal}”",
+            "checklist_uncompleted": "unchecked “{item}” in the goal “{goal}”",
+            "note_created": "created a note “{note}”",
+            "note_updated": "updated the note “{note}”",
+            "note_deleted": "deleted the note “{note}”"
+        },
+        "errors": {
+            "notAuthenticated": "Your session has expired. Please sign in again.",
+            "forbidden": "You don't have permission to do that.",
+            "network": "Connection problem. Check your internet and try again.",
+            "unknown": "Couldn't load activities. Please try again."
+        }
+    }
+}

@@ -1,4 +1,6 @@
 import { createClient } from '@/lib/supabase/client'
+
+import { RelationshipApiError, toRelationshipError } from './errors'
 import { Relationship, RelationshipDetails } from './types'
 
 export async function getMyRelationship() {
@@ -9,7 +11,7 @@ export async function getMyRelationship() {
   )
 
   if (error) {
-    throw new Error(error.message)
+    throw toRelationshipError(error)
   }
 
   return data?.[0] ?? null
@@ -33,7 +35,7 @@ export async function createRelationship({
   )
 
   if (error) {
-    throw new Error(error.message)
+    throw toRelationshipError(error)
   }
 
   return data as Relationship
@@ -52,7 +54,7 @@ export async function joinRelationship(
   )
 
   if (error) {
-    throw new Error(error.message)
+    throw toRelationshipError(error)
   }
 
   return data
@@ -66,38 +68,36 @@ export async function getMyRelationshipDetails(): Promise<RelationshipDetails> {
   )
 
   if (error) {
-    throw new Error(error.message)
+    throw toRelationshipError(error)
   }
 
   return data as RelationshipDetails
 }
 
-
 export async function getPartnerName() {
-  const supabase = createClient();
+  const supabase = createClient()
 
   const {
     data: { user },
-  } = await supabase.auth.getUser();
+  } = await supabase.auth.getUser()
 
   if (!user) {
-    throw new Error("User not authenticated");
+    throw new RelationshipApiError('notAuthenticated')
   }
 
   const { data, error } = await supabase.rpc(
-    "get_my_relationship_details"
-  );
+    'get_my_relationship_details'
+  )
 
   if (error) {
-    throw error;
+    throw toRelationshipError(error)
   }
 
   const partner = data?.members?.find(
     (member: { user_id: string }) => member.user_id !== user.id
-  );
-  
+  )
 
-  return partner ?? null;
+  return partner ?? null
 }
 
 export async function updateRelationship({
@@ -118,7 +118,7 @@ export async function updateRelationship({
   )
 
   if (error) {
-    throw new Error(error.message)
+    throw toRelationshipError(error)
   }
 
   return data as Relationship
@@ -132,7 +132,7 @@ export async function deleteMyRelationship(confirmationName: string): Promise<vo
   })
 
   if (error) {
-    throw new Error(error.message)
+    throw toRelationshipError(error)
   }
 }
 
@@ -142,6 +142,6 @@ export async function cancelPendingRelationship(): Promise<void> {
   const { error } = await supabase.rpc('cancel_pending_relationship')
 
   if (error) {
-    throw new Error(error.message)
+    throw toRelationshipError(error)
   }
 }

@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
@@ -8,13 +8,15 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { motion, useReducedMotion } from 'framer-motion'
 import { ArrowLeft, ArrowRight, Check, Heart } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 
 import logo from '@/assets/logo-white.png'
 
 import {
+  createJoinRelationshipSchema,
   createRelationshipSchema,
+  getMaxStartedAt,
   getMinStartedAt,
-  joinRelationshipSchema,
   NAME_MAX_LENGTH,
   NAME_MIN_LENGTH,
   type CreateRelationshipFormValues,
@@ -22,6 +24,7 @@ import {
 } from '../schemas'
 
 import { createRelationship, joinRelationship } from '../api'
+import { getRelationshipErrorKey } from '../errors'
 import { relationshipKeys } from '../queries'
 
 type Mode = 'create' | 'join'
@@ -34,25 +37,13 @@ const FLOWS: Record<Mode, Step[]> = {
   join: ['welcome', 'choose', 'join'],
 }
 
+// Teks diambil dari messages: t(`choices.${value}.title|description`)
 const CHOICES: {
   value: Mode
-  title: string
-  description: string
   icon: typeof Check
 }[] = [
-    {
-      value: 'create',
-      title: 'Buat hubungan baru',
-      description: 'Mulai ruang baru dan undang pasanganmu.',
-      icon: Check,
-    },
-    {
-      value: 'join',
-      title: 'Gabung dengan kode',
-      description:
-        'Masukan kode dari pasangan.',
-      icon: Check,
-    },
+    { value: 'create', icon: Check },
+    { value: 'join', icon: Check },
   ]
 
 const inputBase =
@@ -308,6 +299,11 @@ function WelcomeIntro({ onDone }: { onDone: () => void }) {
 /* -------------------------------------------------------------------------- */
 
 export default function RelationshipOnboarding() {
+  const t = useTranslations('relationship.onboarding')
+  const tv = useTranslations('relationship.validation')
+  const te = useTranslations('relationship.errors')
+  const tc = useTranslations('common')
+
   const router = useRouter()
   const queryClient = useQueryClient()
 
@@ -316,19 +312,23 @@ export default function RelationshipOnboarding() {
 
   const steps = FLOWS[mode ?? 'create']
   const step = steps[stepIndex]
+  const isLastStep = stepIndex === steps.length - 1
 
   // Dipanggil WelcomeIntro setelah animasinya selesai
   const goToChoose = useCallback(() => setStepIndex(1), [])
 
   /* ---------------------------------- Forms --------------------------------- */
 
+  const createSchema = useMemo(() => createRelationshipSchema(tv), [tv])
+  const joinSchema = useMemo(() => createJoinRelationshipSchema(tv), [tv])
+
   const createForm = useForm<CreateRelationshipFormValues>({
-    resolver: zodResolver(createRelationshipSchema),
+    resolver: zodResolver(createSchema),
     defaultValues: { relationshipName: '', startedAt: '' },
   })
 
   const joinForm = useForm<JoinRelationshipFormValues>({
-    resolver: zodResolver(joinRelationshipSchema),
+    resolver: zodResolver(joinSchema),
     defaultValues: { inviteCode: '' },
   })
 
@@ -356,12 +356,17 @@ export default function RelationshipOnboarding() {
   })
 
   const isPending = createMutation.isPending || joinMutation.isPending
-  const errorMessage =
+
+  const activeError =
     step === 'join'
-      ? joinMutation.error?.message
+      ? joinMutation.error
       : step === 'date'
-        ? createMutation.error?.message
-        : undefined
+        ? createMutation.error
+        : null
+
+  const errorMessage = activeError
+    ? te(getRelationshipErrorKey(activeError))
+    : undefined
 
   /* ------------------------------- Navigation ------------------------------- */
 
@@ -439,20 +444,19 @@ export default function RelationshipOnboarding() {
             {step === 'choose' && (
               <div>
                 <h1 className="text-lg font-semibold tracking-[-0.02em] text-white">
-                  Mau mulai dari mana?
+                  {t('choose.title')}
                 </h1>
 
                 <p className="mt-2 text-sm leading-6 text-description">
-                  Duora hanya bisa digunakan jika kamu dan pasanganmu sudah
-                  terhubung.
+                  {t('choose.description')}
                 </p>
 
                 <div
                   role="radiogroup"
-                  aria-label="Pengaturan hubungan"
+                  aria-label={t('choose.groupLabel')}
                   className="mt-8 space-y-3"
                 >
-                  {CHOICES.map(({ value, title, description, icon: Icon }) => {
+                  {CHOICES.map(({ value, icon: Icon }) => {
                     const selected = mode === value
 
                     return (
@@ -482,10 +486,10 @@ export default function RelationshipOnboarding() {
 
                         <span>
                           <span className="block text-sm font-semibold text-white">
-                            {title}
+                            {t(`choices.${value}.title`)}
                           </span>
                           <span className="mt-1 block text-xs leading-6 text-description">
-                            {description}
+                            {t(`choices.${value}.description`)}
                           </span>
                         </span>
                       </button>
@@ -498,16 +502,16 @@ export default function RelationshipOnboarding() {
             {step === 'name' && (
               <div>
                 <h1 className="text-lg font-semibold tracking-[-0.02em] text-white">
-                  Apa nama hubungan kalian?
+                  {t('name.title')}
                 </h1>
 
                 <p className="mt-2 text-sm leading-6 text-description">
-                  Pilih nama yang kalian berdua suka. Bisa diubah nanti.
+                  {t('name.description')}
                 </p>
 
                 <div className="mt-8">
                   <label htmlFor="relationshipName" className="sr-only">
-                    Nama hubungan
+                    {t('name.label')}
                   </label>
 
                   <input
@@ -531,8 +535,10 @@ export default function RelationshipOnboarding() {
                   </div>
 
                   <p className="mt-1 text-sm text-description">
-                    Minimal {NAME_MIN_LENGTH} karakter, maksimal{' '}
-                    {NAME_MAX_LENGTH} karakter.
+                    {t('name.hint', {
+                      min: NAME_MIN_LENGTH,
+                      max: NAME_MAX_LENGTH,
+                    })}
                   </p>
                 </div>
               </div>
@@ -541,16 +547,16 @@ export default function RelationshipOnboarding() {
             {step === 'date' && (
               <div>
                 <h1 className="text-lg font-semibold tracking-[-0.02em] text-white">
-                  Kapan kalian mulai hubungan?
+                  {t('date.title')}
                 </h1>
 
                 <p className="mt-2 text-sm leading-6 text-description">
-                  Tanggal ini dipakai untuk menghitung hari kalian bersama.
+                  {t('date.description')}
                 </p>
 
                 <div className="mt-8">
                   <label htmlFor="startedAt" className="sr-only">
-                    Tanggal jadian
+                    {t('date.label')}
                   </label>
 
                   <input
@@ -558,6 +564,7 @@ export default function RelationshipOnboarding() {
                     {...createForm.register('startedAt')}
                     type="date"
                     min={getMinStartedAt()}
+                    max={getMaxStartedAt()}
                     className={`${inputBase} [color-scheme:dark]`}
                   />
 
@@ -573,16 +580,16 @@ export default function RelationshipOnboarding() {
             {step === 'join' && (
               <div>
                 <h1 className="text-lg font-semibold tracking-[-0.02em] text-white">
-                  Masukkan kode undangan
+                  {t('join.title')}
                 </h1>
 
                 <p className="mt-2 text-sm leading-6 text-description">
-                  Minta pasanganmu kode 8 karakter dari akun Duora miliknya.
+                  {t('join.description')}
                 </p>
 
                 <div className="mt-8">
                   <label htmlFor="inviteCode" className="sr-only">
-                    Kode undangan
+                    {t('join.label')}
                   </label>
 
                   <input
@@ -624,7 +631,7 @@ export default function RelationshipOnboarding() {
                   type="button"
                   onClick={back}
                   disabled={isPending}
-                  aria-label="Kembali"
+                  aria-label={tc('back')}
                   className="flex size-12 shrink-0 items-center justify-center rounded-full border border-neutral-600 text-neutral-600 transition-colors  disabled:cursor-not-allowed disabled:opacity-40"
                 >
                   <ArrowLeft size={18} />
@@ -634,6 +641,7 @@ export default function RelationshipOnboarding() {
               <button
                 type="submit"
                 disabled={buttonDisabled}
+                aria-label={isLastStep ? t('submit') : t('next')}
                 className="flex size-12 shrink-0 items-center justify-center rounded-full bg-black text-white transition-colors  disabled:cursor-not-allowed disabled:opacity-40"
               >
                 <ArrowRight size={18} />

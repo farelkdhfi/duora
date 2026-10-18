@@ -11,6 +11,9 @@ import {
   Loader2,
 } from 'lucide-react'
 
+import { useTranslations } from 'next-intl'
+import { getProfileErrorKey } from '@/features/profiles/errors'
+
 import {
   useGetMyProfile,
   useUpdateMyAvatar,
@@ -27,7 +30,13 @@ const ACCEPTED_TYPES = [
   'image/webp',
 ]
 
+type AvatarErrorKey = 'invalidType' | 'tooLarge'
+
 export default function ProfileForm() {
+  const t = useTranslations('profile.form')
+  const tc = useTranslations('common')
+  const te = useTranslations('profile.errors')
+
   const {
     data: profile,
     isLoading,
@@ -41,7 +50,7 @@ export default function ProfileForm() {
   const [mounted, setMounted] = useState(false)
   const [displayName, setDisplayName] = useState('')
   const [hasEditedName, setHasEditedName] = useState(false)
-  const [avatarError, setAvatarError] = useState<string | null>(null)
+  const [avatarError, setAvatarError] = useState<AvatarErrorKey | null>(null)
   const [nameSaved, setNameSaved] = useState(false)
 
   useEffect(() => {
@@ -109,20 +118,16 @@ export default function ProfileForm() {
     setAvatarError(null)
 
     if (!ACCEPTED_TYPES.includes(file.type)) {
-      setAvatarError('Use PNG, JPG, or WEBP.')
+      setAvatarError('invalidType')
       return
     }
 
     if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
-      setAvatarError(`Max file size is ${MAX_FILE_SIZE_MB}MB.`)
+      setAvatarError('tooLarge')
       return
     }
 
-    updateAvatar.mutate(file, {
-      onError: () => {
-        setAvatarError('Failed to upload photo. Try again.')
-      },
-    })
+    updateAvatar.mutate(file)
   }
 
   const isNameUnchanged =
@@ -146,7 +151,7 @@ export default function ProfileForm() {
           {profile?.avatar_url ? (
             <img
               src={profile.avatar_url}
-              alt={profile.display_name ?? 'Avatar'}
+              alt={profile.display_name ?? t('avatarAlt')}
               className="h-full w-full object-cover"
             />
           ) : (
@@ -187,7 +192,7 @@ export default function ProfileForm() {
 
         <div className="mt-4 flex flex-col items-center">
           <p className="text-[15px] font-semibold tracking-[-0.02em] text-secondary">
-            {profile?.display_name || 'Your name'}
+            {profile?.display_name || t('yourName')}
           </p>
 
           <button
@@ -202,7 +207,7 @@ export default function ProfileForm() {
                   size={12}
                   className="animate-spin"
                 />
-                Uploading
+                {t('uploading')}
               </>
             ) : (
               <>
@@ -210,18 +215,26 @@ export default function ProfileForm() {
                   size={12}
                   strokeWidth={2.2}
                 />
-                Change photo
+                {t('changePhoto')}
               </>
             )}
           </button>
 
           <p className="mt-2 text-[10.5px] text-description">
-            PNG, JPG, or WEBP · Max 5MB
+            {t('photoHint', { max: MAX_FILE_SIZE_MB })}
           </p>
 
           {avatarError && (
             <p className="mt-2 text-xs font-medium text-red-500">
-              {avatarError}
+              {t(`avatarErrors.${avatarError}`, {
+                max: MAX_FILE_SIZE_MB,
+              })}
+            </p>
+          )}
+
+          {!avatarError && updateAvatar.isError && (
+            <p className="mt-2 text-xs font-medium text-red-500">
+              {te(getProfileErrorKey(updateAvatar.error))}
             </p>
           )}
         </div>
@@ -232,7 +245,7 @@ export default function ProfileForm() {
           htmlFor="display_name"
           className="block text-[13px] font-semibold text-secondary"
         >
-          Display name
+          {t('displayName')}
         </label>
 
         <div className="mt-2.5 flex flex-col gap-2.5 sm:flex-row">
@@ -241,7 +254,7 @@ export default function ProfileForm() {
             type="text"
             value={currentName}
             onChange={(e) => handleNameChange(e.target.value)}
-            placeholder="Your name"
+            placeholder={t('yourName')}
             maxLength={50}
             className="min-h-12 w-full flex-1 rounded-[14px] border border-white/[0.08] bg-subprimary/40 px-4 py-3 text-sm text-secondary outline-none transition-all duration-200 placeholder:text-description focus:border-white/20 focus:bg-primary focus:ring-4 focus:ring-white/[0.04]"
           />
@@ -261,23 +274,23 @@ export default function ProfileForm() {
                   size={14}
                   className="animate-spin"
                 />
-                Saving
+                {t('saving')}
               </span>
             ) : (
-              'Save'
+              tc('save')
             )}
           </button>
         </div>
 
         {nameSaved && (
           <p className="mt-2.5 text-xs font-medium text-emerald-500">
-            Name updated.
+            {t('nameSaved')}
           </p>
         )}
 
         {updateProfile.isError && (
           <p className="mt-2.5 text-xs font-medium text-red-500">
-            Failed to update name. Try again.
+            {te(getProfileErrorKey(updateProfile.error))}
           </p>
         )}
       </div>

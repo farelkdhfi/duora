@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import { useTranslations } from 'next-intl'
 
 import type { Mood } from '../types'
 
@@ -30,40 +31,35 @@ interface MoodSelectorProps {
   disabled?: boolean
 }
 
+// Label mood diambil dari messages: tm(mood.value)
 const moods: {
   value: Mood
   images: typeof happyEmot1[]
-  label: string
   accent: string
 }[] = [
     {
       value: 'happy',
       images: [happyEmot1, happyEmot2, happyEmot3],
-      label: 'Happy',
       accent: 'bg-pink-400',
     },
     {
       value: 'neutral',
       images: [neutralEmot1, neutralEmot2, neutralEmot3],
-      label: 'Neutral',
       accent: 'bg-neutral-400',
     },
     {
       value: 'sad',
       images: [sadEmot1, sadEmot2, sadEmot3],
-      label: 'Sad',
       accent: 'bg-blue-400',
     },
     {
       value: 'tired',
       images: [tiredEmot1, tiredEmot2, tiredEmot3],
-      label: 'Tired',
       accent: 'bg-indigo-400',
     },
     {
       value: 'stressed',
       images: [stressedEmot1, stressedEmot2, stressedEmot3],
-      label: 'Stressed',
       accent: 'bg-rose-400',
     },
   ]
@@ -73,6 +69,9 @@ export default function MoodSelector({
   onChange,
   disabled = false,
 }: MoodSelectorProps) {
+  const t = useTranslations('checkins.selector')
+  const tm = useTranslations('checkins.moods')
+
   const activeIndex = moods.findIndex((mood) => mood.value === value)
   const currentMood = moods[activeIndex] ?? moods[0]
 
@@ -154,6 +153,7 @@ export default function MoodSelector({
     currentMood.images[(currentVariant + 1) % currentMood.images.length]
 
   const currentImageLoaded = loadedImages.has(currentImage.src)
+  const currentLabel = tm(currentMood.value)
 
   const changeMood = (direction: 1 | -1) => {
     if (disabled) return
@@ -199,7 +199,7 @@ export default function MoodSelector({
     <div className="relative w-full overflow-visible">
       <div
         role="group"
-        aria-label="Mood selector"
+        aria-label={t('groupLabel')}
         onPointerDown={handlePointerDown}
         onPointerUp={handlePointerUp}
         onPointerCancel={handlePointerCancel}
@@ -236,7 +236,7 @@ export default function MoodSelector({
               {/* Current image */}
               <img
                 src={currentImage.src}
-                alt={currentMood.label}
+                alt={currentLabel}
                 draggable={false}
                 className={`absolute inset-0 h-full w-full animate-mood-float object-contain transition-opacity duration-[900ms] ease-in-out ${currentImageLoaded
                   ? 'opacity-100'
@@ -257,11 +257,11 @@ export default function MoodSelector({
           </div>
 
           <span className="mt-0 text-[30px] font-medium tracking-[-0.055em] text-white sm:text-[34px]">
-            {currentMood.label}
+            {currentLabel}
           </span>
 
           <span className="mt-2 text-[11px] font-medium tracking-[-0.01em] text-neutral-400">
-            Swipe to change
+            {t('swipeHint')}
           </span>
         </div>
       </div>
@@ -275,7 +275,7 @@ export default function MoodSelector({
             <button
               key={mood.value}
               type="button"
-              aria-label={`Select ${mood.label}`}
+              aria-label={t('select', { mood: tm(mood.value) })}
               aria-pressed={selected}
               onClick={() => {
                 if (!disabled) onChange(mood.value)

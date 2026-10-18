@@ -1,7 +1,9 @@
 'use client'
 
+import { useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useTranslations } from 'next-intl'
 
 import {
   createPlannerEventSchema,
@@ -9,6 +11,7 @@ import {
 } from '../schemas'
 
 import { useCreatePlannerEvent } from '../queries'
+import { getPlannerErrorKey } from '../errors'
 
 interface CreateEventFormModalProps {
   relationshipId: string
@@ -16,15 +19,15 @@ interface CreateEventFormModalProps {
   onClose: () => void
 }
 
-const categories = [
-  { value: 'relationship', label: 'Relationship' },
-  { value: 'finance', label: 'Finance' },
-  { value: 'birthday', label: 'Birthday' },
-  { value: 'anniversary', label: 'Anniversary' },
-  { value: 'travel', label: 'Travel' },
-  { value: 'health', label: 'Health' },
-  { value: 'work', label: 'Work' },
-  { value: 'other', label: 'Other' },
+const categoryValues = [
+  'relationship',
+  'finance',
+  'birthday',
+  'anniversary',
+  'travel',
+  'health',
+  'work',
+  'other',
 ] as const
 
 const inputClass =
@@ -54,6 +57,14 @@ export default function CreateEventFormModal({
   open,
   onClose,
 }: CreateEventFormModalProps) {
+  const t = useTranslations('planner.form')
+  const tv = useTranslations('planner.validation')
+  const tc = useTranslations('planner.categories')
+  const te = useTranslations('planner.errors')
+  const tCommon = useTranslations('common')
+
+  const schema = useMemo(() => createPlannerEventSchema(tv), [tv])
+
   const mutation = useCreatePlannerEvent()
 
   const {
@@ -63,7 +74,7 @@ export default function CreateEventFormModal({
     watch,
     formState: { errors },
   } = useForm<CreatePlannerEventFormValues>({
-    resolver: zodResolver(createPlannerEventSchema),
+    resolver: zodResolver(schema),
     defaultValues: {
       category: 'relationship',
       isAllDay: false,
@@ -121,15 +132,15 @@ export default function CreateEventFormModal({
             <div className="flex items-start justify-between gap-6">
               <div>
                 <p className="text-[10px] font-medium uppercase tracking-[0.2em] text-description">
-                  Couple planner
+                  {t('eyebrow')}
                 </p>
 
                 <h2 className="mt-4 text-3xl font-semibold leading-none tracking-[-0.055em] text-secondary sm:text-4xl">
-                  Create a moment.
+                  {t('title')}
                 </h2>
 
                 <p className="mt-4 max-w-md text-[13px] leading-6 text-description sm:text-sm">
-                  Add something worth remembering to your shared calendar.
+                  {t('description')}
                 </p>
               </div>
 
@@ -138,7 +149,7 @@ export default function CreateEventFormModal({
                 onClick={onClose}
                 className="shrink-0 rounded-full bg-subprimary px-4 py-2 text-[12px] font-medium text-description transition hover:text-secondary"
               >
-                Close
+                {tCommon('close')}
               </button>
             </div>
 
@@ -150,7 +161,7 @@ export default function CreateEventFormModal({
                 <div>
                   <div className="mb-4 flex items-center gap-3">
                     <span className="text-[10px] font-medium uppercase tracking-[0.18em] text-description">
-                      Details
+                      {t('sections.details')}
                     </span>
                     <div className="h-px flex-1 bg-white/10" />
                   </div>
@@ -159,12 +170,14 @@ export default function CreateEventFormModal({
 
                     {/* Event name */}
                     <div>
-                      <FieldLabel htmlFor="title">Event name</FieldLabel>
+                      <FieldLabel htmlFor="title">
+                        {t('fields.title')}
+                      </FieldLabel>
 
                       <input
                         id="title"
                         {...register('title')}
-                        placeholder="Anniversary dinner"
+                        placeholder={t('placeholders.title')}
                         className={inputClass}
                       />
 
@@ -175,20 +188,22 @@ export default function CreateEventFormModal({
 
                     {/* Category */}
                     <div>
-                      <FieldLabel htmlFor="category">Category</FieldLabel>
+                      <FieldLabel htmlFor="category">
+                        {t('fields.category')}
+                      </FieldLabel>
 
                       <select
                         id="category"
                         {...register('category')}
                         className={`${inputClass} cursor-pointer appearance-none`}
                       >
-                        {categories.map((category) => (
+                        {categoryValues.map((value) => (
                           <option
-                            key={category.value}
-                            value={category.value}
+                            key={value}
+                            value={value}
                             className="bg-primary text-secondary"
                           >
-                            {category.label}
+                            {tc(value)}
                           </option>
                         ))}
                       </select>
@@ -196,12 +211,14 @@ export default function CreateEventFormModal({
 
                     {/* Description */}
                     <div className="sm:col-span-2">
-                      <FieldLabel htmlFor="description">Description</FieldLabel>
+                      <FieldLabel htmlFor="description">
+                        {t('fields.description')}
+                      </FieldLabel>
 
                       <textarea
                         id="description"
                         {...register('description')}
-                        placeholder="Dinner at our favorite restaurant..."
+                        placeholder={t('placeholders.description')}
                         className={`${inputClass} min-h-[100px] resize-none`}
                       />
 
@@ -218,7 +235,7 @@ export default function CreateEventFormModal({
                 <div>
                   <div className="mb-4 flex items-center gap-3">
                     <span className="text-[10px] font-medium uppercase tracking-[0.18em] text-description">
-                      When
+                      {t('sections.when')}
                     </span>
                     <div className="h-px flex-1 bg-white/10" />
                   </div>
@@ -227,7 +244,9 @@ export default function CreateEventFormModal({
 
                     {/* Date */}
                     <div>
-                      <FieldLabel htmlFor="eventDate">Date</FieldLabel>
+                      <FieldLabel htmlFor="eventDate">
+                        {t('fields.date')}
+                      </FieldLabel>
 
                       <input
                         id="eventDate"
@@ -246,17 +265,17 @@ export default function CreateEventFormModal({
                     {/* All day */}
                     <div>
                       <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-description">
-                        Schedule
+                        {t('fields.schedule')}
                       </p>
 
                       <label className="mt-2 flex h-[50px] cursor-pointer items-center justify-between rounded-xl border border-white/10 bg-subprimary px-4 transition hover:border-white/25">
                         <div>
                           <p className="text-[12px] font-medium text-secondary">
-                            All day
+                            {t('fields.allDay')}
                           </p>
 
                           <p className="mt-0.5 text-[10px] text-description">
-                            No specific time
+                            {t('fields.allDayHint')}
                           </p>
                         </div>
 
@@ -276,7 +295,9 @@ export default function CreateEventFormModal({
 
                     {/* Start */}
                     <div>
-                      <FieldLabel htmlFor="startTime">Start time</FieldLabel>
+                      <FieldLabel htmlFor="startTime">
+                        {t('fields.startTime')}
+                      </FieldLabel>
 
                       <input
                         id="startTime"
@@ -295,7 +316,9 @@ export default function CreateEventFormModal({
 
                     {/* End */}
                     <div>
-                      <FieldLabel htmlFor="endTime">End time</FieldLabel>
+                      <FieldLabel htmlFor="endTime">
+                        {t('fields.endTime')}
+                      </FieldLabel>
 
                       <input
                         id="endTime"
@@ -316,7 +339,7 @@ export default function CreateEventFormModal({
                 {mutation.error && (
                   <div className="rounded-xl border border-rose-400/20 bg-rose-400/5 px-4 py-3">
                     <p className="text-[11px] font-medium text-rose-400">
-                      {mutation.error.message}
+                      {te(getPlannerErrorKey(mutation.error))}
                     </p>
                   </div>
                 )}
@@ -324,7 +347,7 @@ export default function CreateEventFormModal({
                 {/* Footer */}
                 <div className="flex flex-col gap-3 border-t border-white/10 pt-5 sm:flex-row sm:items-center sm:justify-between">
                   <p className="text-[10px] text-description">
-                    Make memories together.
+                    {t('footerNote')}
                   </p>
 
                   <div className="flex items-center gap-3">
@@ -333,7 +356,7 @@ export default function CreateEventFormModal({
                       onClick={onClose}
                       className="h-11 rounded-full bg-subprimary px-6 text-[12px] font-medium text-secondary transition hover:bg-white/10"
                     >
-                      Cancel
+                      {tCommon('cancel')}
                     </button>
 
                     <button
@@ -341,7 +364,7 @@ export default function CreateEventFormModal({
                       disabled={mutation.isPending}
                       className="h-11 rounded-full bg-subprimary px-7 text-[12px] font-medium text-secondary transition hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-50"
                     >
-                      {mutation.isPending ? 'Creating...' : 'Create moment'}
+                      {mutation.isPending ? t('submitting') : t('submit')}
                     </button>
                   </div>
                 </div>

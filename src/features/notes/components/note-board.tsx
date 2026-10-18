@@ -2,9 +2,11 @@
 
 import { useState } from 'react'
 import { Loader2, Plus, StickyNote, X } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 
 import NoteCard from './note-card'
 import { useCreateNote, useNotes } from '../queries'
+import { getNoteErrorKey } from '../errors'
 
 interface NoteBoardProps {
   relationshipId: string
@@ -87,6 +89,8 @@ function NoteBoardSkeleton() {
 /* -------------------------------------------------------------------------- */
 
 function NoteEmptyState() {
+  const t = useTranslations('notes.board')
+
   return (
     <div className="rounded-[2rem] border border-white/10 bg-primary p-10 text-center shadow-[0_8px_30px_rgba(0,0,0,0.025)]">
       <div className="relative mx-auto flex size-14 items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-subprimary">
@@ -102,12 +106,11 @@ function NoteEmptyState() {
       </div>
 
       <h3 className="mt-5 text-[13px] font-semibold tracking-[-0.025em] text-secondary">
-        No notes yet
+        {t('emptyTitle')}
       </h3>
 
       <p className="mx-auto mt-2 max-w-[250px] text-[11.5px] leading-5 text-description">
-        Save ideas, plans, reminders, or little messages
-        for your partner.
+        {t('emptyDescription')}
       </p>
     </div>
   )
@@ -120,6 +123,10 @@ function NoteEmptyState() {
 export default function NoteBoard({
   relationshipId,
 }: NoteBoardProps) {
+  const t = useTranslations('notes.board')
+  const te = useTranslations('notes.errors')
+  const tCommon = useTranslations('common')
+
   const {
     data: notes,
     isLoading,
@@ -170,7 +177,7 @@ export default function NoteBoard({
     return (
       <div className="rounded-[2rem] border border-white/10 bg-primary px-6 py-12 text-center shadow-[0_8px_30px_rgba(0,0,0,0.025)]">
         <p className="text-[12px] leading-5 text-description">
-          {error.message}
+          {te(getNoteErrorKey(error))}
         </p>
       </div>
     )
@@ -197,17 +204,18 @@ export default function NoteBoard({
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-description">
-                    New note
+                    {t('newEyebrow')}
                   </p>
 
                   <h3 className="mt-1 text-[14px] font-semibold tracking-[-0.025em] text-secondary">
-                    Write something
+                    {t('newTitle')}
                   </h3>
                 </div>
 
                 <button
                   type="button"
                   onClick={() => setShowCreate(false)}
+                  aria-label={tCommon('close')}
                   className="
                     flex
                     size-8
@@ -234,7 +242,7 @@ export default function NoteBoard({
                 onChange={(e) =>
                   setNewTitle(e.target.value)
                 }
-                placeholder="Note title"
+                placeholder={t('titlePlaceholder')}
                 autoFocus
                 className="
                   mt-5
@@ -260,7 +268,7 @@ export default function NoteBoard({
                 onChange={(e) =>
                   setNewContent(e.target.value)
                 }
-                placeholder="Write a note, idea, or message for your partner..."
+                placeholder={t('contentPlaceholder')}
                 rows={4}
                 className="
                   mt-4
@@ -287,7 +295,7 @@ export default function NoteBoard({
                   onChange={(e) =>
                     setNewCategory(e.target.value)
                   }
-                  placeholder="category"
+                  placeholder={t('categoryPlaceholder')}
                   className="
                     flex-1
                     bg-transparent
@@ -303,7 +311,7 @@ export default function NoteBoard({
 
               <div className="mt-5 flex items-center justify-between border-t border-white/10 pt-4">
                 <p className="text-[10px] text-description">
-                  This note will be saved for both of you.
+                  {t('footerNote')}
                 </p>
 
                 <button
@@ -337,10 +345,10 @@ export default function NoteBoard({
                         size={12}
                         className="animate-spin"
                       />
-                      Saving...
+                      {t('saving')}
                     </>
                   ) : (
-                    'Save note'
+                    t('save')
                   )}
                 </button>
               </div>
@@ -378,7 +386,7 @@ export default function NoteBoard({
               <Plus size={13} strokeWidth={2} />
             </span>
 
-            Write a new note
+            {t('writeNew')}
           </button>
         )}
       </div>

@@ -1,34 +1,43 @@
 import type { Metadata } from 'next'
 import './globals.css'
 
-import QueryProvider from '@/providers/query-provider'
+import { NextIntlClientProvider } from 'next-intl'
+import { getLocale, getTranslations } from 'next-intl/server'
 
-export const metadata: Metadata = {
-  metadataBase: new URL('https://duora-grow-together.vercel.app'),
-  title: 'Duora — AI Relationship Companion for Long-Distance Couples',
-  description:
-    'Duora is an AI relationship companion for long-distance couples. Its AI Assistant knows your goals, check-ins, plans, and notes, so every answer feels personal.',
-  openGraph: {
-    title: 'Duora — A Personal AI Assistant for Your Long-Distance Relationship',
-    description:
-      'Ask anything about your relationship and get answers based on your own goals, daily check-ins, plans, and notes. Resolve disagreements with AI Debate, and grow closer with shared goals, Q&A, and more.',
-    siteName: 'Duora',
-    type: 'website',
-  },
-  // verification: { google: '...' },
+import QueryProvider from '@/providers/query-provider'
+import { TimezoneSync } from '@/i18n/timezone-sync'
+
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations('metadata')
+
+  return {
+    metadataBase: new URL('https://duora-grow-together.vercel.app'),
+    title: t('title'),
+    description: t('description'),
+    openGraph: {
+      title: t('ogTitle'),
+      description: t('ogDescription'),
+      siteName: 'Duora',
+      type: 'website',
+    },
+    // verification: { google: '...' },
+  }
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const locale = await getLocale()
+
   return (
-    <html lang="en">
+    <html lang={locale}>
       <body>
-        <QueryProvider>
-          {children}
-        </QueryProvider>
+        <NextIntlClientProvider>
+          <TimezoneSync />
+          <QueryProvider>{children}</QueryProvider>
+        </NextIntlClientProvider>
       </body>
     </html>
   )

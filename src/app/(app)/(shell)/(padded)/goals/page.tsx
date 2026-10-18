@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { Target } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 
 import CreateGoalFormModal from '@/features/goals/components/create-goal-form-modal'
 import GoalList from '@/features/goals/components/goal-list'
@@ -10,6 +11,7 @@ import { useMyRelationshipDetails } from '@/features/relationship/queries'
 import Header from '@/components/layout/header'
 
 export default function GoalsPage() {
+  const t = useTranslations('goals.page')
   const [showCreate, setShowCreate] = useState(false)
 
   const { data, isLoading } = useMyRelationshipDetails()
@@ -134,12 +136,11 @@ export default function GoalsPage() {
             </div>
 
             <h1 className="mt-5 text-lg font-semibold tracking-[-0.03em] text-neutral-800 sm:text-xl">
-              Connect with your partner
+              {t('noRelationshipTitle')}
             </h1>
 
             <p className="mx-auto mt-2 max-w-sm text-[13px] leading-6 text-neutral-400 sm:text-sm">
-              You need to connect your relationship before creating shared
-              goals.
+              {t('noRelationshipDescription')}
             </p>
           </div>
         </div>
@@ -152,8 +153,8 @@ export default function GoalsPage() {
   return (
     <div className="relative">
       <Header
-        title="Shared Goals"
-        description="Bangun sesuatu dengan bersama."
+        title={t('title')}
+        description={t('description')}
       />
 
       <section className="mt-6 sm:mt-8">

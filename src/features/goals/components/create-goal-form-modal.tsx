@@ -1,7 +1,9 @@
 'use client'
 
+import { useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useTranslations } from 'next-intl'
 
 import {
   createGoalSchema,
@@ -9,6 +11,7 @@ import {
 } from '../schemas'
 
 import { useCreateGoal } from '../queries'
+import { getGoalErrorKey } from '../errors'
 
 interface CreateGoalFormModalProps {
   relationshipId: string
@@ -16,15 +19,15 @@ interface CreateGoalFormModalProps {
   onClose: () => void
 }
 
-const categories = [
-  { value: 'personal', label: 'Personal' },
-  { value: 'vacation', label: 'Vacation' },
-  { value: 'wedding', label: 'Wedding' },
-  { value: 'house', label: 'House' },
-  { value: 'education', label: 'Education' },
-  { value: 'business', label: 'Business' },
-  { value: 'savings', label: 'Savings' },
-  { value: 'other', label: 'Other' },
+const categoryValues = [
+  'personal',
+  'vacation',
+  'wedding',
+  'house',
+  'education',
+  'business',
+  'savings',
+  'other',
 ] as const
 
 const inputClass =
@@ -54,6 +57,14 @@ export default function CreateGoalFormModal({
   open,
   onClose,
 }: CreateGoalFormModalProps) {
+  const t = useTranslations('goals.form')
+  const tv = useTranslations('goals.validation')
+  const tc = useTranslations('goals.categories')
+  const te = useTranslations('goals.errors')
+  const tCommon = useTranslations('common')
+
+  const schema = useMemo(() => createGoalSchema(tv), [tv])
+
   const mutation = useCreateGoal()
 
   const {
@@ -62,7 +73,7 @@ export default function CreateGoalFormModal({
     reset,
     formState: { errors },
   } = useForm<CreateGoalFormValues>({
-    resolver: zodResolver(createGoalSchema),
+    resolver: zodResolver(schema),
     defaultValues: {
       category: 'personal',
     },
@@ -114,15 +125,15 @@ export default function CreateGoalFormModal({
             <div className="flex items-start justify-between gap-6">
               <div>
                 <p className="text-[10px] font-medium uppercase tracking-[0.2em] text-description">
-                  Shared goal
+                  {t('eyebrow')}
                 </p>
 
                 <h2 className="mt-4 text-3xl font-semibold leading-none tracking-[-0.055em] text-secondary sm:text-4xl">
-                  Build something together.
+                  {t('title')}
                 </h2>
 
                 <p className="mt-4 max-w-md text-[13px] leading-6 text-description sm:text-sm">
-                  Turn something you both want into a goal worth working toward.
+                  {t('description')}
                 </p>
               </div>
 
@@ -131,7 +142,7 @@ export default function CreateGoalFormModal({
                 onClick={onClose}
                 className="shrink-0 rounded-full bg-subprimary px-4 py-2 text-[12px] font-medium text-description transition hover:text-secondary"
               >
-                Close
+                {tCommon('close')}
               </button>
             </div>
 
@@ -143,7 +154,7 @@ export default function CreateGoalFormModal({
                 <div>
                   <div className="mb-4 flex items-center gap-3">
                     <span className="text-[10px] font-medium uppercase tracking-[0.18em] text-description">
-                      Details
+                      {t('sections.details')}
                     </span>
                     <div className="h-px flex-1 bg-white/10" />
                   </div>
@@ -152,12 +163,14 @@ export default function CreateGoalFormModal({
 
                     {/* Goal name */}
                     <div>
-                      <FieldLabel htmlFor="title">Goal name</FieldLabel>
+                      <FieldLabel htmlFor="title">
+                        {t('fields.title')}
+                      </FieldLabel>
 
                       <input
                         id="title"
                         {...register('title')}
-                        placeholder="Our dream vacation"
+                        placeholder={t('placeholders.title')}
                         className={inputClass}
                       />
 
@@ -168,20 +181,22 @@ export default function CreateGoalFormModal({
 
                     {/* Category */}
                     <div>
-                      <FieldLabel htmlFor="category">Category</FieldLabel>
+                      <FieldLabel htmlFor="category">
+                        {t('fields.category')}
+                      </FieldLabel>
 
                       <select
                         id="category"
                         {...register('category')}
                         className={`${inputClass} cursor-pointer appearance-none`}
                       >
-                        {categories.map((category) => (
+                        {categoryValues.map((value) => (
                           <option
-                            key={category.value}
-                            value={category.value}
+                            key={value}
+                            value={value}
                             className="bg-primary text-secondary"
                           >
-                            {category.label}
+                            {tc(value)}
                           </option>
                         ))}
                       </select>
@@ -189,12 +204,14 @@ export default function CreateGoalFormModal({
 
                     {/* Description */}
                     <div className="sm:col-span-2">
-                      <FieldLabel htmlFor="description">Description</FieldLabel>
+                      <FieldLabel htmlFor="description">
+                        {t('fields.description')}
+                      </FieldLabel>
 
                       <textarea
                         id="description"
                         {...register('description')}
-                        placeholder="Save together for our trip..."
+                        placeholder={t('placeholders.description')}
                         className={`${inputClass} min-h-[100px] resize-none`}
                       />
 
@@ -211,7 +228,7 @@ export default function CreateGoalFormModal({
                 <div>
                   <div className="mb-4 flex items-center gap-3">
                     <span className="text-[10px] font-medium uppercase tracking-[0.18em] text-description">
-                      Target
+                      {t('sections.target')}
                     </span>
                     <div className="h-px flex-1 bg-white/10" />
                   </div>
@@ -221,7 +238,7 @@ export default function CreateGoalFormModal({
                     {/* Amount */}
                     <div>
                       <FieldLabel htmlFor="targetAmount">
-                        Target amount
+                        {t('fields.targetAmount')}
                       </FieldLabel>
 
                       <div className="relative">
@@ -237,7 +254,7 @@ export default function CreateGoalFormModal({
                           })}
                           type="number"
                           min="0"
-                          placeholder="10.000.000"
+                          placeholder={t('placeholders.targetAmount')}
                           className={`${inputClass} pl-10`}
                         />
                       </div>
@@ -251,7 +268,9 @@ export default function CreateGoalFormModal({
 
                     {/* Deadline */}
                     <div>
-                      <FieldLabel htmlFor="deadline">Deadline</FieldLabel>
+                      <FieldLabel htmlFor="deadline">
+                        {t('fields.deadline')}
+                      </FieldLabel>
 
                       <input
                         id="deadline"
@@ -271,7 +290,7 @@ export default function CreateGoalFormModal({
                 {mutation.error && (
                   <div className="rounded-xl border border-rose-400/20 bg-rose-400/5 px-4 py-3">
                     <p className="text-[11px] font-medium text-rose-400">
-                      {mutation.error.message}
+                      {te(getGoalErrorKey(mutation.error))}
                     </p>
                   </div>
                 )}
@@ -279,7 +298,7 @@ export default function CreateGoalFormModal({
                 {/* Footer */}
                 <div className="flex flex-col gap-3 border-t border-white/10 pt-5 sm:flex-row sm:items-center sm:justify-between">
                   <p className="text-[10px] text-description">
-                    Small steps. Shared dreams.
+                    {t('footerNote')}
                   </p>
 
                   <div className="flex items-center gap-3">
@@ -288,7 +307,7 @@ export default function CreateGoalFormModal({
                       onClick={onClose}
                       className="h-11 rounded-full bg-subprimary px-6 text-[12px] font-medium text-secondary transition hover:bg-white/10"
                     >
-                      Cancel
+                      {tCommon('cancel')}
                     </button>
 
                     <button
@@ -296,7 +315,7 @@ export default function CreateGoalFormModal({
                       disabled={mutation.isPending}
                       className="h-11 rounded-full bg-subprimary px-7 text-[12px] font-medium text-secondary transition hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-50"
                     >
-                      {mutation.isPending ? 'Creating...' : 'Create goal'}
+                      {mutation.isPending ? t('submitting') : t('submit')}
                     </button>
                   </div>
                 </div>

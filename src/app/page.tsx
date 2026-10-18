@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useState, useTransition, type ReactNode } from 'react'
+import { useCallback, useEffect, useState, useTransition } from 'react'
 import Image, { type StaticImageData } from 'next/image'
 import Link from 'next/link'
 import {
@@ -10,6 +10,7 @@ import {
   type PanInfo,
   type Variants,
 } from 'framer-motion'
+import { useTranslations } from 'next-intl'
 import logo from '@/assets/logo-white.png'
 import hero1 from '@/assets/landingpage/hero-mobile-1-2.png'
 import hero2 from '@/assets/landingpage/hero-mobile-2-2.png'
@@ -19,6 +20,7 @@ import heroBg from '@/assets/landingpage/hero-bg-mobile.png'
 import heroBg2 from '@/assets/landingpage/hero-bg-mobile-2.png'
 import { useRouter } from 'next/navigation'
 import { Loader2 } from 'lucide-react'
+import { LanguageSwitcher } from '@/components/language-switcher'
 
 /* -------------------------------------------------------------------------- */
 /*  Config                                                                    */
@@ -30,7 +32,7 @@ const SWIPE_DISTANCE = 60 // minimal jarak drag agar dianggap swipe (px)
 const SWIPE_VELOCITY = 400 // atau minimal kecepatan flick (px/s)
 const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1]
 
-// ← DIUBAH: aspect ratio gambar hero desktop pertama jadi patokan
+// Aspect ratio gambar hero desktop pertama jadi patokan
 // untuk semua slide di desktop (hero 1 tidak ke-crop, hero 2 ngikut).
 const DESKTOP_IMAGE_RATIO = `${heroDesktop1.width} / ${heroDesktop1.height}`
 
@@ -46,55 +48,29 @@ const DESKTOP_CORNER_GRADIENTS = [
 /*  Slides                                                                    */
 /* -------------------------------------------------------------------------- */
 
-const Accent = ({ children }: { children: ReactNode }) => (
-  <span className="text-[#AD72C0]">{children}</span>
-)
+// Teks slide ada di messages (landing.slides.<id>.*).
+// Di sini cuma config non-teks: gambar dan warna aksen.
+type SlideId = 'loveLivesHere' | 'assistant'
 
-const Accent2 = ({ children }: { children: ReactNode }) => (
-  <span className="text-[#6b9bc2]">{children}</span>
-)
-
-type Slide = {
-  id: string
+type SlideConfig = {
+  id: SlideId
   image: StaticImageData // mobile
   imageDesktop: StaticImageData // desktop
-  alt: string
-  title: ReactNode[] // satu item = satu baris judul
-  description: ReactNode
+  accentClass: string
 }
 
-const slides: Slide[] = [
+const slides: SlideConfig[] = [
   {
-    id: 'love-lives-here',
+    id: 'loveLivesHere',
     image: hero1,
     imageDesktop: heroDesktop1,
-    alt: 'Two fluffy cat characters staying connected through Duora',
-    title: ['Love', <>lives <Accent>here.</Accent></>],
-    description: (
-      <>
-        Tempat nyaman untuk tetap dekat
-        <br className="hidden min-[360px]:block lg:hidden" />
-        dan saling terhubung, meski
-        <br className="lg:hidden" />
-        terpisah jarak.
-      </>
-    ),
+    accentClass: 'text-[#AD72C0]',
   },
   {
     id: 'assistant',
     image: hero2,
     imageDesktop: heroDesktop2,
-    alt: 'Duora AI assistant helping a couple with their relationship',
-    title: ['Assistant', <>your <Accent2>relationship</Accent2></>],
-    description: (
-      <>
-        Tanya apa pun tentang hubungan
-        <br className="hidden min-[360px]:block lg:hidden" />
-        kalian, Duora AI memahami
-        <br className="lg:hidden" />
-        konteksnya.
-      </>
-    ),
+    accentClass: 'text-[#6b9bc2]',
   },
 ]
 
@@ -151,6 +127,9 @@ const textVariants: Variants = {
 /* -------------------------------------------------------------------------- */
 
 export default function LandingPage() {
+  const t = useTranslations('landing')
+  const tc = useTranslations('common')
+
   // [index slide aktif, arah transisi: 1 = maju, -1 = mundur, 0 = awal]
   const [[index, direction], setPage] = useState<[number, number]>([0, 0])
   const [paused, setPaused] = useState(false)
@@ -171,6 +150,14 @@ export default function LandingPage() {
 
   const slide = slides[index]
   const lastIndex = slides.length - 1
+
+  const slideAlt = t(`slides.${slide.id}.alt`)
+  const titleLines = [
+    t(`slides.${slide.id}.line1`),
+    t.rich(`slides.${slide.id}.line2`, {
+      accent: (chunks) => <span className={slide.accentClass}>{chunks}</span>,
+    }),
+  ]
 
   const goTo = useCallback((next: number) => {
     setPage((prev) =>
@@ -260,9 +247,13 @@ export default function LandingPage() {
 
         {/* Main layout */}
         <section className="z-10 mx-auto flex min-h-dvh w-full max-w-[480px] flex-col px-5 sm:px-8 lg:max-w-[1320px] lg:px-12 xl:px-16">
-          {/* Logo */}
-          <header className="mt-8 flex shrink-0 items-center justify-center lg:mt-10 lg:justify-start lg:gap-2.5">
-            <Link href="/" aria-label="Duora home" className="flex items-center lg:gap-2.5">
+          {/* Logo + language switcher */}
+          <header className="relative mt-8 flex shrink-0 items-center justify-center lg:mt-10 lg:justify-start lg:gap-2.5">
+            <Link
+              href="/"
+              aria-label={t('homeLabel')}
+              className="flex items-center lg:gap-2.5"
+            >
               <Image
                 src={logo}
                 alt=""
@@ -276,6 +267,8 @@ export default function LandingPage() {
                 DUORA
               </span>
             </Link>
+
+            <LanguageSwitcher className="absolute right-0 top-1/2 -translate-y-1/2" />
           </header>
 
           {/* Onboarding carousel */}
@@ -298,13 +291,15 @@ export default function LandingPage() {
                 onDragEnd={handleDragEnd}
                 role="group"
                 aria-roledescription="slide"
-                aria-label={`${index + 1} of ${slides.length}`}
+                aria-label={t('slideOf', {
+                  current: index + 1,
+                  total: slides.length,
+                })}
                 className="relative z-10 col-start-1 row-start-1 flex cursor-grab select-none flex-col active:cursor-grabbing lg:grid lg:grid-cols-[1fr_1.15fr] lg:content-center lg:items-center lg:gap-10 xl:gap-16"
               >
-                {/* Hero illustration */}
-                {/* ← DIUBAH (desktop saja): tinggi fix dihapus, diganti aspect ratio
-                    hero desktop 1 → lebar penuh kolom, tinggi otomatis, tidak ke-crop.
-                    Kelas mobile (tanpa prefix lg:) tidak diubah. */}
+                {/* Hero illustration
+                    Desktop: tinggi otomatis mengikuti aspect ratio hero desktop 1,
+                    jadi tidak ke-crop. Kelas mobile (tanpa prefix lg:) tidak diubah. */}
                 <motion.div
                   variants={imageVariants}
                   style={
@@ -314,20 +309,20 @@ export default function LandingPage() {
                   }
                   className="relative flex min-h-[330px] flex-1 items-center justify-center pt-5 sm:min-h-[380px] lg:order-2 lg:h-auto lg:min-h-0 lg:w-full lg:flex-none lg:pt-0 lg:[aspect-ratio:var(--desktop-ratio)]"
                 >
-                  {/* Mobile image (tidak diubah) */}
+                  {/* Mobile image */}
                   <Image
                     src={slide.image}
-                    alt={slide.alt}
+                    alt={slideAlt}
                     priority={index === 0}
                     sizes="100vw"
                     draggable={false}
                     className="pointer-events-none h-full max-h-[440px] w-full object-contain object-center lg:hidden"
                   />
 
-                  {/* Desktop image ← DIUBAH: mengisi penuh kotak ber-ratio hero 1 */}
+                  {/* Desktop image: mengisi penuh kotak ber-ratio hero 1 */}
                   <Image
                     src={slide.imageDesktop}
-                    alt={slide.alt}
+                    alt={slideAlt}
                     priority={index === 0}
                     sizes="(min-width: 1024px) 55vw, 0px"
                     draggable={false}
@@ -338,7 +333,7 @@ export default function LandingPage() {
                 {/* Headline and description */}
                 <div className="mt-5 flex shrink-0 flex-col items-center px-5 text-center sm:px-8 lg:order-1 lg:mt-0 lg:items-start lg:px-0 lg:text-left">
                   <h1 className="text-[36px] font-semibold leading-[0.94] tracking-[-1.3px] lg:text-[76px] lg:leading-[0.95] lg:tracking-[-3px] xl:text-[92px] xl:tracking-[-3.5px]">
-                    {slide.title.map((line, i) => (
+                    {titleLines.map((line, i) => (
                       <motion.span
                         key={i}
                         variants={textVariants}
@@ -353,7 +348,7 @@ export default function LandingPage() {
                     variants={textVariants}
                     className="mt-4 min-h-[45px] max-w-[320px] text-balance text-[14px] font-normal leading-[15px] text-description lg:mt-8 lg:min-h-0 lg:max-w-[460px] lg:text-[18px] lg:leading-[1.65] xl:text-[20px]"
                   >
-                    {slide.description}
+                    {t(`slides.${slide.id}.description`)}
                   </motion.p>
                 </div>
               </motion.div>
@@ -364,7 +359,10 @@ export default function LandingPage() {
           <div
             className="mt-5 flex shrink-0 items-center justify-center lg:mt-2 lg:justify-start"
             role="group"
-            aria-label={`Page ${index + 1} of ${slides.length}`}
+            aria-label={t('pageOf', {
+              current: index + 1,
+              total: slides.length,
+            })}
           >
             {slides.map((s, i) => {
               const active = i === index
@@ -374,7 +372,7 @@ export default function LandingPage() {
                   key={s.id}
                   type="button"
                   onClick={() => goTo(i)}
-                  aria-label={`Go to page ${i + 1}`}
+                  aria-label={t('goToPage', { page: i + 1 })}
                   aria-current={active ? 'step' : undefined}
                   className="rounded-full p-[3px] lg:first:pl-0"
                 >
@@ -407,10 +405,10 @@ export default function LandingPage() {
               {isNavigating ? (
                 <>
                   <Loader2 size={16} className="animate-spin" />
-                  Loading...
+                  {tc('loading')}
                 </>
               ) : (
-                'Start your LDR'
+                t('cta')
               )}
             </button>
           </footer>

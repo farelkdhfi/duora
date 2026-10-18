@@ -1,5 +1,7 @@
 'use client'
 
+import { useMemo } from 'react'
+import { useLocale, useTranslations } from 'next-intl'
 import { Heart, PiggyBank, Sparkle } from 'lucide-react'
 import {
   motion,
@@ -12,12 +14,6 @@ interface TotalSavingsCardProps {
   /** Total tabungan dalam angka (Rupiah) */
   totalSavings: number
 }
-
-const currencyFormatter = new Intl.NumberFormat('id-ID', {
-  style: 'currency',
-  currency: 'IDR',
-  maximumFractionDigits: 0,
-})
 
 /* ========================================================= */
 /* MOTION HELPERS */
@@ -62,6 +58,16 @@ export default function TotalSavingsCard({
   totalSavings,
 }: TotalSavingsCardProps) {
   const play = useLoop()
+  const t = useTranslations('goals.summary')
+  
+  const locale = useLocale()
+
+  const currencyFormatter = useMemo(() => new Intl.NumberFormat(locale, {
+    style: 'currency',
+    currency: 'IDR',
+    currencyDisplay: 'narrowSymbol',
+    maximumFractionDigits: 0
+  }), [locale])
 
   const formattedTotalSavings = currencyFormatter.format(totalSavings)
   const parts = currencyFormatter.formatToParts(totalSavings)
@@ -160,7 +166,7 @@ export default function TotalSavingsCard({
               <PiggyBank size={13} strokeWidth={1.8} />
             </span>
             <span className="text-[11px] font-medium tracking-wide text-white/80">
-              Total savings
+              {t('label')}
             </span>
           </span>
 
@@ -189,7 +195,7 @@ export default function TotalSavingsCard({
               <span className="relative size-1.5 rounded-full bg-pink-200" />
             </span>
             <p className="text-[12px] text-white/60">
-              Saved together across all goals
+              {t('description')}
             </p>
           </div>
         </div>

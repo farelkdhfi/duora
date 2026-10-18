@@ -11,6 +11,7 @@ import {
   Trash2,
   X,
 } from 'lucide-react'
+import { useFormatter, useTranslations } from 'next-intl'
 
 import type { NoteWithDetails } from '../types'
 import { getNoteColor } from '../utils'
@@ -30,30 +31,15 @@ interface NoteCardProps {
   relationshipId: string
 }
 
-function formatRelativeTime(dateString: string) {
-  const date = new Date(dateString)
-  const now = new Date()
-
-  const diffMs = now.getTime() - date.getTime()
-  const diffMinutes = Math.floor(diffMs / 60000)
-  const diffHours = Math.floor(diffMinutes / 60)
-  const diffDays = Math.floor(diffHours / 24)
-
-  if (diffMinutes < 1) return 'Just now'
-  if (diffMinutes < 60) return `${diffMinutes}m ago`
-  if (diffHours < 24) return `${diffHours}h ago`
-  if (diffDays < 7) return `${diffDays}d ago`
-
-  return date.toLocaleDateString('id-ID', {
-    day: 'numeric',
-    month: 'short',
-  })
-}
-
 export default function NoteCard({
   note,
   relationshipId,
 }: NoteCardProps) {
+  const t = useTranslations('notes.card')
+  const tTime = useTranslations('notes.time')
+  const tCommon = useTranslations('common')
+  const format = useFormatter()
+
   const [isEditing, setIsEditing] = useState(false)
   const [isConfirmingDelete, setIsConfirmingDelete] =
     useState(false)
@@ -99,12 +85,36 @@ export default function NoteCard({
     note.editor?.username ??
     note.creator?.display_name ??
     note.creator?.username ??
-    'Seseorang'
+    t('someone')
 
   const completedCount =
     note.checklist_items.filter(
       (item) => item.is_completed,
     ).length
+
+  /** Bentuk ringkas ("5m ago" / "5 mnt lalu"), lewat 7 hari jadi tanggal */
+  const formatRelativeTime = (dateString: string) => {
+    const date = new Date(dateString)
+    const now = new Date()
+
+    const diffMs = now.getTime() - date.getTime()
+    const diffMinutes = Math.floor(diffMs / 60000)
+    const diffHours = Math.floor(diffMinutes / 60)
+    const diffDays = Math.floor(diffHours / 24)
+
+    if (diffMinutes < 1) return tTime('justNow')
+    if (diffMinutes < 60)
+      return tTime('minutesAgo', { count: diffMinutes })
+    if (diffHours < 24)
+      return tTime('hoursAgo', { count: diffHours })
+    if (diffDays < 7)
+      return tTime('daysAgo', { count: diffDays })
+
+    return format.dateTime(date, {
+      day: 'numeric',
+      month: 'short',
+    })
+  }
 
   const handleOpenEdit = () => {
     setTitle(note.title)
@@ -244,7 +254,7 @@ export default function NoteCard({
               </span>
             ) : (
               <span className="text-[9px] font-medium uppercase tracking-[0.16em] text-description">
-                Note
+                {t('noteLabel')}
               </span>
             )}
           </div>
@@ -253,6 +263,12 @@ export default function NoteCard({
             <button
               type="button"
               onClick={handleToggleFavorite}
+              aria-label={
+                note.is_favorite
+                  ? t('favoriteRemove')
+                  : t('favoriteAdd')
+              }
+              aria-pressed={note.is_favorite}
               className={`
                 flex
                 size-7
@@ -281,6 +297,12 @@ export default function NoteCard({
             <button
               type="button"
               onClick={handleTogglePin}
+              aria-label={
+                note.is_pinned
+                  ? t('pinRemove')
+                  : t('pinAdd')
+              }
+              aria-pressed={note.is_pinned}
               className={`
                 flex
                 size-7
@@ -319,7 +341,7 @@ export default function NoteCard({
               onChange={(e) =>
                 setTitle(e.target.value)
               }
-              placeholder="Note title"
+              placeholder={t('titlePlaceholder')}
               autoFocus
               className="
                 w-full
@@ -345,7 +367,7 @@ export default function NoteCard({
               onChange={(e) =>
                 setContent(e.target.value)
               }
-              placeholder="Write a note..."
+              placeholder={t('contentPlaceholder')}
               rows={4}
               className="
                 w-full
@@ -371,7 +393,7 @@ export default function NoteCard({
               onChange={(e) =>
                 setCategory(e.target.value)
               }
-              placeholder="Category (optional)"
+              placeholder={t('categoryPlaceholder')}
               className="
                 w-full
                 rounded-xl
@@ -400,6 +422,11 @@ export default function NoteCard({
                   >
                     <button
                       type="button"
+                      aria-label={
+                        item.is_completed
+                          ? t('markIncomplete')
+                          : t('markComplete')
+                      }
                       onClick={() =>
                         toggleChecklistMutation.mutate({
                           itemId: item.id,
@@ -440,6 +467,9 @@ export default function NoteCard({
 
                     <button
                       type="button"
+                      aria-label={t('deleteItemAria', {
+                        content: item.content,
+                      })}
                       onClick={() =>
                         deleteChecklistMutation.mutate(
                           item.id,
@@ -470,7 +500,7 @@ export default function NoteCard({
                     handleAddChecklistItem()
                   }
                 }}
-                placeholder="Add checklist..."
+                placeholder={t('addChecklistPlaceholder')}
                 className="
                   min-w-0
                   flex-1
@@ -491,6 +521,7 @@ export default function NoteCard({
               <button
                 type="button"
                 onClick={handleAddChecklistItem}
+                aria-label={t('addItemAria')}
                 disabled={
                   addChecklistMutation.isPending
                 }
@@ -546,8 +577,8 @@ export default function NoteCard({
                     "
                   >
                     {deleteNoteMutation.isPending
-                      ? 'Deleting...'
-                      : 'Are you sure?'}
+                      ? t('deleting')
+                      : t('deleteConfirm')}
                   </button>
 
                   <button
@@ -566,7 +597,7 @@ export default function NoteCard({
                       hover:bg-subprimary
                     "
                   >
-                    Cancel
+                    {tCommon('cancel')}
                   </button>
                 </div>
               ) : (
@@ -589,7 +620,7 @@ export default function NoteCard({
                   "
                 >
                   <Trash2 size={11} />
-                  Delete
+                  {tCommon('delete')}
                 </button>
               )}
 
@@ -608,7 +639,7 @@ export default function NoteCard({
                     hover:text-secondary
                   "
                 >
-                  Cancel
+                  {tCommon('cancel')}
                 </button>
 
                 <button
@@ -641,7 +672,7 @@ export default function NoteCard({
                     />
                   )}
 
-                  Save
+                  {tCommon('save')}
                 </button>
               </div>
             </div>
@@ -727,9 +758,10 @@ export default function NoteCard({
 
                 {note.checklist_items.length > 4 && (
                   <p className="pl-5 text-[10px] text-description">
-                    +
-                    {note.checklist_items.length - 4}{' '}
-                    more
+                    {t('moreItems', {
+                      count:
+                        note.checklist_items.length - 4,
+                    })}
                   </p>
                 )}
 

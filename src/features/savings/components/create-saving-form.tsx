@@ -1,5 +1,6 @@
 'use client'
 
+import { useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
@@ -9,6 +10,7 @@ import {
   MessageSquare,
   Wallet,
 } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 
 import {
   createSavingSchema,
@@ -18,6 +20,7 @@ import {
 import {
   useCreateSaving,
 } from '../queries'
+import { getSavingErrorKey } from '../errors'
 
 interface CreateSavingFormProps {
   relationshipId: string
@@ -34,6 +37,12 @@ export default function CreateSavingForm({
   relationshipId,
   goalId,
 }: CreateSavingFormProps) {
+  const t = useTranslations('savings.form')
+  const tv = useTranslations('savings.validation')
+  const te = useTranslations('savings.errors')
+
+  const schema = useMemo(() => createSavingSchema(tv), [tv])
+
   const mutation = useCreateSaving()
 
   const {
@@ -44,7 +53,7 @@ export default function CreateSavingForm({
       errors,
     },
   } = useForm<CreateSavingFormValues>({
-    resolver: zodResolver(createSavingSchema),
+    resolver: zodResolver(schema),
   })
 
   function onSubmit(values: CreateSavingFormValues) {
@@ -90,13 +99,13 @@ export default function CreateSavingForm({
               </span>
 
               <span className="truncate">
-                Amount
+                {t('amount')}
               </span>
 
             </label>
 
             <span className="shrink-0 text-[8px] font-medium text-description sm:text-[9px]">
-              Required
+              {t('required')}
             </span>
 
           </div>
@@ -118,7 +127,7 @@ export default function CreateSavingForm({
               type="number"
               min="1"
               inputMode="numeric"
-              placeholder="500.000"
+              placeholder={t('placeholders.amount')}
               className={`${inputClass} pl-10 pr-3.5 text-[14px] sm:pl-11 sm:pr-4 sm:text-[15px]`}
             />
 
@@ -154,13 +163,13 @@ export default function CreateSavingForm({
               </span>
 
               <span className="truncate">
-                Note
+                {t('note')}
               </span>
 
             </label>
 
             <span className="shrink-0 text-[8px] font-medium text-description sm:text-[9px]">
-              Optional
+              {t('optional')}
             </span>
 
           </div>
@@ -168,7 +177,7 @@ export default function CreateSavingForm({
           <input
             id="note"
             {...register('note')}
-            placeholder="Tabungan minggu ini..."
+            placeholder={t('placeholders.note')}
             className={inputClass}
           />
 
@@ -194,7 +203,7 @@ export default function CreateSavingForm({
             </div>
 
             <p className="min-w-0 pt-0.5 text-[10px] font-medium leading-relaxed text-rose-300 sm:text-[11px]">
-              {mutation.error.message}
+              {te(getSavingErrorKey(mutation.error))}
             </p>
 
           </div>
@@ -217,11 +226,11 @@ export default function CreateSavingForm({
             <div className="min-w-0">
 
               <p className="truncate text-[11px] font-semibold text-emerald-300 sm:text-[12px]">
-                Savings added
+                {t('successTitle')}
               </p>
 
               <p className="mt-0.5 truncate text-[10px] text-emerald-300/50 sm:text-[11px]">
-                Another little step toward your goal.
+                {t('successHint')}
               </p>
 
             </div>
@@ -251,13 +260,13 @@ export default function CreateSavingForm({
                 />
 
                 <span>
-                  Adding savings...
+                  {t('submitting')}
                 </span>
               </>
             ) : (
               <>
                 <span>
-                  Add savings
+                  {t('submit')}
                 </span>
 
                 <span className="flex size-6 items-center justify-center rounded-full bg-white/[0.08]">
@@ -279,8 +288,7 @@ export default function CreateSavingForm({
         {/* ================================================= */}
 
         <p className="px-3 text-center text-[8px] leading-relaxed text-description sm:px-0 sm:text-[9px]">
-          Every contribution brings you two
-          a little closer.
+          {t('footerNote')}
         </p>
 
       </div>

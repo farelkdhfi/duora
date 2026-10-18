@@ -1,5 +1,9 @@
-import { useForm } from "react-hook-form"
-import { DailyCheckinFormValues } from "../schemas"
+'use client'
+
+import { useForm } from 'react-hook-form'
+import { useTranslations } from 'next-intl'
+
+import { SCORE_MAX, SCORE_MIN, type DailyCheckinFormValues } from '../schemas'
 
 export default function SliderSection({
   label,
@@ -20,7 +24,9 @@ export default function SliderSection({
   name: 'energy' | 'stress'
   error?: string
 }) {
-  const percentage = ((value - 1) / 9) * 100
+  const t = useTranslations('checkins.slider')
+
+  const percentage = ((value - SCORE_MIN) / (SCORE_MAX - SCORE_MIN)) * 100
 
   return (
     <div>
@@ -31,7 +37,7 @@ export default function SliderSection({
           </p>
 
           <p className="mt-0.5 text-[10px] text-neutral-400">
-            Rate from 1 to 10
+            {t('hint', { min: SCORE_MIN, max: SCORE_MAX })}
           </p>
         </div>
 
@@ -57,8 +63,8 @@ export default function SliderSection({
             valueAsNumber: true,
           })}
           type="range"
-          min="1"
-          max="10"
+          min={SCORE_MIN}
+          max={SCORE_MAX}
           step="1"
           className="relative z-10 h-6 w-full cursor-pointer appearance-none bg-transparent accent-neutral-900 [&::-webkit-slider-runnable-track]:h-1 [&::-webkit-slider-runnable-track]:rounded-full [&::-webkit-slider-runnable-track]:bg-transparent [&::-webkit-slider-thumb]:mt-[-7px] [&::-webkit-slider-thumb]:size-5 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border [&::-webkit-slider-thumb]:border-black/[0.08] [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:shadow-[0_3px_10px_rgba(0,0,0,0.14)]"
         />

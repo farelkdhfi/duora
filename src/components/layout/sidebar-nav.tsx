@@ -1,90 +1,26 @@
-// features/dashboard/components/sidebar-nav.tsx
-
 'use client'
 
 import Link from 'next/link'
 import { useState } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 
 import {
-  CalendarDays,
-  ChartBarDecreasing,
-  CheckCircle2,
-  Clock,
-  File,
-  Goal,
   Heart,
-  Home,
   Loader2,
   Lock,
   LogOut,
-  Logs,
-  NotebookPen,
   Pin,
-  Smile,
-  User2,
 } from 'lucide-react'
 
 import { createClient } from '@/lib/supabase/client'
 import { useMyRelationshipDetails } from '@/features/relationship/queries'
-import { PlanBadge } from '@/features/subscription/components/plan-badge' // TAMBAHKAN
+import { PlanBadge } from '@/features/subscription/components/plan-badge'
+import { LanguageSwitcher } from '@/components/language-switcher'
+import { sidebarNavigation } from './nav-config'
 import Image from 'next/image'
 
 import logoImage from '@/assets/duora-logo3.png'
-
-
-const navigation = [
-  {
-    label: 'Overview',
-    href: '/dashboard',
-    icon: Home,
-  },
-  {
-    label: 'Debates',
-    href: '/debates',
-    icon: ChartBarDecreasing,
-  },
-  {
-    label: 'Goals',
-    href: '/goals',
-    icon: Goal,
-  },
-  {
-    label: 'Planner',
-    href: '/planner',
-    icon: CalendarDays,
-  },
-  {
-    label: 'Daily Check-in',
-    href: '/check-in',
-    icon: Smile,
-  },
-  {
-    label: 'Notes',
-    href: '/notes',
-    icon: NotebookPen,
-  },
-  {
-    label: 'Wrapped',
-    href: '/wrapped',
-    icon: File,
-  },
-  {
-    label: 'Countdown',
-    href: '/countdown',
-    icon: Clock,
-  },
-  {
-    label: 'Profile',
-    href: '/profile',
-    icon: User2,
-  },
-  {
-    label: 'Activities',
-    href: '/activities',
-    icon: Logs,
-  },
-]
 
 
 interface SidebarNavProps {
@@ -93,6 +29,9 @@ interface SidebarNavProps {
 
 
 export default function SidebarNav({ onNavigate }: SidebarNavProps) {
+
+  const t = useTranslations('nav')
+  const tc = useTranslations('common')
 
   const pathname = usePathname()
   const router = useRouter()
@@ -137,21 +76,21 @@ export default function SidebarNav({ onNavigate }: SidebarNavProps) {
 
           <div>
             <div className='flex items-center gap-1'>
-              <Image src={logoImage} width={20} height={20} alt='logo' />
+              <Image src={logoImage} width={20} height={20} alt='Duora' />
               <p className="text-[17px] uppercase font-bold tracking-[-0.04em] text-secondary">
                 duora
               </p>
             </div>
 
             <p className="mt-0.5 text-[11px] text-description">
-              Grow together.
+              {t('brandTagline')}
             </p>
 
           </div>
 
         </Link>
 
-        {/* PLAN BADGE - TAMBAHKAN */}
+        {/* PLAN BADGE */}
         <div className="mt-3">
           <PlanBadge />
         </div>
@@ -166,15 +105,16 @@ export default function SidebarNav({ onNavigate }: SidebarNavProps) {
       <nav className="flex-1 px-3">
 
         <p className="mb-3 px-3 text-[10px] font-semibold uppercase tracking-[0.12em] text-description/60">
-          Workspace
+          {t('workspace')}
         </p>
 
 
         <div className="space-y-1">
 
-          {navigation.map((item) => {
+          {sidebarNavigation.map((item) => {
 
             const Icon = item.icon
+            const label = t(`items.${item.key}`)
 
 
             const isActive =
@@ -198,7 +138,7 @@ export default function SidebarNav({ onNavigate }: SidebarNavProps) {
                     <Icon size={17} strokeWidth={1.9} />
                   </span>
 
-                  <span>{item.label}</span>
+                  <span>{label}</span>
 
                   <Lock
                     size={12}
@@ -249,7 +189,7 @@ export default function SidebarNav({ onNavigate }: SidebarNavProps) {
                 </span>
 
                 <span>
-                  {item.label}
+                  {label}
                 </span>
 
                 {isActive && (
@@ -280,13 +220,12 @@ export default function SidebarNav({ onNavigate }: SidebarNavProps) {
               </div>
 
               <span className="text-[11px] font-semibold text-description">
-                Waiting for partner
+                {t('waitingForPartner')}
               </span>
             </div>
 
             <p className="mt-3 text-[12px] leading-5 text-description">
-              Your space unlocks once your
-              partner joins with the invite code.
+              {t('lockedHint')}
             </p>
           </div>
         ) : (
@@ -310,7 +249,7 @@ export default function SidebarNav({ onNavigate }: SidebarNavProps) {
                   </div>
 
                   <span className="text-[11px] font-semibold text-secondary">
-                    Your relationship
+                    {t('yourRelationship')}
                   </span>
 
                 </div>
@@ -323,22 +262,21 @@ export default function SidebarNav({ onNavigate }: SidebarNavProps) {
               </div>
 
               <p className="mt-4 text-[12px] leading-5 text-description">
-                Every little moment you share
-                becomes part of your story.
+                {t('relationshipQuote')}
               </p>
 
               <div className="mt-4 flex items-center">
 
                 <div className="flex size-7 items-center justify-center rounded-full border-2 border-primary bg-blue-500/20 text-[10px] font-semibold text-blue-400">
-                  Y
+                  {t('youInitial')}
                 </div>
 
                 <div className="-ml-2 flex size-7 items-center justify-center rounded-full border-2 border-primary bg-pink-500/20 text-[10px] font-semibold text-pink-400">
-                  P
+                  {t('partnerInitial')}
                 </div>
 
                 <span className="ml-2 text-[10px] text-description">
-                  Growing together
+                  {t('growingTogether')}
                 </span>
 
               </div>
@@ -357,6 +295,15 @@ export default function SidebarNav({ onNavigate }: SidebarNavProps) {
 
       <div className="border-t border-white/[0.06] px-3 py-3">
 
+        {/* LANGUAGE */}
+        <div className="mb-2 flex items-center justify-between px-3.5 py-1">
+          <span className="text-[13px] font-medium text-description">
+            {tc('language')}
+          </span>
+
+          <LanguageSwitcher />
+        </div>
+
         <button
           type="button"
           onClick={handleLogout}
@@ -371,11 +318,11 @@ export default function SidebarNav({ onNavigate }: SidebarNavProps) {
             )}
           </span>
 
-          <span>{isLoggingOut ? 'Logging out...' : 'Log out'}</span>
+          <span>{isLoggingOut ? t('loggingOut') : t('logout')}</span>
         </button>
 
         <p className="mt-2 px-3.5 text-[10px] text-description/60">
-          Grow together with DUORA
+          {t('footer')}
         </p>
 
       </div>

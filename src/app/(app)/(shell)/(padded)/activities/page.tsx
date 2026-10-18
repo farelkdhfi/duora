@@ -1,12 +1,14 @@
 'use client'
 
-import { ListChecks } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 
 import ActivityFeed from '@/features/activities/components/activity-feed'
 import { useMyRelationshipDetails } from '@/features/relationship/queries'
 import Header from '@/components/layout/header'
 
 export default function ActivitiesPage() {
+  const t = useTranslations('activities.page')
+
   const { data, isLoading } = useMyRelationshipDetails()
 
   if (isLoading) {
@@ -23,7 +25,7 @@ export default function ActivitiesPage() {
     return (
       <div className="flex min-h-[50vh] items-center justify-center">
         <p className="text-sm text-neutral-400">
-          Kamu perlu terhubung dengan pasangan dulu.
+          {t('noRelationship')}
         </p>
       </div>
     )
@@ -35,8 +37,8 @@ export default function ActivitiesPage() {
     <div>
       {/* HEADER */}
       <Header
-        title='Activities'
-        description='See the little moments and activities you share together.'
+        title={t('title')}
+        description={t('description')}
       />
 
       {/* ACTIVITY FEED */}
