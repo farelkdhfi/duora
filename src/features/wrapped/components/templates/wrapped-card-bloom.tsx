@@ -115,13 +115,13 @@ export const WrappedCardBloom = forwardRef<
               <div className="flex items-center gap-[6px]">
                 <Image
                   src={logoImg}
-                  alt="Duora"
+                  alt="DUONEAR"
                   width={17}
                   height={17}
                 />
 
                 <span className="text-[14px] font-bold tracking-[-0.06em]">
-                  Duora
+                  DUONEAR
                 </span>
               </div>
             </header>

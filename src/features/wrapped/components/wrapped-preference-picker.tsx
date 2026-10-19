@@ -607,7 +607,7 @@ export function WrappedPreferencePicker({
 
                     <p className="mt-1 text-[10px] leading-4 text-secondary/40">
                       Custom colors are available
-                      starting from the Duora Plus plan.
+                      starting from the DUONEAR Plus plan.
                     </p>
                   </div>
                 </div>

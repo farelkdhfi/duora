@@ -45,7 +45,7 @@ export function TrialActiveModal() {
 
         <h2 className="mt-4 text-lg font-bold text-secondary">Trial Premium Aktif! 🎉</h2>
         <p className="mt-2 text-sm text-description">
-          Kalian dapat akses penuh ke semua fitur premium Duora selama{" "}
+          Kalian dapat akses penuh ke semua fitur premium DUONEAR selama{" "}
           <span className="font-semibold text-pink-500">{daysLeft} hari</span> ke depan.
         </p>
 

@@ -3,7 +3,7 @@ import Image from 'next/image'
 import { getTranslations } from 'next-intl/server'
 
 import LoginForm from '@/features/auth/components/login-form'
-import duoraLogo from '@/assets/logo-white.png'
+import DUONEARLogo from '@/assets/logo-white.png'
 
 export default async function LoginPage() {
   const t = await getTranslations('auth.login')
@@ -25,15 +25,15 @@ export default async function LoginPage() {
               className="inline-flex items-center gap-2"
             >
               <Image
-                src={duoraLogo}
-                alt="Duora"
+                src={DUONEARLogo}
+                alt="DUONEAR"
                 width={30}
                 height={30}
                 className="rounded-full"
               />
 
               <span className="text-base font-bold uppercase tracking-[-0.05em]">
-                duora
+                DUONEAR
               </span>
             </Link>
 
@@ -71,8 +71,8 @@ export default async function LoginPage() {
 
               <div className="flex items-center justify-center gap-2 lg:hidden">
                 <Image
-                  src={duoraLogo}
-                  alt="Duora"
+                  src={DUONEARLogo}
+                  alt="DUONEAR"
                   width={70}
                   height={70}
                   className="rounded-full"

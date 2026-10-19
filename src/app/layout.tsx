@@ -11,13 +11,13 @@ export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('metadata')
 
   return {
-    metadataBase: new URL('https://duora-grow-together.vercel.app'),
+    metadataBase: new URL('https://duonear.com'),
     title: t('title'),
     description: t('description'),
     openGraph: {
       title: t('ogTitle'),
       description: t('ogDescription'),
-      siteName: 'Duora',
+      siteName: 'DUONEAR',
       type: 'website',
     },
     // verification: { google: '...' },

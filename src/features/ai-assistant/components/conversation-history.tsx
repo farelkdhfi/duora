@@ -87,7 +87,7 @@ export function ConversationHistory({
             </p>
 
             <p className="mt-1 text-[10px] leading-4 text-description/70">
-              Mulai percakapan baru dengan Duora AI.
+              Mulai percakapan baru dengan DUONEAR AI.
             </p>
           </div>
         ) : (

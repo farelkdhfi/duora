@@ -20,7 +20,7 @@ import { LanguageSwitcher } from '@/components/language-switcher'
 import { sidebarNavigation } from './nav-config'
 import Image from 'next/image'
 
-import logoImage from '@/assets/duora-logo3.png'
+import logoImage from '@/assets/DUONEAR-logo3.png'
 
 
 interface SidebarNavProps {
@@ -76,9 +76,9 @@ export default function SidebarNav({ onNavigate }: SidebarNavProps) {
 
           <div>
             <div className='flex items-center gap-1'>
-              <Image src={logoImage} width={20} height={20} alt='Duora' />
+              <Image src={logoImage} width={20} height={20} alt='DUONEAR' />
               <p className="text-[17px] uppercase font-bold tracking-[-0.04em] text-secondary">
-                duora
+                DUONEAR
               </p>
             </div>
 

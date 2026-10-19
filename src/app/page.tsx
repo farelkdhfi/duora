@@ -252,7 +252,7 @@ export default function LandingPage() {
             <Link
               href="/"
               aria-label={t('homeLabel')}
-              className="flex items-center lg:gap-2.5"
+              className="flex items-center"
             >
               <Image
                 src={logo}
@@ -264,7 +264,7 @@ export default function LandingPage() {
               />
 
               <span className="text-[15px] font-semibold text-white lg:text-[20px] lg:tracking-wide">
-                DUORA
+                DUONEAR
               </span>
             </Link>
 

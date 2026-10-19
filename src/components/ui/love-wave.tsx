@@ -32,7 +32,7 @@ interface LoveWaveProps {
 export default function LoveWave({ size = 190, shadow = false }: LoveWaveProps) {
   return (
     <div
-      className="duora-love-wrap"
+      className="DUONEAR-love-wrap"
       style={{
         width: size,
         height: size,
@@ -41,7 +41,7 @@ export default function LoveWave({ size = 190, shadow = false }: LoveWaveProps) 
       <style
         dangerouslySetInnerHTML={{
           __html: `
-            .duora-love-wrap {
+            .DUONEAR-love-wrap {
               position: relative;
               display: flex;
               align-items: center;
@@ -51,7 +51,7 @@ export default function LoveWave({ size = 190, shadow = false }: LoveWaveProps) 
 
             /* Glow berbentuk cincin: tengahnya kosong supaya
                warna background parent tetap terlihat di dalam orb */
-            .duora-love-glow {
+            .DUONEAR-love-glow {
               position: absolute;
               border-radius: 9999px;
               background:
@@ -64,60 +64,60 @@ export default function LoveWave({ size = 190, shadow = false }: LoveWaveProps) 
                   rgba(255, 170, 215, 0.08) 90%,
                   transparent 100%
                 );
-              animation: duoraLoveGlow 7s ease-in-out infinite;
+              animation: DUONEARLoveGlow 7s ease-in-out infinite;
               pointer-events: none;
             }
 
-            .duora-love-svg {
+            .DUONEAR-love-svg {
               position: relative;
               width: 175px;
               height: 175px;
               overflow: visible;
             }
 
-            .duora-orb-layer {
+            .DUONEAR-orb-layer {
               transform-box: view-box;
               transform-origin: 100px 100px;
             }
 
-            .duora-orb-flow-a {
-              animation: duoraOrbFlowA 5s ease-in-out infinite;
+            .DUONEAR-orb-flow-a {
+              animation: DUONEAROrbFlowA 5s ease-in-out infinite;
             }
 
-            .duora-orb-flow-b {
-              animation: duoraOrbFlowB 7s ease-in-out infinite;
+            .DUONEAR-orb-flow-b {
+              animation: DUONEAROrbFlowB 7s ease-in-out infinite;
               animation-delay: -11s;
             }
 
-            .duora-orb-flow-c {
-              animation: duoraOrbFlowC 5s ease-in-out infinite;
+            .DUONEAR-orb-flow-c {
+              animation: DUONEAROrbFlowC 5s ease-in-out infinite;
               animation-delay: -17s;
             }
 
-            .duora-orb-ribbon-a {
-              animation: duoraOrbRibbonA 6s ease-in-out infinite;
+            .DUONEAR-orb-ribbon-a {
+              animation: DUONEAROrbRibbonA 6s ease-in-out infinite;
               animation-delay: -6s;
             }
 
-            .duora-orb-ribbon-b {
-              animation: duoraOrbRibbonB 8s ease-in-out infinite;
+            .DUONEAR-orb-ribbon-b {
+              animation: DUONEAROrbRibbonB 8s ease-in-out infinite;
               animation-delay: -21s;
             }
 
-            .duora-orb-caustic {
-              animation: duoraOrbCaustic 1s ease-in-out infinite;
+            .DUONEAR-orb-caustic {
+              animation: DUONEAROrbCaustic 1s ease-in-out infinite;
             }
 
-            .duora-orb-spec-a {
-              animation: duoraOrbSpecA 2s ease-in-out infinite;
+            .DUONEAR-orb-spec-a {
+              animation: DUONEAROrbSpecA 2s ease-in-out infinite;
             }
 
-            .duora-orb-spec-b {
-              animation: duoraOrbSpecB 3s ease-in-out infinite;
+            .DUONEAR-orb-spec-b {
+              animation: DUONEAROrbSpecB 3s ease-in-out infinite;
               animation-delay: -8s;
             }
 
-            @keyframes duoraLoveGlow {
+            @keyframes DUONEARLoveGlow {
               0%,
               100% {
                 transform: scale(0.86);
@@ -130,7 +130,7 @@ export default function LoveWave({ size = 190, shadow = false }: LoveWaveProps) 
               }
             }
 
-            @keyframes duoraOrbFlowA {
+            @keyframes DUONEAROrbFlowA {
               0%,
               100% {
                 transform: translate(0px, 0px) rotate(0deg) scale(1);
@@ -145,7 +145,7 @@ export default function LoveWave({ size = 190, shadow = false }: LoveWaveProps) 
               }
             }
 
-            @keyframes duoraOrbFlowB {
+            @keyframes DUONEAROrbFlowB {
               0%,
               100% {
                 transform: translate(0px, 0px) rotate(0deg) scale(1);
@@ -160,7 +160,7 @@ export default function LoveWave({ size = 190, shadow = false }: LoveWaveProps) 
               }
             }
 
-            @keyframes duoraOrbFlowC {
+            @keyframes DUONEAROrbFlowC {
               0%,
               100% {
                 transform: translate(0px, 0px) rotate(0deg) scale(1);
@@ -175,7 +175,7 @@ export default function LoveWave({ size = 190, shadow = false }: LoveWaveProps) 
               }
             }
 
-            @keyframes duoraOrbRibbonA {
+            @keyframes DUONEAROrbRibbonA {
               0%,
               100% {
                 transform: translate(0px, 0px) rotate(0deg);
@@ -190,7 +190,7 @@ export default function LoveWave({ size = 190, shadow = false }: LoveWaveProps) 
               }
             }
 
-            @keyframes duoraOrbRibbonB {
+            @keyframes DUONEAROrbRibbonB {
               0%,
               100% {
                 transform: translate(0px, 0px) rotate(0deg);
@@ -205,7 +205,7 @@ export default function LoveWave({ size = 190, shadow = false }: LoveWaveProps) 
               }
             }
 
-            @keyframes duoraOrbCaustic {
+            @keyframes DUONEAROrbCaustic {
               0%,
               100% {
                 transform: translate(0px, 0px) scale(1);
@@ -218,7 +218,7 @@ export default function LoveWave({ size = 190, shadow = false }: LoveWaveProps) 
               }
             }
 
-            @keyframes duoraOrbSpecA {
+            @keyframes DUONEAROrbSpecA {
               0%,
               100% {
                 transform: rotate(0deg);
@@ -233,7 +233,7 @@ export default function LoveWave({ size = 190, shadow = false }: LoveWaveProps) 
               }
             }
 
-            @keyframes duoraOrbSpecB {
+            @keyframes DUONEAROrbSpecB {
               0%,
               100% {
                 transform: rotate(0deg);
@@ -245,15 +245,15 @@ export default function LoveWave({ size = 190, shadow = false }: LoveWaveProps) 
             }
 
             @media (prefers-reduced-motion: reduce) {
-              .duora-love-glow,
-              .duora-orb-flow-a,
-              .duora-orb-flow-b,
-              .duora-orb-flow-c,
-              .duora-orb-ribbon-a,
-              .duora-orb-ribbon-b,
-              .duora-orb-caustic,
-              .duora-orb-spec-a,
-              .duora-orb-spec-b {
+              .DUONEAR-love-glow,
+              .DUONEAR-orb-flow-a,
+              .DUONEAR-orb-flow-b,
+              .DUONEAR-orb-flow-c,
+              .DUONEAR-orb-ribbon-a,
+              .DUONEAR-orb-ribbon-b,
+              .DUONEAR-orb-caustic,
+              .DUONEAR-orb-spec-a,
+              .DUONEAR-orb-spec-b {
                 animation: none !important;
               }
             }
@@ -262,7 +262,7 @@ export default function LoveWave({ size = 190, shadow = false }: LoveWaveProps) 
       />
 
       <div
-        className="duora-love-glow"
+        className="DUONEAR-love-glow"
         style={{
           width: size,
           height: size,
@@ -271,7 +271,7 @@ export default function LoveWave({ size = 190, shadow = false }: LoveWaveProps) 
       />
 
       <svg
-        className="duora-love-svg"
+        className="DUONEAR-love-svg"
         viewBox="0 0 200 200"
         xmlns="http://www.w3.org/2000/svg"
         aria-hidden="true"
@@ -284,7 +284,7 @@ export default function LoveWave({ size = 190, shadow = false }: LoveWaveProps) 
           {/* ---------- Gradients ---------- */}
 
           {/* Atmospheric glow (pastel) */}
-          <radialGradient id="duoraOrbAtmosA" cx="50%" cy="50%" r="50%">
+          <radialGradient id="DUONEAROrbAtmosA" cx="50%" cy="50%" r="50%">
             <stop offset="0%" stopColor="#8fa2ff" stopOpacity="0.38" />
             <stop offset="62%" stopColor="#9a8cff" stopOpacity="0.3" />
             <stop offset="74%" stopColor="#b08cf8" stopOpacity="0.2" />
@@ -292,7 +292,7 @@ export default function LoveWave({ size = 190, shadow = false }: LoveWaveProps) 
             <stop offset="100%" stopColor="#c9a4ff" stopOpacity="0" />
           </radialGradient>
 
-          <radialGradient id="duoraOrbAtmosB" cx="50%" cy="50%" r="50%">
+          <radialGradient id="DUONEAROrbAtmosB" cx="50%" cy="50%" r="50%">
             <stop offset="0%" stopColor="#ff9fdc" stopOpacity="0.3" />
             <stop offset="62%" stopColor="#ffa8d2" stopOpacity="0.24" />
             <stop offset="74%" stopColor="#f5a4ec" stopOpacity="0.17" />
@@ -301,7 +301,7 @@ export default function LoveWave({ size = 190, shadow = false }: LoveWaveProps) 
           </radialGradient>
 
           {/* Soft ground shadow (opsional lewat prop `shadow`) */}
-          <radialGradient id="duoraOrbShadow" cx="50%" cy="50%" r="50%">
+          <radialGradient id="DUONEAROrbShadow" cx="50%" cy="50%" r="50%">
             <stop offset="0%" stopColor="#5b63c9" stopOpacity="0.32" />
             <stop offset="60%" stopColor="#7b7fd8" stopOpacity="0.14" />
             <stop offset="100%" stopColor="#7b7fd8" stopOpacity="0" />
@@ -310,7 +310,7 @@ export default function LoveWave({ size = 190, shadow = false }: LoveWaveProps) 
           {/* Clear glass body: tengah transparan, hanya tepi yang
               punya tint tipis supaya bentuk orb tetap terbaca */}
           <radialGradient
-            id="duoraOrbBase"
+            id="DUONEAROrbBase"
             cx="100"
             cy="100"
             r="68"
@@ -329,7 +329,7 @@ export default function LoveWave({ size = 190, shadow = false }: LoveWaveProps) 
               - Ubah "48%" jadi lebih besar  -> lubang tengah lebih lebar
               - Ubah "86%" jadi lebih kecil  -> warna di tepi lebih tipis */}
           <radialGradient
-            id="duoraOrbCenterFade"
+            id="DUONEAROrbCenterFade"
             cx="100"
             cy="100"
             r="66"
@@ -343,31 +343,31 @@ export default function LoveWave({ size = 190, shadow = false }: LoveWaveProps) 
           </radialGradient>
 
           {/* Internal light blobs (pastel) */}
-          <radialGradient id="duoraOrbBlue" cx="50%" cy="50%" r="50%">
+          <radialGradient id="DUONEAROrbBlue" cx="50%" cy="50%" r="50%">
             <stop offset="0%" stopColor="#7fa3ff" stopOpacity="0.95" />
             <stop offset="45%" stopColor="#8aa4ff" stopOpacity="0.68" />
             <stop offset="100%" stopColor="#9aa8ff" stopOpacity="0" />
           </radialGradient>
 
-          <radialGradient id="duoraOrbCyan" cx="50%" cy="50%" r="50%">
+          <radialGradient id="DUONEAROrbCyan" cx="50%" cy="50%" r="50%">
             <stop offset="0%" stopColor="#96e8f8" stopOpacity="0.95" />
             <stop offset="50%" stopColor="#7adcf2" stopOpacity="0.62" />
             <stop offset="100%" stopColor="#6fd0ee" stopOpacity="0" />
           </radialGradient>
 
-          <radialGradient id="duoraOrbViolet" cx="50%" cy="50%" r="50%">
+          <radialGradient id="DUONEAROrbViolet" cx="50%" cy="50%" r="50%">
             <stop offset="0%" stopColor="#c0a4ff" stopOpacity="0.95" />
             <stop offset="50%" stopColor="#b293ff" stopOpacity="0.66" />
             <stop offset="100%" stopColor="#a98bff" stopOpacity="0" />
           </radialGradient>
 
-          <radialGradient id="duoraOrbMagenta" cx="50%" cy="50%" r="50%">
+          <radialGradient id="DUONEAROrbMagenta" cx="50%" cy="50%" r="50%">
             <stop offset="0%" stopColor="#ff98e8" stopOpacity="0.9" />
             <stop offset="50%" stopColor="#f08ad9" stopOpacity="0.6" />
             <stop offset="100%" stopColor="#e07ad0" stopOpacity="0" />
           </radialGradient>
 
-          <radialGradient id="duoraOrbPink" cx="50%" cy="50%" r="50%">
+          <radialGradient id="DUONEAROrbPink" cx="50%" cy="50%" r="50%">
             <stop offset="0%" stopColor="#ffc0dc" stopOpacity="0.95" />
             <stop offset="50%" stopColor="#ffa3cb" stopOpacity="0.66" />
             <stop offset="100%" stopColor="#ff8fb8" stopOpacity="0" />
@@ -375,7 +375,7 @@ export default function LoveWave({ size = 190, shadow = false }: LoveWaveProps) 
 
           {/* Light ribbons */}
           <linearGradient
-            id="duoraOrbRibbonBlue"
+            id="DUONEAROrbRibbonBlue"
             x1="52"
             y1="112"
             x2="146"
@@ -390,7 +390,7 @@ export default function LoveWave({ size = 190, shadow = false }: LoveWaveProps) 
           </linearGradient>
 
           <linearGradient
-            id="duoraOrbRibbonPink"
+            id="DUONEAROrbRibbonPink"
             x1="118"
             y1="48"
             x2="150"
@@ -404,7 +404,7 @@ export default function LoveWave({ size = 190, shadow = false }: LoveWaveProps) 
           </linearGradient>
 
           <linearGradient
-            id="duoraOrbRibbonViolet"
+            id="DUONEAROrbRibbonViolet"
             x1="50"
             y1="92"
             x2="84"
@@ -417,7 +417,7 @@ export default function LoveWave({ size = 190, shadow = false }: LoveWaveProps) 
           </linearGradient>
 
           <linearGradient
-            id="duoraOrbRibbonMix"
+            id="DUONEAROrbRibbonMix"
             x1="132"
             y1="118"
             x2="96"
@@ -430,14 +430,14 @@ export default function LoveWave({ size = 190, shadow = false }: LoveWaveProps) 
           </linearGradient>
 
           {/* Faint inner caustic untuk kedalaman */}
-          <radialGradient id="duoraOrbCaustic" cx="50%" cy="50%" r="50%">
+          <radialGradient id="DUONEAROrbCaustic" cx="50%" cy="50%" r="50%">
             <stop offset="0%" stopColor="#98a6ff" stopOpacity="0.26" />
             <stop offset="100%" stopColor="#98a6ff" stopOpacity="0" />
           </radialGradient>
 
           {/* Iridescent rim — gradient itself slowly drifts around the edge */}
           <linearGradient
-            id="duoraOrbRimGrad"
+            id="DUONEAROrbRimGrad"
             x1="38"
             y1="38"
             x2="162"
@@ -462,7 +462,7 @@ export default function LoveWave({ size = 190, shadow = false }: LoveWaveProps) 
 
           {/* Glass surface sheen: tipis, hampir transparan */}
           <linearGradient
-            id="duoraOrbGloss"
+            id="DUONEAROrbGloss"
             x1="60"
             y1="36"
             x2="140"
@@ -477,7 +477,7 @@ export default function LoveWave({ size = 190, shadow = false }: LoveWaveProps) 
 
           {/* Specular crescents */}
           <linearGradient
-            id="duoraOrbSpec"
+            id="DUONEAROrbSpec"
             x1="47.8"
             y1="86"
             x2="104.7"
@@ -491,7 +491,7 @@ export default function LoveWave({ size = 190, shadow = false }: LoveWaveProps) 
           </linearGradient>
 
           <linearGradient
-            id="duoraOrbSpecB"
+            id="DUONEAROrbSpecB"
             x1="47.8"
             y1="86"
             x2="104.7"
@@ -505,7 +505,7 @@ export default function LoveWave({ size = 190, shadow = false }: LoveWaveProps) 
           </linearGradient>
 
           {/* ---------- Organic silhouette clip (morphing) ---------- */}
-          <clipPath id="duoraOrbClip" clipPathUnits="userSpaceOnUse">
+          <clipPath id="DUONEAROrbClip" clipPathUnits="userSpaceOnUse">
             <path d={ORB_SHAPE_1}>
               <animate {...ORB_MORPH_ANIMATION} />
             </path>
@@ -514,7 +514,7 @@ export default function LoveWave({ size = 190, shadow = false }: LoveWaveProps) 
           {/* Mask pelubang tengah: semua isi orb dipotong di bagian tengah,
               jadi yang terlihat di tengah adalah background parent */}
           <mask
-            id="duoraOrbCenterMask"
+            id="DUONEAROrbCenterMask"
             maskUnits="userSpaceOnUse"
             x="0"
             y="0"
@@ -526,14 +526,14 @@ export default function LoveWave({ size = 190, shadow = false }: LoveWaveProps) 
               y="0"
               width="200"
               height="200"
-              fill="url(#duoraOrbCenterFade)"
+              fill="url(#DUONEAROrbCenterFade)"
             />
           </mask>
 
           {/* Mask "lubang" berbentuk orb: dipakai untuk memotong glow
               atmosfer di dalam orb */}
           <mask
-            id="duoraOrbHole"
+            id="DUONEAROrbHole"
             maskUnits="userSpaceOnUse"
             x="0"
             y="0"
@@ -544,7 +544,7 @@ export default function LoveWave({ size = 190, shadow = false }: LoveWaveProps) 
             <path
               d={ORB_SHAPE_1}
               fill="#000000"
-              filter="url(#duoraOrbBlurMask)"
+              filter="url(#DUONEAROrbBlurMask)"
             >
               <animate {...ORB_MORPH_ANIMATION} />
             </path>
@@ -552,7 +552,7 @@ export default function LoveWave({ size = 190, shadow = false }: LoveWaveProps) 
 
           {/* ---------- Filters ---------- */}
           <filter
-            id="duoraOrbBlurGlow"
+            id="DUONEAROrbBlurGlow"
             filterUnits="userSpaceOnUse"
             x="0"
             y="0"
@@ -564,7 +564,7 @@ export default function LoveWave({ size = 190, shadow = false }: LoveWaveProps) 
           </filter>
 
           <filter
-            id="duoraOrbBlurMask"
+            id="DUONEAROrbBlurMask"
             filterUnits="userSpaceOnUse"
             x="0"
             y="0"
@@ -576,7 +576,7 @@ export default function LoveWave({ size = 190, shadow = false }: LoveWaveProps) 
           </filter>
 
           <filter
-            id="duoraOrbBlurShadow"
+            id="DUONEAROrbBlurShadow"
             filterUnits="userSpaceOnUse"
             x="0"
             y="0"
@@ -588,7 +588,7 @@ export default function LoveWave({ size = 190, shadow = false }: LoveWaveProps) 
           </filter>
 
           <filter
-            id="duoraOrbBlurHalo"
+            id="DUONEAROrbBlurHalo"
             filterUnits="userSpaceOnUse"
             x="0"
             y="0"
@@ -600,7 +600,7 @@ export default function LoveWave({ size = 190, shadow = false }: LoveWaveProps) 
           </filter>
 
           <filter
-            id="duoraOrbBlurLg"
+            id="DUONEAROrbBlurLg"
             filterUnits="userSpaceOnUse"
             x="0"
             y="0"
@@ -612,7 +612,7 @@ export default function LoveWave({ size = 190, shadow = false }: LoveWaveProps) 
           </filter>
 
           <filter
-            id="duoraOrbBlurSm"
+            id="DUONEAROrbBlurSm"
             filterUnits="userSpaceOnUse"
             x="0"
             y="0"
@@ -624,7 +624,7 @@ export default function LoveWave({ size = 190, shadow = false }: LoveWaveProps) 
           </filter>
 
           <filter
-            id="duoraOrbBlurRim"
+            id="DUONEAROrbBlurRim"
             filterUnits="userSpaceOnUse"
             x="0"
             y="0"
@@ -636,7 +636,7 @@ export default function LoveWave({ size = 190, shadow = false }: LoveWaveProps) 
           </filter>
 
           <filter
-            id="duoraOrbBlurEdge"
+            id="DUONEAROrbBlurEdge"
             filterUnits="userSpaceOnUse"
             x="0"
             y="0"
@@ -648,7 +648,7 @@ export default function LoveWave({ size = 190, shadow = false }: LoveWaveProps) 
           </filter>
 
           <filter
-            id="duoraOrbBlurSheen"
+            id="DUONEAROrbBlurSheen"
             filterUnits="userSpaceOnUse"
             x="0"
             y="0"
@@ -660,7 +660,7 @@ export default function LoveWave({ size = 190, shadow = false }: LoveWaveProps) 
           </filter>
 
           <filter
-            id="duoraOrbBlurHi"
+            id="DUONEAROrbBlurHi"
             filterUnits="userSpaceOnUse"
             x="0"
             y="0"
@@ -674,7 +674,7 @@ export default function LoveWave({ size = 190, shadow = false }: LoveWaveProps) 
           {/* Glass refraction: animated turbulence drives a displacement map,
               with slightly different strength per colour channel (dispersion) */}
           <filter
-            id="duoraOrbRefract"
+            id="DUONEAROrbRefract"
             filterUnits="userSpaceOnUse"
             x="0"
             y="0"
@@ -687,7 +687,7 @@ export default function LoveWave({ size = 190, shadow = false }: LoveWaveProps) 
               baseFrequency="0.011 0.015"
               numOctaves="2"
               seed="11"
-              result="duoraNoise"
+              result="DUONEARNoise"
             >
               <animate
                 attributeName="baseFrequency"
@@ -702,63 +702,63 @@ export default function LoveWave({ size = 190, shadow = false }: LoveWaveProps) 
 
             <feDisplacementMap
               in="SourceGraphic"
-              in2="duoraNoise"
+              in2="DUONEARNoise"
               scale="12"
               xChannelSelector="R"
               yChannelSelector="G"
-              result="duoraDispR"
+              result="DUONEARDispR"
             />
             <feColorMatrix
-              in="duoraDispR"
+              in="DUONEARDispR"
               type="matrix"
               values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0"
-              result="duoraChanR"
+              result="DUONEARChanR"
             />
 
             <feDisplacementMap
               in="SourceGraphic"
-              in2="duoraNoise"
+              in2="DUONEARNoise"
               scale="15"
               xChannelSelector="R"
               yChannelSelector="G"
-              result="duoraDispG"
+              result="DUONEARDispG"
             />
             <feColorMatrix
-              in="duoraDispG"
+              in="DUONEARDispG"
               type="matrix"
               values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0"
-              result="duoraChanG"
+              result="DUONEARChanG"
             />
 
             <feDisplacementMap
               in="SourceGraphic"
-              in2="duoraNoise"
+              in2="DUONEARNoise"
               scale="18"
               xChannelSelector="R"
               yChannelSelector="G"
-              result="duoraDispB"
+              result="DUONEARDispB"
             />
             <feColorMatrix
-              in="duoraDispB"
+              in="DUONEARDispB"
               type="matrix"
               values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0"
-              result="duoraChanB"
+              result="DUONEARChanB"
             />
 
             <feBlend
-              in="duoraChanR"
-              in2="duoraChanG"
+              in="DUONEARChanR"
+              in2="DUONEARChanG"
               mode="screen"
-              result="duoraChanRG"
+              result="DUONEARChanRG"
             />
             <feBlend
-              in="duoraChanRG"
-              in2="duoraChanB"
+              in="DUONEARChanRG"
+              in2="DUONEARChanB"
               mode="screen"
-              result="duoraChanRGB"
+              result="DUONEARChanRGB"
             />
             <feColorMatrix
-              in="duoraChanRGB"
+              in="DUONEARChanRGB"
               type="saturate"
               values="1.25"
             />
@@ -767,13 +767,13 @@ export default function LoveWave({ size = 190, shadow = false }: LoveWaveProps) 
 
         {/* 0. Soft contact shadow (opsional) */}
         {shadow && (
-          <g filter="url(#duoraOrbBlurShadow)">
+          <g filter="url(#DUONEAROrbBlurShadow)">
             <ellipse
               cx="100"
               cy="176"
               rx="46"
               ry="7"
-              fill="url(#duoraOrbShadow)"
+              fill="url(#DUONEAROrbShadow)"
             >
               <animate
                 attributeName="rx"
@@ -798,9 +798,9 @@ export default function LoveWave({ size = 190, shadow = false }: LoveWaveProps) 
         )}
 
         {/* 1. Atmospheric glow (breathing) — hanya di luar orb berkat mask */}
-        <g mask="url(#duoraOrbHole)">
-          <g filter="url(#duoraOrbBlurGlow)">
-            <circle cx="96" cy="106" r="80" fill="url(#duoraOrbAtmosA)">
+        <g mask="url(#DUONEAROrbHole)">
+          <g filter="url(#DUONEAROrbBlurGlow)">
+            <circle cx="96" cy="106" r="80" fill="url(#DUONEAROrbAtmosA)">
               <animate
                 attributeName="r"
                 values="78;88;78"
@@ -821,7 +821,7 @@ export default function LoveWave({ size = 190, shadow = false }: LoveWaveProps) 
               />
             </circle>
 
-            <circle cx="106" cy="92" r="76" fill="url(#duoraOrbAtmosB)">
+            <circle cx="106" cy="92" r="76" fill="url(#DUONEAROrbAtmosB)">
               <animate
                 attributeName="r"
                 values="74;84;74"
@@ -848,10 +848,10 @@ export default function LoveWave({ size = 190, shadow = false }: LoveWaveProps) 
         <path
           d={ORB_SHAPE_1}
           fill="none"
-          stroke="url(#duoraOrbRimGrad)"
+          stroke="url(#DUONEAROrbRimGrad)"
           strokeWidth="10"
           opacity="0.32"
-          filter="url(#duoraOrbBlurHalo)"
+          filter="url(#DUONEAROrbBlurHalo)"
         >
           <animate {...ORB_MORPH_ANIMATION} />
           <animate
@@ -867,29 +867,29 @@ export default function LoveWave({ size = 190, shadow = false }: LoveWaveProps) 
 
         {/* 3. The orb itself — dipotong ke bentuk blob, lalu tengahnya
                dilubangi lewat mask supaya benar-benar transparan */}
-        <g clipPath="url(#duoraOrbClip)">
-          <g mask="url(#duoraOrbCenterMask)">
+        <g clipPath="url(#DUONEAROrbClip)">
+          <g mask="url(#DUONEAROrbCenterMask)">
             {/* Clear glass body (tengah transparan, tepi tint tipis) */}
             <rect
               x="20"
               y="20"
               width="160"
               height="160"
-              fill="url(#duoraOrbBase)"
+              fill="url(#DUONEAROrbBase)"
             />
 
             {/* Internal flowing light, warped by the refraction filter */}
-            <g filter="url(#duoraOrbRefract)">
+            <g filter="url(#DUONEAROrbRefract)">
               {/* Soft colour masses */}
-              <g filter="url(#duoraOrbBlurLg)">
-                <g className="duora-orb-layer duora-orb-flow-a">
+              <g filter="url(#DUONEAROrbBlurLg)">
+                <g className="DUONEAR-orb-layer DUONEAR-orb-flow-a">
                   <ellipse
                     cx="66"
                     cy="126"
                     rx="40"
                     ry="24"
                     transform="rotate(-32 66 126)"
-                    fill="url(#duoraOrbBlue)"
+                    fill="url(#DUONEAROrbBlue)"
                   />
                   <ellipse
                     cx="112"
@@ -897,18 +897,18 @@ export default function LoveWave({ size = 190, shadow = false }: LoveWaveProps) 
                     rx="34"
                     ry="15"
                     transform="rotate(-8 112 150)"
-                    fill="url(#duoraOrbCyan)"
+                    fill="url(#DUONEAROrbCyan)"
                   />
                 </g>
 
-                <g className="duora-orb-layer duora-orb-flow-b">
+                <g className="DUONEAR-orb-layer DUONEAR-orb-flow-b">
                   <ellipse
                     cx="54"
                     cy="82"
                     rx="30"
                     ry="20"
                     transform="rotate(-50 54 82)"
-                    fill="url(#duoraOrbViolet)"
+                    fill="url(#DUONEAROrbViolet)"
                   />
                   <ellipse
                     cx="88"
@@ -916,18 +916,18 @@ export default function LoveWave({ size = 190, shadow = false }: LoveWaveProps) 
                     rx="26"
                     ry="12"
                     transform="rotate(-12 88 44)"
-                    fill="url(#duoraOrbBlue)"
+                    fill="url(#DUONEAROrbBlue)"
                   />
                 </g>
 
-                <g className="duora-orb-layer duora-orb-flow-c">
+                <g className="DUONEAR-orb-layer DUONEAR-orb-flow-c">
                   <ellipse
                     cx="148"
                     cy="76"
                     rx="32"
                     ry="22"
                     transform="rotate(35 148 76)"
-                    fill="url(#duoraOrbMagenta)"
+                    fill="url(#DUONEAROrbMagenta)"
                   />
                   <ellipse
                     cx="150"
@@ -935,42 +935,42 @@ export default function LoveWave({ size = 190, shadow = false }: LoveWaveProps) 
                     rx="22"
                     ry="30"
                     transform="rotate(-15 150 122)"
-                    fill="url(#duoraOrbPink)"
+                    fill="url(#DUONEAROrbPink)"
                   />
                 </g>
               </g>
 
               {/* Thin flowing light ribbons */}
-              <g filter="url(#duoraOrbBlurSm)">
-                <g className="duora-orb-layer duora-orb-ribbon-a">
+              <g filter="url(#DUONEAROrbBlurSm)">
+                <g className="DUONEAR-orb-layer DUONEAR-orb-ribbon-a">
                   <path
                     d="M52,112 C54,134 74,152 100,154 C120,155 136,146 146,132"
                     fill="none"
-                    stroke="url(#duoraOrbRibbonBlue)"
+                    stroke="url(#DUONEAROrbRibbonBlue)"
                     strokeWidth="7"
                     strokeLinecap="round"
                   />
                   <path
                     d="M132,118 C128,136 112,146 96,146"
                     fill="none"
-                    stroke="url(#duoraOrbRibbonMix)"
+                    stroke="url(#DUONEAROrbRibbonMix)"
                     strokeWidth="3.5"
                     strokeLinecap="round"
                   />
                 </g>
 
-                <g className="duora-orb-layer duora-orb-ribbon-b">
+                <g className="DUONEAR-orb-layer DUONEAR-orb-ribbon-b">
                   <path
                     d="M118,48 C140,52 154,68 156,90 C157,102 154,112 150,120"
                     fill="none"
-                    stroke="url(#duoraOrbRibbonPink)"
+                    stroke="url(#DUONEAROrbRibbonPink)"
                     strokeWidth="6"
                     strokeLinecap="round"
                   />
                   <path
                     d="M50,92 C48,70 62,52 84,46"
                     fill="none"
-                    stroke="url(#duoraOrbRibbonViolet)"
+                    stroke="url(#DUONEAROrbRibbonViolet)"
                     strokeWidth="5"
                     strokeLinecap="round"
                   />
@@ -979,14 +979,14 @@ export default function LoveWave({ size = 190, shadow = false }: LoveWaveProps) 
             </g>
 
             {/* Faint inner caustic for depth */}
-            <g className="duora-orb-layer duora-orb-caustic">
+            <g className="DUONEAR-orb-layer DUONEAR-orb-caustic">
               <ellipse
                 cx="108"
                 cy="106"
                 rx="24"
                 ry="14"
                 transform="rotate(-25 108 106)"
-                fill="url(#duoraOrbCaustic)"
+                fill="url(#DUONEAROrbCaustic)"
               />
             </g>
 
@@ -994,10 +994,10 @@ export default function LoveWave({ size = 190, shadow = false }: LoveWaveProps) 
             <path
               d={ORB_SHAPE_1}
               fill="none"
-              stroke="url(#duoraOrbRimGrad)"
+              stroke="url(#DUONEAROrbRimGrad)"
               strokeWidth="9"
               opacity="0.75"
-              filter="url(#duoraOrbBlurRim)"
+              filter="url(#DUONEAROrbBlurRim)"
             >
               <animate {...ORB_MORPH_ANIMATION} />
             </path>
@@ -1006,10 +1006,10 @@ export default function LoveWave({ size = 190, shadow = false }: LoveWaveProps) 
             <path
               d={ORB_SHAPE_1}
               fill="none"
-              stroke="url(#duoraOrbRimGrad)"
+              stroke="url(#DUONEAROrbRimGrad)"
               strokeWidth="2"
               opacity="0.45"
-              filter="url(#duoraOrbBlurEdge)"
+              filter="url(#DUONEAROrbBlurEdge)"
             >
               <animate {...ORB_MORPH_ANIMATION} />
             </path>
@@ -1020,11 +1020,11 @@ export default function LoveWave({ size = 190, shadow = false }: LoveWaveProps) 
               y="20"
               width="160"
               height="160"
-              fill="url(#duoraOrbGloss)"
+              fill="url(#DUONEAROrbGloss)"
             />
 
             {/* Edge sheens that drift slowly along the glass */}
-            <g filter="url(#duoraOrbBlurSheen)">
+            <g filter="url(#DUONEAROrbBlurSheen)">
               <path
                 d={ORB_SHAPE_1}
                 fill="none"
@@ -1071,11 +1071,11 @@ export default function LoveWave({ size = 190, shadow = false }: LoveWaveProps) 
             </g>
 
             {/* White specular highlights */}
-            <g filter="url(#duoraOrbBlurHi)">
-              <g className="duora-orb-layer duora-orb-spec-a">
+            <g filter="url(#DUONEAROrbBlurHi)">
+              <g className="DUONEAR-orb-layer DUONEAR-orb-spec-a">
                 <path
                   d="M47.8,86 C54.6,60.7 78.6,43.9 104.7,46.2 C86,51 60,66 47.8,86 Z"
-                  fill="url(#duoraOrbSpec)"
+                  fill="url(#DUONEAROrbSpec)"
                 />
                 <ellipse
                   cx="71"
@@ -1089,13 +1089,13 @@ export default function LoveWave({ size = 190, shadow = false }: LoveWaveProps) 
               </g>
 
               <g
-                className="duora-orb-layer duora-orb-spec-b"
+                className="DUONEAR-orb-layer DUONEAR-orb-spec-b"
                 opacity="0.6"
               >
                 <path
                   d="M47.8,86 C54.6,60.7 78.6,43.9 104.7,46.2 C86,51 60,66 47.8,86 Z"
                   transform="rotate(180 100 100)"
-                  fill="url(#duoraOrbSpecB)"
+                  fill="url(#DUONEAROrbSpecB)"
                 />
               </g>
             </g>

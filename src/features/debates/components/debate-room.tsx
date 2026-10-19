@@ -558,7 +558,7 @@ function MediatorStage({
             </p>
 
             <p className="mt-1 text-[10.5px] leading-4 text-description">
-              Diskusi akan ditutup dan Duora AI akan menyiapkan
+              Diskusi akan ditutup dan DUONEAR AI akan menyiapkan
               putusan akhir untuk kalian berdua.
             </p>
           </div>
@@ -1319,7 +1319,7 @@ export default function DebateRoom({
               </div>
             ) : (
               <div className="mx-auto flex min-h-full w-full max-w-[520px] flex-col justify-center">
-                {/* 1. DUORA AI */}
+                {/* 1. DUONEAR AI */}
 
                 <MediatorStage
                   persona={personaLabel[debate.ai_persona]}

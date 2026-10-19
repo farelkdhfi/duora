@@ -21,7 +21,7 @@ import logo from "@/assets/logo-white.png";
 const PLANS = [
   {
     id: "free",
-    name: "Duora Free",
+    name: "DUONEAR Free",
     shortName: "Free",
     price: "Rp 0",
     oldPrice: null,
@@ -41,7 +41,7 @@ const PLANS = [
   },
   {
     id: "plus",
-    name: "Duora Plus",
+    name: "DUONEAR Plus",
     shortName: "Plus",
     price: "Rp 17.999",
     oldPrice: "Rp 35.000",
@@ -62,7 +62,7 @@ const PLANS = [
   },
   {
     id: "pro",
-    name: "Duora Pro",
+    name: "DUONEAR Pro",
     shortName: "Pro",
     price: "Rp 25.999",
     oldPrice: "Rp 50.000",
@@ -71,7 +71,7 @@ const PLANS = [
     eyebrow: "Everything, unlimited",
     title: "More room for everything.",
     description:
-      "Unlock the full Duora experience with higher limits and unlimited access.",
+      "Unlock the full DUONEAR experience with higher limits and unlimited access.",
     features: [
       ["AI Debates", "Unlimited messages"],
       ["Debate Rooms", "Unlimited"],
@@ -161,10 +161,10 @@ export default function SubscriptionPlanPage() {
           </button>
 
           <div className="flex items-center">
-            <Image src={logo} alt="Duora" className="size-4" />
+            <Image src={logo} alt="DUONEAR" className="size-4" />
 
             <span className="text-sm font-semibold text-secondary">
-              Duora
+              DUONEAR
             </span>
           </div>
         </header>

@@ -126,7 +126,7 @@ export default function MobileBottomNav({ onMore }: MobileBottomNavProps) {
 
         {locked ? (
           <div
-            aria-label="Duora AI Assistant (terkunci)"
+            aria-label="DUONEAR AI Assistant (terkunci)"
             aria-disabled="true"
             className="absolute left-1/2 top-1/2 z-20 flex size-[3.15rem] -translate-x-1/2 -translate-y-[calc(50%+1.55rem)] cursor-not-allowed items-center justify-center rounded-full bg-neutral-900 opacity-50 shadow-[0_12px_30px_-10px_rgba(0,0,0,0.8)] ring-[0.55rem] ring-black/80"
           >
@@ -137,7 +137,7 @@ export default function MobileBottomNav({ onMore }: MobileBottomNavProps) {
         ) : (
           <Link
             href="/ai-assistant"
-            aria-label="Duora AI Assistant"
+            aria-label="DUONEAR AI Assistant"
             className={`absolute left-1/2 top-1/2 z-20 flex size-[3.15rem] -translate-x-1/2 -translate-y-[calc(50%+1.55rem)] items-center justify-center rounded-full shadow-[0_12px_30px_-10px_rgba(0,0,0,0.8)] ring-[0.55rem] ring-black/80 transition-all duration-200 active:scale-95 bg-black`}
           >
             <div className="pointer-events-none flex size-[3rem] items-center justify-center overflow-hidden rounded-full">

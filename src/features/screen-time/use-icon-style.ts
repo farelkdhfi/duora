@@ -15,8 +15,8 @@ export interface IconStyle {
   animated: boolean;
 }
 
-const STORAGE_KEY = "duora:screen-time-icon-style";
-const CHANGE_EVENT = "duora:icon-style-change";
+const STORAGE_KEY = "DUONEAR:screen-time-icon-style";
+const CHANGE_EVENT = "DUONEAR:icon-style-change";
 
 const DEFAULT_STYLE: IconStyle = { theme: null, color: null, animated: true };
 const HEX = /^#[0-9a-f]{6}$/i;

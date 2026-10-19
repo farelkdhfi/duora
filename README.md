@@ -1,6 +1,6 @@
-# Duora — A Digital Space for Couples
+# DUONEAR — A Digital Space for Couples
 
-Duora is a web application designed to help couples manage and grow their relationship in a structured way — from shared financial goals, daily mood journals, and idea notes to an AI-assisted discussion space for resolving disagreements in a healthy and constructive way.
+DUONEAR is a web application designed to help couples manage and grow their relationship in a structured way — from shared financial goals, daily mood journals, and idea notes to an AI-assisted discussion space for resolving disagreements in a healthy and constructive way.
 
 ## ✨ Key Features
 
@@ -52,4 +52,4 @@ The most complex feature in the application: a real-time chat space where couple
 
 ## 🚀 Live Demo
 
-https://duora-grow-together.vercel.app
+https://DUONEAR-grow-together.vercel.app

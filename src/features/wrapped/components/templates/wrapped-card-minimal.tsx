@@ -98,7 +98,7 @@ export const WrappedCardMinimal = forwardRef<HTMLDivElement, WrappedCardMinimalP
             {milestoneLabel}
           </p>
           <p className="text-[9px] font-medium uppercase tracking-[0.3em] text-neutral-400">
-            Duora
+            DUONEAR
           </p>
         </div>
 

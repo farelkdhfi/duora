@@ -1,8 +1,8 @@
 {
     "metadata": {
-        "title": "Duora — Teman AI untuk Pasangan Long Distance",
-        "description": "Duora adalah teman AI untuk pasangan LDR. AI Assistant-nya kenal tujuan, check-in, rencana, dan catatan kalian, jadi setiap jawabannya terasa personal.",
-        "ogTitle": "Duora — Asisten AI Pribadi untuk Hubungan Long Distance Kamu",
+        "title": "DUONEAR — Teman AI untuk Pasangan Long Distance",
+        "description": "DUONEAR adalah teman AI untuk pasangan LDR. AI Assistant-nya kenal tujuan, check-in, rencana, dan catatan kalian, jadi setiap jawabannya terasa personal.",
+        "ogTitle": "DUONEAR — Asisten AI Pribadi untuk Hubungan Long Distance Kamu",
         "ogDescription": "Tanya apa aja soal hubungan kalian dan dapat jawaban berdasarkan tujuan, check-in harian, rencana, dan catatan kalian sendiri. Selesaikan perbedaan pendapat dengan AI Debate, dan makin dekat lewat tujuan bersama, Q&A, dan lainnya."
     },
     "common": {
@@ -28,23 +28,23 @@
         }
     },
     "landing": {
-        "homeLabel": "Beranda Duora",
+        "homeLabel": "Beranda DUONEAR",
         "cta": "Mulai LDR kamu",
         "slideOf": "{current} dari {total}",
         "pageOf": "Halaman {current} dari {total}",
         "goToPage": "Ke halaman {page}",
         "slides": {
             "loveLivesHere": {
-                "alt": "Dua karakter kucing berbulu yang tetap terhubung lewat Duora",
+                "alt": "Dua karakter kucing berbulu yang tetap terhubung lewat DUONEAR",
                 "line1": "Love",
                 "line2": "lives <accent>here.</accent>",
                 "description": "Tempat nyaman untuk tetap dekat dan saling terhubung, meski terpisah jarak."
             },
             "assistant": {
-                "alt": "Asisten AI Duora membantu pasangan dalam hubungan mereka",
+                "alt": "Asisten AI DUONEAR membantu pasangan dalam hubungan mereka",
                 "line1": "Assistant",
                 "line2": "your <accent>relationship</accent>",
-                "description": "Tanya apa pun tentang hubungan kalian, Duora AI memahami konteksnya."
+                "description": "Tanya apa pun tentang hubungan kalian, DUONEAR AI memahami konteksnya."
             }
         }
     },
@@ -63,7 +63,7 @@
             "title": "selamat datang kembali",
             "headline": "<line>Biar jarak</line><line><accent>tetap dekat.</accent></line>",
             "subtitle": "Ruang privat untuk dua orang agar tetap terhubung, berbagi momen kecil, dan membuat jarak terasa lebih dekat.",
-            "legal": "Dengan melanjutkan, kamu menyetujui <terms>Ketentuan Layanan</terms> dan <privacy>Kebijakan Privasi</privacy> Duora. Belum punya akun? <signup>Daftar</signup>.",
+            "legal": "Dengan melanjutkan, kamu menyetujui <terms>Ketentuan Layanan</terms> dan <privacy>Kebijakan Privasi</privacy> DUONEAR. Belum punya akun? <signup>Daftar</signup>.",
             "signIn": "Masuk",
             "signingIn": "Sedang masuk"
         },
@@ -71,7 +71,7 @@
             "title": "buat ruangmu.",
             "headline": "<line>Bikin</line><line><accent>jarak</accent></line><line><accent>terasa lebih dekat.</accent></line>",
             "subtitle": "Buat ruang privat untuk kalian berdua agar tetap terhubung, berbagi momen kecil, dan membuat jarak terasa lebih dekat.",
-            "legal": "Dengan melanjutkan, kamu menyetujui <terms>Ketentuan Layanan</terms> dan <privacy>Kebijakan Privasi</privacy> Duora. Sudah punya akun? <signin>Masuk</signin>.",
+            "legal": "Dengan melanjutkan, kamu menyetujui <terms>Ketentuan Layanan</terms> dan <privacy>Kebijakan Privasi</privacy> DUONEAR. Sudah punya akun? <signin>Masuk</signin>.",
             "signUpWithEmail": "Daftar dengan email",
             "continue": "Lanjut",
             "createAccount": "Buat akun",
@@ -83,11 +83,11 @@
             "steps": {
                 "method": {
                     "title": "Mau gabung lewat mana?",
-                    "description": "Pilih cara termudah untuk membuat ruang Duora kamu."
+                    "description": "Pilih cara termudah untuk membuat ruang DUONEAR kamu."
                 },
                 "username": {
                     "title": "Pilih username kamu.",
-                    "description": "Ini nama yang akan dikenali di dalam Duora."
+                    "description": "Ini nama yang akan dikenali di dalam DUONEAR."
                 },
                 "displayName": {
                     "title": "Mau dipanggil apa?",
@@ -103,7 +103,7 @@
                 },
                 "confirmPassword": {
                     "title": "Satu langkah lagi.",
-                    "description": "Konfirmasi password kamu dan akun Duora kamu siap."
+                    "description": "Konfirmasi password kamu dan akun DUONEAR kamu siap."
                 }
             }
         },
@@ -159,7 +159,7 @@
         "closeMenu": "Tutup menu",
         "logout": "Keluar",
         "loggingOut": "Sedang keluar...",
-        "footer": "Tumbuh bersama DUORA"
+        "footer": "Tumbuh bersama DUONEAR"
     },
     "checkins": {
         "moods": {
@@ -303,7 +303,7 @@
         },
         "waiting": {
             "imageAlt": "Sepasang kekasih yang saling menunggu",
-            "instruction": "Bagikan kode undangan ini ke pasanganmu untuk mulai membangun ruang bersama di Duora.",
+            "instruction": "Bagikan kode undangan ini ke pasanganmu untuk mulai membangun ruang bersama di DUONEAR.",
             "copy": "Salin kode undangan",
             "copied": "Kode berhasil disalin",
             "wrongPick": "Salah pilih? Hapus relationship ini untuk bergabung dengan kode pasanganmu.",
@@ -762,7 +762,7 @@
         "onboarding": {
             "choose": {
                 "title": "Mau mulai dari mana?",
-                "description": "Duora hanya bisa digunakan jika kamu dan pasanganmu sudah terhubung.",
+                "description": "DUONEAR hanya bisa digunakan jika kamu dan pasanganmu sudah terhubung.",
                 "groupLabel": "Pengaturan hubungan"
             },
             "choices": {
@@ -788,7 +788,7 @@
             },
             "join": {
                 "title": "Masukkan kode undangan",
-                "description": "Minta pasanganmu kode 8 karakter dari akun Duora miliknya.",
+                "description": "Minta pasanganmu kode 8 karakter dari akun DUONEAR miliknya.",
                 "label": "Kode undangan"
             },
             "next": "Lanjut",

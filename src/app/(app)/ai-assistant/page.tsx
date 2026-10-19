@@ -86,7 +86,7 @@ export default function AiAssistantLandingPage() {
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-primary">
         <div className="flex items-center gap-3 text-sm text-neutral-400">
           <div className="h-4 w-4 animate-spin rounded-full border-2 border-neutral-200 border-t-neutral-500" />
-          Memuat Duora AI...
+          Memuat DUONEAR AI...
         </div>
       </div>
     );
@@ -105,7 +105,7 @@ export default function AiAssistantLandingPage() {
           </h1>
 
           <p className="mt-2 text-sm leading-6 text-neutral-500">
-            Duora AI membutuhkan hubungan yang terhubung agar dapat
+            DUONEAR AI membutuhkan hubungan yang terhubung agar dapat
             memahami konteks hubungan kalian.
           </p>
         </div>
@@ -129,7 +129,7 @@ export default function AiAssistantLandingPage() {
           </div>
 
           <h1 className="mt-7 text-2xl font-semibold tracking-tight text-neutral-950">
-            Duora AI
+            DUONEAR AI
           </h1>
 
           <p className="mx-auto mt-3 max-w-sm text-sm leading-6 text-neutral-500">
@@ -152,7 +152,7 @@ export default function AiAssistantLandingPage() {
                 </p>
 
                 <p className="mt-1 text-xs leading-5 text-neutral-500">
-                  Upgrade untuk mulai menggunakan Duora AI
+                  Upgrade untuk mulai menggunakan DUONEAR AI
                   dan mendapatkan insight yang lebih personal.
                 </p>
               </div>
@@ -212,7 +212,7 @@ export default function AiAssistantLandingPage() {
 
                 <div className="mt-2 flex items-center justify-center">
                   <span className="text-[10px] text-description">
-                    Duora AI dapat membuat kesalahan
+                    DUONEAR AI dapat membuat kesalahan
                   </span>
                 </div>
               </div>
@@ -236,7 +236,7 @@ export default function AiAssistantLandingPage() {
 
                       <p className="mx-auto mt-3 max-w-xl text-[13px] leading-6 text-description sm:text-sm">
                         Tanyakan apa pun tentang hubungan kalian.
-                        Duora AI dapat memahami konteks dari mood,
+                        DUONEAR AI dapat memahami konteks dari mood,
                         goals, planner, Q&A, dan percakapan sebelumnya.
                       </p>
                     </div>
@@ -265,7 +265,7 @@ export default function AiAssistantLandingPage() {
                   <span className="h-0.5 w-0.5 rounded-full bg-neutral-300" />
 
                   <span className="text-[10px] text-neutral-400">
-                    Duora AI dapat membuat kesalahan
+                    DUONEAR AI dapat membuat kesalahan
                   </span>
                 </div>
               </div>

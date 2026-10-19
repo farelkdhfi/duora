@@ -125,9 +125,9 @@
 |   |   \-- hero-mobile-2-2.png
 |   +-- waiting
 |   |   \-- waiting-couple.png
-|   +-- duora-logo.png
-|   +-- duora-logo2.png
-|   +-- duora-logo3.png
+|   +-- DUONEAR-logo.png
+|   +-- DUONEAR-logo2.png
+|   +-- DUONEAR-logo3.png
 |   +-- logo.png
 |   \-- logo-white.png
 +-- components

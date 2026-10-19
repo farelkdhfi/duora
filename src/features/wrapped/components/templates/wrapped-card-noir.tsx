@@ -104,7 +104,7 @@ export const WrappedCardNoir = forwardRef<
             <header className="flex items-start justify-between border-b border-white/10 pb-4">
               <div>
                 <p className="text-[7px] font-semibold uppercase tracking-[0.32em] text-white/45">
-                  Duora / Wrapped
+                  DUONEAR / Wrapped
                 </p>
 
                 <p className="mt-2 text-[7px] uppercase tracking-[0.16em] text-white/30">
@@ -115,14 +115,14 @@ export const WrappedCardNoir = forwardRef<
               <div className="flex items-center gap-1.5">
                 <Image
                   src={logoImg}
-                  alt="Duora"
+                  alt="DUONEAR"
                   width={16}
                   height={16}
                   className="brightness-0 invert opacity-80"
                 />
 
                 <span className="text-[13px] font-semibold tracking-[-0.06em]">
-                  Duora
+                  DUONEAR
                 </span>
               </div>
             </header>

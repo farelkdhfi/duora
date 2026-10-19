@@ -113,11 +113,11 @@ export default function MobileMoreSheet({
                 src={logo}
                 height={20}
                 width={20}
-                alt="Duora"
+                alt="DUONEAR"
               />
 
               <p className="text-[16px] font-semibold uppercase text-white">
-                DUORA
+                DUONEAR
               </p>
             </div>
 

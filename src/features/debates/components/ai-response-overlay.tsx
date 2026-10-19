@@ -153,17 +153,17 @@ export default function AiResponseOverlay({
 
   const subtitle = isProcessing
     ? isPendingVerdict
-      ? 'Duora AI sedang menyusun putusan akhir.'
+      ? 'DUONEAR AI sedang menyusun putusan akhir.'
       : requesterName
-        ? `${requesterName} mengundang Duora AI kedalam diskusi.`
-        : 'Duora is reading both perspectives.'
+        ? `${requesterName} mengundang DUONEAR AI kedalam diskusi.`
+        : 'DUONEAR is reading both perspectives.'
     : null
 
   const title = isProcessing
     ? processingTitle
     : isResolution
       ? 'A calmer place to meet in the middle.'
-      : 'Here is what Duora heard.'
+      : 'Here is what DUONEAR heard.'
 
   /* key untuk transisi teks hero saat state berganti */
   const heroKey = `${isProcessing ? 'processing' : 'done'}-${isResolution ? 'resolution' : 'comment'}`
@@ -187,7 +187,7 @@ export default function AiResponseOverlay({
         <header className="pointer-events-none absolute inset-x-0 top-0 z-20 flex items-center justify-between px-5 pb-4 pt-[max(1.25rem,env(safe-area-inset-top))] sm:px-8 sm:pt-7">
           <div className="flex items-center gap-2.5">
             <p className="text-[9px] font-semibold uppercase tracking-[0.3em] text-secondary">
-              Duora
+              DUONEAR
             </p>
 
             {isResolution && (

@@ -400,7 +400,7 @@ export function TemplatePicker({
 
                   <p className="mt-1 text-[10px] leading-relaxed text-description">
                     Unlock custom colors and premium
-                    templates with Duora Premium.
+                    templates with DUONEAR Premium.
                   </p>
                 </div>
               </div>

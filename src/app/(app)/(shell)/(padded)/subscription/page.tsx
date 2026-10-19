@@ -75,7 +75,7 @@ export default function SubscriptionPage() {
 
           <p className="mt-2 text-sm leading-6 text-description">
             Hubungkan relationship kamu terlebih dahulu untuk mengelola
-            langganan Duora.
+            langganan DUONEAR.
           </p>
         </div>
       </div>
@@ -157,7 +157,7 @@ export default function SubscriptionPage() {
           {/* HEADER */}
           <Header
             title="Subscription"
-            description="Kelola akses Duora dan lihat ruang yang tersedia untuk relationship kalian."
+            description="Kelola akses DUONEAR dan lihat ruang yang tersedia untuk relationship kalian."
           />
 
           {/* CURRENT PLAN */}
@@ -234,7 +234,7 @@ export default function SubscriptionPage() {
                         {trial
                           ? "Akses premium kamu sedang aktif."
                           : isPro
-                            ? "Akses penuh untuk semua ruang Duora."
+                            ? "Akses penuh untuk semua ruang DUONEAR."
                             : isPlus
                               ? "Lebih banyak ruang untuk relationship kalian."
                               : "Ruang dasar untuk tetap connected."}
@@ -366,7 +366,7 @@ export default function SubscriptionPage() {
                     <h3 className="text-sm font-semibold tracking-[-0.035em] text-secondary">
                       {subscription.has_used_trial
                         ? "Trial sudah digunakan"
-                        : "Coba Duora+ gratis"}
+                        : "Coba DUONEAR+ gratis"}
                     </h3>
 
                     <p className="mt-1.5 max-w-md text-xs leading-5 text-description">
@@ -426,7 +426,7 @@ export default function SubscriptionPage() {
                     <Crown size={14} className="text-pink-200" />
 
                     <span className="text-[9px] font-medium uppercase tracking-[0.22em] text-description">
-                      Duora plan
+                      DUONEAR plan
                     </span>
                   </div>
 
@@ -458,7 +458,7 @@ export default function SubscriptionPage() {
           {isPaid && !nearingExpiry && (
             <div className="mt-7 flex flex-col gap-2 text-center sm:flex-row sm:items-center sm:justify-between sm:text-left">
               <p className="text-[9px] text-description">
-                Duora gives you more room for the moments that matter.
+                DUONEAR gives you more room for the moments that matter.
               </p>
 
               <div className="flex items-center justify-center gap-2 text-[8px] uppercase tracking-[0.14em] text-description">

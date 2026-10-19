@@ -117,7 +117,7 @@ export const WrappedCardSoft = forwardRef<
                   />
 
                   <p className="text-[15px] font-bold tracking-[-0.05em] text-neutral-900">
-                    Duora
+                    DUONEAR
                   </p>
                 </div>
 

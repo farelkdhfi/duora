@@ -480,7 +480,7 @@ export default function DebateIntro({
           transition={{ duration: 0.8, delay: 0.1 }}
           className="absolute inset-x-0 top-[calc(2rem_+_env(safe-area-inset-top))] text-center text-[9px] font-semibold uppercase tracking-[0.3em] text-description sm:top-[calc(2.5rem_+_env(safe-area-inset-top))]"
         >
-          Duora
+          DUONEAR
         </motion.p>
 
         {/* SECTIONS */}

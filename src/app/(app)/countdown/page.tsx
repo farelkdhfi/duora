@@ -66,7 +66,7 @@ export default function CountdownPage() {
                     </div>
 
                     <p className="mt-6 text-[10px] font-semibold uppercase tracking-[0.18em] text-neutral-300">
-                        Duora Countdown
+                        DUONEAR Countdown
                     </p>
 
                     <h2 className="mt-2 text-xl font-semibold tracking-[-0.04em] text-neutral-800">

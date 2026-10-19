@@ -121,14 +121,14 @@ export const WrappedCardNight = forwardRef<
               <div className="flex items-center gap-1.5">
                 <Image
                   src={logoImg}
-                  alt="Duora"
+                  alt="DUONEAR"
                   width={17}
                   height={17}
                   className="brightness-0 invert opacity-90"
                 />
 
                 <p className="text-[14px] font-semibold tracking-[-0.06em]">
-                  Duora
+                  DUONEAR
                 </p>
               </div>
             </header>
@@ -327,7 +327,7 @@ export const WrappedCardNight = forwardRef<
                 <div className="h-px flex-1 bg-gradient-to-r from-transparent to-white/10" />
 
                 <span className="text-[8px] font-medium uppercase tracking-[0.25em] text-white/30">
-                  Duora
+                  DUONEAR
                 </span>
 
                 <div className="h-px flex-1 bg-gradient-to-l from-transparent to-white/10" />

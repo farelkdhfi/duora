@@ -1175,7 +1175,7 @@ export default function DebateList({
               <div className="mx-auto flex size-12 items-center justify-center rounded-full bg-white/[0.06]">
                 <Image
                   src={formalAi}
-                  alt="Duora mediator"
+                  alt="DUONEAR mediator"
                   width={34}
                   height={34}
                   className="size-[34px] object-contain"

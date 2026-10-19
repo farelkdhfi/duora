@@ -122,7 +122,7 @@ export function PlanBadge({ onNavigate }: PlanBadgeProps) {
         <div className="relative z-10 min-w-0 flex-1">
           <div className="flex items-center gap-2">
             <p className="text-[12px] font-medium text-secondary">
-              Duora+
+              DUONEAR+
             </p>
 
             <span className="size-1 rounded-full bg-pink-300" />
@@ -158,7 +158,7 @@ export function PlanBadge({ onNavigate }: PlanBadgeProps) {
         <div className="relative z-10 min-w-0 flex-1">
           <div className="flex items-center gap-2">
             <p className="text-[12px] font-medium text-secondary">
-              Duora+
+              DUONEAR+
             </p>
 
             <span className="size-1 rounded-full bg-pink-400" />

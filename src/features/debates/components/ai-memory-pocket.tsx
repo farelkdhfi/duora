@@ -40,7 +40,7 @@ export default function AiMemoryPocket({
             </p>
 
             <h2 className="mt-1 text-[16px] font-semibold tracking-[-0.04em] text-secondary sm:text-[19px]">
-              Duora AI
+              DUONEAR AI
             </h2>
 
             <p className="mt-1 text-[9px] text-description sm:text-[10px]">

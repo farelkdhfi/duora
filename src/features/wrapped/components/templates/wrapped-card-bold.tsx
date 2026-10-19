@@ -194,7 +194,7 @@ export const WrappedCardBold = forwardRef<
                   </div>
 
                   <span className="text-[10px] font-bold uppercase tracking-[0.22em] text-[#a05a72]">
-                    Duora Wrapped
+                    DUONEAR Wrapped
                   </span>
                 </div>
 
@@ -504,7 +504,7 @@ export const WrappedCardBold = forwardRef<
                 </svg>
 
                 <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-[#b4778b]">
-                  made with duora
+                  made with DUONEAR
                 </span>
 
                 <svg

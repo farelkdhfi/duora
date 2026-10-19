@@ -287,7 +287,7 @@ function WelcomeIntro({ onDone }: { onDone: () => void }) {
 
       <div className="relative flex flex-col items-center text-center">
         <motion.div {...logoMotion}>
-          <Image src={logo} alt="Duora" priority className="h-30 w-auto grayscale brightness-200" />
+          <Image src={logo} alt="DUONEAR" priority className="h-30 w-auto grayscale brightness-200" />
         </motion.div>
       </div>
     </motion.div>

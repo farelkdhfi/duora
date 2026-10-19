@@ -64,7 +64,7 @@ export function AiSidebar({
           <div className="mb-5 flex items-center justify-between px-2 py-1">
             <div>
               <p className="text-[13px] font-semibold tracking-tight text-secondary">
-                Duora AI
+                DUONEAR AI
               </p>
 
               <p className="text-[10px] text-description">
@@ -151,7 +151,7 @@ export function AiSidebar({
 
         <div className="pointer-events-auto flex items-center rounded-full border border-white/10 bg-primary px-3 py-1.5 shadow-sm backdrop-blur-xl">
           <span className="text-[11px] font-medium text-secondary">
-            Duora AI
+            DUONEAR AI
           </span>
         </div>
 
@@ -177,7 +177,7 @@ export function AiSidebar({
             <div className="flex shrink-0 items-center justify-between border-b border-white/10 px-4 py-4">
               <div>
                 <p className="text-lg font-semibold tracking-tight text-secondary">
-                  Duora AI
+                  DUONEAR AI
                 </p>
 
                 <p className="text-[10px] text-description">

@@ -10,7 +10,7 @@ import {
   resolveTemplateColors,
   getCustomGradientStyle,
 } from "@/features/share-template/utils";
-import logoImg from "@/assets/duora-logo3.png";
+import logoImg from "@/assets/DUONEAR-logo3.png";
 
 interface CountdownShareCardProps {
   countdown: MeetupCountdown;
@@ -145,7 +145,7 @@ export const CountdownShareCard = forwardRef<
                 src={logoImg}
                 width={20}
                 height={20}
-                alt="Duora"
+                alt="DUONEAR"
                 loading="eager"
                 unoptimized
               />
@@ -285,7 +285,7 @@ export const CountdownShareCard = forwardRef<
 
               <div className="flex shrink-0 items-center gap-2">
                 <span className="text-[7px] font-semibold uppercase tracking-[0.2em] text-neutral-300">
-                  made with duora
+                  made with DUONEAR
                 </span>
 
                 <span className="size-1 rounded-full bg-neutral-300" />

@@ -240,7 +240,7 @@ function ConversationView({
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-primary">
         <div className="flex items-center gap-3 text-sm text-description">
           <div className="h-4 w-4 animate-spin rounded-full border-2 border-white/10 border-t-description" />
-          Memuat Duora AI...
+          Memuat DUONEAR AI...
         </div>
       </div>
     );
@@ -262,7 +262,7 @@ function ConversationView({
           </h1>
 
           <p className="mt-2 text-sm leading-6 text-description">
-            Duora AI membutuhkan hubungan
+            DUONEAR AI membutuhkan hubungan
             yang terhubung agar dapat
             memahami konteks hubungan
             kalian.
@@ -281,7 +281,7 @@ function ConversationView({
           </div>
 
           <h1 className="mt-7 text-2xl font-semibold tracking-tight text-secondary">
-            Duora AI
+            DUONEAR AI
           </h1>
 
           <p className="mx-auto mt-3 max-w-sm text-sm leading-6 text-description">
@@ -307,7 +307,7 @@ function ConversationView({
 
                 <p className="mt-1 text-xs leading-5 text-description">
                   Upgrade untuk mulai
-                  menggunakan Duora AI dan
+                  menggunakan DUONEAR AI dan
                   mendapatkan insight yang lebih
                   personal.
                 </p>
@@ -452,7 +452,7 @@ function ConversationView({
               <span className="h-0.5 w-0.5 rounded-full bg-description/50" />
 
               <span className="text-[10px] text-description">
-                Duora AI dapat membuat
+                DUONEAR AI dapat membuat
                 kesalahan
               </span>
             </div>

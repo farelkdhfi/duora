@@ -1,8 +1,8 @@
 {
     "metadata": {
-        "title": "Duora — AI Relationship Companion for Long-Distance Couples",
-        "description": "Duora is an AI relationship companion for long-distance couples. Its AI Assistant knows your goals, check-ins, plans, and notes, so every answer feels personal.",
-        "ogTitle": "Duora — A Personal AI Assistant for Your Long-Distance Relationship",
+        "title": "DUONEAR — AI Relationship Companion for Long-Distance Couples",
+        "description": "DUONEAR is an AI relationship companion for long-distance couples. Its AI Assistant knows your goals, check-ins, plans, and notes, so every answer feels personal.",
+        "ogTitle": "DUONEAR — A Personal AI Assistant for Your Long-Distance Relationship",
         "ogDescription": "Ask anything about your relationship and get answers based on your own goals, daily check-ins, plans, and notes. Resolve disagreements with AI Debate, and grow closer with shared goals, Q&A, and more."
     },
     "common": {
@@ -28,23 +28,23 @@
         }
     },
     "landing": {
-        "homeLabel": "Duora home",
+        "homeLabel": "DUONEAR home",
         "cta": "Start your LDR",
         "slideOf": "{current} of {total}",
         "pageOf": "Page {current} of {total}",
         "goToPage": "Go to page {page}",
         "slides": {
             "loveLivesHere": {
-                "alt": "Two fluffy cat characters staying connected through Duora",
+                "alt": "Two fluffy cat characters staying connected through DUONEAR",
                 "line1": "Love",
                 "line2": "lives <accent>here.</accent>",
                 "description": "A cozy place to stay close and connected, even when you're apart."
             },
             "assistant": {
-                "alt": "Duora AI assistant helping a couple with their relationship",
+                "alt": "DUONEAR AI assistant helping a couple with their relationship",
                 "line1": "Assistant",
                 "line2": "your <accent>relationship</accent>",
-                "description": "Ask anything about your relationship, Duora AI understands the context."
+                "description": "Ask anything about your relationship, DUONEAR AI understands the context."
             }
         }
     },
@@ -63,7 +63,7 @@
             "title": "welcome back",
             "headline": "<line>Keep the</line><line><accent>distance close.</accent></line>",
             "subtitle": "A private space for two people to stay connected, share little moments, and make distance feel closer.",
-            "legal": "By continuing, you agree to Duora <terms>Terms of Service</terms> and <privacy>Privacy Policy</privacy>. Don't have an account? <signup>Sign up</signup>.",
+            "legal": "By continuing, you agree to DUONEAR <terms>Terms of Service</terms> and <privacy>Privacy Policy</privacy>. Don't have an account? <signup>Sign up</signup>.",
             "signIn": "Sign in",
             "signingIn": "Signing in"
         },
@@ -71,7 +71,7 @@
             "title": "create your space.",
             "headline": "<line>Make the</line><line><accent>distance</accent></line><line><accent>feel closer.</accent></line>",
             "subtitle": "Create your private space for two people to stay connected, share little moments, and make distance feel closer.",
-            "legal": "By continuing, you agree to Duora <terms>Terms of Service</terms> and <privacy>Privacy Policy</privacy>. Already have an account? <signin>Sign in</signin>.",
+            "legal": "By continuing, you agree to DUONEAR <terms>Terms of Service</terms> and <privacy>Privacy Policy</privacy>. Already have an account? <signin>Sign in</signin>.",
             "signUpWithEmail": "Sign up with email",
             "continue": "Continue",
             "createAccount": "Create account",
@@ -83,11 +83,11 @@
             "steps": {
                 "method": {
                     "title": "How do you want to join?",
-                    "description": "Choose the easiest way to create your Duora space."
+                    "description": "Choose the easiest way to create your DUONEAR space."
                 },
                 "username": {
                     "title": "Choose your username.",
-                    "description": "This is how you will be recognized inside Duora."
+                    "description": "This is how you will be recognized inside DUONEAR."
                 },
                 "displayName": {
                     "title": "What should we call you?",
@@ -103,7 +103,7 @@
                 },
                 "confirmPassword": {
                     "title": "One last thing.",
-                    "description": "Confirm your password and your Duora account is ready."
+                    "description": "Confirm your password and your DUONEAR account is ready."
                 }
             }
         },
@@ -159,7 +159,7 @@
         "closeMenu": "Close menu",
         "logout": "Log out",
         "loggingOut": "Logging out...",
-        "footer": "Grow together with DUORA"
+        "footer": "Grow together with DUONEAR"
     },
         "checkins": {
         "moods": {
@@ -303,7 +303,7 @@
         },
         "waiting": {
             "imageAlt": "A couple waiting for each other",
-            "instruction": "Share this invite code with your partner to start building your shared space on Duora.",
+            "instruction": "Share this invite code with your partner to start building your shared space on DUONEAR.",
             "copy": "Copy invite code",
             "copied": "Code copied",
             "wrongPick": "Picked the wrong one? Delete this relationship to join with your partner's code.",
@@ -762,7 +762,7 @@
         "onboarding": {
             "choose": {
                 "title": "Where do you want to start?",
-                "description": "Duora only works once you and your partner are connected.",
+                "description": "DUONEAR only works once you and your partner are connected.",
                 "groupLabel": "Relationship setup"
             },
             "choices": {
@@ -788,7 +788,7 @@
             },
             "join": {
                 "title": "Enter your invite code",
-                "description": "Ask your partner for the 8-character code from their Duora account.",
+                "description": "Ask your partner for the 8-character code from their DUONEAR account.",
                 "label": "Invite code"
             },
             "next": "Continue",
