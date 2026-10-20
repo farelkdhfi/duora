@@ -5,6 +5,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { X } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useMyRelationshipDetails } from "@/features/relationship/queries";
 import { useGetMyProfile } from "@/features/profiles/queries";
 import { useActiveSession } from "@/features/qna/queries";
@@ -16,6 +17,8 @@ import { QnaReveal } from "@/features/qna/components/qna-reveal";
 const GRACE_PERIOD_MS = 2000;
 
 export default function QnaSessionPage() {
+  const t = useTranslations("qna.session");
+  const tn = useTranslations("qna.notConnected");
   const router = useRouter();
 
   const { data: relationshipDetails, isLoading: isLoadingRelationship } =
@@ -126,12 +129,11 @@ export default function QnaSessionPage() {
           </div>
 
           <h2 className="mt-5 text-lg font-semibold tracking-tight text-secondary">
-            Belum terhubung
+            {tn("title")}
           </h2>
 
           <p className="mt-2 text-sm leading-6 text-description">
-            Hubungkan pasanganmu terlebih dahulu untuk mulai menggunakan Q&A
-            bersama.
+            {tn("description")}
           </p>
         </div>
       </main>
@@ -146,18 +148,18 @@ export default function QnaSessionPage() {
         <header className="flex shrink-0 items-start justify-between gap-5 px-5 pt-7 sm:px-8 sm:pt-10">
           <div>
             <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-description">
-              Q&A
+              {t("eyebrow")}
             </p>
 
             <h1 className="mt-1 text-[25px] font-medium leading-tight tracking-[-0.045em] text-secondary sm:text-[32px]">
-              Answer anything.
+              {t("title")}
             </h1>
           </div>
 
           <button
             type="button"
             onClick={() => router.push("/qna")}
-            aria-label="Kembali ke Q&A"
+            aria-label={t("backAria")}
             className="flex size-9 shrink-0 items-center justify-center rounded-full border border-black/[0.05] bg-neutral-800 text-secondary shadow-sm transition-all duration-200 hover:bg-primary hover:text-secondary active:scale-95"
           >
             <X className="size-4" strokeWidth={1.8} />
@@ -203,7 +205,7 @@ export default function QnaSessionPage() {
                   <span className="h-px w-8 bg-black/10" />
 
                   <span className="text-[9px] font-semibold uppercase tracking-[0.22em] text-description">
-                    Sesi selesai
+                    {t("endedEyebrow")}
                   </span>
 
                   <span className="size-1.5 rounded-full bg-[#c995b5]" />
@@ -212,12 +214,11 @@ export default function QnaSessionPage() {
                 </div>
 
                 <h2 className="mt-7 text-[34px] font-medium leading-[1.08] tracking-[-0.055em] text-secondary sm:text-[48px]">
-                  Sesi ini sudah berakhir.
+                  {t("endedTitle")}
                 </h2>
 
                 <p className="mt-5 max-w-sm text-[13px] leading-6 text-description sm:text-[15px]">
-                  Tidak ada percakapan yang sedang berlangsung. Kalian bisa
-                  kembali ke Q&A dan memilih sesuatu yang ingin dibicarakan.
+                  {t("endedBody")}
                 </p>
 
                 <button
@@ -225,7 +226,7 @@ export default function QnaSessionPage() {
                   onClick={() => router.push("/qna")}
                   className="mt-8 flex h-13 w-full items-center justify-center rounded-full bg-[#1e1318] px-6 text-sm font-semibold tracking-[-0.01em] text-secondary shadow-[0_18px_40px_-18px_rgba(30,19,24,0.5)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#281a21] active:translate-y-0"
                 >
-                  Kembali ke Q&A
+                  {t("backCta")}
                 </button>
               </div>
             ) : (
@@ -239,7 +240,7 @@ export default function QnaSessionPage() {
                 </div>
 
                 <p className="mt-5 text-[10px] font-semibold uppercase tracking-[0.2em] text-description">
-                  Menyiapkan sesi
+                  {t("preparing")}
                 </p>
               </div>
             )}

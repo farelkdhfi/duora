@@ -17,6 +17,11 @@ import {
 } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
+import { useFormatter, useTimeZone, useTranslations } from 'next-intl'
+
+import { isSameZonedDay } from '@/lib/date'
+
+import { getDebateErrorKey } from '../errors'
 
 import DebateMessageBubble from './debate-message-bubble'
 import DateSeparator from './date-separator'
@@ -61,50 +66,27 @@ type Side = 'left' | 'right'
 
 type Provider = 'auto' | 'openrouter' | 'groq'
 
-const statusConfig = {
-  active: {
-    label: 'Active',
-    color: 'bg-emerald-400',
-  },
-  pending_verdict: {
-    label: 'Preparing verdict',
-    color: 'bg-amber-400',
-  },
-  resolved: {
-    label: 'Resolved',
-    color: 'bg-neutral-400',
-  },
-  archived: {
-    label: 'Archived',
-    color: 'bg-neutral-300',
-  },
-}
 
 const personaLabel: Record<
   AiPersona,
   {
-    text: string
     image: EmoticonImage
     button: string
   }
 > = {
   formal: {
-    text: 'Formal',
     image: formalAi,
     button: 'bg-primary text-secondary hover:bg-primary/80',
   },
   lembut: {
-    text: 'Lembut',
     image: lembutAi,
     button: 'bg-[#D68F9E] text-white hover:bg-pink-500',
   },
   kasar: {
-    text: 'Nyeletuk',
     image: nyeletukAi,
     button: 'bg-[#C13131] text-white hover:bg-red-600',
   },
   lebay: {
-    text: 'Lebay',
     image: lebayAi,
     button: 'bg-[#7698C0] text-white hover:bg-blue-600',
   },
@@ -141,12 +123,9 @@ function getMemberName(
       username: string | null
     }
     | undefined,
+  fallback: string,
 ) {
-  return (
-    member?.display_name ??
-    member?.username ??
-    'Partner'
-  )
+  return member?.display_name ?? member?.username ?? fallback
 }
 
 function isSameDay(dateA: string, dateB: string) {
@@ -182,14 +161,12 @@ function formatTime(dateString: string) {
 /* AI MEDIATOR (TOP) */
 /* ===================================================== */
 
-const providerOptions: Array<{
-  value: Provider
-  label: string
-}> = [
-    { value: 'auto', label: 'Auto' },
-    { value: 'openrouter', label: 'OpenRouter' },
-    { value: 'groq', label: 'Groq' },
-  ]
+const providerValues: Provider[] = ['auto', 'openrouter', 'groq']
+
+const providerNames = {
+  openrouter: 'OpenRouter',
+  groq: 'Groq',
+} as const
 
 type OrbitPlacement = 'top' | 'left' | 'right' | 'bottom'
 
@@ -299,6 +276,9 @@ function MediatorStage({
   /* opsional: jumlah pesan AI, untuk badge & disable "Lihat jawaban" */
   aiMessageCount?: number
 }) {
+  const t = useTranslations('debates.room.mediator')
+  const tCommon = useTranslations('common')
+
   const [open, setOpen] = useState(false)
   const trayId = useId()
 
@@ -338,9 +318,9 @@ function MediatorStage({
     canUseAi && askDisabled && aiButtonTitle
       ? aiButtonTitle
       : canResolve && isResolveDisabled
-        ? 'Tunggu AI selesai menjawab dulu'
+        ? t('hintWaitAi')
         : historyEmpty
-          ? 'Belum ada jawaban dari AI'
+          ? t('hintNoAi')
           : null
 
   /* ---------- handlers ---------- */
@@ -386,7 +366,7 @@ function MediatorStage({
       <div
         id={trayId}
         role="group"
-        aria-label="Menu mediator"
+        aria-label={t('menuLabel')}
         className={[
           'relative transition-[padding] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none',
           showVertical ? 'pb-11 pt-12' : 'pb-0 pt-0',
@@ -421,9 +401,7 @@ function MediatorStage({
             onClick={handleToggle}
             aria-expanded={expanded}
             aria-controls={trayId}
-            aria-label={
-              expanded ? 'Tutup menu mediator' : 'Buka menu mediator'
-            }
+            aria-label={expanded ? t('close') : t('open')}
             className="relative block size-full cursor-pointer rounded-full transition-transform duration-300 active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-neutral-400"
           >
             <Image
@@ -447,7 +425,7 @@ function MediatorStage({
                 <Loader2 size={12} className="animate-spin" />
               )}
 
-              {askBusy ? 'AI menjawab' : 'Tanya AI'}
+              {askBusy ? t('asking') : t('ask')}
             </button>
           </OrbitSlot>
 
@@ -460,7 +438,7 @@ function MediatorStage({
                 disabled={historyEmpty}
                 className={`${pill} px-3.5`}
               >
-                Lihat jawaban
+                {t('history')}
               </button>
 
               {aiMessageCount ? (
@@ -483,7 +461,7 @@ function MediatorStage({
               disabled={isResolveDisabled}
               className={`${pill} px-3.5`}
             >
-              Akhiri diskusi
+              {t('end')}
             </button>
           </OrbitSlot>
 
@@ -491,25 +469,25 @@ function MediatorStage({
           <OrbitSlot placement="bottom" visible={showVertical} delay={180}>
             <div className="flex items-center gap-2 whitespace-nowrap">
               <span className="text-[10.5px] text-description">
-                Penyedia AI
+                {t('providerLabel')}
               </span>
 
               <div
                 role="radiogroup"
-                aria-label="Penyedia AI"
+                aria-label={t('providerLabel')}
                 className="flex rounded-full bg-neutral-200/60 p-0.5"
               >
-                {providerOptions.map((option) => {
-                  const selected = provider === option.value
+                {providerValues.map((value) => {
+                  const selected = provider === value
 
                   return (
                     <button
-                      key={option.value}
+                      key={value}
                       type="button"
                       role="radio"
                       aria-checked={selected}
                       disabled={isProcessing}
-                      onClick={() => onProviderChange(option.value)}
+                      onClick={() => onProviderChange(value)}
                       className={[
                         'h-6 rounded-full px-2.5 text-[10px] font-medium transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-50',
                         selected
@@ -517,7 +495,9 @@ function MediatorStage({
                           : 'text-description hover:text-secondary',
                       ].join(' ')}
                     >
-                      {option.label}
+                      {value === 'auto'
+                        ? t('providerAuto')
+                        : providerNames[value]}
                     </button>
                   )
                 })}
@@ -539,11 +519,11 @@ function MediatorStage({
         <div className="min-h-0 overflow-hidden">
           <div className="flex flex-col items-center pt-2">
             <p className="text-xs font-semibold text-secondary">
-              {persona.text} mediator
+              {t('label', { persona: persona.text })}
             </p>
 
             <p className="mt-1 text-[10.5px] text-description">
-              Tap avatar AI untuk buka menu
+              {t('tapHint')}
             </p>
           </div>
         </div>
@@ -554,12 +534,11 @@ function MediatorStage({
         <div className="mt-2 flex max-w-[260px] animate-[debate-content-in_0.5s_cubic-bezier(0.22,1,0.36,1)_both] flex-col items-center motion-reduce:animate-none">
           <div role="status" className="text-center">
             <p className="text-[12px] font-semibold text-secondary">
-              Akhiri diskusi ini?
+              {t('confirmTitle')}
             </p>
 
             <p className="mt-1 text-[10.5px] leading-4 text-description">
-              Diskusi akan ditutup dan DUONEAR AI akan menyiapkan
-              putusan akhir untuk kalian berdua.
+              {t('confirmBody')}
             </p>
           </div>
 
@@ -570,7 +549,7 @@ function MediatorStage({
               disabled={isResolving}
               className={`${quietPill} px-5`}
             >
-              Batal
+              {tCommon('cancel')}
             </button>
 
             <button
@@ -583,7 +562,7 @@ function MediatorStage({
                 <Loader2 size={12} className="animate-spin" />
               )}
 
-              Ya, akhiri
+              {t('confirmYes')}
             </button>
           </div>
         </div>
@@ -624,6 +603,7 @@ function PartnerAvatar({
   disabled: boolean
   onSelect: () => void
 }) {
+  const t = useTranslations('debates.room.partners')
   const tone = sideTone[side]
 
   return (
@@ -632,7 +612,7 @@ function PartnerAvatar({
       onClick={onSelect}
       disabled={disabled}
       aria-pressed={isActive}
-      aria-label={`Show ${name}'s latest thought`}
+      aria-label={t('showLatest', { name })}
       className="group relative flex flex-col items-center rounded-3xl focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-neutral-400 disabled:cursor-default"
     >
       <span
@@ -712,7 +692,10 @@ function ActiveBubble({
   emptyText: string
   onOpenPocket: () => void
 }) {
+  const t = useTranslations('debates.room.bubble')
+  const format = useFormatter()
   const tone = sideTone[side]
+
 
   return (
     <div className="relative" aria-live="polite">
@@ -745,7 +728,10 @@ function ActiveBubble({
 
             {message && (
               <span className="text-[10px] tabular-nums text-description">
-                {formatTime(message.created_at)}
+                {format.dateTime(new Date(message.created_at), {
+                  hour: '2-digit',
+                  minute: '2-digit',
+                })}
               </span>
             )}
           </div>
@@ -767,7 +753,7 @@ function ActiveBubble({
                 onClick={onOpenPocket}
                 className="group/pocket inline-flex items-center gap-1.5 text-[10.5px] font-medium text-description transition-colors hover:text-secondary"
               >
-                {formatThoughtCount(previousCount)}
+                {t('previous', { count: previousCount })}
 
                 <ArrowUpRight
                   size={12}
@@ -798,6 +784,9 @@ function MemoryPocket({
   currentUserId: string
   onClose: () => void
 }) {
+  const t = useTranslations('debates.room')
+  const timeZone = useTimeZone()
+
   return (
     <div className="fixed inset-0 z-[100] flex items-end justify-center bg-neutral-950/20 p-2.5 backdrop-blur-[3px] xs:p-3 sm:items-center sm:p-6">
       <div className="relative flex max-h-[88dvh] w-full max-w-xl flex-col overflow-hidden rounded-[1.6rem] border border-black/[0.06] bg-primary shadow-[0_30px_100px_rgba(0,0,0,0.18)] sm:max-h-[80vh] sm:rounded-[2rem]">
@@ -806,15 +795,15 @@ function MemoryPocket({
         <header className="relative z-10 flex shrink-0 items-center justify-between gap-4 border-b border-black/[0.05] px-4 py-4 sm:px-6 sm:py-5">
           <div className="min-w-0">
             <p className="text-[8px] font-semibold uppercase tracking-[0.2em] text-description">
-              Memory pocket
+              {t('pocket.eyebrow')}
             </p>
 
             <h2 className="mt-1 truncate  text-[18px] tracking-[-0.02em] text-secondary sm:text-[20px]">
-              {name}&apos;s thoughts
+              {t('pocket.title', { name })}
             </h2>
 
             <p className="mt-1 text-[10px] text-description">
-              {formatThoughtCount(messages.length)}
+              {t('bubble.previous', { count: messages.length })}
             </p>
           </div>
 
@@ -822,7 +811,7 @@ function MemoryPocket({
             type="button"
             onClick={onClose}
             className="flex size-8 shrink-0 items-center justify-center rounded-full border border-black/[0.05] bg-primary text-description transition hover:bg-neutral-900 hover:text-white sm:size-9"
-            aria-label="Close memory pocket"
+            aria-label={t('pocket.close')}
           >
             <X size={13} strokeWidth={1.7} />
           </button>
@@ -836,9 +825,10 @@ function MemoryPocket({
               const showDateSeparator =
                 index === 0 ||
                 !previousMessage ||
-                !isSameDay(
+                !isSameZonedDay(
                   message.created_at,
                   previousMessage.created_at,
+                  timeZone,
                 )
 
               return (
@@ -872,6 +862,11 @@ export default function DebateRoom({
   currentUserId,
   members,
 }: DebateRoomProps) {
+  const t = useTranslations('debates.room')
+  const te = useTranslations('debates.errors')
+  const tp = useTranslations('debates.personas')
+  const tCommon = useTranslations('common')
+
   const [showIntro, setShowIntro] = useState(true)
 
   const [isConfirmingResolve, setIsConfirmingResolve] =
@@ -969,6 +964,8 @@ export default function DebateRoom({
 
   const isRoomActive = debate.status === 'active'
 
+  const personaName = tp(`${debate.ai_persona}.label`)
+
   const isPendingVerdict =
     debate.status === 'pending_verdict'
 
@@ -1035,18 +1032,18 @@ export default function DebateRoom({
 
   const partnerA = currentMember ?? {
     user_id: currentUserId,
-    display_name: 'You',
+    display_name: t('you'),
     username: null,
   }
 
   const partnerB = otherMember ?? {
     user_id: 'partner',
-    display_name: 'Partner',
+    display_name: t('partnerFallback'),
     username: null,
   }
 
-  const partnerAName = getMemberName(partnerA)
-  const partnerBName = getMemberName(partnerB)
+  const partnerAName = getMemberName(partnerA, t('you'))
+  const partnerBName = getMemberName(partnerB, t('partnerFallback'))
 
   const partnerAMessages = userMessages
     .filter(
@@ -1110,7 +1107,6 @@ export default function DebateRoom({
     hasNewMessageSinceLastAiComment &&
     !isAiProcessing
 
-  const status = statusConfig[debate.status]
 
   /* ---------- single active bubble ---------- */
 
@@ -1137,32 +1133,32 @@ export default function DebateRoom({
       : previousPartnerBMessages.length
 
   const activeDisplayName =
-    activeSide === 'left' ? 'You' : partnerBName
+    activeSide === 'left' ? t('you') : partnerBName
 
   const activeEmptyText =
     activeSide === 'left'
-      ? "Kamu belum mengirim pesan."
-      : `${partnerBName} belum mengirim pesan.`
+      ? t('bubble.emptyYou')
+      : t('bubble.emptyPartner', { name: partnerBName })
 
   const handleResolve = () => {
-  if (!isConfirmingResolve) {
-    setIsConfirmingResolve(true)
-    return
+    if (!isConfirmingResolve) {
+      setIsConfirmingResolve(true)
+      return
+    }
+
+    setIsAwaitingVerdict(true)
+    setShowAiOverlay(true)
+    setAiOverlayMessageId(null)
+
+    resolveDebateMutation.mutate(debateId, {
+      onError: (error) => {
+        alert(te(getDebateErrorKey(error)))
+        setIsConfirmingResolve(false)
+        setIsAwaitingVerdict(false)
+        setShowAiOverlay(false)
+      },
+    })
   }
-
-  setIsAwaitingVerdict(true)
-  setShowAiOverlay(true)
-  setAiOverlayMessageId(null)
-
-  resolveDebateMutation.mutate(debateId, {
-    onError: (error) => {
-      alert(error.message)
-      setIsConfirmingResolve(false)
-      setIsAwaitingVerdict(false)
-      setShowAiOverlay(false)
-    },
-  })
-}
 
   /* ---------- AI request handlers ---------- */
 
@@ -1213,16 +1209,18 @@ export default function DebateRoom({
   const getAiButtonTooltip = () => {
     if (isAiProcessing) {
       return isAiRequestedByMe
-        ? 'Waiting for AI response...'
-        : `${aiRequesterName ?? 'Your babe'} is requesting AI assistance`
+        ? t('ai.waiting')
+        : t('ai.requesting', {
+          name: aiRequesterName ?? t('partnerFallback'),
+        })
     }
 
     if (!hasUserMessage) {
-      return 'kirim pesan sebelum tanya AI'
+      return t('ai.sendFirst')
     }
 
     if (!hasNewMessageSinceLastAiComment) {
-      return 'kirim pesan sebelum tanya AI lagi'
+      return t('ai.sendAgain')
     }
 
     return undefined
@@ -1250,7 +1248,7 @@ export default function DebateRoom({
           partnerAAvatarUrl={partnerA.avatar_url}
           partnerBAvatarUrl={partnerB.avatar_url}
           persona={debate.ai_persona}
-          personaName={personaLabel[debate.ai_persona].text}
+          personaName={personaName}
           personaImage={personaLabel[debate.ai_persona].image}
           onComplete={() => setShowIntro(false)}
         />
@@ -1293,7 +1291,7 @@ export default function DebateRoom({
             <div className="flex min-w-0 items-center gap-2.5 sm:gap-3">
               <Link
                 href="/debates"
-                aria-label="Back to discussions"
+                aria-label={t('backToList')}
                 className="flex size-8 shrink-0 items-center justify-center rounded-full border border-black/[0.055] bg-primary/70 text-description transition-all hover:bg-neutral-900 hover:text-white"
               >
                 <ArrowLeft size={13} strokeWidth={1.8} />
@@ -1322,7 +1320,10 @@ export default function DebateRoom({
                 {/* 1. DUONEAR AI */}
 
                 <MediatorStage
-                  persona={personaLabel[debate.ai_persona]}
+                  persona={{
+                    ...personaLabel[debate.ai_persona],
+                    text: personaName,
+                  }}
                   isProcessing={isAiProcessing}
                   hasAiComment={Boolean(
                     latestAiCommentMessage,
@@ -1350,7 +1351,7 @@ export default function DebateRoom({
 
                 <div
                   role="group"
-                  aria-label="Switch between partners"
+                  aria-label={t('partners.groupLabel')}
                   className="relative mt-6"
                 >
                   {/* konektor AI -> pasangan */}
@@ -1371,7 +1372,7 @@ export default function DebateRoom({
 
                   <div className="relative grid grid-cols-2">
                     <PartnerAvatar
-                      name="You"
+                      name={t('you')}
                       image={lembutAi}
                       avatarUrl={partnerA.avatar_url}
                       side="left"
@@ -1427,18 +1428,17 @@ export default function DebateRoom({
                       />
 
                       <p className="mt-5 text-center text-xs tracking-[0.02em] text-description">
-                        Tap avatar untuk melihat obrolan
+                        {t('bubble.tapHint')}
                       </p>
                     </>
                   ) : (
                     <div className="px-4 text-center">
                       <h2 className=" text-[26px] text-secondary sm:text-[30px]">
-                        Start with what you feel.
+                        {t('empty.title')}
                       </h2>
 
                       <p className="mx-auto mt-3 max-w-[300px] text-[12px] leading-6 text-description">
-                        There is no need to be right here.
-                        Just say what is on your mind.
+                        {t('empty.description')}
                       </p>
                     </div>
                   )}
@@ -1453,8 +1453,11 @@ export default function DebateRoom({
             <div className="relative z-30 shrink-0 border-t border-red-500/[0.08] bg-red-50/70 px-3.5 py-2.5 sm:px-7 sm:py-3">
               <div className="flex items-center justify-between gap-2 sm:gap-4">
                 <p className="min-w-0 flex-1 truncate text-[9px] leading-5 text-red-500/80 sm:text-[10.5px]">
-                  {requestAiMutation.error?.message ??
-                    'AI failed to respond.'}
+                  {te(
+                    requestAiMutation.error
+                      ? getDebateErrorKey(requestAiMutation.error)
+                      : 'aiFailed',
+                  )}
                 </p>
 
                 <button
@@ -1465,10 +1468,10 @@ export default function DebateRoom({
                   <RefreshCw size={10} strokeWidth={1.8} />
 
                   <span className="hidden xs:inline">
-                    Try again
+                    {tCommon('tryAgain')}
                   </span>
 
-                  <span className="xs:hidden">Retry</span>
+                  <span className="xs:hidden">{t('ai.retryShort')}</span>
                 </button>
               </div>
             </div>
@@ -1519,9 +1522,7 @@ export default function DebateRoom({
           isProcessing={isOverlayProcessing}
           isPendingVerdict={isOverlayPendingVerdict}
           persona={debate.ai_persona}
-          personaName={
-            personaLabel[debate.ai_persona].text
-          }
+          personaName={personaName}
           personaImage={
             personaLabel[debate.ai_persona].image
           }

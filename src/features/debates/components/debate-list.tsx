@@ -8,6 +8,9 @@ import {
 } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
+import { useFormatter, useTimeZone, useTranslations } from 'next-intl'
+
+import { isSameZonedDay } from '@/lib/date'
 import {
   ArrowUpRight,
   ChevronLeft,
@@ -56,22 +59,18 @@ const LIST_PAGE_SIZE = 10
 
 const statusConfig = {
   active: {
-    label: 'Active',
     dot: 'bg-emerald-400',
     className: 'bg-emerald-400/10 text-emerald-400',
   },
   pending_verdict: {
-    label: 'Thinking',
     dot: 'bg-amber-400',
     className: 'bg-amber-400/10 text-amber-400',
   },
   resolved: {
-    label: 'Resolved',
     dot: 'bg-neutral-400',
     className: 'bg-white/[0.06] text-description',
   },
   archived: {
-    label: 'Archived',
     dot: 'bg-neutral-500',
     className: 'bg-white/[0.04] text-description',
   },
@@ -79,42 +78,23 @@ const statusConfig = {
 
 const personaOptions: {
   value: AiPersona
-  label: string
-  description: string
   image: typeof lembutAi
 }[] = [
-    {
-      value: 'formal',
-      label: 'Formal',
-      description: 'Neutral & structured',
-      image: formalAi,
-    },
-    {
-      value: 'lembut',
-      label: 'Lembut',
-      description: 'Calm & empathetic',
-      image: lembutAi,
-    },
-    {
-      value: 'kasar',
-      label: 'Nyeletuk',
-      description: 'Casual & witty',
-      image: nyeletukAi,
-    },
-    {
-      value: 'lebay',
-      label: 'Lebay',
-      description: 'Expressive & dramatic',
-      image: lebayAi,
-    },
+    { value: 'formal', image: formalAi },
+    { value: 'lembut', image: lembutAi },
+    { value: 'kasar', image: nyeletukAi },
+    { value: 'lebay', image: lebayAi },
   ]
 
-function formatDate(dateString: string) {
-  return new Date(dateString).toLocaleDateString('id-ID', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-  })
+function useFormatDate() {
+  const format = useFormatter()
+
+  return (dateString: string) =>
+    format.dateTime(new Date(dateString), {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+    })
 }
 
 function getPersona(aiPersona: AiPersona) {
@@ -122,17 +102,6 @@ function getPersona(aiPersona: AiPersona) {
     personaOptions.find(
       (persona) => persona.value === aiPersona,
     ) ?? personaOptions[0]
-  )
-}
-
-function isToday(dateString: string) {
-  const date = new Date(dateString)
-  const today = new Date()
-
-  return (
-    date.getDate() === today.getDate() &&
-    date.getMonth() === today.getMonth() &&
-    date.getFullYear() === today.getFullYear()
   )
 }
 
@@ -151,6 +120,9 @@ function DeleteControl({
   relationshipId: string
   className?: string
 }) {
+  const t = useTranslations('debates.list')
+  const tCommon = useTranslations('common')
+
   const [isConfirmingDelete, setIsConfirmingDelete] =
     useState(false)
 
@@ -192,14 +164,14 @@ function DeleteControl({
           >
             {deleteDebateMutation.isPending
               ? '...'
-              : 'Delete'}
+              : tCommon('delete')}
           </button>
 
           <button
             type="button"
             onClick={handleCancelDelete}
             disabled={deleteDebateMutation.isPending}
-            aria-label="Cancel delete"
+            aria-label={t('cancelDeleteAria')}
             className="rounded-full px-2 py-1.5 text-xs font-semibold text-description transition hover:bg-white/10 hover:text-secondary disabled:opacity-50"
           >
             <X
@@ -212,7 +184,7 @@ function DeleteControl({
         <button
           type="button"
           onClick={handleDeleteClick}
-          aria-label={`Delete ${debateTitle}`}
+          aria-label={t('deleteAria', { title: debateTitle })}
           className="flex size-8 items-center justify-center rounded-full border border-white/10 bg-subprimary text-secondary shadow-[0_5px_20px_-12px_rgba(0,0,0,0.6)] transition-all hover:border-red-400/30 hover:bg-red-500/10 hover:text-red-400 sm:opacity-0 sm:group-hover:opacity-100"
         >
           <Trash2
@@ -236,7 +208,12 @@ function DebateListItem({
   debate: Debate
   relationshipId: string
 }) {
+  const ts = useTranslations('debates.status')
+  const tp = useTranslations('debates.personas')
+  const formatDate = useFormatDate()
+
   const persona = getPersona(debate.ai_persona)
+  const personaLabel = tp(`${debate.ai_persona}.label`)
   const status = statusConfig[debate.status]
 
   return (
@@ -253,7 +230,7 @@ function DebateListItem({
           <div className="flex shrink-0 items-center justify-center transition-transform duration-300 group-hover:scale-105">
             <Image
               src={persona.image}
-              alt={persona.label}
+              alt={personaLabel}
               width={28}
               height={28}
               className="size-7 object-contain"
@@ -267,7 +244,7 @@ function DebateListItem({
 
             <div className="mt-1.5 flex items-center gap-2">
               <span className="text-xs font-medium text-description">
-                {persona.label}
+                {personaLabel}
               </span>
 
               <span className="text-xs text-description/50">
@@ -291,7 +268,7 @@ function DebateListItem({
                   }`}
               />
 
-              {status.label}
+              {ts(debate.status)}
             </span>
           </div>
         </div>
@@ -467,7 +444,13 @@ function DebateCard({
   debate: Debate
   relationshipId: string
 }) {
+  const ts = useTranslations('debates.status')
+  const tp = useTranslations('debates.personas')
+  const formatDate = useFormatDate()
+
   const persona = getPersona(debate.ai_persona)
+  const personaLabel = tp(`${debate.ai_persona}.label`)
+  const statusLabel = ts(debate.status)
   const status = statusConfig[debate.status]
   const theme = getCardTheme(debate.ai_persona)
 
@@ -488,7 +471,7 @@ function DebateCard({
 
           <Image
             src={persona.image}
-            alt={persona.label}
+            alt={personaLabel}
             fill
             sizes="(max-width: 640px) 66vw, 255px"
             className="object-contain drop-shadow-[0_16px_20px_rgba(0,0,0,0.35)] transition-transform duration-300 group-hover:scale-105"
@@ -503,10 +486,10 @@ function DebateCard({
 
           <p className="mt-1.5 text-xs text-description">
             <span className={`font-semibold ${theme.accentText}`}>
-              {persona.label}
+              {personaLabel}
             </span>
             <span className="mx-1.5 text-description/50">·</span>
-            {persona.description}
+            {tp(`${debate.ai_persona}.description`)}
           </p>
         </div>
 
@@ -514,8 +497,8 @@ function DebateCard({
         <div className="relative mt-4 flex items-center justify-center gap-2 px-5">
           <span
             role="img"
-            aria-label={status.label}
-            title={status.label}
+            aria-label={statusLabel}
+            title={statusLabel}
             className={`size-2 rounded-full ${status.dot} ${debate.status === 'active' ? 'animate-pulse' : ''
               }`}
           />
@@ -547,6 +530,7 @@ function DebateCarousel({
   debates: Debate[]
   relationshipId: string
 }) {
+  const t = useTranslations('debates.list.carousel')
   const scrollerRef = useRef<HTMLDivElement>(null)
 
   const [activeIndex, setActiveIndex] = useState(0)
@@ -666,7 +650,7 @@ function DebateCarousel({
                   key={debate.id}
                   type="button"
                   onClick={() => scrollToIndex(index)}
-                  aria-label={`Go to debate ${index + 1}`}
+                  aria-label={t('goTo', { number: index + 1 })}
                   className={`h-1.5 rounded-full transition-all duration-300 ${index === currentIndex
                     ? 'w-5 bg-secondary'
                     : 'w-1.5 bg-white/20 hover:bg-white/40'
@@ -690,7 +674,7 @@ function DebateCarousel({
                   )
                 }
                 disabled={!canPrev}
-                aria-label="Previous debate"
+                aria-label={t('previous')}
                 className="flex size-8 items-center justify-center rounded-full border border-white/10 bg-primary text-description transition hover:bg-white/10 hover:text-secondary disabled:cursor-not-allowed disabled:opacity-40"
               >
                 <ChevronLeft
@@ -707,7 +691,7 @@ function DebateCarousel({
                   )
                 }
                 disabled={!canNext}
-                aria-label="Next debate"
+                aria-label={t('next')}
                 className="flex size-8 items-center justify-center rounded-full border border-white/10 bg-primary text-description transition hover:bg-white/10 hover:text-secondary disabled:cursor-not-allowed disabled:opacity-40"
               >
                 <ChevronRight
@@ -736,23 +720,17 @@ function ViewModeToggle({
   value: ViewMode
   onChange: (mode: ViewMode) => void
 }) {
+  const t = useTranslations('debates.list.viewMode')
+
   const options = [
-    {
-      mode: 'cards',
-      label: 'Card view',
-      Icon: GalleryHorizontal,
-    },
-    {
-      mode: 'list',
-      label: 'List view',
-      Icon: List,
-    },
+    { mode: 'cards', label: t('cards'), Icon: GalleryHorizontal },
+    { mode: 'list', label: t('list'), Icon: List },
   ] as const
 
   return (
     <div
       role="group"
-      aria-label="Debate view mode"
+      aria-label={t('groupLabel')}
       className="flex items-center gap-0.5 rounded-full bg-white/[0.06] p-1"
     >
       {options.map(({ mode, label, Icon }) => {
@@ -873,6 +851,8 @@ function CreateDebateButton({
   max: number | null
   floating?: boolean
 }) {
+  const t = useTranslations('debates.list.create')
+
   return (
     <button
       type="button"
@@ -880,8 +860,8 @@ function CreateDebateButton({
       disabled={disabled}
       title={
         disabled
-          ? `Monthly limit reached (${used}/${max})`
-          : 'Start a new debate'
+          ? t('limitTitle', { used, max: max ?? 0 })
+          : t('tooltip')
       }
       className={`mx-auto flex h-12 w-40 shrink-0 items-center justify-center gap-1.5 rounded-full text-sm font-semibold transition-all duration-200 sm:w-[340px] ${floating
         ? 'fixed bottom-6 left-1/2 -translate-x-1/2 z-20 mt-6 shadow-[0_12px_30px_-10px_rgba(0,0,0,0.6)]'
@@ -895,7 +875,7 @@ function CreateDebateButton({
         size={15}
         strokeWidth={1.8}
       />
-      {disabled ? 'Limit reached' : 'Create debate'}
+      {disabled ? t('limitReached') : t('button')}
     </button>
   )
 }
@@ -913,6 +893,8 @@ function ListPagination({
   totalPages: number
   onChange: (page: number) => void
 }) {
+  const t = useTranslations('debates.list.pagination')
+
   if (totalPages <= 1) {
     return null
   }
@@ -923,7 +905,7 @@ function ListPagination({
         type="button"
         onClick={() => onChange(page - 1)}
         disabled={page <= 1}
-        aria-label="Previous page"
+        aria-label={t('previous')}
         className="flex size-8 items-center justify-center rounded-full border border-white/10 bg-primary text-description transition hover:bg-white/10 hover:text-secondary disabled:cursor-not-allowed disabled:opacity-40"
       >
         <ChevronLeft
@@ -940,7 +922,7 @@ function ListPagination({
         type="button"
         onClick={() => onChange(page + 1)}
         disabled={page >= totalPages}
-        aria-label="Next page"
+        aria-label={t('next')}
         className="flex size-8 items-center justify-center rounded-full border border-white/10 bg-primary text-description transition hover:bg-white/10 hover:text-secondary disabled:cursor-not-allowed disabled:opacity-40"
       >
         <ChevronRight
@@ -960,6 +942,9 @@ function ListPagination({
 export default function DebateList({
   relationshipId,
 }: DebateListProps) {
+  const t = useTranslations('debates.list')
+  const timeZone = useTimeZone()
+
   const { data: debates, isLoading } =
     useDebates(relationshipId)
 
@@ -1046,7 +1031,11 @@ export default function DebateList({
       }
 
       if (activeFilter === 'today') {
-        return isToday(debate.created_at)
+        return isSameZonedDay(
+          debate.created_at,
+          new Date().toISOString(),
+          timeZone,
+        )
       }
 
       if (activeFilter === 'in_progress') {
@@ -1079,23 +1068,11 @@ export default function DebateList({
     value: DebateFilter
     label: string
   }[] = [
-      {
-        value: 'all',
-        label: 'All',
-      },
-      {
-        value: 'today',
-        label: 'Today',
-      },
-      {
-        value: 'in_progress',
-        label: 'In progress',
-      },
-      {
-        value: 'resolved',
-        label: 'Resolved',
-      },
-    ]
+    { value: 'all', label: t('filters.all') },
+    { value: 'today', label: t('filters.today') },
+    { value: 'in_progress', label: t('filters.in_progress') },
+    { value: 'resolved', label: t('filters.resolved') },
+  ]
 
   return (
     <div className="flex flex-1 flex-col bg-primary">
@@ -1135,15 +1112,12 @@ export default function DebateList({
       {/* INFO + VIEW TOGGLE (tetap di atas, tidak ikut ditengahkan) */}
       <div className="mb-3 flex items-center justify-between px-1">
         <p className="text-xs text-description">
-          {filteredDebates.length}{' '}
-          {filteredDebates.length === 1
-            ? 'debate'
-            : 'debates'}
+          {t('count', { count: filteredDebates.length })}
           <span className="mx-1.5 text-description/50">
             ·
           </span>
           <span className="font-medium text-description/70">
-            AI mediated
+            {t('aiMediated')}
           </span>
         </p>
 
@@ -1175,7 +1149,7 @@ export default function DebateList({
               <div className="mx-auto flex size-12 items-center justify-center rounded-full bg-white/[0.06]">
                 <Image
                   src={formalAi}
-                  alt="DUONEAR mediator"
+                  alt={t('mediatorAlt')}
                   width={34}
                   height={34}
                   className="size-[34px] object-contain"
@@ -1183,23 +1157,11 @@ export default function DebateList({
               </div>
 
               <h3 className="mt-4 text-[16px] font-semibold tracking-[-0.03em] text-secondary">
-                {activeFilter === 'all'
-                  ? 'No debates yet.'
-                  : activeFilter === 'today'
-                    ? 'No debates today.'
-                    : activeFilter === 'in_progress'
-                      ? 'Nothing in progress.'
-                      : 'No resolved debates.'}
+                {t(`empty.${activeFilter}.title`)}
               </h3>
 
               <p className="mx-auto mt-1.5 max-w-xs text-sm leading-5 text-description">
-                {activeFilter === 'all'
-                  ? 'Start your first debate whenever you need a little help finding common ground.'
-                  : activeFilter === 'today'
-                    ? 'Start a conversation whenever you need a little help finding common ground.'
-                    : activeFilter === 'in_progress'
-                      ? 'Your active debates will appear here.'
-                      : 'Resolved conversations will appear here.'}
+                {t(`empty.${activeFilter}.description`)}
               </p>
             </div>
           </div>

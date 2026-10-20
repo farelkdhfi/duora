@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/client'
 import type { AiPersona, Debate, DebateMessage } from './types'
 import { getDebateRoomsCreatedThisMonth, getMySubscription } from "../subscription/api";
+import { DebateApiError, toDebateError } from './errors'
 
 export async function getDebates(
   relationshipId: string,
@@ -17,7 +18,7 @@ export async function getDebates(
     .order('created_at', { ascending: false })
 
   if (error) {
-    throw new Error(error.message)
+    throw toDebateError(error)
   }
 
   return data
@@ -38,7 +39,7 @@ export async function getDebate(
     .single()
 
   if (error) {
-    throw new Error(error.message)
+    throw toDebateError(error)
   }
 
   return data
@@ -64,7 +65,7 @@ export async function createDebate({
   } = await supabase.auth.getUser()
 
   if (!user) {
-    throw new Error('Not authenticated')
+    throw new DebateApiError('notAuthenticated')
   }
 
   const subscription = await getMySubscription();
@@ -82,9 +83,9 @@ export async function createDebate({
     const roomsThisMonth = await getDebateRoomsCreatedThisMonth(relationshipId);
 
     if (roomsThisMonth >= maxRoomsPerMonth) {
-      throw new Error(
-        `Kamu sudah mencapai batas ${maxRoomsPerMonth} room debat bulan ini. Upgrade untuk membuat lebih banyak.`
-      );
+      throw new DebateApiError('roomLimitReached', {
+        params: { max: maxRoomsPerMonth },
+      });
     }
   }
 
@@ -104,7 +105,7 @@ export async function createDebate({
     .single()
 
   if (error) {
-    throw new Error(error.message)
+    throw toDebateError(error)
   }
 
   return data
@@ -125,7 +126,7 @@ export async function updateDebatePersona({
     .eq('id', debateId)
 
   if (error) {
-    throw new Error(error.message)
+    throw toDebateError(error)
   }
 
   return debateId
@@ -142,7 +143,7 @@ export async function deleteDebate(
     .eq('id', debateId)
 
   if (error) {
-    throw new Error(error.message)
+    throw toDebateError(error)
   }
 
   return debateId
@@ -172,7 +173,7 @@ export async function getDebateMessages(
     .order('created_at', { ascending: true })
 
   if (error) {
-    throw new Error(error.message)
+    throw toDebateError(error)
   }
 
   return data as DebateMessage[]
@@ -192,7 +193,7 @@ export async function sendDebateMessage({
   } = await supabase.auth.getUser()
 
   if (!user) {
-    throw new Error('Not authenticated')
+    throw new DebateApiError('notAuthenticated')
   }
 
   const {
@@ -210,7 +211,7 @@ export async function sendDebateMessage({
     .single()
 
   if (error) {
-    throw new Error(error.message)
+    throw toDebateError(error)
   }
 
   return data
@@ -232,7 +233,7 @@ export async function requestAiAnalysis({
   } = await supabase.auth.getUser()
 
   if (!user) {
-    throw new Error('Not authenticated')
+    throw new DebateApiError('notAuthenticated')
   }
 
   const {
@@ -247,7 +248,7 @@ export async function requestAiAnalysis({
     .eq('id', debateId)
 
   if (flagError) {
-    throw new Error(flagError.message)
+    throw toDebateError(flagError)
   }
 
   try {
@@ -262,7 +263,7 @@ export async function requestAiAnalysis({
     )
 
     if (error) {
-      throw new Error(error.message)
+      throw toDebateError(error)
     }
 
     return data
@@ -290,7 +291,7 @@ export async function resolveDebate(
   )
 
   if (error) {
-    throw new Error(error.message)
+    throw toDebateError(error)
   }
 
   return debateId

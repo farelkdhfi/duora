@@ -1,12 +1,15 @@
 'use client'
 
 import { ChartBarDecreasing } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 
 import DebateList from '@/features/debates/components/debate-list'
 import { useMyRelationshipDetails } from '@/features/relationship/queries'
 import HeaderWithoutShell from '@/components/layout/header-without-shell'
 
 export default function DebatesPage() {
+  const t = useTranslations('debates.page')
+
   const { data, isLoading } = useMyRelationshipDetails()
 
   if (isLoading) {
@@ -113,7 +116,7 @@ export default function DebatesPage() {
           </div>
 
           <p className="mt-4 text-sm text-description">
-            You need to connect with your partner first.
+            {t('noRelationship')}
           </p>
         </div>
       </div>
@@ -125,7 +128,7 @@ export default function DebatesPage() {
   return (
     <div className="relative flex min-h-full flex-col bg-primary overflow-hidden p-4 sm:p-5 md:p-6">
       <div className="relative flex flex-1 flex-col">
-        <HeaderWithoutShell title='AI Debates' text='Resolve disagreements' />
+        <HeaderWithoutShell title={t('title')} text={t('subtitle')} />
         <section className="mt-6 flex flex-1 flex-col sm:mt-8">
           <DebateList relationshipId={relationshipId} />
         </section>

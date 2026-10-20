@@ -870,5 +870,308 @@
             "network": "Koneksi bermasalah. Cek internet kamu lalu coba lagi.",
             "unknown": "Gagal memuat aktivitas. Coba lagi."
         }
+    },
+    "debates": {
+        "page": {
+            "title": "AI Debate",
+            "subtitle": "Selesaikan beda pendapat",
+            "noRelationship": "Kamu perlu terhubung dengan pasangan dulu."
+        },
+        "status": {
+            "active": "Berlangsung",
+            "pending_verdict": "Menimbang",
+            "resolved": "Selesai",
+            "archived": "Diarsipkan"
+        },
+        "personas": {
+            "formal": {
+                "label": "Formal",
+                "description": "Netral & terstruktur"
+            },
+            "lembut": {
+                "label": "Lembut",
+                "description": "Tenang & empatik"
+            },
+            "kasar": {
+                "label": "Nyeletuk",
+                "description": "Santai & nyeletuk"
+            },
+            "lebay": {
+                "label": "Lebay",
+                "description": "Ekspresif & dramatis"
+            }
+        },
+        "list": {
+            "filters": {
+                "all": "Semua",
+                "today": "Hari ini",
+                "in_progress": "Berlangsung",
+                "resolved": "Selesai"
+            },
+            "count": "{count} debat",
+            "aiMediated": "Dimediasi AI",
+            "mediatorAlt": "Mediator DUONEAR",
+            "deleteAria": "Hapus {title}",
+            "cancelDeleteAria": "Batal hapus",
+            "viewMode": {
+                "groupLabel": "Mode tampilan debat",
+                "cards": "Tampilan kartu",
+                "list": "Tampilan daftar"
+            },
+            "carousel": {
+                "goTo": "Ke debat {number}",
+                "previous": "Debat sebelumnya",
+                "next": "Debat berikutnya"
+            },
+            "pagination": {
+                "previous": "Halaman sebelumnya",
+                "next": "Halaman berikutnya"
+            },
+            "create": {
+                "button": "Buat debat",
+                "limitReached": "Batas tercapai",
+                "tooltip": "Mulai debat baru",
+                "limitTitle": "Batas bulanan tercapai ({used}/{max})"
+            },
+            "empty": {
+                "all": {
+                    "title": "Belum ada debat.",
+                    "description": "Mulai debat pertama kalian kapan pun butuh bantuan menemukan titik temu."
+                },
+                "today": {
+                    "title": "Tidak ada debat hari ini.",
+                    "description": "Mulai percakapan kapan pun kalian butuh bantuan menemukan titik temu."
+                },
+                "in_progress": {
+                    "title": "Tidak ada yang berlangsung.",
+                    "description": "Debat yang sedang berlangsung akan muncul di sini."
+                },
+                "resolved": {
+                    "title": "Belum ada debat yang selesai.",
+                    "description": "Percakapan yang sudah selesai akan muncul di sini."
+                }
+            }
+        },
+        "room": {
+            "you": "Kamu",
+            "partnerFallback": "Pasangan",
+            "backToList": "Kembali ke daftar diskusi",
+            "mediator": {
+                "menuLabel": "Menu mediator",
+                "open": "Buka menu mediator",
+                "close": "Tutup menu mediator",
+                "ask": "Tanya AI",
+                "asking": "AI menjawab",
+                "history": "Lihat jawaban",
+                "end": "Akhiri diskusi",
+                "providerLabel": "Penyedia AI",
+                "providerAuto": "Otomatis",
+                "label": "Mediator {persona}",
+                "tapHint": "Ketuk avatar AI untuk membuka menu",
+                "hintWaitAi": "Tunggu AI selesai menjawab dulu",
+                "hintNoAi": "Belum ada jawaban dari AI",
+                "confirmTitle": "Akhiri diskusi ini?",
+                "confirmBody": "Diskusi akan ditutup dan DUONEAR AI akan menyiapkan putusan akhir untuk kalian berdua.",
+                "confirmYes": "Ya, akhiri"
+            },
+            "partners": {
+                "groupLabel": "Pindah antar pasangan",
+                "showLatest": "Lihat pesan terakhir {name}"
+            },
+            "bubble": {
+                "emptyYou": "Kamu belum mengirim pesan.",
+                "emptyPartner": "{name} belum mengirim pesan.",
+                "previous": "{count} pesan sebelumnya",
+                "tapHint": "Ketuk avatar untuk melihat obrolan"
+            },
+            "pocket": {
+                "eyebrow": "Memory pocket",
+                "title": "Pikiran {name}",
+                "close": "Tutup memory pocket"
+            },
+            "empty": {
+                "title": "Mulai dari apa yang kamu rasakan.",
+                "description": "Tidak perlu merasa paling benar di sini. Ceritakan saja apa yang ada di pikiranmu."
+            },
+            "ai": {
+                "waiting": "Menunggu jawaban AI...",
+                "requesting": "{name} sedang meminta bantuan AI",
+                "sendFirst": "Kirim pesan dulu sebelum tanya AI",
+                "sendAgain": "Kirim pesan baru sebelum tanya AI lagi",
+                "failed": "AI gagal merespons.",
+                "retryShort": "Ulangi"
+            }
+        },
+        "aiMemory": {
+            "eyebrow": "Memory pocket",
+            "title": "DUONEAR AI",
+            "count": "{count} jawaban tersimpan",
+            "close": "Tutup AI memory pocket"
+        },
+        "composer": {
+            "placeholderBusy": "Menunggu mediator...",
+            "placeholder": "Ceritakan apa yang ada di pikiranmu...",
+            "send": "Bagikan pikiranmu",
+            "hintDesktop": "Enter untuk kirim · Shift + Enter untuk baris baru",
+            "hintMobile": "Enter untuk kirim",
+            "mediatorListening": "Mediator sedang mendengarkan...",
+            "partnerInvited": "{name} mengundang mediator",
+            "partnerFallback": "Pasanganmu",
+            "shareAnother": "Kirim pikiran lain untuk mengundang mediator lagi.",
+            "preparing": "Mediator sedang menyiapkan putusan untuk kalian.",
+            "ended": "Diskusi ini sudah berakhir."
+        },
+        "create": {
+            "dialogLabel": "Buat debat",
+            "eyebrow": "Debat baru",
+            "titleStep1": "Apa topik yang ingin dibahas?",
+            "titleStep2": "Pilih mediator kamu",
+            "closeAria": "Tutup jendela buat debat",
+            "swipeHint": "Geser untuk mengubah persona",
+            "placeholder": "Contoh: Tahun baruan enaknya ke mana?",
+            "continue": "Lanjut",
+            "creating": "Membuat...",
+            "start": "Mulai debat",
+            "selectPersona": "Pilih {name}"
+        },
+        "intro": {
+            "perspectives": "Dua sudut pandang",
+            "topic": "Topik",
+            "yourMediator": "Mediator kamu",
+            "middle": "Cari titik temu"
+        },
+        "overlay": {
+            "resolutionTag": "Putusan",
+            "closeAria": "Tutup respons AI",
+            "eyebrow": "Mediator {persona}",
+            "processingResolution": "Mencari titik temu kalian",
+            "processingComment": "Mendengarkan kedua sisi",
+            "subtitleVerdict": "DUONEAR AI sedang menyusun putusan akhir.",
+            "subtitleRequester": "{name} mengundang DUONEAR AI ke dalam diskusi.",
+            "subtitleDefault": "DUONEAR sedang membaca kedua sudut pandang.",
+            "doneResolution": "Tempat yang lebih tenang untuk bertemu di tengah.",
+            "doneComment": "Ini yang didengar DUONEAR.",
+            "disclaimer": "● Respons AI bisa membuat kesalahan"
+        },
+        "message": {
+            "someone": "Seseorang",
+            "strongerArgument": "Argumen yang lebih kuat",
+            "facts": "Fakta",
+            "perspectives": "Sudut pandang",
+            "commonGround": "Titik temu"
+        },
+        "errors": {
+            "notAuthenticated": "Sesi kamu sudah berakhir. Silakan masuk lagi.",
+            "forbidden": "Kamu tidak punya izin untuk melakukan ini.",
+            "invalidInput": "Ada data yang tidak valid. Cek lagi lalu coba lagi.",
+            "notFound": "Debat ini tidak ditemukan. Mungkin sudah dihapus.",
+            "roomLimitReached": "Kamu sudah mencapai batas {max} room debat bulan ini. Upgrade untuk membuat lebih banyak.",
+            "rateLimited": "Terlalu banyak permintaan. Tunggu sebentar lalu coba lagi.",
+            "aiFailed": "AI gagal merespons. Coba lagi.",
+            "network": "Koneksi bermasalah. Cek internet kamu lalu coba lagi.",
+            "unknown": "Terjadi kesalahan. Coba lagi."
+        }
+    },
+    "qna": {
+        "notConnected": {
+            "title": "Belum terhubung",
+            "description": "Hubungkan pasanganmu terlebih dahulu untuk mulai menggunakan Q&A bersama."
+        },
+        "menu": {
+            "title": "Q&A",
+            "subtitle": "Makin dekat",
+            "activeEyebrow": "Sesi berlanjut",
+            "waitingTitle": "Pasanganmu menunggu :)",
+            "continueTitle": "Mari lanjutkan percakapan ini.",
+            "waitingBody": "Sekarang giliranmu untuk menjawab.",
+            "continueBody": "Salah satu dari kalian sudah membuat sesi Q&A, ayo lanjutkan.",
+            "continueCta": "Lanjutkan sesi",
+            "historyHint": "Percakapan yang pernah kalian mulai",
+            "categoryHint": "Pilih sesuatu untuk dibicarakan bersama",
+            "tabCategories": "Kategori",
+            "tabHistory": "Riwayat"
+        },
+        "session": {
+            "eyebrow": "Q&A",
+            "title": "Jawab apa saja.",
+            "backAria": "Kembali ke Q&A",
+            "endedEyebrow": "Sesi selesai",
+            "endedTitle": "Sesi ini sudah berakhir.",
+            "endedBody": "Tidak ada percakapan yang sedang berlangsung. Kalian bisa kembali ke Q&A dan memilih sesuatu yang ingin dibicarakan.",
+            "backCta": "Kembali ke Q&A",
+            "preparing": "Menyiapkan sesi"
+        },
+        "categories": {
+            "love_and_us": {
+                "name": "Love & Us",
+                "description": "Tentang hubungan kalian berdua"
+            },
+            "deep_talk": {
+                "name": "Deep Talk",
+                "description": "Obrolan yang lebih dalam & reflektif"
+            },
+            "future": {
+                "name": "Future",
+                "description": "Rencana & harapan ke depan"
+            },
+            "memories": {
+                "name": "Memories",
+                "description": "Kenangan & momen berharga"
+            },
+            "fun_and_random": {
+                "name": "Fun & Random",
+                "description": "Ringan, random, dan seru"
+            }
+        },
+        "picker": {
+            "groupLabel": "Pilih kategori",
+            "previous": "Kategori sebelumnya",
+            "next": "Kategori berikutnya",
+            "select": "Pilih {name}",
+            "swipeHint": "Geser untuk mengganti",
+            "tapToStart": "Ketuk untuk mulai"
+        },
+        "card": {
+            "shuffling": "Mengacak pertanyaan",
+            "change": "Ganti",
+            "rerollExhausted": "Pertanyaan di kategori ini sudah habis. Tidak bisa reroll lagi."
+        },
+        "answer": {
+            "mine": "Jawaban kamu",
+            "syncing": "Jawaban kalian sedang disinkronkan...",
+            "waitingPartner": "Menunggu pasanganmu memberikan jawabannya...",
+            "privacy": "Privat sampai kalian berdua menjawab",
+            "placeholder": "Tulis apa yang kamu pikirkan...",
+            "partnerAnswered": "Pasanganmu sudah menjawab. Jawab sekarang untuk melihat jawabannya.",
+            "submit": "Kirim jawaban"
+        },
+        "reveal": {
+            "loading": "Memuat jawaban",
+            "myAnswer": "Jawaban kamu",
+            "meBadge": "Kamu",
+            "partnerAnswer": "Jawaban pasangan",
+            "partnerBadge": "Pasangan",
+            "newQuestion": "Pertanyaan baru",
+            "close": "Tutup"
+        },
+        "history": {
+            "emptyTitle": "Belum ada cerita",
+            "emptyDescription": "Jawaban dari percakapan kalian akan tersimpan di sini.",
+            "me": "Kamu",
+            "partner": "Pasangan",
+            "deleteAria": "Hapus sesi",
+            "delete": "Hapus",
+            "previousPage": "Halaman sebelumnya",
+            "nextPage": "Halaman berikutnya"
+        },
+        "errors": {
+            "notAuthenticated": "Sesi kamu sudah berakhir. Silakan masuk lagi.",
+            "forbidden": "Kamu tidak punya izin untuk melakukan ini.",
+            "invalidInput": "Ada data yang tidak valid. Cek lagi lalu coba lagi.",
+            "notFound": "Sesi ini tidak ditemukan. Mungkin sudah dihapus.",
+            "exhausted": "Pertanyaan di kategori ini sudah habis. Coba kategori lain.",
+            "network": "Koneksi bermasalah. Cek internet kamu lalu coba lagi.",
+            "unknown": "Terjadi kesalahan. Coba lagi."
+        }
     }
 }

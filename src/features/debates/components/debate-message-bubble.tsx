@@ -1,5 +1,7 @@
 'use client'
 
+import { useFormatter, useTranslations } from 'next-intl'
+
 import type { AiPersona, DebateMessage } from '../types'
 
 interface DebateMessageBubbleProps {
@@ -36,16 +38,6 @@ const resolutionTone: Record<
   },
 }
 
-function formatTime(dateString: string) {
-  return new Date(dateString).toLocaleTimeString(
-    'id-ID',
-    {
-      hour: '2-digit',
-      minute: '2-digit',
-    },
-  )
-}
-
 function renderListItem(item: unknown): string {
   if (typeof item === 'string') {
     return item
@@ -77,7 +69,15 @@ function MediatorCard({
   resolution?: boolean
   persona?: AiPersona
 }) {
+  const t = useTranslations('debates.message')
+  const format = useFormatter()
+
   const analysis = message.ai_analysis
+
+  const time = format.dateTime(new Date(message.created_at), {
+    hour: '2-digit',
+    minute: '2-digit',
+  })
 
   const tone =
     resolutionTone[persona ?? 'formal'] ??
@@ -141,7 +141,7 @@ function MediatorCard({
                 : 'text-description',
             ].join(' ')}
           >
-            {formatTime(message.created_at)}
+            {time}
           </span>
         </div>
 
@@ -167,7 +167,7 @@ function MediatorCard({
               <p
                 className={`text-[8px] font-semibold uppercase tracking-[0.17em] ${tone.accent}`}
               >
-                Stronger argument
+                {t('strongerArgument')}
               </p>
 
               <p className="mt-2.5 text-[11.5px] leading-6 text-white/85">
@@ -195,7 +195,7 @@ function MediatorCard({
                   : 'text-description',
               ].join(' ')}
             >
-              Facts
+              {t('facts')}
             </p>
 
             <ul className="mt-3 space-y-2.5">
@@ -239,7 +239,7 @@ function MediatorCard({
                   : 'text-description',
               ].join(' ')}
             >
-              Perspectives
+              {t('perspectives')}
             </p>
 
             <ul className="mt-3 space-y-2.5">
@@ -293,7 +293,7 @@ function MediatorCard({
                     : 'text-description',
                 ].join(' ')}
               >
-                Common ground
+                {t('commonGround')}
               </p>
             </div>
 
@@ -325,13 +325,21 @@ function HistoryThought({
   message: DebateMessage
   currentUserId: string
 }) {
+  const t = useTranslations('debates.message')
+  const format = useFormatter()
+
   const isOwnMessage =
     message.sender_id === currentUserId
 
   const senderName =
     message.profiles?.display_name ??
     message.profiles?.username ??
-    'Someone'
+    t('someone')
+
+  const time = format.dateTime(new Date(message.created_at), {
+    hour: '2-digit',
+    minute: '2-digit',
+  })
 
   return (
     <div
@@ -363,9 +371,7 @@ function HistoryThought({
           </p>
 
           <span className="text-[8px] text-description">
-            {formatTime(
-              message.created_at,
-            )}
+            {time}
           </span>
         </div>
 

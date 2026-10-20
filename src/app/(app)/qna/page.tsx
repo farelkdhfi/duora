@@ -1,8 +1,8 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { X } from "lucide-react";
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { useMyRelationshipDetails } from "@/features/relationship/queries";
 import {
   useActiveSession,
@@ -15,6 +15,8 @@ import { useGetMyProfile } from "@/features/profiles/queries";
 import HeaderWithoutShell from "@/components/layout/header-without-shell";
 
 export default function QnaMenuPage() {
+  const t = useTranslations("qna.menu");
+  const tn = useTranslations("qna.notConnected");
   const router = useRouter();
 
   const { data: relationshipDetails, isLoading: isLoadingRelationship } =
@@ -134,12 +136,11 @@ export default function QnaMenuPage() {
           </div>
 
           <h2 className="mt-5 text-lg font-semibold tracking-tight text-secondary">
-            Belum terhubung
+            {tn("title")}
           </h2>
 
           <p className="mt-2 text-sm leading-6 text-secondary/50">
-            Hubungkan pasanganmu terlebih dahulu untuk mulai menggunakan Q&A
-            bersama.
+            {tn("description")}
           </p>
         </div>
       </main>
@@ -150,7 +151,7 @@ export default function QnaMenuPage() {
     <main className="relative min-h-dvh w-full overflow-hidden bg-primary">
       <div className="relative z-10 flex min-h-dvh w-full flex-col px-5 py-7 sm:px-8 sm:py-10">
         {/* Header */}
-        <HeaderWithoutShell title="Q&A" text="A little closer" />
+        <HeaderWithoutShell title={t("title")} text={t("subtitle")} />
 
         {activeSession && !startedHere ? (
           /* ---------------------------------------------------------------- */
@@ -163,7 +164,7 @@ export default function QnaMenuPage() {
                 <span className="h-px w-7 bg-subprimary/15 sm:w-10" />
 
                 <span className="text-[9px] font-semibold uppercase tracking-[0.22em] text-secondary/40">
-                  Sesi berlanjut
+                  {t("activeEyebrow")}
                 </span>
 
                 <span className="size-1.5 rounded-full bg-pink-200" />
@@ -176,15 +177,15 @@ export default function QnaMenuPage() {
                 <h2 className="mx-auto max-w-2xl text-[24px] font-medium leading-[1.05] tracking-[-0.055em] text-secondary sm:text-[52px] md:text-[62px]">
                   {activeSession.partner_has_answered &&
                   !activeSession.my_answer
-                    ? "Pasanganmu menunggu :)"
-                    : "Mari lanjutkan percakapan ini."}
+                    ? t("waitingTitle")
+                    : t("continueTitle")}
                 </h2>
 
                 <p className="mx-auto mt-5 max-w-md text-[13px] leading-6 text-secondary/60 sm:mt-6 sm:text-[15px]">
                   {activeSession.partner_has_answered &&
                   !activeSession.my_answer
-                    ? "Sekarang giliranmu untuk menjawab."
-                    : "Salah satu dari kalian sudah membuat sesi Q&A ayo lanjutkan."}
+                    ? t("waitingBody")
+                    : t("continueBody")}
                 </p>
               </div>
             </div>
@@ -196,7 +197,7 @@ export default function QnaMenuPage() {
                 onClick={() => router.push("/qna/session")}
                 className="group flex h-12 w-full items-center justify-center rounded-full bg-subprimary px-6 text-sm font-semibold tracking-[-0.01em] text-secondary transition-all duration-300 hover:-translate-y-0.5 hover:bg-subprimary/90 active:translate-y-0"
               >
-                Lanjutkan sesi
+                {t("continueCta")}
               </button>
             </div>
           </section>
@@ -208,9 +209,7 @@ export default function QnaMenuPage() {
             {/* Small navigation */}
             <div className="mt-7 flex shrink-0 items-center justify-between gap-4">
               <p className="px-1 text-xs font-medium text-secondary/40">
-                {showHistory
-                  ? "Percakapan yang pernah kalian mulai"
-                  : "Pilih sesuatu untuk dibicarakan bersama"}
+                {showHistory ? t("historyHint") : t("categoryHint")}
               </p>
 
               <div className="flex shrink-0 rounded-full border border-white/10 bg-subprimary/5 p-1 backdrop-blur-xl">
@@ -223,7 +222,7 @@ export default function QnaMenuPage() {
                       : "text-secondary/50 hover:text-secondary"
                   }`}
                 >
-                  Kategori
+                  {t("tabCategories")}
                 </button>
 
                 <button
@@ -235,7 +234,7 @@ export default function QnaMenuPage() {
                       : "text-secondary/50 hover:text-secondary"
                   }`}
                 >
-                  Riwayat
+                  {t("tabHistory")}
                 </button>
               </div>
             </div>

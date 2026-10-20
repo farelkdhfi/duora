@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import Image, { type StaticImageData } from 'next/image'
+import { useTranslations } from 'next-intl'
 import {
   AnimatePresence,
   MotionConfig,
@@ -203,6 +204,7 @@ function PartnersSection({
   | 'partnerAAvatarUrl'
   | 'partnerBAvatarUrl'
 >) {
+  const t = useTranslations('debates.intro')
   return (
     <motion.section
       variants={sectionVariants}
@@ -212,7 +214,7 @@ function PartnersSection({
       className="flex w-full max-w-xl flex-col items-center text-center"
     >
       <motion.p variants={rise} custom={0.05} className={eyebrow}>
-        Two perspectives
+        {t('perspectives')}
       </motion.p>
 
       <div className="mt-9 flex items-start justify-center gap-4 sm:gap-7">
@@ -249,7 +251,7 @@ function PartnersSection({
         custom={1.55}
         className={`mt-6 ${eyebrow}`}
       >
-        Topic
+        {t('topic')}
       </motion.p>
 
       <motion.h1
@@ -275,6 +277,7 @@ function MediatorSection({
   DebateIntroProps,
   'persona' | 'personaName' | 'personaImage'
 >) {
+  const t = useTranslations('debates.intro')
   const theme = getPersonaTheme(persona)
 
   return (
@@ -348,7 +351,7 @@ function MediatorSection({
         style={{ top: `${HORIZON + 6}%` }}
       >
         <motion.p variants={rise} custom={0.45} className={eyebrow}>
-          Your mediator
+          {t('yourMediator')}
         </motion.p>
 
         <motion.h2
@@ -367,7 +370,7 @@ function MediatorSection({
           <span className="size-1 rounded-full bg-neutral-300" />
 
           <span className="text-[9px] font-medium uppercase tracking-[0.2em] text-description">
-            Find a place in the middle
+            {t('middle')}
           </span>
 
           <span className="size-1 rounded-full bg-neutral-300" />

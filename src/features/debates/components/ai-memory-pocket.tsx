@@ -1,6 +1,9 @@
 'use client'
 
 import { X } from 'lucide-react'
+import { useTimeZone, useTranslations } from 'next-intl'
+
+import { isSameZonedDay } from '@/lib/date'
 
 import type { AiPersona, DebateMessage } from '../types'
 import DebateMessageBubble from './debate-message-bubble'
@@ -12,18 +15,14 @@ interface AiMemoryPocketProps {
   onClose: () => void
 }
 
-function isSameDay(dateA: string, dateB: string) {
-  return (
-    new Date(dateA).toDateString() ===
-    new Date(dateB).toDateString()
-  )
-}
-
 export default function AiMemoryPocket({
   messages,
   persona,
   onClose,
 }: AiMemoryPocketProps) {
+  const t = useTranslations('debates.aiMemory')
+  const timeZone = useTimeZone()
+
   return (
     <div className="fixed inset-0 z-[180] flex items-end justify-center bg-black/50 p-2.5 backdrop-blur-[3px] sm:items-center sm:p-6">
       <div className="relative flex max-h-[90dvh] w-full max-w-2xl flex-col overflow-hidden rounded-[1.6rem] border border-white/10 bg-primary shadow-[0_30px_100px_rgba(0,0,0,0.6)] sm:max-h-[82vh] sm:rounded-[2rem]">
@@ -36,25 +35,22 @@ export default function AiMemoryPocket({
         <header className="relative z-10 flex shrink-0 items-center justify-between gap-4 border-b border-white/[0.08] px-4 py-4 sm:px-6 sm:py-5">
           <div className="min-w-0">
             <p className="text-[7px] font-semibold uppercase tracking-[0.18em] text-description/70 sm:text-[8px]">
-              Memory pocket
+              {t('eyebrow')}
             </p>
 
             <h2 className="mt-1 text-[16px] font-semibold tracking-[-0.04em] text-secondary sm:text-[19px]">
-              DUONEAR AI
+              {t('title')}
             </h2>
 
             <p className="mt-1 text-[9px] text-description sm:text-[10px]">
-              {messages.length}{' '}
-              {messages.length === 1
-                ? 'saved response'
-                : 'saved responses'}
+              {t('count', { count: messages.length })}
             </p>
           </div>
 
           <button
             type="button"
             onClick={onClose}
-            aria-label="Close AI memory pocket"
+            aria-label={t('close')}
             className="flex size-8 shrink-0 items-center justify-center rounded-full border border-white/10 bg-primary text-description transition hover:bg-secondary hover:text-primary sm:size-9"
           >
             <X size={13} strokeWidth={1.7} />
@@ -71,9 +67,10 @@ export default function AiMemoryPocket({
               const showDateSeparator =
                 index === 0 ||
                 !previousMessage ||
-                !isSameDay(
+                !isSameZonedDay(
                   message.created_at,
                   previousMessage.created_at,
+                  timeZone,
                 )
 
               return (

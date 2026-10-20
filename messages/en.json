@@ -161,7 +161,7 @@
         "loggingOut": "Logging out...",
         "footer": "Grow together with DUONEAR"
     },
-        "checkins": {
+    "checkins": {
         "moods": {
             "happy": "Happy",
             "neutral": "Neutral",
@@ -869,6 +869,309 @@
             "forbidden": "You don't have permission to do that.",
             "network": "Connection problem. Check your internet and try again.",
             "unknown": "Couldn't load activities. Please try again."
+        }
+    },
+    "debates": {
+        "page": {
+            "title": "AI Debates",
+            "subtitle": "Resolve disagreements",
+            "noRelationship": "You need to connect with your partner first."
+        },
+        "status": {
+            "active": "Active",
+            "pending_verdict": "Thinking",
+            "resolved": "Resolved",
+            "archived": "Archived"
+        },
+        "personas": {
+            "formal": {
+                "label": "Formal",
+                "description": "Neutral & structured"
+            },
+            "lembut": {
+                "label": "Lembut",
+                "description": "Calm & empathetic"
+            },
+            "kasar": {
+                "label": "Nyeletuk",
+                "description": "Casual & witty"
+            },
+            "lebay": {
+                "label": "Lebay",
+                "description": "Expressive & dramatic"
+            }
+        },
+        "list": {
+            "filters": {
+                "all": "All",
+                "today": "Today",
+                "in_progress": "In progress",
+                "resolved": "Resolved"
+            },
+            "count": "{count, plural, one {# debate} other {# debates}}",
+            "aiMediated": "AI mediated",
+            "mediatorAlt": "DUONEAR mediator",
+            "deleteAria": "Delete {title}",
+            "cancelDeleteAria": "Cancel delete",
+            "viewMode": {
+                "groupLabel": "Debate view mode",
+                "cards": "Card view",
+                "list": "List view"
+            },
+            "carousel": {
+                "goTo": "Go to debate {number}",
+                "previous": "Previous debate",
+                "next": "Next debate"
+            },
+            "pagination": {
+                "previous": "Previous page",
+                "next": "Next page"
+            },
+            "create": {
+                "button": "Create debate",
+                "limitReached": "Limit reached",
+                "tooltip": "Start a new debate",
+                "limitTitle": "Monthly limit reached ({used}/{max})"
+            },
+            "empty": {
+                "all": {
+                    "title": "No debates yet.",
+                    "description": "Start your first debate whenever you need a little help finding common ground."
+                },
+                "today": {
+                    "title": "No debates today.",
+                    "description": "Start a conversation whenever you need a little help finding common ground."
+                },
+                "in_progress": {
+                    "title": "Nothing in progress.",
+                    "description": "Your active debates will appear here."
+                },
+                "resolved": {
+                    "title": "No resolved debates.",
+                    "description": "Resolved conversations will appear here."
+                }
+            }
+        },
+        "room": {
+            "you": "You",
+            "partnerFallback": "Partner",
+            "backToList": "Back to discussions",
+            "mediator": {
+                "menuLabel": "Mediator menu",
+                "open": "Open mediator menu",
+                "close": "Close mediator menu",
+                "ask": "Ask AI",
+                "asking": "AI is replying",
+                "history": "View answers",
+                "end": "End discussion",
+                "providerLabel": "AI provider",
+                "providerAuto": "Auto",
+                "label": "{persona} mediator",
+                "tapHint": "Tap the AI avatar to open the menu",
+                "hintWaitAi": "Wait for the AI to finish replying first",
+                "hintNoAi": "No answers from the AI yet",
+                "confirmTitle": "End this discussion?",
+                "confirmBody": "The discussion will be closed and DUONEAR AI will prepare a final verdict for you both.",
+                "confirmYes": "Yes, end it"
+            },
+            "partners": {
+                "groupLabel": "Switch between partners",
+                "showLatest": "Show {name}'s latest message"
+            },
+            "bubble": {
+                "emptyYou": "You haven't sent a message yet.",
+                "emptyPartner": "{name} hasn't sent a message yet.",
+                "previous": "{count, plural, one {# earlier message} other {# earlier messages}}",
+                "tapHint": "Tap an avatar to see the conversation"
+            },
+            "pocket": {
+                "eyebrow": "Memory pocket",
+                "title": "{name}'s thoughts",
+                "close": "Close memory pocket"
+            },
+            "empty": {
+                "title": "Start with what you feel.",
+                "description": "There is no need to be right here. Just say what is on your mind."
+            },
+            "ai": {
+                "waiting": "Waiting for AI response...",
+                "requesting": "{name} is requesting AI assistance",
+                "sendFirst": "Send a message before asking the AI",
+                "sendAgain": "Send a new message before asking the AI again",
+                "failed": "AI failed to respond.",
+                "retryShort": "Retry"
+            }
+        },
+        "aiMemory": {
+            "eyebrow": "Memory pocket",
+            "title": "DUONEAR AI",
+            "count": "{count, plural, one {# saved response} other {# saved responses}}",
+            "close": "Close AI memory pocket"
+        },
+        "composer": {
+            "placeholderBusy": "Waiting for the mediator...",
+            "placeholder": "Say what's on your mind...",
+            "send": "Share thought",
+            "hintDesktop": "Enter to share · Shift + Enter for a new line",
+            "hintMobile": "Enter to share",
+            "mediatorListening": "The mediator is listening...",
+            "partnerInvited": "{name} invited the mediator",
+            "partnerFallback": "Your partner",
+            "shareAnother": "Share another thought to invite the mediator again.",
+            "preparing": "The mediator is preparing your resolution.",
+            "ended": "This discussion has ended."
+        },
+        "create": {
+            "dialogLabel": "Create debate",
+            "eyebrow": "New debate",
+            "titleStep1": "What do you want to talk about?",
+            "titleStep2": "Choose your mediator",
+            "closeAria": "Close create debate modal",
+            "swipeHint": "Swipe to change persona",
+            "placeholder": "e.g. Where should we spend New Year's Eve?",
+            "continue": "Continue",
+            "creating": "Creating...",
+            "start": "Start debate",
+            "selectPersona": "Select {name}"
+        },
+        "intro": {
+            "perspectives": "Two perspectives",
+            "topic": "Topic",
+            "yourMediator": "Your mediator",
+            "middle": "Find a place in the middle"
+        },
+        "overlay": {
+            "resolutionTag": "Resolution",
+            "closeAria": "Close AI response",
+            "eyebrow": "{persona} mediator",
+            "processingResolution": "Finding your middle ground",
+            "processingComment": "Listening to both sides",
+            "subtitleVerdict": "DUONEAR AI is preparing the final verdict.",
+            "subtitleRequester": "{name} invited DUONEAR AI into the discussion.",
+            "subtitleDefault": "DUONEAR is reading both perspectives.",
+            "doneResolution": "A calmer place to meet in the middle.",
+            "doneComment": "Here is what DUONEAR heard.",
+            "disclaimer": "● AI responses can make mistakes"
+        },
+        "message": {
+            "someone": "Someone",
+            "strongerArgument": "Stronger argument",
+            "facts": "Facts",
+            "perspectives": "Perspectives",
+            "commonGround": "Common ground"
+        },
+        "errors": {
+            "notAuthenticated": "Your session has expired. Please sign in again.",
+            "forbidden": "You don't have permission to do that.",
+            "invalidInput": "Some details look invalid. Check them and try again.",
+            "notFound": "This debate couldn't be found. It may have been deleted.",
+            "roomLimitReached": "You've reached the limit of {max} debate rooms this month. Upgrade to create more.",
+            "rateLimited": "Too many requests. Please wait a moment and try again.",
+            "aiFailed": "The AI couldn't respond. Please try again.",
+            "network": "Connection problem. Check your internet and try again.",
+            "unknown": "Something went wrong. Please try again."
+        }
+    },
+    "qna": {
+        "notConnected": {
+            "title": "Not connected yet",
+            "description": "Connect with your partner first to start using Q&A together."
+        },
+        "menu": {
+            "title": "Q&A",
+            "subtitle": "A little closer",
+            "activeEyebrow": "Session in progress",
+            "waitingTitle": "Your partner is waiting :)",
+            "continueTitle": "Let's continue this conversation.",
+            "waitingBody": "It's your turn to answer now.",
+            "continueBody": "One of you already started a Q&A session. Let's continue.",
+            "continueCta": "Continue session",
+            "historyHint": "Conversations you've started",
+            "categoryHint": "Pick something to talk about together",
+            "tabCategories": "Categories",
+            "tabHistory": "History"
+        },
+        "session": {
+            "eyebrow": "Q&A",
+            "title": "Answer anything.",
+            "backAria": "Back to Q&A",
+            "endedEyebrow": "Session over",
+            "endedTitle": "This session has ended.",
+            "endedBody": "There's no conversation in progress. You can go back to Q&A and pick something you'd like to talk about.",
+            "backCta": "Back to Q&A",
+            "preparing": "Preparing session"
+        },
+        "categories": {
+            "love_and_us": {
+                "name": "Love & Us",
+                "description": "About the two of you"
+            },
+            "deep_talk": {
+                "name": "Deep Talk",
+                "description": "Deeper, more reflective conversations"
+            },
+            "future": {
+                "name": "Future",
+                "description": "Plans & hopes ahead"
+            },
+            "memories": {
+                "name": "Memories",
+                "description": "Memories & precious moments"
+            },
+            "fun_and_random": {
+                "name": "Fun & Random",
+                "description": "Light, random, and fun"
+            }
+        },
+        "picker": {
+            "groupLabel": "Choose a category",
+            "previous": "Previous category",
+            "next": "Next category",
+            "select": "Choose {name}",
+            "swipeHint": "Swipe to change",
+            "tapToStart": "Tap to start"
+        },
+        "card": {
+            "shuffling": "Shuffling the question",
+            "change": "Change",
+            "rerollExhausted": "No more questions in this category. You can't reroll again."
+        },
+        "answer": {
+            "mine": "Your answer",
+            "syncing": "Syncing your answers...",
+            "waitingPartner": "Waiting for your partner to answer...",
+            "privacy": "Private until you both answer",
+            "placeholder": "Write what you're thinking...",
+            "partnerAnswered": "Your partner has answered. Answer now to see their response.",
+            "submit": "Submit answer"
+        },
+        "reveal": {
+            "loading": "Loading answers",
+            "myAnswer": "Your answer",
+            "meBadge": "You",
+            "partnerAnswer": "Your partner's answer",
+            "partnerBadge": "Partner",
+            "newQuestion": "New question",
+            "close": "Close"
+        },
+        "history": {
+            "emptyTitle": "No stories yet",
+            "emptyDescription": "Answers from your conversations will be saved here.",
+            "me": "You",
+            "partner": "Partner",
+            "deleteAria": "Delete session",
+            "delete": "Delete",
+            "previousPage": "Previous page",
+            "nextPage": "Next page"
+        },
+        "errors": {
+            "notAuthenticated": "Your session has expired. Please sign in again.",
+            "forbidden": "You don't have permission to do that.",
+            "invalidInput": "Some details look invalid. Check them and try again.",
+            "notFound": "This session couldn't be found. It may have been deleted.",
+            "exhausted": "No more questions in this category. Try another one.",
+            "network": "Connection problem. Check your internet and try again.",
+            "unknown": "Something went wrong. Please try again."
         }
     }
 }

@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { Loader2, Send } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 
 import { useSendDebateMessage } from '../queries'
 
@@ -32,6 +33,8 @@ export default function DebateComposer({
   hasNewMessageSinceLastAiComment,
   onMessageSent,
 }: DebateComposerProps) {
+  const t = useTranslations('debates.composer')
+
   const [input, setInput] = useState('')
 
   const sendMessageMutation =
@@ -84,8 +87,8 @@ export default function DebateComposer({
                 }}
                 placeholder={
                   isAiProcessing
-                    ? 'Waiting for the mediator...'
-                    : "Say what's on your mind..."
+                    ? t('placeholderBusy')
+                    : t('placeholder')
                 }
                 disabled={isAiProcessing}
                 rows={1}
@@ -100,7 +103,7 @@ export default function DebateComposer({
                   sendMessageMutation.isPending ||
                   isAiProcessing
                 }
-                aria-label="Share thought"
+                aria-label={t('send')}
                 className="flex size-10 shrink-0 items-center justify-center rounded-full bg-neutral-800 text-white shadow-[0_7px_20px_rgba(0,0,0,0.12)] transition-all hover:-translate-y-0.5 hover:bg-black hover:shadow-[0_10px_25px_rgba(0,0,0,0.16)] disabled:pointer-events-none disabled:opacity-20 sm:rounded-[1.15rem]"
               >
                 {sendMessageMutation.isPending ? (
@@ -118,19 +121,20 @@ export default function DebateComposer({
 
             <div className="mt-1.5 flex items-center justify-between gap-3 px-2 sm:mt-2">
               <p className="hidden text-[8px] text-description sm:block sm:text-[8.5px]">
-                Enter to share · Shift + Enter for a new
-                line
+                {t('hintDesktop')}
               </p>
 
               <p className="text-[7.5px] text-description sm:hidden">
-                Enter to share
+                {t('hintMobile')}
               </p>
 
               {isAiProcessing && (
                 <p className="min-w-0 flex-1 truncate text-right text-[7.5px] text-description sm:text-[8.5px]">
                   {isAiRequestedByMe
-                    ? 'The mediator is listening...'
-                    : `${aiRequesterName ?? 'Your partner'} invited the mediator`}
+                    ? t('mediatorListening')
+                    : t('partnerInvited', {
+                        name: aiRequesterName ?? t('partnerFallback'),
+                      })}
                 </p>
               )}
 
@@ -138,8 +142,7 @@ export default function DebateComposer({
                 hasUserMessage &&
                 !hasNewMessageSinceLastAiComment && (
                   <p className="hidden min-w-0 flex-1 truncate text-right text-[8.5px] text-description sm:block">
-                    Share another thought to invite the
-                    mediator again.
+                    {t('shareAnother')}
                   </p>
                 )}
 
@@ -152,9 +155,7 @@ export default function DebateComposer({
       ) : (
         <div className="relative z-30 shrink-0 border-t border-black/[0.045] bg-primary/60 px-4 py-3.5 text-center sm:px-5 sm:py-4">
           <p className="text-[9.5px] text-description sm:text-[10.5px]">
-            {isPendingVerdict
-              ? 'The mediator is preparing your resolution.'
-              : 'This discussion has ended.'}
+            {isPendingVerdict ? t('preparing') : t('ended')}
           </p>
         </div>
       )}

@@ -8,8 +8,8 @@ import {
   Loader2,
   Trash2,
 } from "lucide-react";
+import { useFormatter, useTranslations } from "next-intl";
 import { useQnaHistory, useDeleteSession, useSessionDetail } from "../queries";
-import { getCategoryInfo } from "../category-info";
 
 interface QnaHistoryProps {
   currentUserId: string;
@@ -24,6 +24,7 @@ function HistoryReveal({
   sessionId: string;
   currentUserId: string;
 }) {
+  const t = useTranslations("qna.history");
   const { data: session, isLoading } = useSessionDetail(sessionId);
 
   if (isLoading) {
@@ -78,7 +79,7 @@ function HistoryReveal({
       <div className="space-y-5">
         <div>
           <p className="text-[10px] font-medium uppercase tracking-[0.16em] text-white/40">
-            Kamu
+           {t("me")}
           </p>
 
           <p className="mt-2 text-[14px] leading-6 tracking-[-0.01em] text-white/90">
@@ -90,7 +91,7 @@ function HistoryReveal({
 
         <div>
           <p className="text-[10px] font-medium uppercase tracking-[0.16em] text-white/40">
-            Pasangan
+            {t("partner")}
           </p>
 
           <p className="mt-2 text-[14px] leading-6 tracking-[-0.01em] text-white/90">
@@ -103,6 +104,10 @@ function HistoryReveal({
 }
 
 export function QnaHistoryList({ currentUserId }: QnaHistoryProps) {
+  const t = useTranslations("qna.history");
+  const tcat = useTranslations("qna.categories");
+  const format = useFormatter();
+
   const { data: history, isLoading } = useQnaHistory();
   const { mutate: deleteSession } = useDeleteSession();
 
@@ -138,11 +143,11 @@ export function QnaHistoryList({ currentUserId }: QnaHistoryProps) {
     return (
       <div className="flex min-h-[280px] flex-col items-center justify-center px-6 text-center">
         <span className="text-[10px] font-medium uppercase tracking-[0.22em] text-white/40">
-          Belum ada cerita
+          {t("emptyTitle")}
         </span>
 
         <p className="mt-4 max-w-xs text-[15px] leading-6 tracking-[-0.01em] text-white/50">
-          Jawaban dari percakapan kalian akan tersimpan di sini.
+          {t("emptyDescription")}
         </p>
       </div>
     );
@@ -152,16 +157,16 @@ export function QnaHistoryList({ currentUserId }: QnaHistoryProps) {
     <div className="w-full">
       <div className="grid gap-3 sm:grid-cols-2">
         {paginatedHistory.map((item, index) => {
-          const categoryInfo = getCategoryInfo(item.category);
           const isOpen = openSessionId === item.session_id;
 
-          const date = new Date(
-            item.completed_at ?? item.created_at,
-          ).toLocaleDateString("id-ID", {
-            day: "numeric",
-            month: "short",
-            year: "numeric",
-          });
+          const date = format.dateTime(
+            new Date(item.completed_at ?? item.created_at),
+            {
+              day: "numeric",
+              month: "short",
+              year: "numeric",
+            },
+          );
 
           const globalIndex =
             (currentPage - 1) * ITEMS_PER_PAGE + index + 1;
@@ -192,7 +197,7 @@ export function QnaHistoryList({ currentUserId }: QnaHistoryProps) {
                       <span className="h-0.5 w-0.5 rounded-full bg-white/25" />
 
                       <span className="text-[9px] font-semibold uppercase tracking-[0.16em] text-pink-200">
-                        {categoryInfo.name}
+                        {tcat(`${item.category}.name`)}
                       </span>
                     </div>
 
@@ -235,7 +240,7 @@ export function QnaHistoryList({ currentUserId }: QnaHistoryProps) {
                   <div className="flex justify-end px-5 pb-5">
                     <button
                       type="button"
-                      aria-label="Hapus sesi"
+                      aria-label={t("deleteAria")}
                       onClick={() => {
                         deleteSession(item.session_id);
                         setOpenSessionId(null);
@@ -243,7 +248,7 @@ export function QnaHistoryList({ currentUserId }: QnaHistoryProps) {
                       className="flex items-center gap-2 rounded-full px-2 py-1.5 text-[10px] font-medium uppercase tracking-[0.12em] text-white/35 transition-colors hover:text-red-300"
                     >
                       <Trash2 size={12} strokeWidth={1.6} />
-                      Hapus
+                      {t("delete")}
                     </button>
                   </div>
                 </>
@@ -263,7 +268,7 @@ export function QnaHistoryList({ currentUserId }: QnaHistoryProps) {
               setOpenSessionId(null);
             }}
             className="flex size-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white/50 transition-all hover:border-white/20 hover:text-white disabled:pointer-events-none disabled:opacity-30"
-            aria-label="Halaman sebelumnya"
+            aria-label={t("previousPage")}
           >
             <ChevronLeft size={15} strokeWidth={1.7} />
           </button>
@@ -301,7 +306,7 @@ export function QnaHistoryList({ currentUserId }: QnaHistoryProps) {
               setOpenSessionId(null);
             }}
             className="flex size-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white/50 transition-all hover:border-white/20 hover:text-white disabled:pointer-events-none disabled:opacity-30"
-            aria-label="Halaman berikutnya"
+            aria-label={t("nextPage")}
           >
             <ChevronRight size={15} strokeWidth={1.7} />
           </button>

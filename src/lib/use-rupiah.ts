@@ -21,7 +21,7 @@ export function useRupiah() {
       currency: 'IDR',
       currencyDisplay: 'narrowSymbol',
       notation: 'compact',
-      maximumFractionDigits: 0,
+      maximumFractionDigits: 1,
     })
 
   return { rupiah, rupiahCompact }

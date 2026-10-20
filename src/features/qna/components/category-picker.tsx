@@ -18,7 +18,9 @@ import {
   type MotionValue,
   type PanInfo,
 } from "framer-motion";
+import { useTranslations } from "next-intl";
 import { QNA_CATEGORIES } from "../category-info";
+import { getQnaErrorKey } from "../errors";
 import { useStartNewQna } from "../queries";
 import type { QnaCategory } from "../types";
 
@@ -114,6 +116,10 @@ function CategoryCard({
   disabled,
   onClick,
 }: CategoryCardProps) {
+  const t = useTranslations("qna.picker");
+  const tcat = useTranslations("qna.categories");
+  const te = useTranslations("qna.errors");
+
   // Jarak bertanda ke tengah, dan "sel": 0 = kartu samping, 1 = kartu tengah
   const d = useTransform(position, (p) => wrap(index - p));
   const sel = useTransform(d, (v) => Math.max(0, 1 - Math.abs(v)));
@@ -245,14 +251,14 @@ function CategoryCard({
               className="text-[25px] font-semibold leading-tight tracking-[-0.04em]"
               style={{ color: titleColor }}
             >
-              {category.name}
+              {tcat(`${category.id}.name`)}
             </motion.h3>
 
-            <motion.p
+           <motion.p
               className="mt-3 text-sm leading-6"
               style={{ color: descriptionColor }}
             >
-              {category.description}
+              {tcat(`${category.id}.description`)}
             </motion.p>
 
             {/* Selalu dirender (tidak di-mount/unmount) supaya layout tidak lompat */}
@@ -260,14 +266,13 @@ function CategoryCard({
               {isExhausted ? (
                 <div className="rounded-2xl border border-white/10 bg-white/[0.06] px-4 py-3">
                   <p className="text-[11px] leading-5 text-white/50">
-                    Pertanyaan di kategori ini sudah habis. Coba kategori
-                    lainnya.
+                    {te("exhausted")}
                   </p>
                 </div>
               ) : (
                 <div className="flex items-center gap-2 text-[10px] font-medium uppercase tracking-[0.16em] text-white/40">
                   <span className="h-1.5 w-1.5 rounded-full bg-white/50" />
-                  Tap untuk mulai
+                  {t("tapToStart")}
                 </div>
               )}
             </motion.div>
@@ -283,6 +288,9 @@ function CategoryCard({
 /* -------------------------------------------------------------------------- */
 
 export function CategoryPicker({ onSessionStarted }: CategoryPickerProps) {
+  const t = useTranslations("qna.picker");
+  const tcat = useTranslations("qna.categories");
+
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [exhaustedIds, setExhaustedIds] = useState<QnaCategory[]>([]);
 
@@ -367,7 +375,7 @@ export function CategoryPicker({ onSessionStarted }: CategoryPickerProps) {
         onSessionStarted?.();
       },
       onError: (error) => {
-        if (error.message.includes("QNA_EXHAUSTED")) {
+        if (getQnaErrorKey(error) === "exhausted") {
           setExhaustedIds((previous) =>
             previous.includes(categoryId)
               ? previous
@@ -477,7 +485,7 @@ export function CategoryPicker({ onSessionStarted }: CategoryPickerProps) {
         ref={stageRef}
         role="group"
         aria-roledescription="carousel"
-        aria-label="Pilih kategori"
+        aria-label={t("groupLabel")}
         className="relative isolate h-[400px] w-full touch-pan-y select-none overflow-visible [-webkit-tap-highlight-color:transparent]"
         onPanStart={handlePanStart}
         onPan={handlePan}
@@ -505,7 +513,7 @@ export function CategoryPicker({ onSessionStarted }: CategoryPickerProps) {
           type="button"
           disabled={isPending}
           onClick={goPrevious}
-          aria-label="Kategori sebelumnya"
+          aria-label={t("previous")}
           className="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white/50 transition-all hover:border-white/20 hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
         >
           <ArrowRight size={14} className="rotate-180" />
@@ -518,7 +526,7 @@ export function CategoryPicker({ onSessionStarted }: CategoryPickerProps) {
               type="button"
               disabled={isPending}
               onClick={() => goToIndex(index)}
-              aria-label={`Pilih ${category.name}`}
+              aria-label={t("select", { name: tcat(`${category.id}.name`) })}
               className={`h-1.5 rounded-full transition-all duration-300 ${
                 index === selectedIndex
                   ? "w-5 bg-white"
@@ -532,7 +540,7 @@ export function CategoryPicker({ onSessionStarted }: CategoryPickerProps) {
           type="button"
           disabled={isPending}
           onClick={goNext}
-          aria-label="Kategori berikutnya"
+          aria-label={t("next")}
           className="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white/50 transition-all hover:border-white/20 hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
         >
           <ArrowRight size={14} />
@@ -540,7 +548,7 @@ export function CategoryPicker({ onSessionStarted }: CategoryPickerProps) {
       </div>
 
       <p className="mt-4 text-center text-[10px] font-medium uppercase tracking-[0.18em] text-white/25">
-        Swipe to change
+        {t("swipeHint")}
       </p>
     </div>
   );

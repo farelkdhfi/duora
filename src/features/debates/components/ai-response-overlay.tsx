@@ -9,6 +9,7 @@ import {
   useReducedMotion,
 } from 'framer-motion'
 import { X } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 
 import type { AiPersona, DebateMessage } from '../types'
 import DebateMessageBubble from './debate-message-bubble'
@@ -130,6 +131,8 @@ export default function AiResponseOverlay({
   requesterName,
   onClose,
 }: AiResponseOverlayProps) {
+  const t = useTranslations('debates.overlay')
+
   useEffect(() => {
     if (!isProcessing && !message) return
 
@@ -148,22 +151,22 @@ export default function AiResponseOverlay({
   )
 
   const processingTitle = isResolution
-    ? 'Finding your middle ground'
-    : 'Listening to both sides'
+    ? t('processingResolution')
+    : t('processingComment')
 
   const subtitle = isProcessing
     ? isPendingVerdict
-      ? 'DUONEAR AI sedang menyusun putusan akhir.'
+      ? t('subtitleVerdict')
       : requesterName
-        ? `${requesterName} mengundang DUONEAR AI kedalam diskusi.`
-        : 'DUONEAR is reading both perspectives.'
+        ? t('subtitleRequester', { name: requesterName })
+        : t('subtitleDefault')
     : null
 
   const title = isProcessing
     ? processingTitle
     : isResolution
-      ? 'A calmer place to meet in the middle.'
-      : 'Here is what DUONEAR heard.'
+      ? t('doneResolution')
+      : t('doneComment')
 
   /* key untuk transisi teks hero saat state berganti */
   const heroKey = `${isProcessing ? 'processing' : 'done'}-${isResolution ? 'resolution' : 'comment'}`
@@ -195,7 +198,7 @@ export default function AiResponseOverlay({
                 <span className="h-3 w-px bg-white/15" />
 
                 <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-description">
-                  Resolution
+                  {t('resolutionTag')}
                 </p>
               </>
             )}
@@ -205,7 +208,7 @@ export default function AiResponseOverlay({
             <motion.button
               type="button"
               onClick={onClose}
-              aria-label="Close AI response"
+              aria-label={t('closeAria')}
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.4, ease: EASE }}
@@ -307,7 +310,7 @@ export default function AiResponseOverlay({
               transition={{ duration: 0.7, ease: EASE, delay: 0.3 }}
               className={eyebrow}
             >
-              {personaName} mediator
+              {t('eyebrow', { persona: personaName })}
             </motion.p>
 
             {/* HERO TEXT (berganti halus saat state berubah) */}
@@ -391,7 +394,7 @@ export default function AiResponseOverlay({
             className="relative z-20 shrink-0 bg-primary/70 px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-3 backdrop-blur-xl sm:bg-transparent sm:px-8 sm:pb-8 sm:pt-3 sm:backdrop-blur-none"
           >
             <div className="flex justify-center text-xs text-description">
-              <p>● Respons AI bisa membuat kesalahan</p>
+             <p>{t('disclaimer')}</p>
             </div>
           </motion.footer>
         )}

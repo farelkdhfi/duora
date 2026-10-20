@@ -3,7 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { RefreshCw } from "lucide-react";
-import { getCategoryInfo } from "../category-info";
+import { useTranslations } from "next-intl";
+import { getQnaErrorKey, type QnaErrorKey } from "../errors";
 import { useRerollQuestion } from "../queries";
 import type { ActiveQnaSession } from "../types";
 
@@ -84,7 +85,11 @@ const qnaStyles = `
 `;
 
 export function QuestionCard({ session, onShufflingChange }: QuestionCardProps) {
-  const [rerollError, setRerollError] = useState<string | null>(null);
+  const t = useTranslations("qna.card");
+  const tcat = useTranslations("qna.categories");
+  const te = useTranslations("qna.errors");
+
+  const [rerollError, setRerollError] = useState<QnaErrorKey | null>(null);
 
   // Shuffle yang dipicu klik tombol "Ganti" di device ini
   const [isShuffling, setIsShuffling] = useState(false);
@@ -104,7 +109,6 @@ export function QuestionCard({ session, onShufflingChange }: QuestionCardProps) 
 
   const { mutate: reroll, isPending: isRerolling } = useRerollQuestion();
 
-  const categoryInfo = getCategoryInfo(session.category);
   const alreadyAnswered = session.my_answer !== null;
   const canReroll = !alreadyAnswered && !session.partner_has_answered;
   const shuffling = isShuffling || isRerolling || isRemoteShuffling;
@@ -185,13 +189,7 @@ export function QuestionCard({ session, onShufflingChange }: QuestionCardProps) 
 
     reroll(session.session_id, {
       onError: (err) => {
-        if (err.message.includes("QNA_EXHAUSTED")) {
-          setRerollError(
-            "Pertanyaan di kategori ini sudah habis. Tidak bisa reroll lagi."
-          );
-        } else {
-          setRerollError(err.message);
-        }
+        setRerollError(getQnaErrorKey(err));
       },
       onSettled: () => {
         // Berhenti di akhir putaran, bukan di sembarang waktu
@@ -220,7 +218,7 @@ export function QuestionCard({ session, onShufflingChange }: QuestionCardProps) 
         {shuffling ? (
           <>
             <span role="status" className="sr-only">
-              Mengacak pertanyaan
+              {t("shuffling")}
             </span>
 
             {SHUFFLE_CARDS.map((card, i) => (
@@ -268,7 +266,7 @@ export function QuestionCard({ session, onShufflingChange }: QuestionCardProps) 
               <div className="mx-auto flex items-center gap-2.5 pt-7">
                 <span className="h-[1px] w-7 bg-black/30" />
                 <span className="text-[9px] font-semibold uppercase tracking-[0.2em] text-description">
-                  {categoryInfo.name}
+                  {tcat(`${session.category}.name`)}
                 </span>
                 <span className="h-[1px] w-7 bg-black/30" />
               </div>
@@ -285,15 +283,17 @@ export function QuestionCard({ session, onShufflingChange }: QuestionCardProps) 
           >
             <RefreshCw className="size-3 transition-transform duration-300 group-hover:rotate-180" />
 
-            <span>Ganti</span>
+             <span>{t("change")}</span>
           </button>
         )}
       </div>
 
       {rerollError && (
         <div className="mx-auto mb-4 max-w-md px-5 text-center">
-          <p role="alert" className="text-xs leading-5 text-amber-600/80">
-            {rerollError}
+           <p role="alert" className="text-xs leading-5 text-amber-600/80">
+            {rerollError === "exhausted"
+              ? t("rerollExhausted")
+              : te(rerollError)}
           </p>
         </div>
       )}

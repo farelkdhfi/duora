@@ -5,7 +5,9 @@ import { useTranslations } from 'next-intl'
 import { ArrowUpRight, Target } from 'lucide-react'
 
 import DarkCardShell from '@/components/ui/dark-card-shell'
+import { getSavingErrorKey } from '@/features/savings/errors'
 import { useGoalsWithSavingsSummary } from '@/features/savings/queries'
+import { useRupiah } from '@/lib/use-rupiah'
 
 interface GoalListProps {
   relationshipId: string
@@ -16,19 +18,6 @@ const openButtonClass =
 
 const panelClass =
   'relative mt-4 flex-1  px-3'
-
-// TODO Fase 5: diganti helper format angka yang ikut locale
-function formatRupiah(amount: number) {
-  if (amount >= 1_000_000) {
-    return `Rp ${(amount / 1_000_000).toFixed(1).replace(/\.0$/, '')}M`
-  }
-
-  if (amount >= 1_000) {
-    return `Rp ${(amount / 1_000).toFixed(1).replace(/\.0$/, '')}K`
-  }
-
-  return `Rp ${amount.toLocaleString('id-ID')}`
-}
 
 function CardHeader({ withLink = false }: { withLink?: boolean }) {
   const t = useTranslations('dashboard.goals')
@@ -52,6 +41,8 @@ function CardHeader({ withLink = false }: { withLink?: boolean }) {
 
 export default function GoalListSummary({ relationshipId }: GoalListProps) {
   const t = useTranslations('dashboard.goals')
+  const te = useTranslations('savings.errors')
+  const { rupiahCompact } = useRupiah()
 
   const {
     data: goals,
@@ -80,7 +71,6 @@ export default function GoalListSummary({ relationshipId }: GoalListProps) {
   }
 
   if (error) {
-    // TODO i18n: error.message masih mentah, diganti error bertipe di Fase 3 (savings/api.ts)
     return (
       <DarkCardShell variant="sky" compact>
         <h3 className="break-words text-sm font-medium leading-snug tracking-[-0.04em] text-neutral-50">
@@ -88,7 +78,7 @@ export default function GoalListSummary({ relationshipId }: GoalListProps) {
         </h3>
 
         <p className="mt-1 text-[11px] leading-relaxed text-neutral-400">
-          {error.message}
+          {te(getSavingErrorKey(error))}
         </p>
       </DarkCardShell>
     )
@@ -158,7 +148,7 @@ export default function GoalListSummary({ relationshipId }: GoalListProps) {
         </p>
 
         <p className="mt-1.5 break-words text-xl font-semibold tracking-[-0.04em] text-neutral-50">
-          {formatRupiah(totalSavings)}
+          {rupiahCompact(totalSavings)}
         </p>
 
         <p className="mt-1.5 text-[10px] text-neutral-500">

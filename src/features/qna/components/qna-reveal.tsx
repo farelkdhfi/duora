@@ -3,7 +3,8 @@
 "use client";
 
 import { ArrowUpRight, Loader2, X } from "lucide-react";
-import { getCategoryInfo } from "../category-info";
+import { useTranslations } from "next-intl";
+import { getQnaErrorKey } from "../errors";
 import { useSessionDetail, useStartNewQna } from "../queries";
 
 interface QnaRevealProps {
@@ -42,6 +43,10 @@ export function QnaReveal({
   onClose,
   showNewQuestionButton = false,
 }: QnaRevealProps) {
+  const t = useTranslations("qna.reveal");
+  const tcat = useTranslations("qna.categories");
+  const te = useTranslations("qna.errors");
+
   const { data: session, isLoading } = useSessionDetail(sessionId);
   const {
     mutate: startNewQna,
@@ -61,7 +66,7 @@ export function QnaReveal({
           </div>
 
           <span className="text-[8px] font-semibold uppercase tracking-[0.2em] text-description">
-            Memuat jawaban
+            {t("loading")}
           </span>
         </div>
       </div>
@@ -73,7 +78,6 @@ export function QnaReveal({
   }
 
   const category = session.category;
-  const categoryInfo = getCategoryInfo(category);
 
   function handleNewQuestion() {
     startNewQna(category);
@@ -120,7 +124,7 @@ export function QnaReveal({
             <div className="mx-auto flex items-center gap-2.5 pt-7">
               <span className="h-[1px] w-7 bg-black/30" />
               <span className="text-[9px] font-semibold uppercase tracking-[0.2em] text-description">
-                {categoryInfo.name}
+                {tcat(`${category}.name`)}
               </span>
               <span className="h-[1px] w-7 bg-black/30" />
             </div>
@@ -135,11 +139,11 @@ export function QnaReveal({
           <div className="rounded-[2rem] border border-black/[0.06] bg-primary/65 p-6 shadow-[0_20px_60px_-40px_rgba(30,19,24,0.25)] backdrop-blur-xl sm:p-7">
             <div className="flex items-center justify-between">
               <span className="text-[9px] font-semibold uppercase tracking-[0.2em] text-description">
-                Jawaban kamu
+                {t("myAnswer")}
               </span>
 
               <span className="rounded-full bg-[#c995b5]/10 px-2.5 py-1 text-[8px] font-semibold uppercase tracking-[0.14em] text-[#9b6683]">
-                Kamu
+                {t("meBadge")}
               </span>
             </div>
 
@@ -152,11 +156,11 @@ export function QnaReveal({
           <div className="rounded-[2rem] border border-black/[0.06] bg-primary/65 p-6 shadow-[0_20px_60px_-40px_rgba(30,19,24,0.25)] backdrop-blur-xl sm:p-7">
             <div className="flex items-center justify-between">
               <span className="text-[9px] font-semibold uppercase tracking-[0.2em] text-description">
-                Jawaban pasangan
+                {t("partnerAnswer")}
               </span>
 
               <span className="rounded-full bg-black/[0.035] px-2.5 py-1 text-[8px] font-semibold uppercase tracking-[0.14em] text-description">
-                Pasangan
+                {t("partnerBadge")}
               </span>
             </div>
 
@@ -172,9 +176,7 @@ export function QnaReveal({
         {startError && (
           <div className="mx-auto mt-4 max-w-md text-center">
             <p role="alert" className="text-xs leading-5 text-amber-600/80">
-              {startError.message.includes("QNA_EXHAUSTED")
-                ? "Pertanyaan di kategori ini sudah habis. Coba kategori lain."
-                : startError.message}
+              {te(getQnaErrorKey(startError))}
             </p>
           </div>
         )}
@@ -194,7 +196,7 @@ export function QnaReveal({
                 <Loader2 className="size-4 animate-spin" />
               ) : (
                 <>
-                  <span>Pertanyaan baru</span>
+                  <span>{t("newQuestion")}</span>
 
                   <ArrowUpRight
                     className="size-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
@@ -208,7 +210,7 @@ export function QnaReveal({
               <button
                 type="button"
                 onClick={onClose}
-                aria-label="Tutup"
+                aria-label={t("close")}
                 className="flex size-12 shrink-0 items-center justify-center rounded-full border border-black/[0.08] bg-primary/65 text-description backdrop-blur-xl transition-all duration-300 hover:bg-primary hover:text-secondary"
               >
                 <X className="size-4" strokeWidth={1.7} />
@@ -223,7 +225,7 @@ export function QnaReveal({
               className="mt-4 flex h-12 w-full items-center justify-center gap-2 rounded-full border border-black/[0.08] bg-primary/65 text-sm font-semibold tracking-[-0.01em] text-description backdrop-blur-xl transition-all duration-300 hover:bg-primary hover:text-secondary"
             >
               <X className="size-3.5" strokeWidth={1.7} />
-              <span>Tutup</span>
+              <span>{t("close")}</span>
             </button>
           )
         )}

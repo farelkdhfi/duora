@@ -1,6 +1,7 @@
 // qna/api.ts
 
 import { createClient } from "@/lib/supabase/client";
+import { toQnaError } from "./errors";
 import type {
   QnaQuestion,
   ActiveQnaSession,
@@ -18,7 +19,7 @@ export async function getRandomQuestion(
     p_category: category,
   });
 
-  if (error) throw error;
+  if (error) throw toQnaError(error);
   return data;
 }
 
@@ -27,7 +28,7 @@ export async function startSession(questionId: string) {
     p_question_id: questionId,
   });
 
-  if (error) throw error;
+  if (error) throw toQnaError(error);
   return data;
 }
 
@@ -37,13 +38,13 @@ export async function submitAnswer(sessionId: string, answerText: string) {
     p_answer_text: answerText,
   });
 
-  if (error) throw error;
+  if (error) throw toQnaError(error);
   return data;
 }
 
 export async function getActiveSession(): Promise<ActiveQnaSession | null> {
   const { data, error } = await supabase.rpc("get_active_qna_session");
-  if (error) throw error;
+  if (error) throw toQnaError(error);
   return data?.[0] ?? null;
 }
 
@@ -54,7 +55,7 @@ export async function getSessionDetail(
     p_session_id: sessionId,
   });
 
-  if (error) throw error;
+  if (error) throw toQnaError(error);
   return data?.[0];
 }
 
@@ -67,7 +68,7 @@ export async function getHistory(
     p_offset: offset,
   });
 
-  if (error) throw error;
+  if (error) throw toQnaError(error);
   return data ?? [];
 }
 
@@ -76,12 +77,12 @@ export async function deleteSession(sessionId: string): Promise<void> {
     p_session_id: sessionId,
   });
 
-  if (error) throw error;
+  if (error) throw toQnaError(error);
 }
 
 export async function getSessionsCreatedToday(): Promise<number> {
   const { data, error } = await supabase.rpc("get_qna_sessions_created_today");
-  if (error) throw error;
+  if (error) throw toQnaError(error);
   return data as number;
 }
 
@@ -90,6 +91,6 @@ export async function rerollQuestion(sessionId: string) {
     p_session_id: sessionId,
   });
 
-  if (error) throw error;
+  if (error) throw toQnaError(error);
   return data;
 }

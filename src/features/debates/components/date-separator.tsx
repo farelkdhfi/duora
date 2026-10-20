@@ -1,41 +1,43 @@
+'use client'
+
+import { useFormatter, useTimeZone, useTranslations } from 'next-intl'
+
+import { addDays, parseDateOnly, toDateKey, zonedNow } from '@/lib/date'
+
 interface DateSeparatorProps {
   date: string
 }
 
-function formatDateLabel(dateString: string) {
-  const date = new Date(dateString)
-  const now = new Date()
+export default function DateSeparator({ date }: DateSeparatorProps) {
+  const t = useTranslations('common.relative')
+  const format = useFormatter()
+  const timeZone = useTimeZone()
 
-  const isToday =
-    date.toDateString() === now.toDateString()
+  const target = new Date(date)
 
-  const yesterday = new Date(now)
-  yesterday.setDate(now.getDate() - 1)
+  // Semua perbandingan memakai tanggal di timezone user
+  const dayKey = zonedNow(timeZone, target).dateKey
+  const todayKey = zonedNow(timeZone).dateKey
+  const yesterdayKey = toDateKey(addDays(parseDateOnly(todayKey), -1))
 
-  const isYesterday =
-    date.toDateString() ===
-    yesterday.toDateString()
+  let label: string
 
-  if (isToday) return 'Today'
-  if (isYesterday) return 'Yesterday'
+  if (dayKey === todayKey) {
+    label = t('today')
+  } else if (dayKey === yesterdayKey) {
+    label = t('yesterday')
+  } else {
+    label = format.dateTime(target, {
+      day: 'numeric',
+      month: 'long',
+      year: dayKey.slice(0, 4) !== todayKey.slice(0, 4) ? 'numeric' : undefined,
+    })
+  }
 
-  return date.toLocaleDateString('id-ID', {
-    day: 'numeric',
-    month: 'long',
-    year:
-      date.getFullYear() !== now.getFullYear()
-        ? 'numeric'
-        : undefined,
-  })
-}
-
-export default function DateSeparator({
-  date,
-}: DateSeparatorProps) {
   return (
     <div className="flex items-center justify-center py-3">
       <span className="rounded-full bg-white/[0.06] px-3 py-1 text-[10px] font-medium text-description">
-        {formatDateLabel(date)}
+        {label}
       </span>
     </div>
   )

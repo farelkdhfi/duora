@@ -6,7 +6,7 @@ import type {
   PointerEvent as ReactPointerEvent,
 } from 'react'
 import Link from 'next/link'
-import { useFormatter, useTranslations } from 'next-intl'
+import { useFormatter, useTimeZone, useTranslations } from 'next-intl'
 import { ArrowUpRight, Heart } from 'lucide-react'
 
 import happyEmot1 from '@/assets/emoticon/happy-fluffy.webp'
@@ -30,6 +30,7 @@ import stressedEmot2 from '@/assets/emoticon/stressed-fluffy-2.webp'
 import stressedEmot3 from '@/assets/emoticon/stressed-fluffy-3.webp'
 
 import type { DailyCheckin, Mood } from '@/features/checkins/types'
+import { addDays, parseDateOnly, toDateKey, UTC, zonedNow } from '@/lib/date'
 
 interface PartnerCheckinCardProps {
   checkins: DailyCheckin[] | undefined
@@ -89,13 +90,6 @@ const GRADIENT_HALF = 180 // setengah lebar bagian ring yang kelihatan
 const clamp = (value: number, min: number, max: number) =>
   Math.min(max, Math.max(min, value))
 
-/** YYYY-MM-DD memakai tanggal lokal (bukan UTC) supaya tidak geser hari di WIB. */
-function toDateKey(date: Date) {
-  const y = date.getFullYear()
-  const m = String(date.getMonth() + 1).padStart(2, '0')
-  const d = String(date.getDate()).padStart(2, '0')
-  return `${y}-${m}-${d}`
-}
 
 type DayEntry = {
   key: string
@@ -294,6 +288,7 @@ export default function PartnerCheckinCard({
   const tp = useTranslations('dashboard.people')
   const tc = useTranslations('common')
   const format = useFormatter()
+  const timeZone = useTimeZone()
 
   // position: 0 = Now, 6 = 6 hari lalu. Float saat di-drag, integer saat snap.
   const [position, setPosition] = useState(0)
@@ -307,26 +302,34 @@ export default function PartnerCheckinCard({
   const suppressClickRef = useRef(false)
 
   const days = useMemo<DayEntry[]>(() => {
-    const today = new Date()
+    // "Hari ini" menurut timezone user; semua Date di bawah berbasis UTC
+    const today = parseDateOnly(zonedNow(timeZone).dateKey)
 
     return Array.from({ length: DAYS }, (_, i) => {
-      const date = new Date(today)
-      date.setDate(today.getDate() - i)
+      const date = addDays(today, -i)
       const key = toDateKey(date)
 
       const ofDay = (checkins ?? []).filter((c) => c.checkin_date === key)
 
       return {
         key,
-        label: i === 0 ? t('now') : format.dateTime(date, { weekday: 'short' }).toLowerCase(),
-        fullLabel: format.dateTime(date, { weekday: 'long', month: 'short', day: 'numeric' }),
+        label:
+          i === 0
+            ? t('now')
+            : format.dateTime(date, { weekday: 'short', ...UTC }).toLowerCase(),
+        fullLabel: format.dateTime(date, {
+          weekday: 'long',
+          month: 'short',
+          day: 'numeric',
+          ...UTC,
+        }),
         user: userId ? (ofDay.find((c) => c.user_id === userId) ?? null) : null,
         partner: userId
           ? (ofDay.find((c) => c.user_id !== userId) ?? null)
           : null,
       }
     })
-  }, [checkins, userId, format, t])
+  }, [checkins, userId, format, t, timeZone])
 
   const selectedIndex = Math.round(position)
   const selected = days[selectedIndex]

@@ -3,8 +3,10 @@
 import { Fragment, useEffect, useMemo, useRef, useState } from 'react'
 import type { KeyboardEvent } from 'react'
 import Link from 'next/link'
-import { useFormatter, useTranslations } from 'next-intl'
+import { useFormatter, useTimeZone, useTranslations } from 'next-intl'
 import { ArrowUpRight, CalendarDays, History, Plus } from 'lucide-react'
+
+import { parseDateOnly, UTC, wallClock, zonedNow } from '@/lib/date'
 
 /**
  * Bentuk data dari tabel planner_events.
@@ -34,41 +36,37 @@ const MAX_PAST = 3
 /** number = index event mendatang, 'past' = filter riwayat. */
 type View = number | 'past'
 
-/* ========================================================= */
-/* HELPER (murni, tanpa teks) */
-/* ========================================================= */
+const DAY_MS = 86_400_000
 
-/** YYYY-MM-DD memakai tanggal lokal (bukan UTC) supaya tidak geser hari di WIB. */
-function toDateKey(date: Date) {
-  const y = date.getFullYear()
-  const m = String(date.getMonth() + 1).padStart(2, '0')
-  const d = String(date.getDate()).padStart(2, '0')
-  return `${y}-${m}-${d}`
-}
-
-function formatTime(time: string) {
-  return time.slice(0, 5)
-}
-
-function daysUntil(dateKey: string) {
-  const target = new Date(`${dateKey}T00:00:00`)
-  const now = new Date()
-  now.setHours(0, 0, 0, 0)
-  return Math.round((target.getTime() - now.getTime()) / 86_400_000)
+/** Selisih hari kalender (dateKey - todayKey), keduanya YYYY-MM-DD */
+function daysUntil(dateKey: string, todayKey: string) {
+  return Math.round(
+    (parseDateOnly(dateKey).getTime() - parseDateOnly(todayKey).getTime()) /
+    DAY_MS,
+  )
 }
 
 /** Helper yang butuh teks/format locale dikumpulkan di sini. */
 function usePlannerFormat() {
   const t = useTranslations('dashboard.planner')
   const tc = useTranslations('common')
+  const tCat = useTranslations('planner.categories')
   const format = useFormatter()
+  const timeZone = useTimeZone()
+
+  // "Hari ini" menurut timezone user
+  const todayKey = zonedNow(timeZone).dateKey
 
   /** "oct" / "okt" */
-  const monthShort = (date: Date) =>
-    format.dateTime(date, { month: 'short' }).toLowerCase()
+  const monthShort = (dateKey: string) =>
+    format
+      .dateTime(parseDateOnly(dateKey), { month: 'short', ...UTC })
+      .toLowerCase()
+
+  const dayOfMonth = (dateKey: string) => parseDateOnly(dateKey).getUTCDate()
 
   const relativeLabel = (dateKey: string) => {
-    const diff = daysUntil(dateKey)
+    const diff = daysUntil(dateKey, todayKey)
     if (diff === 0) return tc('relative.today')
     if (diff === 1) return tc('relative.tomorrow')
     if (diff === -1) return tc('relative.yesterday')
@@ -78,13 +76,24 @@ function usePlannerFormat() {
 
   /** "oct 10" / "10 okt", plus " '25" kalau beda tahun dengan sekarang. */
   const shortDate = (dateKey: string) => {
-    const date = new Date(`${dateKey}T00:00:00`)
+    const date = parseDateOnly(dateKey)
     const label = format
-      .dateTime(date, { day: 'numeric', month: 'short' })
+      .dateTime(date, { day: 'numeric', month: 'short', ...UTC })
       .toLowerCase()
-    const sameYear = date.getFullYear() === new Date().getFullYear()
+    const year = date.getUTCFullYear()
+    const sameYear = year === Number(todayKey.slice(0, 4))
 
-    return sameYear ? label : `${label} '${String(date.getFullYear()).slice(2)}`
+    return sameYear ? label : `${label} '${String(year).slice(2)}`
+  }
+
+  /** "13:30:00" -> "1:30 PM" (en) / "13.30" (id) */
+  const formatTime = (time: string) => {
+    const [h, m] = time.split(':').map(Number)
+    return format.dateTime(wallClock(h, m || 0), {
+      hour: 'numeric',
+      minute: '2-digit',
+      ...UTC,
+    })
   }
 
   const timeLabel = (event: PlannerEvent) => {
@@ -94,7 +103,22 @@ function usePlannerFormat() {
     return event.end_time ? `${start} – ${formatTime(event.end_time)}` : start
   }
 
-  return { monthShort, relativeLabel, shortDate, timeLabel }
+  const categoryLabel = (category?: string | null) => {
+    if (!category) return ''
+
+    const key = category as Parameters<typeof tCat>[0]
+
+    return tCat.has(key) ? tCat(key) : category.replace(/[_-]+/g, ' ')
+  }
+
+  return {
+    monthShort,
+    dayOfMonth,
+    relativeLabel,
+    shortDate,
+    timeLabel,
+    categoryLabel,
+  }
 }
 
 /** true setelah komponen mount, dipakai untuk efek fade-in. */
@@ -115,20 +139,18 @@ function useMounted() {
 
 function EventDetail({ event }: { event: PlannerEvent }) {
   const t = useTranslations('dashboard.planner')
-  const { monthShort, relativeLabel, timeLabel } = usePlannerFormat()
+  const { monthShort, dayOfMonth, relativeLabel, timeLabel, categoryLabel } =
+    usePlannerFormat()
   const ready = useMounted()
 
-  const date = new Date(`${event.event_date}T00:00:00`)
-  const month = monthShort(date)
-  // TODO Fase 3: category masih nilai mentah dari DB, nanti lewat label planner
-  const category = event.category?.replace(/[_-]+/g, ' ')
+  const month = monthShort(event.event_date)
+  const category = categoryLabel(event.category)
 
   return (
     <div
       role="tabpanel"
-      className={`flex items-stretch gap-3 transition-all duration-300 ease-out ${
-        ready ? 'translate-y-0 opacity-100' : 'translate-y-1 opacity-0'
-      }`}
+      className={`flex items-stretch gap-3 transition-all duration-300 ease-out ${ready ? 'translate-y-0 opacity-100' : 'translate-y-1 opacity-0'
+        }`}
     >
       {/* tile tanggal */}
       <div className="flex size-16 shrink-0 flex-col items-center justify-center rounded-2xl border border-white/[0.08] bg-gradient-to-b from-white/[0.12] to-black shadow-[0_10px_24px_-16px_rgba(0,0,0,0.9)]">
@@ -136,7 +158,7 @@ function EventDetail({ event }: { event: PlannerEvent }) {
           {month}
         </p>
         <p className="mt-0.5 text-2xl font-semibold leading-none tracking-[-0.04em] text-white">
-          {date.getDate()}
+          {dayOfMonth(event.event_date)}
         </p>
       </div>
 
@@ -187,9 +209,8 @@ function PastList({ events }: { events: PlannerEvent[] }) {
   return (
     <ul
       role="tabpanel"
-      className={`transition-all duration-300 ease-out ${
-        ready ? 'translate-y-0 opacity-100' : 'translate-y-1 opacity-0'
-      }`}
+      className={`transition-all duration-300 ease-out ${ready ? 'translate-y-0 opacity-100' : 'translate-y-1 opacity-0'
+        }`}
     >
       {events.map((event) => (
         <li
@@ -274,12 +295,15 @@ const activeClass =
 
 export default function PlannerSummaryCard({ events }: PlannerSummaryCardProps) {
   const t = useTranslations('dashboard.planner')
+  const timeZone = useTimeZone()
 
   const [view, setView] = useState<View>(0)
+
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([])
 
   const { upcoming, past, total } = useMemo(() => {
-    const todayKey = toDateKey(new Date())
+    const todayKey = zonedNow(timeZone).dateKey
+
     const all = events ?? []
 
     return {
@@ -294,7 +318,7 @@ export default function PlannerSummaryCard({ events }: PlannerSummaryCardProps) 
         .slice(0, MAX_PAST),
       total: all.length,
     }
-  }, [events])
+  }, [events, timeZone])
 
   // selalu MAX_UPCOMING slot; slot tanpa plan = null
   const slots = Array.from(
@@ -361,11 +385,10 @@ export default function PlannerSummaryCard({ events }: PlannerSummaryCardProps) 
                   title={event.title}
                   tabIndex={isActive ? 0 : -1}
                   onClick={() => setView(i)}
-                  className={`relative z-10 flex size-7 shrink-0 items-center justify-center rounded-full text-xs font-medium outline-none transition-all duration-300 focus-visible:ring-2 focus-visible:ring-white/30 ${
-                    isActive
-                      ? ` ${activeClass}`
-                      : 'border border-white/[0.08] bg-black text-neutral-200 hover:border-white/20 hover:bg-neutral-900'
-                  }`}
+                  className={`relative z-10 flex size-7 shrink-0 items-center justify-center rounded-full text-xs font-medium outline-none transition-all duration-300 focus-visible:ring-2 focus-visible:ring-white/30 ${isActive
+                    ? ` ${activeClass}`
+                    : 'border border-white/[0.08] bg-black text-neutral-200 hover:border-white/20 hover:bg-neutral-900'
+                    }`}
                 >
                   {i + 1}
                 </button>
@@ -387,11 +410,10 @@ export default function PlannerSummaryCard({ events }: PlannerSummaryCardProps) 
               {i < slots.length - 1 && (
                 <span
                   aria-hidden
-                  className={`h-px flex-1 transition-colors duration-500 ${
-                    typeof activeView === 'number' && i < activeView
-                      ? 'bg-purple-400/60'
-                      : 'bg-white/10'
-                  }`}
+                  className={`h-px flex-1 transition-colors duration-500 ${typeof activeView === 'number' && i < activeView
+                    ? 'bg-purple-400/60'
+                    : 'bg-white/10'
+                    }`}
                 />
               )}
             </Fragment>
@@ -413,13 +435,12 @@ export default function PlannerSummaryCard({ events }: PlannerSummaryCardProps) 
           title={past.length > 0 ? t('pastPlans') : t('noHistory')}
           tabIndex={pastActive ? 0 : -1}
           onClick={() => setView('past')}
-          className={`relative z-10 inline-flex h-7 shrink-0 items-center gap-1 rounded-full px-2.5 text-[11px] font-medium outline-none transition-all duration-300 focus-visible:ring-2 focus-visible:ring-white/30 ${
-            past.length === 0
-              ? 'cursor-default border border-dashed border-white/[0.08] bg-black text-neutral-600'
-              : pastActive
-                ? activeClass
-                : 'border border-white/[0.08] bg-black text-neutral-300 hover:border-white/20 hover:bg-neutral-900'
-          }`}
+          className={`relative z-10 inline-flex h-7 shrink-0 items-center gap-1 rounded-full px-2.5 text-[11px] font-medium outline-none transition-all duration-300 focus-visible:ring-2 focus-visible:ring-white/30 ${past.length === 0
+            ? 'cursor-default border border-dashed border-white/[0.08] bg-black text-neutral-600'
+            : pastActive
+              ? activeClass
+              : 'border border-white/[0.08] bg-black text-neutral-300 hover:border-white/20 hover:bg-neutral-900'
+            }`}
         >
           <History size={11} strokeWidth={2} />
           {t('past')}

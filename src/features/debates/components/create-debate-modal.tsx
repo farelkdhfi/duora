@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import Image, { type StaticImageData } from 'next/image'
 import { AnimatePresence, motion, type Variants } from 'framer-motion'
 import { X } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 
 import { useCreateDebate } from '../queries'
 import { AiPersona } from '../types'
@@ -19,6 +20,7 @@ import lembutAi from '@/assets/ai-persona/lembut-ai.png'
 import formalAi from '@/assets/ai-persona/formal-ai.png'
 import nyeletukAi from '@/assets/ai-persona/nyeletuk-ai.png'
 import lebayAi from '@/assets/ai-persona/lebay-ai.png'
+import { getDebateErrorKey, getDebateErrorParams } from '../errors'
 
 interface CreateDebateModalProps {
   relationshipId: string
@@ -36,46 +38,19 @@ const IMAGE_SIZES = '(max-width: 640px) 84vw, 480px'
 /* Posisi garis lantai backdrop (% tinggi layar) */
 const HORIZON = 60
 
-const STEP_TITLE: Record<1 | 2, string> = {
-  1: 'Apa topik yang ingin dibahas?',
-  2: 'Choose your mediator',
-}
-
 // Input versi dark theme
 const inputClass =
   'h-14 w-full rounded-[1.15rem] border border-white/10 bg-white/[0.04] px-4 text-[15px] font-medium tracking-[-0.02em] text-secondary outline-none backdrop-blur-sm transition-all duration-200 placeholder:text-description/50 hover:border-white/20 focus:border-white/25 focus:ring-4 focus:ring-white/[0.05]'
 
 const personaOptions: {
   value: AiPersona
-  label: string
-  description: string
   image: StaticImageData
 }[] = [
-  {
-    value: 'formal',
-    label: 'Formal',
-    description: 'Neutral & structured',
-    image: formalAi,
-  },
-  {
-    value: 'lembut',
-    label: 'Lembut',
-    description: 'Calm & empathetic',
-    image: lembutAi,
-  },
-  {
-    value: 'kasar',
-    label: 'Nyeletuk',
-    description: 'Casual & witty',
-    image: nyeletukAi,
-  },
-  {
-    value: 'lebay',
-    label: 'Lebay',
-    description: 'Expressive & dramatic',
-    image: lebayAi,
-  },
-]
+    { value: 'formal', image: formalAi },
+    { value: 'lembut', image: lembutAi },
+    { value: 'kasar', image: nyeletukAi },
+    { value: 'lebay', image: lebayAi },
+  ]
 
 const wrapIndex = (index: number) =>
   ((index % personaOptions.length) + personaOptions.length) %
@@ -143,8 +118,12 @@ function PersonaStage({
   onPaginate: (direction: number) => void
   onSelectIndex: (index: number) => void
 }) {
+  const t = useTranslations('debates.create')
+  const tp = useTranslations('debates.personas')
+
   const persona = personaOptions[index]
   const theme = getPersonaTheme(persona.value)
+  const personaLabel = tp(`${persona.value}.label`)
 
   return (
     <div className="w-full">
@@ -209,7 +188,7 @@ function PersonaStage({
             <div className="relative size-60">
               <Image
                 src={persona.image}
-                alt={persona.label}
+                alt={personaLabel}
                 fill
                 sizes={IMAGE_SIZES}
                 draggable={false}
@@ -232,10 +211,10 @@ function PersonaStage({
               transition={{ duration: 0.25, ease: EASE }}
             >
               <p className="text-[24px] font-medium leading-tight tracking-[-0.045em] text-secondary sm:text-[28px]">
-                {persona.label}
+                {personaLabel}
               </p>
               <p className="mt-1 text-[12px] text-description">
-                {persona.description}
+                {tp(`${persona.value}.description`)}
               </p>
             </motion.div>
           </AnimatePresence>
@@ -247,7 +226,9 @@ function PersonaStage({
             <button
               key={option.value}
               type="button"
-              aria-label={`Select ${option.label}`}
+              aria-label={t('selectPersona', {
+                name: tp(`${option.value}.label`),
+              })}
               onClick={() => onSelectIndex(i)}
               className="flex h-5 items-center px-[3px]"
             >
@@ -255,11 +236,10 @@ function PersonaStage({
                 initial={false}
                 animate={{ width: i === index ? 22 : 6 }}
                 transition={{ duration: 0.4, ease: EASE }}
-                className={`block h-1.5 rounded-full transition-colors duration-300 ${
-                  i === index
-                    ? 'bg-secondary'
-                    : 'bg-white/20 hover:bg-white/40'
-                }`}
+                className={`block h-1.5 rounded-full transition-colors duration-300 ${i === index
+                  ? 'bg-secondary'
+                  : 'bg-white/20 hover:bg-white/40'
+                  }`}
               />
             </button>
           ))}
@@ -278,6 +258,8 @@ export default function CreateDebateModal({
   open,
   onClose,
 }: CreateDebateModalProps) {
+  const t = useTranslations('debates.create')
+  const te = useTranslations('debates.errors')
   const router = useRouter()
 
   const [title, setTitle] = useState('')
@@ -382,7 +364,7 @@ export default function CreateDebateModal({
           key="create-debate-modal"
           role="dialog"
           aria-modal="true"
-          aria-label="Create debate"
+          aria-label={t('dialogLabel')}
           className="fixed inset-0 z-[100] isolate overflow-hidden bg-primary"
           initial={{ opacity: 0, scale: 1.015 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -429,7 +411,7 @@ export default function CreateDebateModal({
               <header className="flex items-start justify-between gap-4">
                 <div>
                   <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-description">
-                    New debate
+                    {t('eyebrow')}
                   </p>
 
                   <AnimatePresence mode="wait" initial={false}>
@@ -442,7 +424,7 @@ export default function CreateDebateModal({
                       transition={{ duration: 0.25, ease: EASE }}
                       className="mt-2 text-[25px] font-medium leading-tight tracking-[-0.045em] text-secondary sm:text-[29px]"
                     >
-                      {STEP_TITLE[step]}
+                      {t(`titleStep${step}`)}
                     </motion.h1>
                   </AnimatePresence>
                 </div>
@@ -451,7 +433,7 @@ export default function CreateDebateModal({
                   type="button"
                   onClick={closeModal}
                   disabled={isPending}
-                  aria-label="Close create debate modal"
+                  aria-label={t('closeAria')}
                   className="flex size-9 shrink-0 items-center justify-center rounded-full border border-white/10 bg-primary/80 text-description shadow-[0_8px_25px_rgba(0,0,0,0.35)] backdrop-blur-xl transition-all duration-200 hover:bg-white hover:text-neutral-900 active:scale-95 disabled:pointer-events-none disabled:opacity-40"
                 >
                   <X className="size-4" strokeWidth={1.8} />
@@ -470,7 +452,7 @@ export default function CreateDebateModal({
                       transition={{ duration: 0.25 }}
                       className="text-[10px] font-medium text-description"
                     >
-                      Geser untuk mengubah persona
+                      {t('swipeHint')}
                     </motion.p>
                   )}
                 </AnimatePresence>
@@ -506,7 +488,7 @@ export default function CreateDebateModal({
                               goNext()
                             }
                           }}
-                          placeholder="Contoh: Tahun baruan enaknya ke mana?"
+                          placeholder={t('placeholder')}
                           autoFocus
                           autoComplete="off"
                           className={inputClass}
@@ -539,6 +521,16 @@ export default function CreateDebateModal({
 
               {/* Footer */}
               <footer className="mt-auto">
+                
+                {createDebateMutation.error && (
+                  <p role="alert" className="mb-3 text-center text-[11px] font-medium text-rose-400">
+                    {te(
+                      getDebateErrorKey(createDebateMutation.error),
+                      getDebateErrorParams(createDebateMutation.error),
+                    )}
+                  </p>
+                )}
+
                 <button
                   type="button"
                   onClick={step === 1 ? goNext : handleCreate}
@@ -555,14 +547,14 @@ export default function CreateDebateModal({
                       className="flex items-center gap-2"
                     >
                       {step === 1 ? (
-                        'Continue'
+                        t('continue')
                       ) : isPending ? (
                         <>
                           <span className="size-3.5 animate-spin rounded-full border-2 border-neutral-900/25 border-t-neutral-900" />
-                          Creating...
+                          {t('creating')}
                         </>
                       ) : (
-                        'Start debate'
+                        t('start')
                       )}
                     </motion.span>
                   </AnimatePresence>

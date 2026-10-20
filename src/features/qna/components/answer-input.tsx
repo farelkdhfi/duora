@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { Clock, Loader2, Lock } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { getQnaErrorKey } from "../errors";
 import { useSubmitAnswer } from "../queries";
 import type { ActiveQnaSession } from "../types";
 
@@ -12,6 +14,9 @@ interface AnswerInputProps {
 }
 
 export function AnswerInput({ session, disabled = false }: AnswerInputProps) {
+  const t = useTranslations("qna.answer");
+  const te = useTranslations("qna.errors");
+
   const [answer, setAnswer] = useState(session.my_answer ?? "");
   const [prevQuestion, setPrevQuestion] = useState({
     id: session.session_id,
@@ -50,7 +55,7 @@ export function AnswerInput({ session, disabled = false }: AnswerInputProps) {
     return (
       <div className="rounded-[2rem] border border-black/[0.06] bg-primary/65 p-6 shadow-[0_20px_60px_-40px_rgba(30,19,24,0.25)] backdrop-blur-xl sm:p-7">
         <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-description">
-          Jawaban kamu
+          {t("mine")}
         </p>
 
         <p className="mt-4 whitespace-pre-wrap text-[15px] leading-7 tracking-[-0.01em] text-secondary sm:text-[16px]">
@@ -63,9 +68,7 @@ export function AnswerInput({ session, disabled = false }: AnswerInputProps) {
           </div>
 
           <p className="text-xs leading-5 text-description">
-            {session.partner_has_answered
-              ? "Jawaban kalian sedang disinkronkan..."
-              : "Menunggu pasanganmu memberikan jawabannya..."}
+            {session.partner_has_answered ? t("syncing") : t("waitingPartner")}
           </p>
         </div>
       </div>
@@ -80,7 +83,7 @@ export function AnswerInput({ session, disabled = false }: AnswerInputProps) {
       <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 px-1 py-3">
         <span className="flex items-center gap-1 text-[9px] font-medium uppercase tracking-[0.12em] text-description">
           <Lock className="size-2.5" strokeWidth={2} />
-          Privat sampai kalian berdua menjawab
+          {t("privacy")}
         </span>
       </div>
 
@@ -88,7 +91,7 @@ export function AnswerInput({ session, disabled = false }: AnswerInputProps) {
         id="qna-answer"
         value={answer}
         onChange={(e) => setAnswer(e.target.value)}
-        placeholder="Tulis apa yang kamu pikirkan..."
+        placeholder={t("placeholder")}
         rows={5}
         className="min-h-[150px] w-full resize-none rounded-[1.25rem] border border-black/[0.06] bg-primary/80 px-4 py-4 text-[14px] leading-6 tracking-[-0.01em] text-secondary outline-none transition-all duration-300 placeholder:text-description focus:border-black/[0.12] focus:bg-primary sm:min-h-[170px] sm:px-5 sm:py-5 sm:text-[15px]"
       />
@@ -98,14 +101,14 @@ export function AnswerInput({ session, disabled = false }: AnswerInputProps) {
           <span className="size-1.5 shrink-0 rounded-full bg-[#c995b5]" />
 
           <p className="text-[11px] font-medium text-description">
-            Pasanganmu sudah menjawab. Jawab sekarang untuk melihat jawabannya.
+            {t("partnerAnswered")}
           </p>
         </div>
       )}
 
       {error && (
         <p className="mt-3 text-center text-xs text-red-500/80">
-          {error.message}
+          {te(getQnaErrorKey(error))}
         </p>
       )}
 
@@ -117,7 +120,7 @@ export function AnswerInput({ session, disabled = false }: AnswerInputProps) {
         {isPending ? (
           <Loader2 className="size-4 animate-spin" />
         ) : (
-          <span>Kirim jawaban</span>
+          <span>{t("submit")}</span>
         )}
       </button>
     </form>

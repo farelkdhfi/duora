@@ -56,3 +56,10 @@ export function zonedNow(timeZone?: string, now: Date = new Date()) {
     minutes: (Number(get('hour')) % 24) * 60 + Number(get('minute')),
   }
 }
+
+export function isSameZonedDay(a: string, b: string, timeZone?: string) {
+  return (
+    zonedNow(timeZone, new Date(a)).dateKey ===
+    zonedNow(timeZone, new Date(b)).dateKey
+  )
+}

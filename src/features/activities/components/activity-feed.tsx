@@ -14,6 +14,9 @@ import {
 import { useFormatter, useTranslations } from 'next-intl'
 
 import { getActivityErrorKey } from '../errors'
+
+import { useRupiah } from '@/lib/use-rupiah'
+
 import { useRelationshipActivities } from '../queries'
 import type { Activity, ActivityType } from '../types'
 
@@ -64,6 +67,7 @@ function ActivityItem({
 }) {
   const t = useTranslations('activities')
   const format = useFormatter()
+  const { rupiah } = useRupiah()
 
   const config = activityConfig[activity.type]
   const Icon = config.icon
@@ -82,11 +86,7 @@ function ActivityItem({
     note: str(metadata.note_title),
     item: str(metadata.checklist_title),
     amount:
-      metadata.amount == null
-        ? ''
-        : `Rp ${format.number(Number(metadata.amount), {
-          maximumFractionDigits: 0,
-        })}`,
+      metadata.amount == null ? '' : rupiah(Number(metadata.amount)),
   }
 
   function formatRelativeTime(dateString: string) {
