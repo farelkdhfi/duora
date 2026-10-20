@@ -7,6 +7,7 @@ import {
   Home,
   Logs,
   NotebookPen,
+  Palette,
   Smile,
   User2,
   type LucideIcon,
@@ -24,6 +25,7 @@ export type NavItemKey =
   | 'profile'
   | 'activities'
   | 'qna'
+  | 'draw&guess'
 
 export const sidebarNavigation: {
   key: NavItemKey
@@ -38,6 +40,7 @@ export const sidebarNavigation: {
   { key: 'notes', href: '/notes', icon: NotebookPen },
   { key: 'wrapped', href: '/wrapped', icon: File },
   { key: 'countdown', href: '/countdown', icon: Clock },
+  { key: 'draw&guess', href: '/draw-guess', icon: Palette },
   { key: 'profile', href: '/profile', icon: User2 },
   { key: 'activities', href: '/activities', icon: Logs },
 ]
@@ -50,6 +53,7 @@ export const moreNavigation: {
   { key: 'checkin', href: '/check-in' },
   { key: 'debates', href: '/debates' },
   { key: 'qna', href: '/qna' },
+  { key: 'draw&guess', href: '/draw-guess' },
   { key: 'countdown', href: '/countdown' },
   { key: 'wrapped', href: '/wrapped' },
   { key: 'activities', href: '/activities' },

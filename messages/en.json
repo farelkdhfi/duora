@@ -142,7 +142,8 @@
             "countdown": "Countdown",
             "profile": "Profile",
             "activities": "Activities",
-            "qna": "Q&A"
+            "qna": "Q&A",
+            "draw&guess": "Draw & Guess"
         },
         "brandTagline": "Grow together.",
         "workspace": "Workspace",
