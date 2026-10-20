@@ -227,24 +227,21 @@ export default function DrawCanvas({ roundId, isDrawer, locked }: DrawCanvasProp
     channelRef.current?.send({ type: 'broadcast', event: 'clear', payload: {} })
   }
 
-  return (
-    <div className="space-y-3">
-      <div
-        ref={wrapRef}
-        className="overflow-hidden rounded-2xl border border-black/[0.06] bg-white shadow-sm"
-      >
+    return (
+    <div className="min-w-0 space-y-3">
+      <div ref={wrapRef} className="aspect-[4/3] w-full overflow-hidden rounded-3xl border border-white/[0.08] bg-white shadow-[0_0_50px_-15px_rgba(244,114,182,0.3)]">
         <canvas
           ref={canvasRef}
           onPointerDown={handlePointerDown}
           onPointerMove={handlePointerMove}
           onPointerUp={handlePointerUp}
           onPointerCancel={handlePointerUp}
-          className={`block w-full touch-none ${isDrawer && !locked ? 'cursor-crosshair' : 'cursor-default'}`}
+          className={`block size-full touch-none ${isDrawer && !locked ? 'cursor-crosshair' : 'cursor-default'}`}
         />
       </div>
 
       {isDrawer && !locked && (
-        <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-white/[0.08] bg-primary/80 px-4 py-3 backdrop-blur">
           <div className="flex items-center gap-1.5">
             {COLORS.map((c) => (
               <button
@@ -253,9 +250,7 @@ export default function DrawCanvas({ roundId, isDrawer, locked }: DrawCanvasProp
                 aria-label={`Warna ${c}`}
                 onClick={() => setColor(c)}
                 style={{ backgroundColor: c }}
-                className={`size-7 rounded-full border-2 transition ${
-                  color === c ? 'scale-110 border-neutral-900' : 'border-white shadow'
-                }`}
+                className={`size-7 rounded-full border-2 transition ${color === c ? 'scale-110 border-secondary' : 'border-primary shadow'}`}
               />
             ))}
           </div>
@@ -267,21 +262,16 @@ export default function DrawCanvas({ roundId, isDrawer, locked }: DrawCanvasProp
                 type="button"
                 aria-label={`Ukuran ${s}`}
                 onClick={() => setSize(s)}
-                className={`flex size-8 items-center justify-center rounded-full border transition ${
-                  size === s ? 'border-neutral-900 bg-neutral-100' : 'border-black/[0.08]'
-                }`}
+                className={`flex size-8 items-center justify-center rounded-full border bg-subprimary transition ${size === s ? 'border-secondary' : 'border-white/[0.08]'}`}
               >
-                <span
-                  className="rounded-full bg-neutral-800"
-                  style={{ width: s + 2, height: s + 2 }}
-                />
+                <span className="rounded-full bg-secondary" style={{ width: s + 2, height: s + 2 }} />
               </button>
             ))}
 
             <button
               type="button"
               onClick={handleClear}
-              className="flex h-8 items-center gap-1 rounded-full border border-black/[0.08] px-3 text-[11px] font-medium text-neutral-500 hover:bg-neutral-50"
+              className="flex h-8 items-center gap-1 rounded-full border border-white/[0.08] bg-subprimary px-3 text-[11px] font-medium text-description hover:bg-subprimary/80"
             >
               <Eraser size={12} />
               Hapus

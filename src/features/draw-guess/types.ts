@@ -44,3 +44,9 @@ export interface Stroke {
   size: number // satuan relatif terhadap lebar 600
   points: [number, number][] // koordinat ternormalisasi 0..1
 }
+
+export interface DrawClue {
+  pattern: string // contoh: "b_____" lalu "b___e_"
+  hint_level: number
+  next_hint_in_ms: number | null // sisa waktu sampai clue berikutnya, null kalau tidak ada lagi
+}

@@ -6,6 +6,7 @@ import {
   getCurrentRound,
   getDrawChemistry,
   getDrawChoices,
+  getDrawClue,
   getRoundGuesses,
   nextDrawRound,
   startDrawSession,
@@ -18,6 +19,8 @@ export const drawKeys = {
   choices: (roundId: string) => [...drawKeys.all, 'choices', roundId] as const,
   guesses: (roundId: string) => [...drawKeys.all, 'guesses', roundId] as const,
   chemistry: () => [...drawKeys.all, 'chemistry'] as const,
+  clue: (roundId: string) => [...drawKeys.all, 'clue', roundId] as const,
+
 }
 
 export function useCurrentRound() {
@@ -72,9 +75,7 @@ export function useSubmitDrawGuess() {
   return useMutation({
     mutationFn: ({ roundId, guess }: { roundId: string; guess: string }) =>
       submitDrawGuess(roundId, guess),
-    onSuccess: (_r, v) => {
-      invalidate()
-    },
+    onSuccess: invalidate
   })
 }
 
@@ -91,4 +92,12 @@ export function useNextDrawRound() {
 export function useEndDrawSession() {
   const invalidate = useInvalidateRound()
   return useMutation({ mutationFn: endDrawSession, onSuccess: invalidate })
+}
+
+export function useDrawClue(roundId: string | undefined, enabled: boolean) {
+  return useQuery({
+    queryKey: drawKeys.clue(roundId ?? ''),
+    queryFn: () => getDrawClue(roundId as string),
+    enabled: !!roundId && enabled,
+  })
 }

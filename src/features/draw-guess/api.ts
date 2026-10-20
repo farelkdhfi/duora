@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/client'
 import type {
   DrawChemistry,
   DrawChoice,
+  DrawClue,
   DrawGuess,
   DrawRound,
   GuessResult,
@@ -91,4 +92,11 @@ export async function getRoundGuesses(roundId: string): Promise<DrawGuess[]> {
     .order('created_at', { ascending: true })
   if (error) throw new Error(error.message)
   return (data ?? []) as DrawGuess[]
+}
+
+export async function getDrawClue(roundId: string): Promise<DrawClue | null> {
+  const supabase = createClient()
+  const { data, error } = await supabase.rpc('get_draw_clue', { p_round_id: roundId })
+  if (error) throw new Error(error.message)
+  return data?.[0] ?? null
 }
