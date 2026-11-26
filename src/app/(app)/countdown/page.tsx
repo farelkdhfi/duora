@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { CalendarDays, Lock, Plus, X } from "lucide-react";
+import { CalendarDays, Lock, X } from "lucide-react";
 import { useMyRelationshipDetails } from "@/features/relationship/queries";
 import { useGetMyProfile } from "@/features/profiles/queries";
 import { useMySubscription } from "@/features/subscription/queries";
