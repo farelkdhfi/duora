@@ -281,7 +281,7 @@ export const WrappedCardNight = forwardRef<
                 <div className="flex items-start justify-between">
                   <div>
                     <p className="text-[6px] font-semibold uppercase tracking-[0.2em] text-white/35">
-                      Things you're building
+                      Things you&apos;re building
                     </p>
 
                     <p className="mt-2 text-[22px] font-medium tracking-[-0.07em]">

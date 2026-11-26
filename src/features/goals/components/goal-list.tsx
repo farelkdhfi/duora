@@ -25,11 +25,18 @@ type GoalFilter =
 
 const ONE_MILLION = 1_000_000
 
-function getGoalSavings(goal: any) {
+type SavingLike = {
+  amount?: number | string | null
+}
+
+type GoalWithSavings = {
+  savings?: SavingLike[] | null
+}
+
+function getGoalSavings(goal: GoalWithSavings) {
   return (
     goal.savings?.reduce(
-      (total: number, saving: any) =>
-        total + Number(saving.amount ?? 0),
+      (total, saving) => total + Number(saving.amount ?? 0),
       0,
     ) ?? 0
   )
